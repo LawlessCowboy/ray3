@@ -258,3 +258,20 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Objinit
 # and +SAV2_fn_bUpdateAllDataFromLoadedFile (register allocation; 3.0.1 misses it). The 23
 # matches recorded before the move still MATCH under both builds (-0/+2).
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/GamSave2.c
+# HieDraw.c: HIE_fn_vSendCharacterDynShadowToViewPort inlines the same VU0 push
+# as HieMtStk.c and matches only under 3.0.3 (3.0.1 leaves its branch delay
+# slots unfilled); every other recorded match in the file still verifies.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HieDraw.c
+# AI/AIGame/CAM_Fnct.c: CAM_fn_p_stGetBestPos copies its stVec local with
+# '((unsigned int*)&stVec)[i]' word stores. 3.0.3 folds the stack address into
+# 'sw r,0x110(sp)' but still treats each store as a pointer store, so it
+# reloads stStruct.hCineinfo between words as retail does. 3.0.1 instead puts
+# the address in a register. Measured 13/13 under 3.0.3, 12/13 under 3.0.1.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Fnct.c
+# GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp: C_WaterFx::Perturb and
+# PerturbFromCharacterPosition inline their (unsigned int)float conversions,
+# where 3.0.1 calls fptoui; WaterFx_vProcessAndDisplay needs 3.0.3's move of
+# the mtbpc before pFx->Process() into the jal delay slot. All 12 matches
+# recorded under 3.0.1 still MATCH, plus those 3 (15/20). Process also needs
+# the unfold build (addiu a2,s0,0x28 for &m_pGrids[i]) but does not match yet.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp

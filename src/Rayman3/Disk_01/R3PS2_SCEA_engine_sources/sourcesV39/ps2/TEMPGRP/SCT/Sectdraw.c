@@ -1069,33 +1069,386 @@ extern HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Head;
 extern HIE_tdstSuperObject_* SECT_g_hActiveSectorList_Tail;
 extern unsigned short SECT_g_uwActiveSectorList_NumberOfElements;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 24–47 */
-/* addr: 0x00319c90  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 24
- *   +0x0004 -> line 26
- *   +0x0010 -> line 30
- *   +0x001c -> line 34
- *   +0x0024 -> line 35
- *   +0x002c -> line 37
- *   +0x0034 -> line 40
- *   +0x003c -> line 41
- *   +0x0040 -> line 44
- *   +0x0044 -> line 45
- *   +0x004c -> line 46
- *   +0x0058 -> line 47
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO);
 void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
 void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
 int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
 void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
+
+/* Target writes COP0 register 24 (mtc0 zero, $24) several times; C cannot
+ * express it. Spelled with the R5900 alias mtbpc, MWCC schedules it like an
+ * ordinary instruction (delay slots, hazard nop) as retail did. */
+inline void SCT_vClearCop0Register24Sched(void)
+{
+    asm { mtbpc zero }
+}
+/* The write placed right before a call has no hazard nop in the target, which
+ * only the noreorder spelling reproduces. */
+inline void SCT_vClearCop0Register24Open(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+unsigned char fn_bIsTransitionInProgress(void);
+void HIE_fn_vStartPS2MatStack(void);
+void GLIPS2_vPrepareCullingForThisFrame(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vSetModifierIntensity(int lMul, int lAdd);
+void SECT_fn_vSendDynamicLightsOfASector();
+unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt);
+void GLI_vSetOptimizedSDC(int flag);
+void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject);
+void GLI_vDMASendObject(unsigned int hSdl);
+void GLI_vDMASendTransparentObject(unsigned int DisplayList);
+void GLI_vClearListOfLightInViewport(void);
+int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
+void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
+
+/* Target +0x1d8 and +0x1f0 write COP0 register 24 (mtc0 zero, $24), which C
+ * cannot express. Spelled with the R5900 alias mtbpc, MWCC schedules it like
+ * an ordinary instruction (delay slots, hazard nop) as retail did. */
+inline void SCT_vClearCop0Register24(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+inline void SCT_vClearCop0Register24Sync(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    nop
+    }
+}
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt);
+void GLI_vResetTableOfActiveLightsForChar(char _cValue);
+unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight);
+void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight_* p_stLight);
+void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop);
+float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector);
+void GEO_vSetZFar(float _xZ);
+void GEO_vSetZFarTransparencyZone(float _xZ);
+void GEO_xReinitZFarTransparencyLevel(void);
+void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
+void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask);
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 102–138 */
+/* addr: 0x0031a8f0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 102
+ *   +0x0004 -> line 103
+ *   +0x0008 -> line 102
+ *   +0x0014 -> line 111
+ *   +0x0020 -> line 114
+ *   +0x0028 -> line 133
+ *   +0x0034 -> line 136
+ *   +0x0038 -> line 137
+ *   +0x0048 -> line 138
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight_* p_stLight);
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO);
+void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
+int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
+void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
+void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
+
+/* Old-style definition: callers pass a third argument it ignores. */
+void SECT_fn_vSendDynamicLightsOfASector(_p_stVpt, _hSectorObject)
+GLD_tdstViewportAttributes_* _p_stVpt;
+SECT_tdstSector_* _hSectorObject;
+{
+    SECT_tdstListOfDNMLights_* hPrevDNMLightsElement;
+    SECT_tdstListOfDNMLights_* hDNMLightsElement;
+
+    hPrevDNMLightsElement = NULL;
+    for (hDNMLightsElement = _hSectorObject->stListOfDNMLights.hFirstElementDyn; hDNMLightsElement; hDNMLightsElement = hDNMLightsElement->hNextBrotherDyn)
+    {
+        if (hDNMLightsElement == hPrevDNMLightsElement)
+            break;
+        GLI_vAddLightToViewport(_p_stVpt, hDNMLightsElement->hDNMLights);
+        hPrevDNMLightsElement = hDNMLightsElement;
+    }
+}
+
+/* The dynamic-light loop of SECT_fn_vSendDynamicLightsOfASector, expanded in
+ * place (retail inlines it twice, each copy on one source line). */
+#define SECT_M_vSendDynamicLightsOfASector(_p_stVpt, _hSectorObject) \
+    { SECT_tdstListOfDNMLights_* hPrevDNMLightsElement = NULL; SECT_tdstListOfDNMLights_* hDNMLightsElement; for (hDNMLightsElement = (_hSectorObject)->stListOfDNMLights.hFirstElementDyn; hDNMLightsElement; hDNMLightsElement = hDNMLightsElement->hNextBrotherDyn) { if (hDNMLightsElement == hPrevDNMLightsElement) break; GLI_vAddLightToViewport(_p_stVpt, hDNMLightsElement->hDNMLights); hPrevDNMLightsElement = hDNMLightsElement; } }
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 149–181 */
+/* addr: 0x0031a7f0  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 149
+ *   +0x0004 -> line 157
+ *   +0x0008 -> line 149
+ *   +0x0020 -> line 154
+ *   +0x0024 -> line 157
+ *   +0x0058 -> line 161
+ *   +0x0068 -> line 169
+ *   +0x0074 -> line 171
+ *   +0x00b0 -> line 176
+ *   +0x00d8 -> line 181
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector)
+{
+    SECT_tdstSector_* hSectorObject;
+    SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicInteractionChild;
+    short xI;
+
+    hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SECT_M_vSendDynamicLightsOfASector(_p_stVpt, hSectorObject);
+    if (!fn_bIsTransitionInProgress())
+    {
+        hGraphicInteractionChild = hSectorObject->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+        for (xI = 0; xI < hSectorObject->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt; xI++, hGraphicInteractionChild++)
+        {
+            SECT_M_vSendDynamicLightsOfASector(_p_stVpt, hGraphicInteractionChild->hPointerOfSectorSO->hLinkedObject.p_stSector);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 251–295 */
+/* addr: 0x0031a6b0  size: 316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 251
+ *   +0x0028 -> line 252
+ *   +0x0034 -> line 254
+ *   +0x003c -> line 255
+ *   +0x0044 -> line 260
+ *   +0x0048 -> line 270
+ *   +0x0054 -> line 272
+ *   +0x0058 -> line 273
+ *   +0x0070 -> line 277
+ *   +0x0078 -> line 279
+ *   +0x0084 -> line 281
+ *   +0x00d8 -> line 290
+ *   +0x00e0 -> line 292
+ *   +0x0108 -> line 294
+ *   +0x0110 -> line 295
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vFogOn(void);
+void GLI_vFogOff(void);
+unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight);
+void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight);
+void GLI_vSetFog2(float xBlendNear, float xNear, float xBlendFar, float xFar, float xInfinite, GEO_tdstColor_* p_stColor);
+extern char GLI_cGlobalFogIsOn;
+void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector)
+{
+    GLI_tdstLight_* hStaticLight;
+    short xI;
+    SECT_tdstSector_* hSectorObject;
+    GEO_tdstColor_ stColor;
+    SECT_tdstListOfStaticLights_* hStaticLightsElement;
+
+    if (GLI_cGlobalFogIsOn)
+    {
+        GLI_vFogOn();
+        return;
+    }
+    hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    for (hStaticLightsElement = hSectorObject->stListOfStaticLights.hFirstElementOpt, xI = 0; xI < hSectorObject->stListOfStaticLights.lNumberOfElementsOpt; xI++, hStaticLightsElement++)
+    {
+        hStaticLight = hStaticLightsElement->hStaticLights;
+        if (GLI_lGetLightType(hStaticLight) == 6)
+        {
+            GLI_vFogOn();
+            GLI_xGetLightColor(hStaticLight, &stColor);
+            GLI_vSetFog2(GLI_fn_xFogGetBlendNear(hStaticLight), GLI_fn_xFogGetNear(hStaticLight), GLI_fn_xFogGetBlendFar(hStaticLight), GLI_fn_xFogGetFar(hStaticLight), GLI_fn_xFogGetInfinite(hStaticLight), &stColor);
+            return;
+        }
+    }
+    GLI_vFogOff();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 323–483 */
+/* addr: 0x0031a3e0  size: 712 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 323
+ *   +0x0028 -> line 341
+ *   +0x002c -> line 323
+ *   +0x0038 -> line 332
+ *   +0x003c -> line 341
+ *   +0x0044 -> line 354
+ *   +0x0048 -> line 362
+ *   +0x0050 -> line 363
+ *   +0x005c -> line 365
+ *   +0x0064 -> line 370
+ *   +0x006c -> line 371
+ *   +0x007c -> line 374
+ *   +0x0090 -> line 383
+ *   +0x0094 -> line 374
+ *   +0x0098 -> line 383
+ *   +0x009c -> line 386
+ *   +0x00a0 -> line 383
+ *   +0x00a4 -> line 386
+ *   +0x00a8 -> line 383
+ *   +0x00ac -> line 384
+ *   +0x00b8 -> line 383
+ *   +0x00c0 -> line 384
+ *   +0x00d8 -> line 383
+ *   +0x00e0 -> line 386
+ *   +0x00ec -> line 383
+ *   +0x00f0 -> line 386
+ *   +0x0134 -> line 394
+ *   +0x018c -> line 395
+ *   +0x0190 -> line 394
+ *   +0x0194 -> line 395
+ *   +0x01a8 -> line 399
+ *   +0x0204 -> line 408
+ *   +0x020c -> line 413
+ *   +0x0214 -> line 415
+ *   +0x0224 -> line 417
+ *   +0x022c -> line 420
+ *   +0x0234 -> line 423
+ *   +0x0248 -> line 442
+ *   +0x0268 -> line 455
+ *   +0x0278 -> line 473
+ *   +0x0280 -> line 479
+ *   +0x0298 -> line 482
+ *   +0x029c -> line 483
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
+{
+    int lMaxInOut;
+    int lMinInOut;
+    COL_tdstParallelBox_* hParallelBox;
+    int lCullingResult;
+    MTH3D_tdstVector_* p_stBorderMaxPoint;
+    MTH3D_tdstVector_* p_stBorderMinPoint;
+    MTH3D_tdstVector_* p_stBdvMaxPoint;
+    MTH3D_tdstVector_* p_stBdvMinPoint;
+    SECT_tdstSector_* hSectorObject;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 534–714 */
+/* addr: 0x0031a180  size: 600 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 534
+ *   +0x0038 -> line 536
+ *   +0x0040 -> line 541
+ *   +0x005c -> line 546
+ *   +0x0064 -> line 547
+ *   +0x006c -> line 550
+ *   +0x0080 -> line 561
+ *   +0x0088 -> line 574
+ *   +0x0098 -> line 585
+ *   +0x00b4 -> line 587
+ *   +0x0128 -> line 614
+ *   +0x013c -> line 615
+ *   +0x0148 -> line 616
+ *   +0x0158 -> line 618
+ *   +0x015c -> line 619
+ *   +0x0160 -> line 620
+ *   +0x0168 -> line 621
+ *   +0x0170 -> line 631
+ *   +0x0188 -> line 632
+ *   +0x0198 -> line 635
+ *   +0x019c -> line 639
+ *   +0x01a4 -> line 635
+ *   +0x01a8 -> line 639
+ *   +0x01b8 -> line 650
+ *   +0x01bc -> line 647
+ *   +0x01c0 -> line 650
+ *   +0x01d8 -> line 657
+ *   +0x01dc -> line 658
+ *   +0x01f0 -> line 659
+ *   +0x01f8 -> line 674
+ *   +0x0210 -> line 689
+ *   +0x021c -> line 690
+ *   +0x0228 -> line 714
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult)
+{
+    short xI;
+    short xNbLights;
+    GLI_tdstLight_* hStaticLight;
+    SECT_tdstListOfStaticLights_* hStaticLightsElement;
+    SECT_tdstSector_* hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SECT_tdstListOfSOCharacters_* hCharacter;
+    HIE_tdstSuperObject_* hCharacterSO;
+    int lDrawmaskOfCharacter;
+    unsigned int ulCustomBits;
+
+    if (!fn_bIsTransitionInProgress() || _hSprObjSector->xTransition)
+    {
+    GLIPS2_vPrepareDisplay(_p_stVpt);
+    HIE_fn_vStartPS2MatStack();
+    if (_lCullingResult || g_bInGameMenu)
+    {
+    GLI_vResetTableOfActiveLightsForChar(1);
+    xNbLights = 0;
+    SECT_fn_vSendFogToViewport(_p_stVpt, _hSprObjSector);
+    if ((_lDrawMask & 0x8000) && (_hSprObjSector->lDrawModeMask & 0x8000))
+    {
+        SECT_tdstSector_* hLightSector = _hSprObjSector->hLinkedObject.p_stSector;
+        hStaticLightsElement = hLightSector->stListOfStaticLights.hFirstElementOpt;
+        for (xI = 0; xI < hLightSector->stListOfStaticLights.lNumberOfElementsOpt; xI++)
+        {
+            hStaticLight = hStaticLightsElement->hStaticLights;
+            if (GLI_ucGetObjectLighted(hStaticLight) & 2)
+            {
+                GLI_vAddLightToViewport(_p_stVpt, hStaticLight);
+                xNbLights++;
+            }
+            hStaticLightsElement++;
+        }
+    }
+    GEO_vSetZFar(fn_xGetSectorZFar(_hSprObjSector));
+    GEO_vSetZFarTransparencyZone(0.0f);
+    for (xI = 0, hCharacter = hSectorObject->stListOfCharacters.hFirstElementDyn; hCharacter != NULL; hCharacter = hCharacter->hNextBrotherDyn, xI++)
+    {
+        hCharacterSO = hCharacter->hPointerOfCharacter;
+        lDrawmaskOfCharacter = hCharacterSO->lDrawModeMask;
+        ulCustomBits = fn_ulStandardGameGetCustomBitsSO(hCharacterSO);
+        GEO_xReinitZFarTransparencyLevel();
+        if ((!g_bInGameMenu || (ulCustomBits & 0x100000)) && (lDrawmaskOfCharacter & 0x200000))
+        {
+            g_bDisplayingActors = 1;
+            g_pActorBeingDisplayed = hCharacterSO;
+            HIE_fn_vSendCharacterToViewportPS2(_p_stVpt, hCharacterSO, lDrawmaskOfCharacter & _lDrawMask, _lCullingResult);
+            g_bDisplayingActors = 0;
+            g_pActorBeingDisplayed = NULL;
+            if ((ulCustomBits & 0x100) && !fn_bIsTransitionInProgress())
+            {
+                SCT_vClearCop0Register24();
+                SHW_fn_vDrawShadow(_p_stVpt, hCharacterSO, _hSprObjSector, _lDrawMask);
+                SCT_vClearCop0Register24Sync();
+            }
+        }
+    }
+    if (xNbLights)
+        GLI_vPopLightsInViewport(0, xNbLights);
+    }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 739–1053 */
 /* addr: 0x00319cf0  size: 1160 bytes */
@@ -1166,337 +1519,6 @@ void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Target writes COP0 register 24 (mtc0 zero, $24) several times; C cannot
- * express it. Spelled with the R5900 alias mtbpc, MWCC schedules it like an
- * ordinary instruction (delay slots, hazard nop) as retail did. */
-inline void SCT_vClearCop0Register24Sched(void)
-{
-    asm { mtbpc zero }
-}
-/* The write placed right before a call has no hazard nop in the target, which
- * only the noreorder spelling reproduces. */
-inline void SCT_vClearCop0Register24Open(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    }
-}
-unsigned char fn_bIsTransitionInProgress(void);
-void HIE_fn_vStartPS2MatStack(void);
-void GLIPS2_vPrepareCullingForThisFrame(GLD_tdstViewportAttributes_* p_stVpt);
-void GLI_vSetModifierIntensity(int lMul, int lAdd);
-void SECT_fn_vSendDynamicLightsOfASector();
-unsigned char HIE_fn_bInitCameraMatrixStack(GLD_tdstViewportAttributes_* _hVpt);
-void GLI_vSetOptimizedSDC(int flag);
-void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject);
-void GLI_vDMASendObject(unsigned int hSdl);
-void GLI_vDMASendTransparentObject(unsigned int DisplayList);
-void GLI_vClearListOfLightInViewport(void);
-int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
-void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 534–714 */
-/* addr: 0x0031a180  size: 600 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 534
- *   +0x0038 -> line 536
- *   +0x0040 -> line 541
- *   +0x005c -> line 546
- *   +0x0064 -> line 547
- *   +0x006c -> line 550
- *   +0x0080 -> line 561
- *   +0x0088 -> line 574
- *   +0x0098 -> line 585
- *   +0x00b4 -> line 587
- *   +0x0128 -> line 614
- *   +0x013c -> line 615
- *   +0x0148 -> line 616
- *   +0x0158 -> line 618
- *   +0x015c -> line 619
- *   +0x0160 -> line 620
- *   +0x0168 -> line 621
- *   +0x0170 -> line 631
- *   +0x0188 -> line 632
- *   +0x0198 -> line 635
- *   +0x019c -> line 639
- *   +0x01a4 -> line 635
- *   +0x01a8 -> line 639
- *   +0x01b8 -> line 650
- *   +0x01bc -> line 647
- *   +0x01c0 -> line 650
- *   +0x01d8 -> line 657
- *   +0x01dc -> line 658
- *   +0x01f0 -> line 659
- *   +0x01f8 -> line 674
- *   +0x0210 -> line 689
- *   +0x021c -> line 690
- *   +0x0228 -> line 714
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* Target +0x1d8 and +0x1f0 write COP0 register 24 (mtc0 zero, $24), which C
- * cannot express. Spelled with the R5900 alias mtbpc, MWCC schedules it like
- * an ordinary instruction (delay slots, hazard nop) as retail did. */
-inline void SCT_vClearCop0Register24(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    }
-}
-inline void SCT_vClearCop0Register24Sync(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    nop
-    }
-}
-unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
-void GLIPS2_vPrepareDisplay(GLD_tdstViewportAttributes_* p_stVpt);
-void GLI_vResetTableOfActiveLightsForChar(char _cValue);
-unsigned char GLI_ucGetObjectLighted(GLI_tdstLight_* p_stLight);
-void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight_* p_stLight);
-void GLI_vPopLightsInViewport(int lUnused, unsigned int lNbLightsToPop);
-float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector);
-void GEO_vSetZFar(float _xZ);
-void GEO_vSetZFarTransparencyZone(float _xZ);
-void GEO_xReinitZFarTransparencyLevel(void);
-void HIE_fn_vSendCharacterToViewportPS2(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
-void SHW_fn_vDrawShadow(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hHandleOfCharacter, HIE_tdstSuperObject_* _hSprObjSector, int _lSectorDrawmask);
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 323–483 */
-/* addr: 0x0031a3e0  size: 712 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 323
- *   +0x0028 -> line 341
- *   +0x002c -> line 323
- *   +0x0038 -> line 332
- *   +0x003c -> line 341
- *   +0x0044 -> line 354
- *   +0x0048 -> line 362
- *   +0x0050 -> line 363
- *   +0x005c -> line 365
- *   +0x0064 -> line 370
- *   +0x006c -> line 371
- *   +0x007c -> line 374
- *   +0x0090 -> line 383
- *   +0x0094 -> line 374
- *   +0x0098 -> line 383
- *   +0x009c -> line 386
- *   +0x00a0 -> line 383
- *   +0x00a4 -> line 386
- *   +0x00a8 -> line 383
- *   +0x00ac -> line 384
- *   +0x00b8 -> line 383
- *   +0x00c0 -> line 384
- *   +0x00d8 -> line 383
- *   +0x00e0 -> line 386
- *   +0x00ec -> line 383
- *   +0x00f0 -> line 386
- *   +0x0134 -> line 394
- *   +0x018c -> line 395
- *   +0x0190 -> line 394
- *   +0x0194 -> line 395
- *   +0x01a8 -> line 399
- *   +0x0204 -> line 408
- *   +0x020c -> line 413
- *   +0x0214 -> line 415
- *   +0x0224 -> line 417
- *   +0x022c -> line 420
- *   +0x0234 -> line 423
- *   +0x0248 -> line 442
- *   +0x0268 -> line 455
- *   +0x0278 -> line 473
- *   +0x0280 -> line 479
- *   +0x0298 -> line 482
- *   +0x029c -> line 483
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 251–295 */
-/* addr: 0x0031a6b0  size: 316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 251
- *   +0x0028 -> line 252
- *   +0x0034 -> line 254
- *   +0x003c -> line 255
- *   +0x0044 -> line 260
- *   +0x0048 -> line 270
- *   +0x0054 -> line 272
- *   +0x0058 -> line 273
- *   +0x0070 -> line 277
- *   +0x0078 -> line 279
- *   +0x0084 -> line 281
- *   +0x00d8 -> line 290
- *   +0x00e0 -> line 292
- *   +0x0108 -> line 294
- *   +0x0110 -> line 295
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 149–181 */
-/* addr: 0x0031a7f0  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0004 -> line 157
- *   +0x0008 -> line 149
- *   +0x0020 -> line 154
- *   +0x0024 -> line 157
- *   +0x0058 -> line 161
- *   +0x0068 -> line 169
- *   +0x0074 -> line 171
- *   +0x00b0 -> line 176
- *   +0x00d8 -> line 181
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 102–138 */
-/* addr: 0x0031a8f0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 102
- *   +0x0004 -> line 103
- *   +0x0008 -> line 102
- *   +0x0014 -> line 111
- *   +0x0020 -> line 114
- *   +0x0028 -> line 133
- *   +0x0034 -> line 136
- *   +0x0038 -> line 137
- *   +0x0048 -> line 138
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vAddLightToViewport(GLD_tdstViewportAttributes_* p_stVpt, GLI_tdstLight_* p_stLight);
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO);
-void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector);
-int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
-void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult);
-void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);
-
-/* Old-style definition: callers pass a third argument it ignores. */
-void SECT_fn_vSendDynamicLightsOfASector(_p_stVpt, _hSectorObject)
-GLD_tdstViewportAttributes_* _p_stVpt;
-SECT_tdstSector_* _hSectorObject;
-{
-    SECT_tdstListOfDNMLights_* hPrevDNMLightsElement;
-    SECT_tdstListOfDNMLights_* hDNMLightsElement;
-
-    hPrevDNMLightsElement = NULL;
-    for (hDNMLightsElement = _hSectorObject->stListOfDNMLights.hFirstElementDyn; hDNMLightsElement; hDNMLightsElement = hDNMLightsElement->hNextBrotherDyn)
-    {
-        if (hDNMLightsElement == hPrevDNMLightsElement)
-            break;
-        GLI_vAddLightToViewport(_p_stVpt, hDNMLightsElement->hDNMLights);
-        hPrevDNMLightsElement = hDNMLightsElement;
-    }
-}
-
-void SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector)
-{
-    short xI;
-    SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicInteractionChild;
-    SECT_tdstSector_* hSectorObject;
-    /* TODO: decompile from asm/... */
-}
-
-void SECT_fn_vSendFogToViewport(HIE_tdstSuperObject_* _hSprObjSector)
-{
-    GLI_tdstLight_* hStaticLight;
-    GEO_tdstColor_ stColor;
-    SECT_tdstListOfStaticLights_* hStaticLightsElement;
-    SECT_tdstSector_* hSectorObject;
-    short xI;
-    /* TODO: decompile from asm/... */
-}
-
-int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
-{
-    int lMaxInOut;
-    int lMinInOut;
-    COL_tdstParallelBox_* hParallelBox;
-    int lCullingResult;
-    MTH3D_tdstVector_* p_stBorderMaxPoint;
-    MTH3D_tdstVector_* p_stBorderMinPoint;
-    MTH3D_tdstVector_* p_stBdvMaxPoint;
-    MTH3D_tdstVector_* p_stBdvMinPoint;
-    SECT_tdstSector_* hSectorObject;
-    /* TODO: decompile from asm/... */
-}
-
-void SCT_fn_vSendSectorToViewportDynamic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask, int _lCullingResult)
-{
-    short xI;
-    short xNbLights;
-    GLI_tdstLight_* hStaticLight;
-    SECT_tdstListOfStaticLights_* hStaticLightsElement;
-    SECT_tdstSector_* hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
-    SECT_tdstListOfSOCharacters_* hCharacter;
-    HIE_tdstSuperObject_* hCharacterSO;
-    int lDrawmaskOfCharacter;
-    unsigned int ulCustomBits;
-
-    if (!fn_bIsTransitionInProgress() || _hSprObjSector->xTransition)
-    {
-    GLIPS2_vPrepareDisplay(_p_stVpt);
-    HIE_fn_vStartPS2MatStack();
-    if (_lCullingResult || g_bInGameMenu)
-    {
-    GLI_vResetTableOfActiveLightsForChar(1);
-    xNbLights = 0;
-    SECT_fn_vSendFogToViewport(_hSprObjSector);
-    if ((_lDrawMask & 0x8000) && (_hSprObjSector->lDrawModeMask & 0x8000))
-    {
-        SECT_tdstSector_* hLightSector = _hSprObjSector->hLinkedObject.p_stSector;
-        hStaticLightsElement = hLightSector->stListOfStaticLights.hFirstElementOpt;
-        for (xI = 0; xI < hLightSector->stListOfStaticLights.lNumberOfElementsOpt; xI++)
-        {
-            hStaticLight = hStaticLightsElement->hStaticLights;
-            if (GLI_ucGetObjectLighted(hStaticLight) & 2)
-            {
-                GLI_vAddLightToViewport(_p_stVpt, hStaticLight);
-                xNbLights++;
-            }
-            hStaticLightsElement++;
-        }
-    }
-    GEO_vSetZFar(fn_xGetSectorZFar(_hSprObjSector));
-    GEO_vSetZFarTransparencyZone(0.0f);
-    for (xI = 0, hCharacter = hSectorObject->stListOfCharacters.hFirstElementDyn; hCharacter != NULL; hCharacter = hCharacter->hNextBrotherDyn, xI++)
-    {
-        hCharacterSO = hCharacter->hPointerOfCharacter;
-        lDrawmaskOfCharacter = hCharacterSO->lDrawModeMask;
-        ulCustomBits = fn_ulStandardGameGetCustomBitsSO(hCharacterSO);
-        GEO_xReinitZFarTransparencyLevel();
-        if ((!g_bInGameMenu || (ulCustomBits & 0x100000)) && (lDrawmaskOfCharacter & 0x200000))
-        {
-            g_bDisplayingActors = 1;
-            g_pActorBeingDisplayed = hCharacterSO;
-            HIE_fn_vSendCharacterToViewportPS2(_p_stVpt, hCharacterSO, lDrawmaskOfCharacter & _lDrawMask, _lCullingResult);
-            g_bDisplayingActors = 0;
-            g_pActorBeingDisplayed = NULL;
-            if ((ulCustomBits & 0x100) && !fn_bIsTransitionInProgress())
-            {
-                SCT_vClearCop0Register24();
-                SHW_fn_vDrawShadow(_p_stVpt, hCharacterSO, _hSprObjSector, _lDrawMask);
-                SCT_vClearCop0Register24Sync();
-            }
-        }
-    }
-    if (xNbLights)
-        GLI_vPopLightsInViewport(0, xNbLights);
-    }
-    }
-}
-
 void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
 {
     static char cDrawMap = 1;
@@ -1601,6 +1623,24 @@ void SCT_fn_vSendSectorWhereIAmToViewport(MTH3D_tdstVector_* _p_stAbsolutePositi
     SCT_vClearCop0Register24Sched();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 24–47 */
+/* addr: 0x00319c90  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 24
+ *   +0x0004 -> line 26
+ *   +0x0010 -> line 30
+ *   +0x001c -> line 34
+ *   +0x0024 -> line 35
+ *   +0x002c -> line 37
+ *   +0x0034 -> line 40
+ *   +0x003c -> line 41
+ *   +0x0040 -> line 44
+ *   +0x0044 -> line 45
+ *   +0x004c -> line 46
+ *   +0x0058 -> line 47
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vAddSectorInList(HIE_tdstSuperObject_* _hSectorSO)
 {
     SECT_tdstSector_* hSector = _hSectorSO->hLinkedObject.p_stSector;

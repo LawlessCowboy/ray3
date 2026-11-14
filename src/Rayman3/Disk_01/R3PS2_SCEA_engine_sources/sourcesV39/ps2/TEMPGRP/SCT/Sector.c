@@ -379,67 +379,6 @@ int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject);
 int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject);
 HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 85–140 */
-/* addr: 0x0031c080  size: 652 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 85
- *   +0x0038 -> line 96
- *   +0x0040 -> line 97
- *   +0x004c -> line 100
- *   +0x0054 -> line 103
- *   +0x0060 -> line 110
- *   +0x0064 -> line 104
- *   +0x0068 -> line 111
- *   +0x006c -> line 103
- *   +0x0070 -> line 113
- *   +0x0074 -> line 103
- *   +0x0078 -> line 113
- *   +0x007c -> line 105
- *   +0x0080 -> line 103
- *   +0x0084 -> line 105
- *   +0x0088 -> line 103
- *   +0x0090 -> line 104
- *   +0x009c -> line 105
- *   +0x00a4 -> line 107
- *   +0x00a8 -> line 105
- *   +0x00ac -> line 109
- *   +0x00b8 -> line 106
- *   +0x00bc -> line 109
- *   +0x00c0 -> line 106
- *   +0x00c4 -> line 107
- *   +0x00c8 -> line 109
- *   +0x00d0 -> line 110
- *   +0x00dc -> line 111
- *   +0x00e4 -> line 113
- *   +0x00ec -> line 120
- *   +0x00f0 -> line 121
- *   +0x00f4 -> line 120
- *   +0x00f8 -> line 121
- *   +0x00fc -> line 120
- *   +0x010c -> line 121
- *   +0x0110 -> line 120
- *   +0x0118 -> line 121
- *   +0x011c -> line 120
- *   +0x0120 -> line 121
- *   +0x0148 -> line 123
- *   +0x0174 -> line 130
- *   +0x017c -> line 131
- *   +0x0180 -> line 123
- *   +0x0184 -> line 125
- *   +0x01a4 -> line 127
- *   +0x01c8 -> line 130
- *   +0x01f4 -> line 131
- *   +0x01fc -> line 133
- *   +0x0220 -> line 137
- *   +0x0224 -> line 133
- *   +0x023c -> line 134
- *   +0x0250 -> line 137
- *   +0x0258 -> line 138
- *   +0x0264 -> line 140
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror);
@@ -467,201 +406,157 @@ void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* h
 SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void);
 void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1025–1025 */
-/* addr: 0x0031c310  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1025
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1019–1019 */
-/* addr: 0x0031c320  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1019
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1013–1014 */
-/* addr: 0x0031c330  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1013
- *   +0x0004 -> line 1014
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 993–1002 */
-/* addr: 0x0031c340  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 993
- *   +0x000c -> line 995
- *   +0x0010 -> line 996
- *   +0x0014 -> line 997
- *   +0x0018 -> line 998
- *   +0x001c -> line 999
- *   +0x0020 -> line 1000
- *   +0x0030 -> line 1002
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 960–982 */
-/* addr: 0x0031c380  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 960
- *   +0x0014 -> line 962
- *   +0x0018 -> line 965
- *   +0x0024 -> line 966
- *   +0x002c -> line 970
- *   +0x0054 -> line 971
- *   +0x0064 -> line 972
- *   +0x008c -> line 974
- *   +0x0094 -> line 975
- *   +0x009c -> line 979
- *   +0x00a0 -> line 981
- *   +0x00a4 -> line 979
- *   +0x00a8 -> line 982
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 951–956 */
-/* addr: 0x0031c440  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 951
- *   +0x0004 -> line 953
- *   +0x0024 -> line 956
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 941–946 */
-/* addr: 0x0031c470  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 941
- *   +0x0004 -> line 943
- *   +0x0024 -> line 946
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 905–936 */
-/* addr: 0x0031c4a0  size: 152 bytes */
+#define MTH3D_M_vMiddleVector(_d, _a, _b) { (_d)->xX = (_a)->xX + (_b)->xX; (_d)->xY = (_a)->xY + (_b)->xY; (_d)->xZ = (_a)->xZ + (_b)->xZ; (_d)->xX /= 2.0f; (_d)->xY /= 2.0f; (_d)->xZ /= 2.0f; }
+
+inline float MTH3D_M_xNormVector(MTH3D_tdstVector_* _p_stV)
+{
+    float xX, xY, xZ, xResult;
+    xX = _p_stV->xX; xY = _p_stV->xY; xZ = _p_stV->xZ;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    asm { sqrt.s xResult, xResult }
+    return xResult;
+}
+
+inline int SECT_M_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
+{
+    MTH3D_tdstVector_ stMin;
+    MTH3D_tdstVector_ stMax;
+    ((int*)&stMin)[0] = ((int*)&_hSector->stMinMaxPoints[0])[0]; ((int*)&stMin)[1] = ((int*)&_hSector->stMinMaxPoints[0])[1]; ((int*)&stMin)[2] = ((int*)&_hSector->stMinMaxPoints[0])[2];
+    ((int*)&stMax)[0] = ((int*)&_hSector->stMinMaxPoints[1])[0]; ((int*)&stMax)[1] = ((int*)&_hSector->stMinMaxPoints[1])[1]; ((int*)&stMax)[2] = ((int*)&_hSector->stMinMaxPoints[1])[2];
+    if (_p_stPosition->xX < stMin.xX || _p_stPosition->xX > stMax.xX)
+        return 0;
+    if (_p_stPosition->xY < stMin.xY || _p_stPosition->xY > stMax.xY)
+        return 0;
+    if (_p_stPosition->xZ < stMin.xZ || _p_stPosition->xZ > stMax.xZ)
+        return 0;
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 187–188 */
+/* addr: 0x0031d050  size: 28 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 905
- *   +0x0004 -> line 909
- *   +0x0008 -> line 905
- *   +0x000c -> line 909
- *   +0x001c -> line 910
- *   +0x0024 -> line 913
- *   +0x0030 -> line 914
- *   +0x0038 -> line 916
- *   +0x0050 -> line 921
- *   +0x0058 -> line 925
- *   +0x0064 -> line 926
- *   +0x0068 -> line 930
- *   +0x0080 -> line 932
- *   +0x0088 -> line 935
- *   +0x008c -> line 936
+ *   +0x0000 -> line 187
+ *   +0x0014 -> line 188
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 894–895 */
-/* addr: 0x0031c540  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 894
- *   +0x0004 -> line 895
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint)
+{
+    ((unsigned int*)_p_stMaxPoint)[0] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[0];
+    ((unsigned int*)_p_stMaxPoint)[1] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[1];
+    ((unsigned int*)_p_stMaxPoint)[2] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[2];
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 884–885 */
-/* addr: 0x0031c550  size: 12 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 200–208 */
+/* addr: 0x0031d020  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 884
- *   +0x0004 -> line 885
+ *   +0x0000 -> line 200
+ *   +0x0004 -> line 204
+ *   +0x0008 -> line 200
+ *   +0x000c -> line 204
+ *   +0x0014 -> line 206
+ *   +0x0020 -> line 208
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
+{
+    SECT_tdstListOfSOCharacters_* hCharacterElement;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 504–505 */
-/* addr: 0x0031c560  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x00d0 -> line 505
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    hCharacterElement = (SECT_tdstListOfSOCharacters_ *)HMU_fn_p_vMalloc(0x10, 0);
+    hCharacterElement->hNextBrotherDyn = NULL;
+    hCharacterElement->hPrevBrotherDyn = NULL;
+    hCharacterElement->hFatherDyn = NULL;
+    return hCharacterElement;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 498–499 */
-/* addr: 0x0031c640  size: 132 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 217–217 */
+/* addr: 0x0031d010  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 498
- *   +0x007c -> line 499
+ *   +0x0000 -> line 217
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject)
+{
+    hCharacterElement->hPointerOfCharacter = hSectorSuperObject;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 492–493 */
-/* addr: 0x0031c6d0  size: 212 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 220–228 */
+/* addr: 0x0031cfe0  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 492
- *   +0x00cc -> line 493
+ *   +0x0000 -> line 220
+ *   +0x0004 -> line 224
+ *   +0x0008 -> line 220
+ *   +0x000c -> line 224
+ *   +0x0014 -> line 226
+ *   +0x0020 -> line 228
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
+{
+    SECT_tdstListOfDNMLights_* hDNMLightsElement;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 486–487 */
-/* addr: 0x0031c7b0  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 486
- *   +0x00cc -> line 487
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    hDNMLightsElement = (SECT_tdstListOfDNMLights_ *)HMU_fn_p_vMalloc(0x10, 0);
+    hDNMLightsElement->hNextBrotherDyn = NULL;
+    hDNMLightsElement->hPrevBrotherDyn = NULL;
+    hDNMLightsElement->hFatherDyn = NULL;
+    return hDNMLightsElement;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 480–481 */
-/* addr: 0x0031c890  size: 132 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 237–237 */
+/* addr: 0x0031cfd0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 480
- *   +0x007c -> line 481
+ *   +0x0000 -> line 237
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLightsElement, GLI_tdstLight_* hDNMLights)
+{
+    hDNMLightsElement->hDNMLights = hDNMLights;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 360–409 */
-/* addr: 0x0031c920  size: 876 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 242–261 */
+/* addr: 0x0031cef0  size: 224 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 360
- *   +0x000c -> line 368
- *   +0x0010 -> line 369
- *   +0x0014 -> line 371
- *   +0x00f4 -> line 374
- *   +0x0104 -> line 377
- *   +0x0108 -> line 380
- *   +0x010c -> line 378
- *   +0x0110 -> line 380
- *   +0x0120 -> line 383
- *   +0x0210 -> line 386
- *   +0x0218 -> line 388
- *   +0x0228 -> line 390
- *   +0x0230 -> line 394
- *   +0x0240 -> line 397
- *   +0x0244 -> line 398
- *   +0x0248 -> line 400
- *   +0x0338 -> line 403
- *   +0x0340 -> line 405
- *   +0x0350 -> line 407
- *   +0x035c -> line 409
+ *   +0x0000 -> line 246
+ *   +0x0004 -> line 242
+ *   +0x0008 -> line 246
+ *   +0x0010 -> line 250
+ *   +0x0014 -> line 246
+ *   +0x0020 -> line 247
+ *   +0x0038 -> line 250
+ *   +0x0060 -> line 251
+ *   +0x006c -> line 253
+ *   +0x0098 -> line 254
+ *   +0x00a4 -> line 256
+ *   +0x00d0 -> line 257
+ *   +0x00d4 -> line 261
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
+{
+    SECT_tduVectorWords_ stMin;
+    SECT_tduVectorWords_ stMax;
+    stMin.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
+    stMax.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xZ;
+    if (_p_stPosition->xX < stMin.v.xX || _p_stPosition->xX > stMax.v.xX)
+        return 0;
+    if (_p_stPosition->xY < stMin.v.xY || _p_stPosition->xY > stMax.v.xY)
+        return 0;
+    if (_p_stPosition->xZ < stMin.v.xZ || _p_stPosition->xZ > stMax.v.xZ)
+        return 0;
+    return 1;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 277–352 */
 /* addr: 0x0031cc90  size: 608 bytes */
@@ -712,159 +607,6 @@ void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_*
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-#define MTH3D_M_vMiddleVector(_d, _a, _b) { (_d)->xX = (_a)->xX + (_b)->xX; (_d)->xY = (_a)->xY + (_b)->xY; (_d)->xZ = (_a)->xZ + (_b)->xZ; (_d)->xX /= 2.0f; (_d)->xY /= 2.0f; (_d)->xZ /= 2.0f; }
-
-inline float MTH3D_M_xNormVector(MTH3D_tdstVector_* _p_stV)
-{
-    float xX, xY, xZ, xResult;
-    xX = _p_stV->xX; xY = _p_stV->xY; xZ = _p_stV->xZ;
-    asm { mula.s xX, xX }
-    asm { madda.s xY, xY }
-    asm { madd.s xResult, xZ, xZ }
-    asm { sqrt.s xResult, xResult }
-    return xResult;
-}
-
-inline int SECT_M_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
-{
-    MTH3D_tdstVector_ stMin;
-    MTH3D_tdstVector_ stMax;
-    ((int*)&stMin)[0] = ((int*)&_hSector->stMinMaxPoints[0])[0]; ((int*)&stMin)[1] = ((int*)&_hSector->stMinMaxPoints[0])[1]; ((int*)&stMin)[2] = ((int*)&_hSector->stMinMaxPoints[0])[2];
-    ((int*)&stMax)[0] = ((int*)&_hSector->stMinMaxPoints[1])[0]; ((int*)&stMax)[1] = ((int*)&_hSector->stMinMaxPoints[1])[1]; ((int*)&stMax)[2] = ((int*)&_hSector->stMinMaxPoints[1])[2];
-    if (_p_stPosition->xX < stMin.xX || _p_stPosition->xX > stMax.xX)
-        return 0;
-    if (_p_stPosition->xY < stMin.xY || _p_stPosition->xY > stMax.xY)
-        return 0;
-    if (_p_stPosition->xZ < stMin.xZ || _p_stPosition->xZ > stMax.xZ)
-        return 0;
-    return 1;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 242–261 */
-/* addr: 0x0031cef0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 246
- *   +0x0004 -> line 242
- *   +0x0008 -> line 246
- *   +0x0010 -> line 250
- *   +0x0014 -> line 246
- *   +0x0020 -> line 247
- *   +0x0038 -> line 250
- *   +0x0060 -> line 251
- *   +0x006c -> line 253
- *   +0x0098 -> line 254
- *   +0x00a4 -> line 256
- *   +0x00d0 -> line 257
- *   +0x00d4 -> line 261
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 237–237 */
-/* addr: 0x0031cfd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 237
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 220–228 */
-/* addr: 0x0031cfe0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 220
- *   +0x0004 -> line 224
- *   +0x0008 -> line 220
- *   +0x000c -> line 224
- *   +0x0014 -> line 226
- *   +0x0020 -> line 228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 217–217 */
-/* addr: 0x0031d010  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 217
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 200–208 */
-/* addr: 0x0031d020  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 200
- *   +0x0004 -> line 204
- *   +0x0008 -> line 200
- *   +0x000c -> line 204
- *   +0x0014 -> line 206
- *   +0x0020 -> line 208
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 187–188 */
-/* addr: 0x0031d050  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 187
- *   +0x0014 -> line 188
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint)
-{
-    ((unsigned int*)_p_stMaxPoint)[0] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[0];
-    ((unsigned int*)_p_stMaxPoint)[1] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[1];
-    ((unsigned int*)_p_stMaxPoint)[2] = ((unsigned int*)&_hSector->stMinMaxPoints[1])[2];
-}
-
-SECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void)
-{
-    SECT_tdstListOfSOCharacters_* hCharacterElement;
-
-    hCharacterElement = (SECT_tdstListOfSOCharacters_ *)HMU_fn_p_vMalloc(0x10, 0);
-    hCharacterElement->hNextBrotherDyn = NULL;
-    hCharacterElement->hPrevBrotherDyn = NULL;
-    hCharacterElement->hFatherDyn = NULL;
-    return hCharacterElement;
-}
-
-void SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject)
-{
-    hCharacterElement->hPointerOfCharacter = hSectorSuperObject;
-}
-
-SECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void)
-{
-    SECT_tdstListOfDNMLights_* hDNMLightsElement;
-
-    hDNMLightsElement = (SECT_tdstListOfDNMLights_ *)HMU_fn_p_vMalloc(0x10, 0);
-    hDNMLightsElement->hNextBrotherDyn = NULL;
-    hDNMLightsElement->hPrevBrotherDyn = NULL;
-    hDNMLightsElement->hFatherDyn = NULL;
-    return hDNMLightsElement;
-}
-
-void SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLightsElement, GLI_tdstLight_* hDNMLights)
-{
-    hDNMLightsElement->hDNMLights = hDNMLights;
-}
-
-int SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector)
-{
-    SECT_tduVectorWords_ stMin;
-    SECT_tduVectorWords_ stMax;
-    stMin.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xX; stMin.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xY; stMin.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[0].xZ;
-    stMax.i[0] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xX; stMax.i[1] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xY; stMax.i[2] = *(unsigned int*)&_hSector->stMinMaxPoints[1].xZ;
-    if (_p_stPosition->xX < stMin.v.xX || _p_stPosition->xX > stMax.v.xX)
-        return 0;
-    if (_p_stPosition->xY < stMin.v.xY || _p_stPosition->xY > stMax.v.xY)
-        return 0;
-    if (_p_stPosition->xZ < stMin.v.xZ || _p_stPosition->xZ > stMax.v.xZ)
-        return 0;
-    return 1;
-}
-
 HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition)
 {
     SECT_tdstSector_* param0;
@@ -931,6 +673,33 @@ HIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SEC
     return hSectorWhereIAm;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 360–409 */
+/* addr: 0x0031c920  size: 876 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 360
+ *   +0x000c -> line 368
+ *   +0x0010 -> line 369
+ *   +0x0014 -> line 371
+ *   +0x00f4 -> line 374
+ *   +0x0104 -> line 377
+ *   +0x0108 -> line 380
+ *   +0x010c -> line 378
+ *   +0x0110 -> line 380
+ *   +0x0120 -> line 383
+ *   +0x0210 -> line 386
+ *   +0x0218 -> line 388
+ *   +0x0228 -> line 390
+ *   +0x0230 -> line 394
+ *   +0x0240 -> line 397
+ *   +0x0244 -> line 398
+ *   +0x0248 -> line 400
+ *   +0x0338 -> line 403
+ *   +0x0340 -> line 405
+ *   +0x0350 -> line 407
+ *   +0x035c -> line 409
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas)
 {
     SECT_tdstListOfSOSectorsInCollisionInteraction_* hCollisionNode;
@@ -972,41 +741,118 @@ void SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_s
     *_p_hSectorSOWhereIWas = SECT_fn_hResearchInWhatSectorIAm(param0->hFatherDyn, _p_stAfterAbsolutePosition);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 480–481 */
+/* addr: 0x0031c890  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 480
+ *   +0x007c -> line 481
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode)
 {
     if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 486–487 */
+/* addr: 0x0031c7b0  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 486
+ *   +0x00cc -> line 487
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
 {
     if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 492–493 */
+/* addr: 0x0031c6d0  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 492
+ *   +0x00cc -> line 493
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode)
 {
     if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hNextBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfCharacters; if (hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfCharacters.hLastElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn->hPrevBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.hFirstElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfCharacters.lNumberOfElementsDyn++;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 498–499 */
+/* addr: 0x0031c640  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 498
+ *   +0x007c -> line 499
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode)
 {
     if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 504–505 */
+/* addr: 0x0031c560  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x00d0 -> line 505
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfDNMLights_* hNode)
 {
     if (hNode->hNextBrotherDyn) hNode->hNextBrotherDyn->hPrevBrotherDyn = hNode->hPrevBrotherDyn; if (hNode->hPrevBrotherDyn) hNode->hPrevBrotherDyn->hNextBrotherDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn) { hNode->hFatherDyn->lNumberOfElementsDyn--; if (hNode->hFatherDyn->hFirstElementDyn == hNode) hNode->hFatherDyn->hFirstElementDyn = hNode->hNextBrotherDyn; if (hNode->hFatherDyn->hLastElementDyn == hNode) hNode->hFatherDyn->hLastElementDyn = hNode->hPrevBrotherDyn; } hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = NULL; hNode->hFatherDyn = NULL; hNode->hNextBrotherDyn = NULL; hNode->hPrevBrotherDyn = hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn; hNode->hFatherDyn = &hSector->hLinkedObject.p_stSector->stListOfDNMLights; if (hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn == NULL) hSector->hLinkedObject.p_stSector->stListOfDNMLights.hFirstElementDyn = hNode; else hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn->hNextBrotherDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.hLastElementDyn = hNode; hSector->hLinkedObject.p_stSector->stListOfDNMLights.lNumberOfElementsDyn++;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 884–885 */
+/* addr: 0x0031c550  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 884
+ *   +0x0004 -> line 885
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector)
 {
     return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xVirtual;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 894–895 */
+/* addr: 0x0031c540  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 894
+ *   +0x0004 -> line 895
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 char fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector)
 {
     return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->cCameraType;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 905–936 */
+/* addr: 0x0031c4a0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 905
+ *   +0x0004 -> line 909
+ *   +0x0008 -> line 905
+ *   +0x000c -> line 909
+ *   +0x001c -> line 910
+ *   +0x0024 -> line 913
+ *   +0x0030 -> line 914
+ *   +0x0038 -> line 916
+ *   +0x0050 -> line 921
+ *   +0x0058 -> line 925
+ *   +0x0064 -> line 926
+ *   +0x0068 -> line 930
+ *   +0x0080 -> line 932
+ *   +0x0088 -> line 935
+ *   +0x008c -> line 936
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWantedActivity)
 {
     SECT_tdstSector_* hSector;
@@ -1035,6 +881,15 @@ int SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWant
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 941–946 */
+/* addr: 0x0031c470  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 941
+ *   +0x0004 -> line 943
+ *   +0x0024 -> line 946
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
 {
@@ -1043,6 +898,15 @@ int SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 951–956 */
+/* addr: 0x0031c440  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 951
+ *   +0x0004 -> line 953
+ *   +0x0024 -> line 956
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
 {
@@ -1051,6 +915,25 @@ int SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 960–982 */
+/* addr: 0x0031c380  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 960
+ *   +0x0014 -> line 962
+ *   +0x0018 -> line 965
+ *   +0x0024 -> line 966
+ *   +0x002c -> line 970
+ *   +0x0054 -> line 971
+ *   +0x0064 -> line 972
+ *   +0x008c -> line 974
+ *   +0x0094 -> line 975
+ *   +0x009c -> line 979
+ *   +0x00a0 -> line 981
+ *   +0x00a4 -> line 979
+ *   +0x00a8 -> line 982
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _hSectorObject)
 {
     SECT_tdstSector_* hSector;
@@ -1071,6 +954,20 @@ HIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _
     return hNextSector;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 993–1002 */
+/* addr: 0x0031c340  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 993
+ *   +0x000c -> line 995
+ *   +0x0010 -> line 996
+ *   +0x0014 -> line 997
+ *   +0x0018 -> line 998
+ *   +0x001c -> line 999
+ *   +0x0020 -> line 1000
+ *   +0x0030 -> line 1002
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
 {
     HIE_tdstSuperObject_* hCurrentSector;
@@ -1092,21 +989,103 @@ void SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot)
     SECT_fnvInitGlobalsForActivity();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1013–1014 */
+/* addr: 0x0031c330  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1013
+ *   +0x0004 -> line 1014
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 float fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector)
 {
     return ((SECT_tdstSector_ *)_hSprObjSector->hLinkedObject.p_stSector)->xZFar;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1019–1019 */
+/* addr: 0x0031c320  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1019
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector)
 {
     return &_hSector->stMinMaxPoints[0];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 1025–1025 */
+/* addr: 0x0031c310  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1025
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector)
 {
     return &_hSector->stMinMaxPoints[1];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sector.c lines 85–140 */
+/* addr: 0x0031c080  size: 652 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 85
+ *   +0x0038 -> line 96
+ *   +0x0040 -> line 97
+ *   +0x004c -> line 100
+ *   +0x0054 -> line 103
+ *   +0x0060 -> line 110
+ *   +0x0064 -> line 104
+ *   +0x0068 -> line 111
+ *   +0x006c -> line 103
+ *   +0x0070 -> line 113
+ *   +0x0074 -> line 103
+ *   +0x0078 -> line 113
+ *   +0x007c -> line 105
+ *   +0x0080 -> line 103
+ *   +0x0084 -> line 105
+ *   +0x0088 -> line 103
+ *   +0x0090 -> line 104
+ *   +0x009c -> line 105
+ *   +0x00a4 -> line 107
+ *   +0x00a8 -> line 105
+ *   +0x00ac -> line 109
+ *   +0x00b8 -> line 106
+ *   +0x00bc -> line 109
+ *   +0x00c0 -> line 106
+ *   +0x00c4 -> line 107
+ *   +0x00c8 -> line 109
+ *   +0x00d0 -> line 110
+ *   +0x00dc -> line 111
+ *   +0x00e4 -> line 113
+ *   +0x00ec -> line 120
+ *   +0x00f0 -> line 121
+ *   +0x00f4 -> line 120
+ *   +0x00f8 -> line 121
+ *   +0x00fc -> line 120
+ *   +0x010c -> line 121
+ *   +0x0110 -> line 120
+ *   +0x0118 -> line 121
+ *   +0x011c -> line 120
+ *   +0x0120 -> line 121
+ *   +0x0148 -> line 123
+ *   +0x0174 -> line 130
+ *   +0x017c -> line 131
+ *   +0x0180 -> line 123
+ *   +0x0184 -> line 125
+ *   +0x01a4 -> line 127
+ *   +0x01c8 -> line 130
+ *   +0x01f4 -> line 131
+ *   +0x01fc -> line 133
+ *   +0x0220 -> line 137
+ *   +0x0224 -> line 133
+ *   +0x023c -> line 134
+ *   +0x0250 -> line 137
+ *   +0x0258 -> line 138
+ *   +0x0264 -> line 140
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror)
 {
     MAT_tdstTransformation_ stGlobalMatrixOfCamera;

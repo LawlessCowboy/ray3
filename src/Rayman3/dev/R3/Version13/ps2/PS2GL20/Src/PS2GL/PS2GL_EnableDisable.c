@@ -1135,97 +1135,6 @@ int g_aDmaTag;
 tagGScontext g_gsContext;
 _GL_BUFFERINFO g_stBufferInfo;
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1034–1182 */
-/* addr: 0x0014e680  size: 1220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1034
- *   +0x0004 -> line 1037
- *   +0x0008 -> line 1034
- *   +0x0010 -> line 1037
- *   +0x0164 -> line 1041
- *   +0x016c -> line 1044
- *   +0x0174 -> line 1052
- *   +0x017c -> line 1055
- *   +0x0190 -> line 1058
- *   +0x0198 -> line 1059
- *   +0x01b0 -> line 1061
- *   +0x01c4 -> line 1062
- *   +0x01d0 -> line 1063
- *   +0x01e8 -> line 1065
- *   +0x01fc -> line 1067
- *   +0x0200 -> line 1068
- *   +0x0208 -> line 1071
- *   +0x0210 -> line 1074
- *   +0x0218 -> line 1077
- *   +0x0220 -> line 1080
- *   +0x0224 -> line 1081
- *   +0x022c -> line 1085
- *   +0x0234 -> line 1089
- *   +0x0238 -> line 1088
- *   +0x0240 -> line 1089
- *   +0x0244 -> line 1088
- *   +0x0250 -> line 1089
- *   +0x0260 -> line 1090
- *   +0x0268 -> line 1093
- *   +0x0270 -> line 1095
- *   +0x0278 -> line 1096
- *   +0x0280 -> line 1098
- *   +0x0288 -> line 1099
- *   +0x0290 -> line 1101
- *   +0x0298 -> line 1102
- *   +0x029c -> line 1104
- *   +0x02a0 -> line 1103
- *   +0x02a8 -> line 1104
- *   +0x02b0 -> line 1107
- *   +0x02bc -> line 1108
- *   +0x02d8 -> line 1109
- *   +0x02f8 -> line 1110
- *   +0x02fc -> line 1109
- *   +0x0300 -> line 1110
- *   +0x0304 -> line 1112
- *   +0x0308 -> line 1110
- *   +0x030c -> line 1112
- *   +0x0310 -> line 1110
- *   +0x0320 -> line 1111
- *   +0x032c -> line 1112
- *   +0x0330 -> line 1111
- *   +0x033c -> line 1112
- *   +0x0340 -> line 1114
- *   +0x0348 -> line 1116
- *   +0x0354 -> line 1118
- *   +0x0364 -> line 1119
- *   +0x036c -> line 1120
- *   +0x0378 -> line 1121
- *   +0x0380 -> line 1122
- *   +0x0388 -> line 1123
- *   +0x0390 -> line 1125
- *   +0x0394 -> line 1126
- *   +0x0398 -> line 1128
- *   +0x03a0 -> line 1131
- *   +0x03a8 -> line 1134
- *   +0x03b0 -> line 1137
- *   +0x03b8 -> line 1139
- *   +0x03c0 -> line 1140
- *   +0x03dc -> line 1142
- *   +0x03f0 -> line 1143
- *   +0x03f8 -> line 1146
- *   +0x0400 -> line 1149
- *   +0x0408 -> line 1155
- *   +0x0420 -> line 1156
- *   +0x0428 -> line 1158
- *   +0x0434 -> line 1159
- *   +0x043c -> line 1161
- *   +0x0448 -> line 1162
- *   +0x0450 -> line 1164
- *   +0x0474 -> line 1165
- *   +0x047c -> line 1167
- *   +0x04a0 -> line 1168
- *   +0x04a8 -> line 1173
- *   +0x04b4 -> line 1182
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void impPS2glHint(unsigned int target, unsigned int mode);
@@ -1234,436 +1143,6 @@ void impPS2glCullFace(unsigned int mode);
 unsigned char impPS2glIsEnabled(unsigned int cap);
 void impPS2glDisable(unsigned int cap);
 void impPS2glEnable(unsigned int cap);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1024–1026 */
-/* addr: 0x0014eb50  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1024
- *   +0x0004 -> line 1025
- *   +0x0008 -> line 1024
- *   +0x000c -> line 1025
- *   +0x0010 -> line 1026
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1017–1019 */
-/* addr: 0x0014eb70  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1017
- *   +0x0004 -> line 1018
- *   +0x0008 -> line 1017
- *   +0x000c -> line 1018
- *   +0x0010 -> line 1019
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 712–1012 */
-/* addr: 0x0014eb90  size: 2612 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 712
- *   +0x0338 -> line 715
- *   +0x0348 -> line 716
- *   +0x0350 -> line 720
- *   +0x0374 -> line 724
- *   +0x037c -> line 727
- *   +0x038c -> line 728
- *   +0x0394 -> line 731
- *   +0x03a8 -> line 732
- *   +0x03b0 -> line 735
- *   +0x03c0 -> line 736
- *   +0x03c8 -> line 739
- *   +0x03d8 -> line 740
- *   +0x03e0 -> line 743
- *   +0x03f0 -> line 744
- *   +0x03f8 -> line 747
- *   +0x0408 -> line 748
- *   +0x0410 -> line 751
- *   +0x0420 -> line 752
- *   +0x0428 -> line 755
- *   +0x0438 -> line 756
- *   +0x0440 -> line 759
- *   +0x0450 -> line 760
- *   +0x0458 -> line 763
- *   +0x0468 -> line 764
- *   +0x0470 -> line 767
- *   +0x0480 -> line 768
- *   +0x0488 -> line 771
- *   +0x0498 -> line 772
- *   +0x04a0 -> line 775
- *   +0x04b0 -> line 776
- *   +0x04b8 -> line 779
- *   +0x04c8 -> line 780
- *   +0x04d0 -> line 783
- *   +0x04e0 -> line 784
- *   +0x04e8 -> line 787
- *   +0x04f8 -> line 788
- *   +0x0500 -> line 791
- *   +0x0510 -> line 792
- *   +0x0518 -> line 795
- *   +0x0528 -> line 796
- *   +0x0530 -> line 799
- *   +0x0540 -> line 800
- *   +0x0548 -> line 803
- *   +0x0558 -> line 804
- *   +0x0560 -> line 807
- *   +0x0570 -> line 808
- *   +0x0578 -> line 811
- *   +0x0588 -> line 812
- *   +0x0590 -> line 815
- *   +0x05a0 -> line 816
- *   +0x05a8 -> line 819
- *   +0x05b8 -> line 820
- *   +0x05c0 -> line 823
- *   +0x05d0 -> line 824
- *   +0x05d8 -> line 827
- *   +0x05e8 -> line 828
- *   +0x05f0 -> line 831
- *   +0x0600 -> line 832
- *   +0x0608 -> line 835
- *   +0x0618 -> line 836
- *   +0x0620 -> line 839
- *   +0x0634 -> line 840
- *   +0x063c -> line 843
- *   +0x0650 -> line 844
- *   +0x0658 -> line 847
- *   +0x066c -> line 848
- *   +0x0674 -> line 851
- *   +0x0688 -> line 852
- *   +0x0690 -> line 855
- *   +0x06a4 -> line 856
- *   +0x06ac -> line 859
- *   +0x06c0 -> line 860
- *   +0x06c8 -> line 863
- *   +0x06dc -> line 864
- *   +0x06e4 -> line 867
- *   +0x06f8 -> line 868
- *   +0x0700 -> line 871
- *   +0x0714 -> line 872
- *   +0x071c -> line 875
- *   +0x072c -> line 876
- *   +0x0734 -> line 879
- *   +0x0744 -> line 880
- *   +0x074c -> line 883
- *   +0x075c -> line 884
- *   +0x0764 -> line 887
- *   +0x0774 -> line 888
- *   +0x077c -> line 891
- *   +0x078c -> line 892
- *   +0x0794 -> line 895
- *   +0x07a4 -> line 896
- *   +0x07ac -> line 900
- *   +0x07d0 -> line 904
- *   +0x07d8 -> line 907
- *   +0x07e8 -> line 908
- *   +0x07f0 -> line 911
- *   +0x0800 -> line 912
- *   +0x0808 -> line 915
- *   +0x081c -> line 916
- *   +0x0824 -> line 919
- *   +0x0838 -> line 920
- *   +0x0840 -> line 923
- *   +0x0854 -> line 924
- *   +0x085c -> line 927
- *   +0x0870 -> line 928
- *   +0x0878 -> line 932
- *   +0x089c -> line 936
- *   +0x08a4 -> line 943
- *   +0x08b4 -> line 944
- *   +0x08bc -> line 947
- *   +0x08cc -> line 948
- *   +0x08d4 -> line 951
- *   +0x08e4 -> line 952
- *   +0x08ec -> line 956
- *   +0x0910 -> line 960
- *   +0x0918 -> line 967
- *   +0x0928 -> line 968
- *   +0x0930 -> line 971
- *   +0x0940 -> line 972
- *   +0x0948 -> line 975
- *   +0x0958 -> line 976
- *   +0x0960 -> line 979
- *   +0x0974 -> line 980
- *   +0x097c -> line 983
- *   +0x0990 -> line 984
- *   +0x0998 -> line 987
- *   +0x09a8 -> line 988
- *   +0x09b0 -> line 991
- *   +0x09c0 -> line 992
- *   +0x09c8 -> line 995
- *   +0x09d8 -> line 996
- *   +0x09e0 -> line 999
- *   +0x09f0 -> line 1000
- *   +0x09f8 -> line 1003
- *   +0x0a08 -> line 1004
- *   +0x0a10 -> line 1007
- *   +0x0a20 -> line 1008
- *   +0x0a28 -> line 1011
- *   +0x0a2c -> line 1012
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 373–707 */
-/* addr: 0x0014f5d0  size: 3476 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 373
- *   +0x02fc -> line 379
- *   +0x030c -> line 380
- *   +0x0314 -> line 384
- *   +0x0320 -> line 389
- *   +0x032c -> line 384
- *   +0x0338 -> line 389
- *   +0x033c -> line 384
- *   +0x0340 -> line 389
- *   +0x0350 -> line 384
- *   +0x0354 -> line 389
- *   +0x0358 -> line 384
- *   +0x035c -> line 389
- *   +0x0388 -> line 390
- *   +0x0390 -> line 393
- *   +0x0398 -> line 394
- *   +0x03ac -> line 393
- *   +0x03b0 -> line 394
- *   +0x03c4 -> line 393
- *   +0x03c8 -> line 394
- *   +0x03cc -> line 393
- *   +0x03d0 -> line 394
- *   +0x03e0 -> line 395
- *   +0x03e8 -> line 400
- *   +0x03fc -> line 401
- *   +0x0404 -> line 407
- *   +0x0408 -> line 406
- *   +0x0410 -> line 407
- *   +0x0424 -> line 406
- *   +0x0428 -> line 407
- *   +0x043c -> line 406
- *   +0x0440 -> line 407
- *   +0x0444 -> line 406
- *   +0x0448 -> line 407
- *   +0x0458 -> line 408
- *   +0x0460 -> line 413
- *   +0x0468 -> line 415
- *   +0x0470 -> line 413
- *   +0x0474 -> line 415
- *   +0x0478 -> line 413
- *   +0x0480 -> line 415
- *   +0x0488 -> line 416
- *   +0x0490 -> line 420
- *   +0x0494 -> line 421
- *   +0x0498 -> line 420
- *   +0x04a0 -> line 421
- *   +0x04ac -> line 422
- *   +0x04b4 -> line 426
- *   +0x04bc -> line 427
- *   +0x04cc -> line 428
- *   +0x04d4 -> line 427
- *   +0x04d8 -> line 426
- *   +0x04dc -> line 427
- *   +0x04f0 -> line 426
- *   +0x04f4 -> line 427
- *   +0x04f8 -> line 426
- *   +0x04fc -> line 427
- *   +0x0510 -> line 428
- *   +0x053c -> line 429
- *   +0x0544 -> line 432
- *   +0x054c -> line 435
- *   +0x0554 -> line 436
- *   +0x0568 -> line 435
- *   +0x056c -> line 436
- *   +0x0580 -> line 435
- *   +0x0584 -> line 436
- *   +0x0588 -> line 435
- *   +0x058c -> line 436
- *   +0x059c -> line 437
- *   +0x05a4 -> line 441
- *   +0x05a8 -> line 440
- *   +0x05b0 -> line 441
- *   +0x05c4 -> line 440
- *   +0x05c8 -> line 441
- *   +0x05dc -> line 442
- *   +0x05e0 -> line 441
- *   +0x05e4 -> line 442
- *   +0x05e8 -> line 441
- *   +0x05ec -> line 440
- *   +0x05f4 -> line 441
- *   +0x0604 -> line 443
- *   +0x060c -> line 447
- *   +0x0614 -> line 449
- *   +0x0618 -> line 447
- *   +0x061c -> line 449
- *   +0x0620 -> line 447
- *   +0x0628 -> line 450
- *   +0x0630 -> line 458
- *   +0x0634 -> line 457
- *   +0x063c -> line 458
- *   +0x0644 -> line 457
- *   +0x064c -> line 459
- *   +0x0654 -> line 462
- *   +0x0658 -> line 461
- *   +0x0660 -> line 462
- *   +0x0668 -> line 461
- *   +0x0670 -> line 463
- *   +0x0678 -> line 466
- *   +0x067c -> line 465
- *   +0x0684 -> line 466
- *   +0x068c -> line 465
- *   +0x0694 -> line 467
- *   +0x069c -> line 470
- *   +0x06a0 -> line 469
- *   +0x06a8 -> line 470
- *   +0x06b0 -> line 469
- *   +0x06b8 -> line 471
- *   +0x06c0 -> line 474
- *   +0x06c4 -> line 473
- *   +0x06cc -> line 474
- *   +0x06d4 -> line 473
- *   +0x06dc -> line 475
- *   +0x06e4 -> line 478
- *   +0x06e8 -> line 477
- *   +0x06f0 -> line 478
- *   +0x06f8 -> line 477
- *   +0x0700 -> line 479
- *   +0x0708 -> line 482
- *   +0x070c -> line 481
- *   +0x0714 -> line 482
- *   +0x071c -> line 481
- *   +0x0724 -> line 483
- *   +0x072c -> line 486
- *   +0x0730 -> line 485
- *   +0x0738 -> line 486
- *   +0x0740 -> line 485
- *   +0x0748 -> line 487
- *   +0x0750 -> line 491
- *   +0x0760 -> line 492
- *   +0x0768 -> line 496
- *   +0x0778 -> line 497
- *   +0x0780 -> line 501
- *   +0x0790 -> line 502
- *   +0x0798 -> line 508
- *   +0x07a8 -> line 509
- *   +0x07b0 -> line 513
- *   +0x07c0 -> line 514
- *   +0x07c8 -> line 518
- *   +0x07d8 -> line 519
- *   +0x07e0 -> line 523
- *   +0x07f0 -> line 524
- *   +0x07f8 -> line 528
- *   +0x0808 -> line 529
- *   +0x0810 -> line 533
- *   +0x0820 -> line 534
- *   +0x0828 -> line 538
- *   +0x0838 -> line 539
- *   +0x0840 -> line 543
- *   +0x0850 -> line 544
- *   +0x0858 -> line 548
- *   +0x0868 -> line 549
- *   +0x0870 -> line 556
- *   +0x0884 -> line 557
- *   +0x088c -> line 561
- *   +0x08a0 -> line 562
- *   +0x08a8 -> line 566
- *   +0x08bc -> line 567
- *   +0x08c4 -> line 571
- *   +0x08d8 -> line 572
- *   +0x08e0 -> line 576
- *   +0x08f4 -> line 577
- *   +0x08fc -> line 581
- *   +0x0910 -> line 582
- *   +0x0918 -> line 586
- *   +0x092c -> line 587
- *   +0x0934 -> line 591
- *   +0x0948 -> line 592
- *   +0x0950 -> line 596
- *   +0x0964 -> line 597
- *   +0x096c -> line 602
- *   +0x097c -> line 603
- *   +0x0984 -> line 607
- *   +0x0994 -> line 608
- *   +0x099c -> line 612
- *   +0x09ac -> line 613
- *   +0x09b4 -> line 616
- *   +0x09bc -> line 617
- *   +0x09d4 -> line 616
- *   +0x09d8 -> line 617
- *   +0x09e8 -> line 618
- *   +0x09ec -> line 617
- *   +0x09f0 -> line 618
- *   +0x09f4 -> line 617
- *   +0x09f8 -> line 618
- *   +0x0a08 -> line 619
- *   +0x0a0c -> line 618
- *   +0x0a10 -> line 619
- *   +0x0a14 -> line 618
- *   +0x0a18 -> line 616
- *   +0x0a1c -> line 619
- *   +0x0a20 -> line 616
- *   +0x0a24 -> line 619
- *   +0x0a28 -> line 617
- *   +0x0a2c -> line 620
- *   +0x0a34 -> line 617
- *   +0x0a44 -> line 618
- *   +0x0a4c -> line 619
- *   +0x0a54 -> line 618
- *   +0x0a6c -> line 619
- *   +0x0a80 -> line 620
- *   +0x0a88 -> line 621
- *   +0x0ad0 -> line 623
- *   +0x0b0c -> line 625
- *   +0x0b14 -> line 628
- *   +0x0b24 -> line 629
- *   +0x0b2c -> line 635
- *   +0x0b34 -> line 640
- *   +0x0b40 -> line 635
- *   +0x0b4c -> line 640
- *   +0x0b50 -> line 635
- *   +0x0b54 -> line 640
- *   +0x0b64 -> line 635
- *   +0x0b68 -> line 640
- *   +0x0b6c -> line 635
- *   +0x0b70 -> line 640
- *   +0x0b9c -> line 641
- *   +0x0ba4 -> line 647
- *   +0x0ba8 -> line 644
- *   +0x0bb0 -> line 646
- *   +0x0bd0 -> line 647
- *   +0x0bd8 -> line 644
- *   +0x0be4 -> line 646
- *   +0x0c14 -> line 648
- *   +0x0c1c -> line 651
- *   +0x0c2c -> line 652
- *   +0x0c34 -> line 656
- *   +0x0c44 -> line 657
- *   +0x0c4c -> line 661
- *   +0x0c5c -> line 662
- *   +0x0c64 -> line 666
- *   +0x0c74 -> line 667
- *   +0x0c7c -> line 671
- *   +0x0c8c -> line 672
- *   +0x0c94 -> line 674
- *   +0x0ca4 -> line 675
- *   +0x0cac -> line 677
- *   +0x0cc0 -> line 678
- *   +0x0cc8 -> line 680
- *   +0x0cdc -> line 681
- *   +0x0ce4 -> line 683
- *   +0x0cf8 -> line 684
- *   +0x0d00 -> line 689
- *   +0x0d10 -> line 690
- *   +0x0d18 -> line 692
- *   +0x0d28 -> line 693
- *   +0x0d30 -> line 695
- *   +0x0d40 -> line 696
- *   +0x0d48 -> line 698
- *   +0x0d58 -> line 699
- *   +0x0d60 -> line 701
- *   +0x0d70 -> line 702
- *   +0x0d78 -> line 704
- *   +0x0d8c -> line 707
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 18–366 */
 /* addr: 0x00150370  size: 3056 bytes */
@@ -2181,11 +1660,415 @@ void impPS2glEnable(unsigned int cap)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 373–707 */
+/* addr: 0x0014f5d0  size: 3476 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 373
+ *   +0x02fc -> line 379
+ *   +0x030c -> line 380
+ *   +0x0314 -> line 384
+ *   +0x0320 -> line 389
+ *   +0x032c -> line 384
+ *   +0x0338 -> line 389
+ *   +0x033c -> line 384
+ *   +0x0340 -> line 389
+ *   +0x0350 -> line 384
+ *   +0x0354 -> line 389
+ *   +0x0358 -> line 384
+ *   +0x035c -> line 389
+ *   +0x0388 -> line 390
+ *   +0x0390 -> line 393
+ *   +0x0398 -> line 394
+ *   +0x03ac -> line 393
+ *   +0x03b0 -> line 394
+ *   +0x03c4 -> line 393
+ *   +0x03c8 -> line 394
+ *   +0x03cc -> line 393
+ *   +0x03d0 -> line 394
+ *   +0x03e0 -> line 395
+ *   +0x03e8 -> line 400
+ *   +0x03fc -> line 401
+ *   +0x0404 -> line 407
+ *   +0x0408 -> line 406
+ *   +0x0410 -> line 407
+ *   +0x0424 -> line 406
+ *   +0x0428 -> line 407
+ *   +0x043c -> line 406
+ *   +0x0440 -> line 407
+ *   +0x0444 -> line 406
+ *   +0x0448 -> line 407
+ *   +0x0458 -> line 408
+ *   +0x0460 -> line 413
+ *   +0x0468 -> line 415
+ *   +0x0470 -> line 413
+ *   +0x0474 -> line 415
+ *   +0x0478 -> line 413
+ *   +0x0480 -> line 415
+ *   +0x0488 -> line 416
+ *   +0x0490 -> line 420
+ *   +0x0494 -> line 421
+ *   +0x0498 -> line 420
+ *   +0x04a0 -> line 421
+ *   +0x04ac -> line 422
+ *   +0x04b4 -> line 426
+ *   +0x04bc -> line 427
+ *   +0x04cc -> line 428
+ *   +0x04d4 -> line 427
+ *   +0x04d8 -> line 426
+ *   +0x04dc -> line 427
+ *   +0x04f0 -> line 426
+ *   +0x04f4 -> line 427
+ *   +0x04f8 -> line 426
+ *   +0x04fc -> line 427
+ *   +0x0510 -> line 428
+ *   +0x053c -> line 429
+ *   +0x0544 -> line 432
+ *   +0x054c -> line 435
+ *   +0x0554 -> line 436
+ *   +0x0568 -> line 435
+ *   +0x056c -> line 436
+ *   +0x0580 -> line 435
+ *   +0x0584 -> line 436
+ *   +0x0588 -> line 435
+ *   +0x058c -> line 436
+ *   +0x059c -> line 437
+ *   +0x05a4 -> line 441
+ *   +0x05a8 -> line 440
+ *   +0x05b0 -> line 441
+ *   +0x05c4 -> line 440
+ *   +0x05c8 -> line 441
+ *   +0x05dc -> line 442
+ *   +0x05e0 -> line 441
+ *   +0x05e4 -> line 442
+ *   +0x05e8 -> line 441
+ *   +0x05ec -> line 440
+ *   +0x05f4 -> line 441
+ *   +0x0604 -> line 443
+ *   +0x060c -> line 447
+ *   +0x0614 -> line 449
+ *   +0x0618 -> line 447
+ *   +0x061c -> line 449
+ *   +0x0620 -> line 447
+ *   +0x0628 -> line 450
+ *   +0x0630 -> line 458
+ *   +0x0634 -> line 457
+ *   +0x063c -> line 458
+ *   +0x0644 -> line 457
+ *   +0x064c -> line 459
+ *   +0x0654 -> line 462
+ *   +0x0658 -> line 461
+ *   +0x0660 -> line 462
+ *   +0x0668 -> line 461
+ *   +0x0670 -> line 463
+ *   +0x0678 -> line 466
+ *   +0x067c -> line 465
+ *   +0x0684 -> line 466
+ *   +0x068c -> line 465
+ *   +0x0694 -> line 467
+ *   +0x069c -> line 470
+ *   +0x06a0 -> line 469
+ *   +0x06a8 -> line 470
+ *   +0x06b0 -> line 469
+ *   +0x06b8 -> line 471
+ *   +0x06c0 -> line 474
+ *   +0x06c4 -> line 473
+ *   +0x06cc -> line 474
+ *   +0x06d4 -> line 473
+ *   +0x06dc -> line 475
+ *   +0x06e4 -> line 478
+ *   +0x06e8 -> line 477
+ *   +0x06f0 -> line 478
+ *   +0x06f8 -> line 477
+ *   +0x0700 -> line 479
+ *   +0x0708 -> line 482
+ *   +0x070c -> line 481
+ *   +0x0714 -> line 482
+ *   +0x071c -> line 481
+ *   +0x0724 -> line 483
+ *   +0x072c -> line 486
+ *   +0x0730 -> line 485
+ *   +0x0738 -> line 486
+ *   +0x0740 -> line 485
+ *   +0x0748 -> line 487
+ *   +0x0750 -> line 491
+ *   +0x0760 -> line 492
+ *   +0x0768 -> line 496
+ *   +0x0778 -> line 497
+ *   +0x0780 -> line 501
+ *   +0x0790 -> line 502
+ *   +0x0798 -> line 508
+ *   +0x07a8 -> line 509
+ *   +0x07b0 -> line 513
+ *   +0x07c0 -> line 514
+ *   +0x07c8 -> line 518
+ *   +0x07d8 -> line 519
+ *   +0x07e0 -> line 523
+ *   +0x07f0 -> line 524
+ *   +0x07f8 -> line 528
+ *   +0x0808 -> line 529
+ *   +0x0810 -> line 533
+ *   +0x0820 -> line 534
+ *   +0x0828 -> line 538
+ *   +0x0838 -> line 539
+ *   +0x0840 -> line 543
+ *   +0x0850 -> line 544
+ *   +0x0858 -> line 548
+ *   +0x0868 -> line 549
+ *   +0x0870 -> line 556
+ *   +0x0884 -> line 557
+ *   +0x088c -> line 561
+ *   +0x08a0 -> line 562
+ *   +0x08a8 -> line 566
+ *   +0x08bc -> line 567
+ *   +0x08c4 -> line 571
+ *   +0x08d8 -> line 572
+ *   +0x08e0 -> line 576
+ *   +0x08f4 -> line 577
+ *   +0x08fc -> line 581
+ *   +0x0910 -> line 582
+ *   +0x0918 -> line 586
+ *   +0x092c -> line 587
+ *   +0x0934 -> line 591
+ *   +0x0948 -> line 592
+ *   +0x0950 -> line 596
+ *   +0x0964 -> line 597
+ *   +0x096c -> line 602
+ *   +0x097c -> line 603
+ *   +0x0984 -> line 607
+ *   +0x0994 -> line 608
+ *   +0x099c -> line 612
+ *   +0x09ac -> line 613
+ *   +0x09b4 -> line 616
+ *   +0x09bc -> line 617
+ *   +0x09d4 -> line 616
+ *   +0x09d8 -> line 617
+ *   +0x09e8 -> line 618
+ *   +0x09ec -> line 617
+ *   +0x09f0 -> line 618
+ *   +0x09f4 -> line 617
+ *   +0x09f8 -> line 618
+ *   +0x0a08 -> line 619
+ *   +0x0a0c -> line 618
+ *   +0x0a10 -> line 619
+ *   +0x0a14 -> line 618
+ *   +0x0a18 -> line 616
+ *   +0x0a1c -> line 619
+ *   +0x0a20 -> line 616
+ *   +0x0a24 -> line 619
+ *   +0x0a28 -> line 617
+ *   +0x0a2c -> line 620
+ *   +0x0a34 -> line 617
+ *   +0x0a44 -> line 618
+ *   +0x0a4c -> line 619
+ *   +0x0a54 -> line 618
+ *   +0x0a6c -> line 619
+ *   +0x0a80 -> line 620
+ *   +0x0a88 -> line 621
+ *   +0x0ad0 -> line 623
+ *   +0x0b0c -> line 625
+ *   +0x0b14 -> line 628
+ *   +0x0b24 -> line 629
+ *   +0x0b2c -> line 635
+ *   +0x0b34 -> line 640
+ *   +0x0b40 -> line 635
+ *   +0x0b4c -> line 640
+ *   +0x0b50 -> line 635
+ *   +0x0b54 -> line 640
+ *   +0x0b64 -> line 635
+ *   +0x0b68 -> line 640
+ *   +0x0b6c -> line 635
+ *   +0x0b70 -> line 640
+ *   +0x0b9c -> line 641
+ *   +0x0ba4 -> line 647
+ *   +0x0ba8 -> line 644
+ *   +0x0bb0 -> line 646
+ *   +0x0bd0 -> line 647
+ *   +0x0bd8 -> line 644
+ *   +0x0be4 -> line 646
+ *   +0x0c14 -> line 648
+ *   +0x0c1c -> line 651
+ *   +0x0c2c -> line 652
+ *   +0x0c34 -> line 656
+ *   +0x0c44 -> line 657
+ *   +0x0c4c -> line 661
+ *   +0x0c5c -> line 662
+ *   +0x0c64 -> line 666
+ *   +0x0c74 -> line 667
+ *   +0x0c7c -> line 671
+ *   +0x0c8c -> line 672
+ *   +0x0c94 -> line 674
+ *   +0x0ca4 -> line 675
+ *   +0x0cac -> line 677
+ *   +0x0cc0 -> line 678
+ *   +0x0cc8 -> line 680
+ *   +0x0cdc -> line 681
+ *   +0x0ce4 -> line 683
+ *   +0x0cf8 -> line 684
+ *   +0x0d00 -> line 689
+ *   +0x0d10 -> line 690
+ *   +0x0d18 -> line 692
+ *   +0x0d28 -> line 693
+ *   +0x0d30 -> line 695
+ *   +0x0d40 -> line 696
+ *   +0x0d48 -> line 698
+ *   +0x0d58 -> line 699
+ *   +0x0d60 -> line 701
+ *   +0x0d70 -> line 702
+ *   +0x0d78 -> line 704
+ *   +0x0d8c -> line 707
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glDisable(unsigned int cap)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 712–1012 */
+/* addr: 0x0014eb90  size: 2612 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 712
+ *   +0x0338 -> line 715
+ *   +0x0348 -> line 716
+ *   +0x0350 -> line 720
+ *   +0x0374 -> line 724
+ *   +0x037c -> line 727
+ *   +0x038c -> line 728
+ *   +0x0394 -> line 731
+ *   +0x03a8 -> line 732
+ *   +0x03b0 -> line 735
+ *   +0x03c0 -> line 736
+ *   +0x03c8 -> line 739
+ *   +0x03d8 -> line 740
+ *   +0x03e0 -> line 743
+ *   +0x03f0 -> line 744
+ *   +0x03f8 -> line 747
+ *   +0x0408 -> line 748
+ *   +0x0410 -> line 751
+ *   +0x0420 -> line 752
+ *   +0x0428 -> line 755
+ *   +0x0438 -> line 756
+ *   +0x0440 -> line 759
+ *   +0x0450 -> line 760
+ *   +0x0458 -> line 763
+ *   +0x0468 -> line 764
+ *   +0x0470 -> line 767
+ *   +0x0480 -> line 768
+ *   +0x0488 -> line 771
+ *   +0x0498 -> line 772
+ *   +0x04a0 -> line 775
+ *   +0x04b0 -> line 776
+ *   +0x04b8 -> line 779
+ *   +0x04c8 -> line 780
+ *   +0x04d0 -> line 783
+ *   +0x04e0 -> line 784
+ *   +0x04e8 -> line 787
+ *   +0x04f8 -> line 788
+ *   +0x0500 -> line 791
+ *   +0x0510 -> line 792
+ *   +0x0518 -> line 795
+ *   +0x0528 -> line 796
+ *   +0x0530 -> line 799
+ *   +0x0540 -> line 800
+ *   +0x0548 -> line 803
+ *   +0x0558 -> line 804
+ *   +0x0560 -> line 807
+ *   +0x0570 -> line 808
+ *   +0x0578 -> line 811
+ *   +0x0588 -> line 812
+ *   +0x0590 -> line 815
+ *   +0x05a0 -> line 816
+ *   +0x05a8 -> line 819
+ *   +0x05b8 -> line 820
+ *   +0x05c0 -> line 823
+ *   +0x05d0 -> line 824
+ *   +0x05d8 -> line 827
+ *   +0x05e8 -> line 828
+ *   +0x05f0 -> line 831
+ *   +0x0600 -> line 832
+ *   +0x0608 -> line 835
+ *   +0x0618 -> line 836
+ *   +0x0620 -> line 839
+ *   +0x0634 -> line 840
+ *   +0x063c -> line 843
+ *   +0x0650 -> line 844
+ *   +0x0658 -> line 847
+ *   +0x066c -> line 848
+ *   +0x0674 -> line 851
+ *   +0x0688 -> line 852
+ *   +0x0690 -> line 855
+ *   +0x06a4 -> line 856
+ *   +0x06ac -> line 859
+ *   +0x06c0 -> line 860
+ *   +0x06c8 -> line 863
+ *   +0x06dc -> line 864
+ *   +0x06e4 -> line 867
+ *   +0x06f8 -> line 868
+ *   +0x0700 -> line 871
+ *   +0x0714 -> line 872
+ *   +0x071c -> line 875
+ *   +0x072c -> line 876
+ *   +0x0734 -> line 879
+ *   +0x0744 -> line 880
+ *   +0x074c -> line 883
+ *   +0x075c -> line 884
+ *   +0x0764 -> line 887
+ *   +0x0774 -> line 888
+ *   +0x077c -> line 891
+ *   +0x078c -> line 892
+ *   +0x0794 -> line 895
+ *   +0x07a4 -> line 896
+ *   +0x07ac -> line 900
+ *   +0x07d0 -> line 904
+ *   +0x07d8 -> line 907
+ *   +0x07e8 -> line 908
+ *   +0x07f0 -> line 911
+ *   +0x0800 -> line 912
+ *   +0x0808 -> line 915
+ *   +0x081c -> line 916
+ *   +0x0824 -> line 919
+ *   +0x0838 -> line 920
+ *   +0x0840 -> line 923
+ *   +0x0854 -> line 924
+ *   +0x085c -> line 927
+ *   +0x0870 -> line 928
+ *   +0x0878 -> line 932
+ *   +0x089c -> line 936
+ *   +0x08a4 -> line 943
+ *   +0x08b4 -> line 944
+ *   +0x08bc -> line 947
+ *   +0x08cc -> line 948
+ *   +0x08d4 -> line 951
+ *   +0x08e4 -> line 952
+ *   +0x08ec -> line 956
+ *   +0x0910 -> line 960
+ *   +0x0918 -> line 967
+ *   +0x0928 -> line 968
+ *   +0x0930 -> line 971
+ *   +0x0940 -> line 972
+ *   +0x0948 -> line 975
+ *   +0x0958 -> line 976
+ *   +0x0960 -> line 979
+ *   +0x0974 -> line 980
+ *   +0x097c -> line 983
+ *   +0x0990 -> line 984
+ *   +0x0998 -> line 987
+ *   +0x09a8 -> line 988
+ *   +0x09b0 -> line 991
+ *   +0x09c0 -> line 992
+ *   +0x09c8 -> line 995
+ *   +0x09d8 -> line 996
+ *   +0x09e0 -> line 999
+ *   +0x09f0 -> line 1000
+ *   +0x09f8 -> line 1003
+ *   +0x0a08 -> line 1004
+ *   +0x0a10 -> line 1007
+ *   +0x0a20 -> line 1008
+ *   +0x0a28 -> line 1011
+ *   +0x0a2c -> line 1012
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char impPS2glIsEnabled(unsigned int cap)
 {
     switch (cap)
@@ -2466,18 +2349,130 @@ unsigned char impPS2glIsEnabled(unsigned int cap)
     return 0;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1017–1019 */
+/* addr: 0x0014eb70  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1017
+ *   +0x0004 -> line 1018
+ *   +0x0008 -> line 1017
+ *   +0x000c -> line 1018
+ *   +0x0010 -> line 1019
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glCullFace(unsigned int mode)
 {
     g_PS2glContext.eCullFaceMode = mode;
     g_PS2glContext.bCullfaceChanged = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1024–1026 */
+/* addr: 0x0014eb50  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1024
+ *   +0x0004 -> line 1025
+ *   +0x0008 -> line 1024
+ *   +0x000c -> line 1025
+ *   +0x0010 -> line 1026
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glFrontFace(unsigned int mode)
 {
     g_PS2glContext.eFrontFaceMode = mode;
     g_PS2glContext.bCullfaceChanged = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_EnableDisable.c lines 1034–1182 */
+/* addr: 0x0014e680  size: 1220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1034
+ *   +0x0004 -> line 1037
+ *   +0x0008 -> line 1034
+ *   +0x0010 -> line 1037
+ *   +0x0164 -> line 1041
+ *   +0x016c -> line 1044
+ *   +0x0174 -> line 1052
+ *   +0x017c -> line 1055
+ *   +0x0190 -> line 1058
+ *   +0x0198 -> line 1059
+ *   +0x01b0 -> line 1061
+ *   +0x01c4 -> line 1062
+ *   +0x01d0 -> line 1063
+ *   +0x01e8 -> line 1065
+ *   +0x01fc -> line 1067
+ *   +0x0200 -> line 1068
+ *   +0x0208 -> line 1071
+ *   +0x0210 -> line 1074
+ *   +0x0218 -> line 1077
+ *   +0x0220 -> line 1080
+ *   +0x0224 -> line 1081
+ *   +0x022c -> line 1085
+ *   +0x0234 -> line 1089
+ *   +0x0238 -> line 1088
+ *   +0x0240 -> line 1089
+ *   +0x0244 -> line 1088
+ *   +0x0250 -> line 1089
+ *   +0x0260 -> line 1090
+ *   +0x0268 -> line 1093
+ *   +0x0270 -> line 1095
+ *   +0x0278 -> line 1096
+ *   +0x0280 -> line 1098
+ *   +0x0288 -> line 1099
+ *   +0x0290 -> line 1101
+ *   +0x0298 -> line 1102
+ *   +0x029c -> line 1104
+ *   +0x02a0 -> line 1103
+ *   +0x02a8 -> line 1104
+ *   +0x02b0 -> line 1107
+ *   +0x02bc -> line 1108
+ *   +0x02d8 -> line 1109
+ *   +0x02f8 -> line 1110
+ *   +0x02fc -> line 1109
+ *   +0x0300 -> line 1110
+ *   +0x0304 -> line 1112
+ *   +0x0308 -> line 1110
+ *   +0x030c -> line 1112
+ *   +0x0310 -> line 1110
+ *   +0x0320 -> line 1111
+ *   +0x032c -> line 1112
+ *   +0x0330 -> line 1111
+ *   +0x033c -> line 1112
+ *   +0x0340 -> line 1114
+ *   +0x0348 -> line 1116
+ *   +0x0354 -> line 1118
+ *   +0x0364 -> line 1119
+ *   +0x036c -> line 1120
+ *   +0x0378 -> line 1121
+ *   +0x0380 -> line 1122
+ *   +0x0388 -> line 1123
+ *   +0x0390 -> line 1125
+ *   +0x0394 -> line 1126
+ *   +0x0398 -> line 1128
+ *   +0x03a0 -> line 1131
+ *   +0x03a8 -> line 1134
+ *   +0x03b0 -> line 1137
+ *   +0x03b8 -> line 1139
+ *   +0x03c0 -> line 1140
+ *   +0x03dc -> line 1142
+ *   +0x03f0 -> line 1143
+ *   +0x03f8 -> line 1146
+ *   +0x0400 -> line 1149
+ *   +0x0408 -> line 1155
+ *   +0x0420 -> line 1156
+ *   +0x0428 -> line 1158
+ *   +0x0434 -> line 1159
+ *   +0x043c -> line 1161
+ *   +0x0448 -> line 1162
+ *   +0x0450 -> line 1164
+ *   +0x0474 -> line 1165
+ *   +0x047c -> line 1167
+ *   +0x04a0 -> line 1168
+ *   +0x04a8 -> line 1173
+ *   +0x04b4 -> line 1182
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glHint(unsigned int target, unsigned int mode)
 {
     switch (target)

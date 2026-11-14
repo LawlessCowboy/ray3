@@ -4630,20 +4630,6 @@ unsigned char g_NbFont;
 RND_tdstRandom_ RND_g_stRandomStructure;
 int g_pcFixTimeStamp;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2787–2792 */
-/* addr: 0x0012c4d0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2787
- *   +0x0010 -> line 2789
- *   +0x0014 -> line 2791
- *   +0x0018 -> line 2789
- *   +0x005c -> line 2790
- *   +0x0094 -> line 2791
- *   +0x00a8 -> line 2792
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void PLD_fn_vReinitPositionOfFixCharacters(void);
@@ -4657,71 +4643,17 @@ void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture);
 void debug_printf(char* format, ...);
 void CheckForTutorial(char* Name);
 void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks);
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks);
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks);
 void PLD_fn_vLoadFix(void);
 char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
 unsigned char PLD_fn_bIsInFix(void* Ptr);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2767–2779 */
-/* addr: 0x0012c580  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2767
- *   +0x0004 -> line 2768
- *   +0x0008 -> line 2767
- *   +0x000c -> line 2768
- *   +0x0014 -> line 2769
- *   +0x001c -> line 2771
- *   +0x0024 -> line 2774
- *   +0x0038 -> line 2776
- *   +0x0044 -> line 2777
- *   +0x004c -> line 2778
- *   +0x0050 -> line 2779
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SND_fn_bUnloadBank(char* pIdStr);
 int SND_fn_bDesInitDataLoadSnd(void);
 void MNC_fn_pcUnLoadArea(unsigned int _u32AreaId);
 char* strcpy(char* s1, const char* s2);
 void free(void* ptr);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2677–2730 */
-/* addr: 0x0012c5e0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2677
- *   +0x0004 -> line 2680
- *   +0x0008 -> line 2677
- *   +0x000c -> line 2680
- *   +0x0010 -> line 2677
- *   +0x0014 -> line 2680
- *   +0x0018 -> line 2677
- *   +0x0024 -> line 2680
- *   +0x0030 -> line 2684
- *   +0x0038 -> line 2690
- *   +0x0048 -> line 2691
- *   +0x0060 -> line 2694
- *   +0x006c -> line 2696
- *   +0x0070 -> line 2697
- *   +0x0074 -> line 2696
- *   +0x0078 -> line 2698
- *   +0x0080 -> line 2701
- *   +0x0084 -> line 2699
- *   +0x0088 -> line 2700
- *   +0x008c -> line 2701
- *   +0x0090 -> line 2704
- *   +0x009c -> line 2706
- *   +0x00ac -> line 2707
- *   +0x00b4 -> line 2708
- *   +0x00bc -> line 2711
- *   +0x00cc -> line 2712
- *   +0x00d4 -> line 2717
- *   +0x00d8 -> line 2718
- *   +0x00e4 -> line 2722
- *   +0x00f0 -> line 2728
- *   +0x00f8 -> line 2730
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_lGetTransitionBloc(void);
 unsigned char fn_bDoTransition(void);
 unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
@@ -4731,49 +4663,914 @@ void HMU_fn_vDeleteTransition2Memories(void);
 void GLI_TEX_vKillMemoryChannel(unsigned char ucChannel);
 void MNC_fn_vUnLoadAreaWithDeallocator(_tdeAreaName eArea, void (*fn_vDeallocator)(void*));
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2615–2668 */
-/* addr: 0x0012c700  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2615
- *   +0x0004 -> line 2624
- *   +0x0008 -> line 2615
- *   +0x000c -> line 2624
- *   +0x0034 -> line 2625
- *   +0x0038 -> line 2640
- *   +0x0048 -> line 2646
- *   +0x0050 -> line 2651
- *   +0x0058 -> line 2660
- *   +0x006c -> line 2665
- *   +0x0070 -> line 2662
- *   +0x0074 -> line 2664
- *   +0x0078 -> line 2662
- *   +0x0080 -> line 2663
- *   +0x008c -> line 2664
- *   +0x0098 -> line 2665
- *   +0x00ac -> line 2668
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void HMU_fn_vDeleteLevelMemories(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2582–2611 */
-/* addr: 0x0012c7c0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2582
- *   +0x0010 -> line 2588
- *   +0x0090 -> line 2592
- *   +0x00a0 -> line 2596
- *   +0x00d4 -> line 2599
- *   +0x00e8 -> line 2610
- *   +0x00f8 -> line 2611
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks);
 unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask);
 unsigned char fn_ucFindPersonalIdOfPersonalType(int otType);
 unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId);
 int sprintf(char* s, const char* format, ...);
+
+typedef void* (*MNC_tfnAllocator_)(unsigned int);
+void GLI_vSetProgressCallBack(unsigned int SizeToRead);
+void GLI_PrintDebugString(char* szString);
+void CTL_SetCurrentMap(char* Map);
+void GLI_HysteresisLevelStart(char* levelname);
+void GLI_vResetTempList(void);
+void VID_fn_vPlayVideoIfAskedAfterLevel(void);
+void GAM_fn_vSaveGameAfterVideoIfNeeded(void);
+unsigned char fn_bLevelHadTransitionMemory(void);
+void GLI_vLoadCarton(char* levelname);
+void CheckPS2GLMem(void);
+void SetAllocMode(int Mode);
+void CheckAllocMode(int Mode);
+unsigned char fn_bDoTransition(void);
+void LS_Create(void);
+char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName);
+int fn_lGetTransitionBloc(void);
+MNC_tfnAllocator_ fn_pfnCurrentTransitionAllocator(void);
+char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);
+char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId);
+void PS2_fn_vEnterGLCriticalSection(void);
+void PS2_fn_vLeaveGLCriticalSection(void);
+void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize);
+void HMU_fn_vSetMemoriesInLevelMode(void);
+unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
+void GLI_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel);
+void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize);
+void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize);
+void HMU_fn_vInitTempTransition2Memory(unsigned int _ulTempMemSize);
+unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
+unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void);
+void fn_vTVS(void);
+HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj);
+void fn_v3dDataInitValueSAI(tdst3dData_* h_3dData);
+int SND_fn_bInitDataLoadSnd(char* szName);
+void SND_fn_vStartLoad(void);
+char* fn_p_szGetLevelName(void);
+char* Strcat(char* s1, char* s2);
+char* Strrchr(char* string, int ch);
+int SND_fn_bLoadBank(char* pch_NameWithoutExt);
+void SND_fn_vFinishLoad(char* pIdStr);
+unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask);
+unsigned char fn_ucFindFamilyIdOfFamilyType(int otType);
+unsigned char GAM_fn_bIsFamilyToLoad(unsigned char ucFamilyId);
+unsigned char fn_ucFindPersonalIdOfPersonalType(int otType);
+unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId);
+_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId);
+void* memcpy(void* dst, const void* src, size_t n);
+int printf(const char* format, ...);
+int sprintf(char* s, const char* format, ...);
+void CheckForTutorial(char* Name);
+char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks);
+void fn_v_Transition_CorrectTextureChannelTable(void);
+
+/* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
+ * instruction, filling jal delay slots as in retail. */
+inline void PLD_vClearCop0Register24Sched(void)
+{
+    asm { mtbpc zero }
+}
+/* The write placed right before a call has no hazard nop in the target, which
+ * only the noreorder spelling reproduces. */
+inline void PLD_vClearCop0Register24Open(void)
+{
+    asm {
+    .set noreorder
+    mtc0 zero, $24
+    }
+}
+
+#define M_READ(type) (*((type*)pcCMBAddress)++)
+#define M_READ_AT(type, lv) { char* pcNew; char* pcSrc; type* pDst; type xV; pcSrc = pcCMBAddress; pcNew = pcSrc + sizeof(type); pDst = (type*)&(lv); pcCMBAddress = pcNew; xV = *(type*)pcSrc; *pDst = xV; }
+#define M_READ_STRUCT(dst, id) { volatile stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) memcpy((dst), pcCMBAddress, p_stDef->u32ActualSize); { unsigned int uS = p_stDef->u32ActualSize; pcCMBAddress += uS; } }
+
+inline tdstEngineObject_* PLD_fn_pstGetPerso(HIE_tdstSuperObject_* h)
+{ tdstEngineObject_* p; if (h->ulTypeOfLinkedObject != 2) p = NULL; else p = h->hLinkedObject.p_stCharacter; return p; }
+
+inline void PLD_vClearCop0Register24Plain(void)
+{
+    asm { mtc0 zero, $24 }
+}
+
+#pragma opt_propagation off
+#pragma opt_dead_assignments off
+
+#pragma opt_dead_assignments reset
+#pragma opt_propagation reset
+
+void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture);
+
+void debug_printf(char* format, ...);
+
+int toupper(char c);
+char* strstr(const char* s1, const char* s2);
+
+#pragma optimize_for_size off
+
+#pragma optimize_for_size reset
+
+#define M_READ_STRUCTSP(dst, n) { if (dst) { unsigned int uN = p_stDef->u32ActualSize; memcpy((dst), pcCMBAddress, uN * (n)); } { unsigned int uS = p_stDef->u32ActualSize * (n); pcCMBAddress += uS; } }
+#define M_READ_STRUCTS(dst, id, n) { volatile stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) { unsigned int uN = p_stDef->u32ActualSize; memcpy((dst), pcCMBAddress, uN * (n)); } { unsigned int uS = p_stDef->u32ActualSize * (n); pcCMBAddress += uS; } }
+
+#pragma opt_strength_reduction off
+#pragma opt_lifetimes off
+
+#pragma opt_strength_reduction reset
+#pragma opt_lifetimes reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 321–328 */
+/* addr: 0x0012f060  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 321
+ *   +0x0008 -> line 322
+ *   +0x0018 -> line 324
+ *   +0x0030 -> line 325
+ *   +0x0038 -> line 326
+ *   +0x0048 -> line 327
+ *   +0x004c -> line 328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+unsigned char PLD_fn_bIsInFix(void* Ptr)
+{
+    unsigned int ulI;
+    unsigned int ulNbObject;
+    unsigned int ulOffset;
+    /* Permuter result: the redundant double assignment fixes register order (clean up later). */
+    ulNbObject = (ulNbObject = g_stFixInfo.ulNbObject);
+    for (ulI = 0; ulI < ulNbObject; ulI++)
+    {
+        if (g_stFixInfo.a20_stObjects[ulI] == Ptr)
+            return 1;
+    }
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 564–601 */
+/* addr: 0x0012efb0  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 564
+ *   +0x0014 -> line 568
+ *   +0x001c -> line 570
+ *   +0x0024 -> line 573
+ *   +0x0034 -> line 577
+ *   +0x0040 -> line 578
+ *   +0x0060 -> line 593
+ *   +0x006c -> line 594
+ *   +0x008c -> line 600
+ *   +0x0094 -> line 601
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName)
+{
+    char* szFilename;
+    unsigned int u32AreaId;
+
+    szFilename = PLD_szLocationFromAreaId(_eAreaId, _szAreaName);
+    if (_eAreaId == 0)
+    {
+        strcpy(szLastFixLoaded, szFilename);
+    }
+    u32AreaId = _eAreaId;
+    if (_eAreaId == 2)
+    {
+        u32AreaId = (fn_lGetTransitionBloc() == 2) ? 2 : 3;
+    }
+    if (_eAreaId == 2)
+    {
+        return MNC_fn_pcLoadAreaWithAllocator(szFilename, u32AreaId, fn_pfnCurrentTransitionAllocator());
+    }
+    return MNC_fn_pcLoadArea(szFilename, u32AreaId);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 651–1123 */
+/* addr: 0x0012e630  size: 2428 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 651
+ *   +0x0018 -> line 670
+ *   +0x001c -> line 691
+ *   +0x0024 -> line 699
+ *   +0x0028 -> line 696
+ *   +0x0030 -> line 699
+ *   +0x003c -> line 702
+ *   +0x0048 -> line 716
+ *   +0x0054 -> line 719
+ *   +0x0084 -> line 726
+ *   +0x0088 -> line 719
+ *   +0x008c -> line 726
+ *   +0x0098 -> line 729
+ *   +0x00a4 -> line 732
+ *   +0x00b4 -> line 740
+ *   +0x00b8 -> line 752
+ *   +0x00bc -> line 740
+ *   +0x00c8 -> line 745
+ *   +0x00d8 -> line 750
+ *   +0x00e4 -> line 752
+ *   +0x0128 -> line 757
+ *   +0x012c -> line 758
+ *   +0x0130 -> line 757
+ *   +0x013c -> line 758
+ *   +0x0144 -> line 759
+ *   +0x014c -> line 760
+ *   +0x016c -> line 763
+ *   +0x0170 -> line 776
+ *   +0x0180 -> line 763
+ *   +0x018c -> line 765
+ *   +0x0198 -> line 770
+ *   +0x01a4 -> line 771
+ *   +0x01ac -> line 776
+ *   +0x01c4 -> line 786
+ *   +0x01c8 -> line 776
+ *   +0x01d4 -> line 786
+ *   +0x01e4 -> line 791
+ *   +0x01e8 -> line 786
+ *   +0x01ec -> line 791
+ *   +0x01fc -> line 794
+ *   +0x021c -> line 799
+ *   +0x0224 -> line 800
+ *   +0x0294 -> line 805
+ *   +0x02cc -> line 810
+ *   +0x02d0 -> line 805
+ *   +0x02dc -> line 810
+ *   +0x02e4 -> line 811
+ *   +0x0354 -> line 816
+ *   +0x035c -> line 817
+ *   +0x03cc -> line 822
+ *   +0x03e8 -> line 823
+ *   +0x03f0 -> line 828
+ *   +0x03f4 -> line 823
+ *   +0x0404 -> line 828
+ *   +0x0418 -> line 830
+ *   +0x041c -> line 831
+ *   +0x0428 -> line 837
+ *   +0x0430 -> line 845
+ *   +0x0434 -> line 837
+ *   +0x0440 -> line 843
+ *   +0x0444 -> line 837
+ *   +0x0448 -> line 843
+ *   +0x0454 -> line 845
+ *   +0x045c -> line 846
+ *   +0x0490 -> line 848
+ *   +0x0498 -> line 849
+ *   +0x04d0 -> line 851
+ *   +0x04d4 -> line 856
+ *   +0x04ec -> line 858
+ *   +0x0504 -> line 860
+ *   +0x0508 -> line 858
+ *   +0x050c -> line 860
+ *   +0x0528 -> line 862
+ *   +0x0530 -> line 864
+ *   +0x0538 -> line 869
+ *   +0x053c -> line 864
+ *   +0x0544 -> line 869
+ *   +0x0548 -> line 864
+ *   +0x054c -> line 869
+ *   +0x0550 -> line 864
+ *   +0x0560 -> line 869
+ *   +0x056c -> line 870
+ *   +0x0574 -> line 872
+ *   +0x0590 -> line 874
+ *   +0x05ac -> line 903
+ *   +0x05cc -> line 993
+ *   +0x05d0 -> line 903
+ *   +0x05d4 -> line 993
+ *   +0x05d8 -> line 903
+ *   +0x05dc -> line 993
+ *   +0x0614 -> line 998
+ *   +0x0618 -> line 1000
+ *   +0x0620 -> line 998
+ *   +0x062c -> line 1000
+ *   +0x0634 -> line 1005
+ *   +0x0638 -> line 1007
+ *   +0x063c -> line 1005
+ *   +0x0648 -> line 1007
+ *   +0x0650 -> line 1008
+ *   +0x0684 -> line 1027
+ *   +0x0688 -> line 1039
+ *   +0x0694 -> line 1027
+ *   +0x06a0 -> line 1031
+ *   +0x06a4 -> line 1027
+ *   +0x06a8 -> line 1031
+ *   +0x06b8 -> line 1039
+ *   +0x06e8 -> line 1042
+ *   +0x0704 -> line 1054
+ *   +0x0714 -> line 1055
+ *   +0x0748 -> line 1060
+ *   +0x0768 -> line 1065
+ *   +0x076c -> line 1060
+ *   +0x0770 -> line 1065
+ *   +0x0778 -> line 1060
+ *   +0x077c -> line 1065
+ *   +0x0798 -> line 1072
+ *   +0x079c -> line 1065
+ *   +0x07a0 -> line 1072
+ *   +0x07ac -> line 1065
+ *   +0x07b0 -> line 1072
+ *   +0x07b8 -> line 1074
+ *   +0x07dc -> line 1076
+ *   +0x07e0 -> line 1074
+ *   +0x07e4 -> line 1076
+ *   +0x07e8 -> line 1074
+ *   +0x07ec -> line 1076
+ *   +0x0830 -> line 1084
+ *   +0x083c -> line 1085
+ *   +0x0844 -> line 1090
+ *   +0x0854 -> line 1092
+ *   +0x085c -> line 1093
+ *   +0x087c -> line 1100
+ *   +0x08b0 -> line 1112
+ *   +0x08b4 -> line 1100
+ *   +0x08b8 -> line 1112
+ *   +0x08c0 -> line 1100
+ *   +0x08d8 -> line 1106
+ *   +0x08e8 -> line 1112
+ *   +0x08f0 -> line 1114
+ *   +0x08fc -> line 1120
+ *   +0x0958 -> line 1122
+ *   +0x0960 -> line 1123
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma opt_strength_reduction off
+#pragma opt_lifetimes off
+void PLD_fn_vLoadFix(void)
+{
+    unsigned int i;
+    char* pcStartCMBAddress;
+    char* volatile pcCMBAddress;
+    char* pcAnimCMBAddress;
+    unsigned int* volatile pu32SoundEventIdArray;
+    char* szFilename;
+    unsigned int u32NbProc;
+    unsigned int u32NbFunc;
+    unsigned int u32NbCond;
+    unsigned int u32DataClass;
+    unsigned int u32NbSoundEvent;
+    unsigned int* pulEvent;
+    unsigned int uwLanguage;
+    char szLanguage[32];
+    char* pcLanguage;
+    char* pcCur;
+    unsigned int ucNbFont;
+    char* pcDst;
+    unsigned int iIndex;
+    int iTemp;
+
+    PLD_vClearCop0Register24Sched();
+    ChosenLanguage = 1;
+    g_stEngineStructure.ucCurrentLanguage = *(unsigned char*)&ChosenLanguage;
+    printf("Loading fix\n");
+    GLI_PrintDebugString("Loading FIX");
+    GLI_vSetProgressCallBack(24000000);
+
+    szFilename = PLD_szLocationFromAreaId(0, 0);
+    strcpy(szLastFixLoaded, szFilename);
+    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(szFilename, 0);
+    printf("fix@%08x\n", pcStartCMBAddress);
+
+    g_ulFixChecksum = MNC_fn_ulGetAreaChecksum();
+    printf("fix checksum: 0x%08x\n", g_ulFixChecksum);
+
+    u32NbProc = M_READ(unsigned int);
+    u32NbFunc = M_READ(unsigned int);
+    u32NbCond = M_READ(unsigned int);
+    if (u32NbProc != 876) printf("\nCurrent NbProc = %d instead of %d\n", 876, u32NbProc);
+    if (u32NbFunc != 446) printf("\nCurrent NbFunc = %d instead of %d\n", 446, u32NbFunc);
+    if (u32NbCond != 178) printf("\nCurrent Nbcond = %d instead of %d\n", 178, u32NbCond);
+
+    u32DataClass = M_READ(unsigned int);
+    if (u32DataClass != g_ulEngineClass)
+    {
+        printf("fix data class (0x%08x) not equal to engine class (0x%08x)\n", u32DataClass, g_ulEngineClass);
+        while (1)
+            ;
+    }
+
+    pcCMBAddress = (char*)(g_pcFixTimeStamp = (int)pcCMBAddress) + 40;
+    pcCMBAddress += 4;
+    pcCMBAddress += 4;
+    pcCMBAddress += 4;
+
+    M_READ_STRUCT(&FON_g_stGeneral, 171);
+
+    g_stEngineStructure.ucNumberOfLevels = M_READ(unsigned char);
+    g_stEngineStructure.ucNumberOfDemos = M_READ(unsigned char);
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
+
+    for (i = 0; i < g_stEngineStructure.ucNumberOfLevels; i++)
+        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 30; pcDst = (char*)&g_stEngineStructure + iIndex + 0x707; M_READ_STRUCTSP(pcDst, 30); }
+    M_READ_STRUCTS(g_stEngineStructure.szFirstLevelName, 114, 30);
+    for (i = 0; i < g_stEngineStructure.ucNumberOfDemos; i++)
+        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 12; pcDst = (char*)&g_stEngineStructure + iIndex + 0x189b; M_READ_STRUCTSP(pcDst, 12); }
+    for (i = 0; i < g_stEngineStructure.ucNumberOfDemos; i++)
+        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 12; pcDst = (char*)&g_stEngineStructure + iIndex + 0x1a03; M_READ_STRUCTSP(pcDst, 12); }
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
+
+    g_stEngineStructure.ucNbLanguages = M_READ(unsigned int);
+    if (ChosenLanguage >= g_stEngineStructure.ucNbLanguages)
+    {
+        ChosenLanguage = 0;
+        g_stEngineStructure.ucCurrentLanguage = *(unsigned char*)&ChosenLanguage;
+    }
+    g_stEngineStructure.p_stLanguageTable = M_READ(tdstLanguageStructure_*);
+
+    gs_lNumberOfTextureToCreate = M_READ(int);
+    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
+        ((int*)gs_aDEFTableOfTextureAlreadyRead)[i] = M_READ(int);
+    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
+        ((int*)gs_aDEFTableOfTextureMemoryChannels)[i] = M_READ(int);
+    g_lNumberOfTexturesInFix = gs_lNumberOfTextureToCreate;
+
+    g_stFixInfo.ulNbObject = M_READ(unsigned int);
+    g_a_LinksOfSuperObjectInFix = (int)malloc(g_stFixInfo.ulNbObject * 0x18);
+    memset((void*)g_a_LinksOfSuperObjectInFix, 0, g_stFixInfo.ulNbObject * 0x18);
+    for (i = 0; i < g_stFixInfo.ulNbObject; i++)
+    {
+        tdstBrain_* h_Brain;
+        { void** ppv = &g_stFixInfo.a20_stObjects[i]; *ppv = M_READ(void*); }
+        h_Brain = ((HIE_tdstSuperObject_*)((void**)((char*)&g_stFixInfo + 4))[i])->hLinkedObject.p_stCharacter->h_Brain;
+        if (h_Brain)
+            memcpy((char*)g_a_LinksOfSuperObjectInFix + i * 0x18, (char*)h_Brain + 8, 0x18);
+    }
+
+    M_READ_STRUCT(&RND_g_stRandomStructure, 183);
+    GLI_PrintDebugString("INIT DATA SND");
+    PLD_vClearCop0Register24Open();
+    SND_fn_bInitDataLoadSnd("Rayman3");
+    SND_fn_vStartLoad();
+    SND_fn_bLoadBank("fixe");
+    SND_fn_vFinishLoad("fixe");
+
+    u32NbSoundEvent = M_READ(unsigned int);
+    printf("Nb Sound Events in fix = %d\n", u32NbSoundEvent);
+    pu32SoundEventIdArray = M_READ(unsigned int*);
+    i = 0;
+    goto L_SndTest;
+L_SndBody:
+    {
+        pulEvent = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[iIndex = i]);
+        *pulEvent = (unsigned int)SND_fn_pstGetBlockEventFromId(*pulEvent);
+        i++;
+    }
+L_SndTest:
+    if (i < u32NbSoundEvent)
+        goto L_SndBody;
+
+    g_ucNbFontBitmap = M_READ(unsigned char);
+    g_NbFont = M_READ(unsigned char);
+    ucNbFont = g_NbFont;
+    M_READ_STRUCTS(&g_ListOfFonts, 213, ucNbFont);
+    pcCur = pcCMBAddress;
+    iTemp = (int)pcCur & 3;
+    if (iTemp)
+        pcCMBAddress = pcCur + (4 - iTemp);
+    for (i = 0; i < g_ucNbFontBitmap; i++)
+        ((int*)&g_TabBitmapFont)[i] = M_READ(int);
+
+    M_READ_STRUCT(&IPT_g_hInputStructure, 113);
+    M_READ_STRUCT(&g_st_3DOS_EntryActions, 111);
+
+    memcpy(&PLD_Saved_stNextVideoToPlay, &VID_g_stGeneralVideos.stNextVideoToPlay, 4);
+    M_READ_STRUCT(&VID_g_stGeneralVideos, 214);
+    if (PLD_Saved_stNextVideoToPlay.bPlayAfterLevel == 1 && PLD_Saved_stNextVideoToPlay.ucVideoNumber < VID_g_stGeneralVideos.ulTrueNumberOfVideos)
+    {
+        VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber = PLD_Saved_stNextVideoToPlay.ucVideoNumber;
+        VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = PLD_Saved_stNextVideoToPlay.bPlayAfterLevel;
+        VID_g_stGeneralVideos.stNextVideoToPlay.bCanBeInterrupt = PLD_Saved_stNextVideoToPlay.bCanBeInterrupt;
+        VID_g_stGeneralVideos.stNextVideoToPlay.bLoop = PLD_Saved_stNextVideoToPlay.bLoop;
+    }
+
+    SND_fn_iSetNbMusicMarkerSlots(M_READ(int));
+    if (SND_fn_iGetNbMusicMarkerSlots())
+    {
+        SND_fn_p_stSetMusicMarkerSlots(pcCMBAddress);
+        pcCMBAddress += SND_fn_iGetNbMusicMarkerSlots() * 40;
+    }
+
+    M_READ_STRUCTS(&g_aBinDataForMenu, 223, 105);
+
+    pcAnimCMBAddress = M_READ(char*);
+    PLD_fn_vReadAnimationsBanks(&pcAnimCMBAddress, 0, 1);
+    GLI_PrintDebugString("FIX LOADED");
+
+    uwLanguage = (unsigned short)ChosenLanguage;
+    sprintf(szLanguage, "lang%d", uwLanguage);
+    pcLanguage = PLD_fn_pcLoadArea((_tdeAreaName)((unsigned short)uwLanguage + 207), szLanguage);
+    pcLanguage = (char*)(g_pcLanguageTimeStamp = (int)pcLanguage) + 40;
+    { stStructDef_* p_stDef; char* pcDest; p_stDef = &g_stStructArray[172]; pcDest = (char*)&FON_g_stGeneral.d_sLanguageArray[(unsigned short)uwLanguage]; if (pcDest) memcpy(pcDest, pcLanguage, p_stDef->u32ActualSize); }
+
+    HMU_fn_vSetMemoriesInFixMode();
+}
+#pragma opt_lifetimes reset
+#pragma opt_strength_reduction reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1152–1192 */
+/* addr: 0x0012e290  size: 928 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1152
+ *   +0x0004 -> line 1165
+ *   +0x0008 -> line 1152
+ *   +0x000c -> line 1165
+ *   +0x0010 -> line 1152
+ *   +0x0028 -> line 1165
+ *   +0x002c -> line 1152
+ *   +0x0040 -> line 1165
+ *   +0x0044 -> line 1158
+ *   +0x0048 -> line 1165
+ *   +0x008c -> line 1167
+ *   +0x0090 -> line 1165
+ *   +0x009c -> line 1169
+ *   +0x00a4 -> line 1165
+ *   +0x00ac -> line 1169
+ *   +0x00b8 -> line 1170
+ *   +0x00bc -> line 1171
+ *   +0x00c0 -> line 1172
+ *   +0x00c4 -> line 1173
+ *   +0x00c8 -> line 1174
+ *   +0x00cc -> line 1175
+ *   +0x00d0 -> line 1176
+ *   +0x00d4 -> line 1177
+ *   +0x00d8 -> line 1178
+ *   +0x00dc -> line 1179
+ *   +0x00e0 -> line 1180
+ *   +0x00e4 -> line 1181
+ *   +0x00e8 -> line 1182
+ *   +0x00ec -> line 1170
+ *   +0x00f4 -> line 1171
+ *   +0x00f8 -> line 1172
+ *   +0x00fc -> line 1173
+ *   +0x0100 -> line 1174
+ *   +0x0104 -> line 1175
+ *   +0x0108 -> line 1176
+ *   +0x010c -> line 1177
+ *   +0x0110 -> line 1178
+ *   +0x0114 -> line 1179
+ *   +0x0118 -> line 1180
+ *   +0x011c -> line 1181
+ *   +0x0120 -> line 1182
+ *   +0x0124 -> line 1170
+ *   +0x0150 -> line 1171
+ *   +0x0178 -> line 1172
+ *   +0x01a0 -> line 1173
+ *   +0x01c8 -> line 1174
+ *   +0x01f0 -> line 1175
+ *   +0x0218 -> line 1176
+ *   +0x0240 -> line 1177
+ *   +0x0268 -> line 1178
+ *   +0x0290 -> line 1179
+ *   +0x02b8 -> line 1180
+ *   +0x02e0 -> line 1181
+ *   +0x0308 -> line 1182
+ *   +0x0330 -> line 1183
+ *   +0x0338 -> line 1182
+ *   +0x033c -> line 1183
+ *   +0x0348 -> line 1188
+ *   +0x0370 -> line 1192
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* The retail debug types iStartBank as unsigned short, but the code never
+ * masks it to 16 bits (MWCC would emit andi on every use), so the build used int. */
+void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, int iStartBank, int iNumberOfBanks)
+{
+    char* pcCMBStartAddress;
+    int i;
+    int iEndBank;
+
+    pcCMBStartAddress = *_ppcCMBAddress;
+    { volatile stStructDef_* p_stDef = &g_stStructArray[159]; if (&g_tdstStackInfos[iStartBank]) { unsigned int uN = p_stDef->u32ActualSize; memcpy(&g_tdstStackInfos[iStartBank], *_ppcCMBAddress, uN * (13 * iNumberOfBanks)); } { unsigned int uS = p_stDef->u32ActualSize * (13 * iNumberOfBanks); *_ppcCMBAddress += uS; } }
+
+    iEndBank = iStartBank + iNumberOfBanks;
+
+    for (i = iStartBank; i < iEndBank; i++) {
+        if (g_tdstStackInfos[i][0].ulMaxPos) g_ax_pA3dGENERAL[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][1].ulMaxPos) g_ax_pVectors[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][2].ulMaxPos) g_ax_pQuaternions[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][3].ulMaxPos) g_ax_pHierarchies[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][4].ulMaxPos) g_ax_pNTTO[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][5].ulMaxPos) g_ax_pOnlyFrames[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][6].ulMaxPos) g_ax_pChannels[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][7].ulMaxPos) g_ax_pFramesNumOfNTTO[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][8].ulMaxPos) g_ax_pFramesKFIndex[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][9].ulMaxPos) g_ax_pKeyFrames[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][10].ulMaxPos) g_ax_pEvents[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][11].ulMaxPos) g_ax_pMorphData[i] = *((int*)*_ppcCMBAddress)++;
+        if (g_tdstStackInfos[i][12].ulMaxPos) g_ax_pDeformations[i] = *((int*)*_ppcCMBAddress)++;
+    }
+
+    printf("PLD_fn_vReadAnimationsBanks(iStartBank=%d,iNumberOfBanks=%d): block is %d bytes\n", iStartBank, iNumberOfBanks, (long)(*_ppcCMBAddress - pcCMBStartAddress));
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1200–1220 */
+/* addr: 0x0012e0e0  size: 420 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1200
+ *   +0x0020 -> line 1203
+ *   +0x0024 -> line 1200
+ *   +0x0028 -> line 1205
+ *   +0x0044 -> line 1217
+ *   +0x0048 -> line 1206
+ *   +0x004c -> line 1217
+ *   +0x0050 -> line 1206
+ *   +0x0054 -> line 1217
+ *   +0x0058 -> line 1207
+ *   +0x005c -> line 1218
+ *   +0x0060 -> line 1208
+ *   +0x0064 -> line 1209
+ *   +0x0068 -> line 1210
+ *   +0x006c -> line 1211
+ *   +0x0070 -> line 1212
+ *   +0x0074 -> line 1213
+ *   +0x0078 -> line 1214
+ *   +0x007c -> line 1215
+ *   +0x0080 -> line 1216
+ *   +0x0084 -> line 1218
+ *   +0x0088 -> line 1206
+ *   +0x0090 -> line 1207
+ *   +0x0094 -> line 1208
+ *   +0x0098 -> line 1209
+ *   +0x009c -> line 1210
+ *   +0x00a0 -> line 1211
+ *   +0x00a4 -> line 1212
+ *   +0x00a8 -> line 1213
+ *   +0x00ac -> line 1214
+ *   +0x00b0 -> line 1215
+ *   +0x00b4 -> line 1216
+ *   +0x00b8 -> line 1218
+ *   +0x00bc -> line 1206
+ *   +0x00c8 -> line 1207
+ *   +0x00cc -> line 1206
+ *   +0x00d0 -> line 1208
+ *   +0x00d4 -> line 1207
+ *   +0x00d8 -> line 1209
+ *   +0x00dc -> line 1207
+ *   +0x00e0 -> line 1211
+ *   +0x00e4 -> line 1208
+ *   +0x00e8 -> line 1210
+ *   +0x00ec -> line 1208
+ *   +0x00f0 -> line 1212
+ *   +0x00f4 -> line 1209
+ *   +0x00f8 -> line 1213
+ *   +0x00fc -> line 1209
+ *   +0x0100 -> line 1214
+ *   +0x0104 -> line 1210
+ *   +0x0108 -> line 1215
+ *   +0x010c -> line 1210
+ *   +0x0110 -> line 1216
+ *   +0x0114 -> line 1211
+ *   +0x0118 -> line 1219
+ *   +0x011c -> line 1217
+ *   +0x0120 -> line 1218
+ *   +0x0124 -> line 1211
+ *   +0x0128 -> line 1217
+ *   +0x012c -> line 1218
+ *   +0x0130 -> line 1212
+ *   +0x0134 -> line 1218
+ *   +0x0138 -> line 1212
+ *   +0x013c -> line 1218
+ *   +0x0140 -> line 1213
+ *   +0x0148 -> line 1214
+ *   +0x014c -> line 1219
+ *   +0x0150 -> line 1214
+ *   +0x0154 -> line 1215
+ *   +0x015c -> line 1216
+ *   +0x0164 -> line 1217
+ *   +0x016c -> line 1218
+ *   +0x0170 -> line 1219
+ *   +0x0178 -> line 1220
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma optimize_for_size off
+void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks)
+{
+    int iEndBank;
+    int i;
+
+    iEndBank = iStartBank + iNumberOfBanks;
+    if (iStartBank < iEndBank) {
+        i = iStartBank;
+        do {
+            g_tdstStackInfos[i][0].ulMaxPos = 0;
+            g_ax_pA3dGENERAL[i] = 0;
+            g_tdstStackInfos[i][1].ulMaxPos = 0;
+            g_ax_pVectors[i] = 0;
+            g_tdstStackInfos[i][2].ulMaxPos = 0;
+            g_ax_pQuaternions[i] = 0;
+            g_tdstStackInfos[i][3].ulMaxPos = 0;
+            g_ax_pHierarchies[i] = 0;
+            g_tdstStackInfos[i][4].ulMaxPos = 0;
+            g_ax_pNTTO[i] = 0;
+            g_tdstStackInfos[i][5].ulMaxPos = 0;
+            g_ax_pOnlyFrames[i] = 0;
+            g_tdstStackInfos[i][6].ulMaxPos = 0;
+            g_ax_pChannels[i] = 0;
+            g_tdstStackInfos[i][7].ulMaxPos = 0;
+            g_ax_pFramesNumOfNTTO[i] = 0;
+            g_tdstStackInfos[i][8].ulMaxPos = 0;
+            g_ax_pFramesKFIndex[i] = 0;
+            g_tdstStackInfos[i][9].ulMaxPos = 0;
+            g_ax_pKeyFrames[i] = 0;
+            g_tdstStackInfos[i][10].ulMaxPos = 0;
+            g_ax_pEvents[i] = 0;
+            g_tdstStackInfos[i][11].ulMaxPos = 0;
+            g_ax_pMorphData[i] = 0;
+            g_tdstStackInfos[i][12].ulMaxPos = 0;
+            g_ax_pDeformations[i] = 0;
+            i++;
+        } while (i < iEndBank);
+    }
+}
+#pragma optimize_for_size reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1300–1332 */
+/* addr: 0x0012dfd0  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1300
+ *   +0x0004 -> line 1306
+ *   +0x0008 -> line 1300
+ *   +0x0014 -> line 1317
+ *   +0x001c -> line 1309
+ *   +0x0020 -> line 1306
+ *   +0x0024 -> line 1310
+ *   +0x0028 -> line 1311
+ *   +0x002c -> line 1312
+ *   +0x0030 -> line 1313
+ *   +0x0034 -> line 1318
+ *   +0x003c -> line 1320
+ *   +0x0050 -> line 1321
+ *   +0x0054 -> line 1322
+ *   +0x0068 -> line 1323
+ *   +0x006c -> line 1325
+ *   +0x0070 -> line 1323
+ *   +0x0074 -> line 1325
+ *   +0x0090 -> line 1326
+ *   +0x00ac -> line 1327
+ *   +0x00c8 -> line 1328
+ *   +0x00e4 -> line 1330
+ *   +0x00fc -> line 1332
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void CheckForTutorial(char* Name)
+{
+    int i;
+    char TempString[256];
+    g_bIsInTutorial = 1;
+    g_bIsInMapinter = 0;
+    g_bIsInMenuMap = 0;
+    g_bIsInEncyclo = 0;
+    bSwamp_60 = 0;
+    G_IsLept15 = 0;
+    g_bEndGame = 0;
+    i = 0;
+    while (Name[i])
+    {
+        /* Not original source, needs cleaning up: the int-cast address keeps
+         * sp+0x30 and the index as a separate addu, as in retail. */
+        *(char*)((int)TempString + i) = toupper(Name[i]);
+        i++;
+    }
+    *(char*)((int)TempString + i) = 0;
+    if (strstr(TempString, "LEPT_15")) G_IsLept15 = 1;
+    if (strstr(TempString, "MAPINTER")) g_bIsInMapinter = 1;
+    if (strstr(TempString, "MENUMAP")) g_bIsInMenuMap = 1;
+    if (strstr(TempString, "ENCYCLO")) g_bIsInEncyclo = 1;
+    if (strstr(TempString, "ENDGAME")) g_bEndGame = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1385–1398 */
+/* addr: 0x0012dfa0  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1385
+ *   +0x0020 -> line 1398
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void debug_printf(char* format, ...)
+{
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1402–1441 */
+/* addr: 0x0012de60  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1402
+ *   +0x0014 -> line 1407
+ *   +0x0024 -> line 1408
+ *   +0x0034 -> line 1409
+ *   +0x0048 -> line 1411
+ *   +0x0050 -> line 1412
+ *   +0x005c -> line 1413
+ *   +0x0064 -> line 1418
+ *   +0x006c -> line 1420
+ *   +0x00ac -> line 1422
+ *   +0x00b4 -> line 1423
+ *   +0x00bc -> line 1425
+ *   +0x00c4 -> line 1426
+ *   +0x00d0 -> line 1427
+ *   +0x00d8 -> line 1430
+ *   +0x00e0 -> line 1431
+ *   +0x00f8 -> line 1432
+ *   +0x010c -> line 1434
+ *   +0x0114 -> line 1436
+ *   +0x011c -> line 1439
+ *   +0x0124 -> line 1441
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture)
+{
+    int i;
+
+    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
+        if (((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i] == p_stTexture)
+            break;
+    if (i == gs_lNumberOfTextureToCreate)
+    {
+        printf("unknown texture ????\n");
+        return;
+    }
+    debug_printf("transit. texture 0x%08x :", p_stTexture);
+    switch (((int*)gs_aDEFTableOfTextureMemoryChannels)[i])
+    {
+    case 0:
+        debug_printf("fix texture channel -> ok\n");
+        break;
+    case 2:
+        debug_printf("level texture channel -> changing to next transition channel\n");
+        ((int*)gs_aDEFTableOfTextureMemoryChannels)[i] = g_ucIdOfNextTransitionbloc;
+        break;
+    case 4:
+    case 6:
+        debug_printf("transition texture channel : ");
+        if (((int*)gs_aDEFTableOfTextureMemoryChannels)[i] == g_ucIdOfNextTransitionbloc)
+            debug_printf("ok\n");
+        else
+            debug_printf("not ok -> changing\n");
+        break;
+    default:
+        debug_printf("Unknown channel value !!!\n");
+        break;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1445–1482 */
+/* addr: 0x0012dd70  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1445
+ *   +0x0004 -> line 1457
+ *   +0x0008 -> line 1445
+ *   +0x0020 -> line 1457
+ *   +0x0034 -> line 1460
+ *   +0x004c -> line 1469
+ *   +0x0058 -> line 1471
+ *   +0x0064 -> line 1473
+ *   +0x0070 -> line 1474
+ *   +0x0078 -> line 1475
+ *   +0x0080 -> line 1477
+ *   +0x0090 -> line 1478
+ *   +0x00a0 -> line 1479
+ *   +0x00bc -> line 1481
+ *   +0x00d0 -> line 1482
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_v_Transition_CorrectTextureChannelTable(void)
+{
+    int i;
+    GLI_tdstMaterial_* pMat;
+    int j;
+
+    *(int*)(gs_aDEFTableOfTextureMemoryChannels + g_lNumberOfTexturesInFix * 4) = 2;
+    *(int*)(gs_aDEFTableOfTextureMemoryChannels + (g_lNumberOfTexturesInFix + 1) * 4) = 2;
+
+    for (i = PLD_g_ulNumberOfFixVisualMaterials; i < PLD_g_ulNumberOfTransitionVisualMaterials; i++)
+    {
+        pMat = (GLI_tdstMaterial_*)GLI_g_StaticCopyOfArrayOfVisualMaterial[i];
+        if (!pMat->ulMultiTextureType)
+        {
+            fn_v_Transition_CorrectTextureChannel(pMat->p_stTexture);
+        }
+        else
+        {
+            for (j = 0; j < pMat->ulNbTextureStages; j++)
+                fn_v_Transition_CorrectTextureChannel(pMat->a_stMultiMaterial[j].pst_Texture);
+        }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1542–2557 */
 /* addr: 0x0012c8d0  size: 5268 bytes */
@@ -5130,886 +5927,6 @@ int sprintf(char* s, const char* format, ...);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-typedef void* (*MNC_tfnAllocator_)(unsigned int);
-void GLI_vSetProgressCallBack(unsigned int SizeToRead);
-void GLI_PrintDebugString(char* szString);
-void CTL_SetCurrentMap(char* Map);
-void GLI_HysteresisLevelStart(char* levelname);
-void GLI_vResetTempList(void);
-void VID_fn_vPlayVideoIfAskedAfterLevel(void);
-void GAM_fn_vSaveGameAfterVideoIfNeeded(void);
-unsigned char fn_bLevelHadTransitionMemory(void);
-void GLI_vLoadCarton(char* levelname);
-void CheckPS2GLMem(void);
-void SetAllocMode(int Mode);
-void CheckAllocMode(int Mode);
-unsigned char fn_bDoTransition(void);
-void LS_Create(void);
-char* PLD_szLocationFromAreaId(_tdeAreaName eAreaId, char* szName);
-int fn_lGetTransitionBloc(void);
-MNC_tfnAllocator_ fn_pfnCurrentTransitionAllocator(void);
-char* MNC_fn_pcLoadAreaWithAllocator(char* _szAreaName, unsigned int _u32AreaId, MNC_tfnAllocator_ _pfnAllocator);
-char* MNC_fn_pcLoadArea(char* _szAreaName, unsigned int _u32AreaId);
-void PS2_fn_vEnterGLCriticalSection(void);
-void PS2_fn_vLeaveGLCriticalSection(void);
-void HMU_fn_vInitNormalLevelMemory(unsigned int _ulNormalMemSize);
-void HMU_fn_vInitTempLevelMemory(unsigned int _ulTempMemSize);
-void HMU_fn_vSetMemoriesInLevelMode(void);
-unsigned char HMU_fn_ucGetLevelNormalMemoryBlock(void);
-void GLI_vSignalCurrentMemoryChannel(unsigned char ucCurrentChannel);
-void HMU_fn_vInitNormalTransition1Memory(unsigned int _ulNormalMemSize);
-void HMU_fn_vInitTempTransition1Memory(unsigned int _ulTempMemSize);
-void HMU_fn_vInitNormalTransition2Memory(unsigned int _ulNormalMemSize);
-void HMU_fn_vInitTempTransition2Memory(unsigned int _ulTempMemSize);
-unsigned char HMU_fn_ucGetTransition1NormalMemoryBlock(void);
-unsigned char HMU_fn_ucGetTransition2NormalMemoryBlock(void);
-void fn_vTVS(void);
-HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj);
-void fn_v3dDataInitValueSAI(tdst3dData_* h_3dData);
-int SND_fn_bInitDataLoadSnd(char* szName);
-void SND_fn_vStartLoad(void);
-char* fn_p_szGetLevelName(void);
-char* Strcat(char* s1, char* s2);
-char* Strrchr(char* string, int ch);
-int SND_fn_bLoadBank(char* pch_NameWithoutExt);
-void SND_fn_vFinishLoad(char* pIdStr);
-unsigned char fn_bGetFamilyProperty(tdstFamilyList_* h_Family, unsigned char ucPropertyMask);
-unsigned char fn_ucFindFamilyIdOfFamilyType(int otType);
-unsigned char GAM_fn_bIsFamilyToLoad(unsigned char ucFamilyId);
-unsigned char fn_ucFindPersonalIdOfPersonalType(int otType);
-unsigned char GAM_fn_bIsActorToLoad(unsigned char ucActorId);
-_SND_tdstBlockEvent* SND_fn_pstGetBlockEventFromId(unsigned int u32_EvtId);
-void* memcpy(void* dst, const void* src, size_t n);
-int printf(const char* format, ...);
-int sprintf(char* s, const char* format, ...);
-void CheckForTutorial(char* Name);
-char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName);
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks);
-void fn_v_Transition_CorrectTextureChannelTable(void);
-
-/* The target writes COP0 register 24 (mtc0 zero, $24); C cannot express it.
- * Spelled with the R5900 alias mtbpc, MWCC schedules it like an ordinary
- * instruction, filling jal delay slots as in retail. */
-inline void PLD_vClearCop0Register24Sched(void)
-{
-    asm { mtbpc zero }
-}
-/* The write placed right before a call has no hazard nop in the target, which
- * only the noreorder spelling reproduces. */
-inline void PLD_vClearCop0Register24Open(void)
-{
-    asm {
-    .set noreorder
-    mtc0 zero, $24
-    }
-}
-
-#define M_READ(type) (*((type*)pcCMBAddress)++)
-#define M_READ_AT(type, lv) { char* pcNew; char* pcSrc; type* pDst; type xV; pcSrc = pcCMBAddress; pcNew = pcSrc + sizeof(type); pDst = (type*)&(lv); pcCMBAddress = pcNew; xV = *(type*)pcSrc; *pDst = xV; }
-#define M_READ_STRUCT(dst, id) { volatile stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) memcpy((dst), pcCMBAddress, p_stDef->u32ActualSize); { unsigned int uS = p_stDef->u32ActualSize; pcCMBAddress += uS; } }
-
-inline tdstEngineObject_* PLD_fn_pstGetPerso(HIE_tdstSuperObject_* h)
-{ tdstEngineObject_* p; if (h->ulTypeOfLinkedObject != 2) p = NULL; else p = h->hLinkedObject.p_stCharacter; return p; }
-
-inline void PLD_vClearCop0Register24Plain(void)
-{
-    asm { mtc0 zero, $24 }
-}
-
-#pragma opt_propagation off
-#pragma opt_dead_assignments off
-
-#pragma opt_dead_assignments reset
-#pragma opt_propagation reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1445–1482 */
-/* addr: 0x0012dd70  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1445
- *   +0x0004 -> line 1457
- *   +0x0008 -> line 1445
- *   +0x0020 -> line 1457
- *   +0x0034 -> line 1460
- *   +0x004c -> line 1469
- *   +0x0058 -> line 1471
- *   +0x0064 -> line 1473
- *   +0x0070 -> line 1474
- *   +0x0078 -> line 1475
- *   +0x0080 -> line 1477
- *   +0x0090 -> line 1478
- *   +0x00a0 -> line 1479
- *   +0x00bc -> line 1481
- *   +0x00d0 -> line 1482
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1402–1441 */
-/* addr: 0x0012de60  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1402
- *   +0x0014 -> line 1407
- *   +0x0024 -> line 1408
- *   +0x0034 -> line 1409
- *   +0x0048 -> line 1411
- *   +0x0050 -> line 1412
- *   +0x005c -> line 1413
- *   +0x0064 -> line 1418
- *   +0x006c -> line 1420
- *   +0x00ac -> line 1422
- *   +0x00b4 -> line 1423
- *   +0x00bc -> line 1425
- *   +0x00c4 -> line 1426
- *   +0x00d0 -> line 1427
- *   +0x00d8 -> line 1430
- *   +0x00e0 -> line 1431
- *   +0x00f8 -> line 1432
- *   +0x010c -> line 1434
- *   +0x0114 -> line 1436
- *   +0x011c -> line 1439
- *   +0x0124 -> line 1441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void debug_printf(char* format, ...);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1385–1398 */
-/* addr: 0x0012dfa0  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1385
- *   +0x0020 -> line 1398
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1300–1332 */
-/* addr: 0x0012dfd0  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1300
- *   +0x0004 -> line 1306
- *   +0x0008 -> line 1300
- *   +0x0014 -> line 1317
- *   +0x001c -> line 1309
- *   +0x0020 -> line 1306
- *   +0x0024 -> line 1310
- *   +0x0028 -> line 1311
- *   +0x002c -> line 1312
- *   +0x0030 -> line 1313
- *   +0x0034 -> line 1318
- *   +0x003c -> line 1320
- *   +0x0050 -> line 1321
- *   +0x0054 -> line 1322
- *   +0x0068 -> line 1323
- *   +0x006c -> line 1325
- *   +0x0070 -> line 1323
- *   +0x0074 -> line 1325
- *   +0x0090 -> line 1326
- *   +0x00ac -> line 1327
- *   +0x00c8 -> line 1328
- *   +0x00e4 -> line 1330
- *   +0x00fc -> line 1332
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int toupper(char c);
-char* strstr(const char* s1, const char* s2);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1200–1220 */
-/* addr: 0x0012e0e0  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1200
- *   +0x0020 -> line 1203
- *   +0x0024 -> line 1200
- *   +0x0028 -> line 1205
- *   +0x0044 -> line 1217
- *   +0x0048 -> line 1206
- *   +0x004c -> line 1217
- *   +0x0050 -> line 1206
- *   +0x0054 -> line 1217
- *   +0x0058 -> line 1207
- *   +0x005c -> line 1218
- *   +0x0060 -> line 1208
- *   +0x0064 -> line 1209
- *   +0x0068 -> line 1210
- *   +0x006c -> line 1211
- *   +0x0070 -> line 1212
- *   +0x0074 -> line 1213
- *   +0x0078 -> line 1214
- *   +0x007c -> line 1215
- *   +0x0080 -> line 1216
- *   +0x0084 -> line 1218
- *   +0x0088 -> line 1206
- *   +0x0090 -> line 1207
- *   +0x0094 -> line 1208
- *   +0x0098 -> line 1209
- *   +0x009c -> line 1210
- *   +0x00a0 -> line 1211
- *   +0x00a4 -> line 1212
- *   +0x00a8 -> line 1213
- *   +0x00ac -> line 1214
- *   +0x00b0 -> line 1215
- *   +0x00b4 -> line 1216
- *   +0x00b8 -> line 1218
- *   +0x00bc -> line 1206
- *   +0x00c8 -> line 1207
- *   +0x00cc -> line 1206
- *   +0x00d0 -> line 1208
- *   +0x00d4 -> line 1207
- *   +0x00d8 -> line 1209
- *   +0x00dc -> line 1207
- *   +0x00e0 -> line 1211
- *   +0x00e4 -> line 1208
- *   +0x00e8 -> line 1210
- *   +0x00ec -> line 1208
- *   +0x00f0 -> line 1212
- *   +0x00f4 -> line 1209
- *   +0x00f8 -> line 1213
- *   +0x00fc -> line 1209
- *   +0x0100 -> line 1214
- *   +0x0104 -> line 1210
- *   +0x0108 -> line 1215
- *   +0x010c -> line 1210
- *   +0x0110 -> line 1216
- *   +0x0114 -> line 1211
- *   +0x0118 -> line 1219
- *   +0x011c -> line 1217
- *   +0x0120 -> line 1218
- *   +0x0124 -> line 1211
- *   +0x0128 -> line 1217
- *   +0x012c -> line 1218
- *   +0x0130 -> line 1212
- *   +0x0134 -> line 1218
- *   +0x0138 -> line 1212
- *   +0x013c -> line 1218
- *   +0x0140 -> line 1213
- *   +0x0148 -> line 1214
- *   +0x014c -> line 1219
- *   +0x0150 -> line 1214
- *   +0x0154 -> line 1215
- *   +0x015c -> line 1216
- *   +0x0164 -> line 1217
- *   +0x016c -> line 1218
- *   +0x0170 -> line 1219
- *   +0x0178 -> line 1220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma optimize_for_size off
-
-#pragma optimize_for_size reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 1152–1192 */
-/* addr: 0x0012e290  size: 928 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1152
- *   +0x0004 -> line 1165
- *   +0x0008 -> line 1152
- *   +0x000c -> line 1165
- *   +0x0010 -> line 1152
- *   +0x0028 -> line 1165
- *   +0x002c -> line 1152
- *   +0x0040 -> line 1165
- *   +0x0044 -> line 1158
- *   +0x0048 -> line 1165
- *   +0x008c -> line 1167
- *   +0x0090 -> line 1165
- *   +0x009c -> line 1169
- *   +0x00a4 -> line 1165
- *   +0x00ac -> line 1169
- *   +0x00b8 -> line 1170
- *   +0x00bc -> line 1171
- *   +0x00c0 -> line 1172
- *   +0x00c4 -> line 1173
- *   +0x00c8 -> line 1174
- *   +0x00cc -> line 1175
- *   +0x00d0 -> line 1176
- *   +0x00d4 -> line 1177
- *   +0x00d8 -> line 1178
- *   +0x00dc -> line 1179
- *   +0x00e0 -> line 1180
- *   +0x00e4 -> line 1181
- *   +0x00e8 -> line 1182
- *   +0x00ec -> line 1170
- *   +0x00f4 -> line 1171
- *   +0x00f8 -> line 1172
- *   +0x00fc -> line 1173
- *   +0x0100 -> line 1174
- *   +0x0104 -> line 1175
- *   +0x0108 -> line 1176
- *   +0x010c -> line 1177
- *   +0x0110 -> line 1178
- *   +0x0114 -> line 1179
- *   +0x0118 -> line 1180
- *   +0x011c -> line 1181
- *   +0x0120 -> line 1182
- *   +0x0124 -> line 1170
- *   +0x0150 -> line 1171
- *   +0x0178 -> line 1172
- *   +0x01a0 -> line 1173
- *   +0x01c8 -> line 1174
- *   +0x01f0 -> line 1175
- *   +0x0218 -> line 1176
- *   +0x0240 -> line 1177
- *   +0x0268 -> line 1178
- *   +0x0290 -> line 1179
- *   +0x02b8 -> line 1180
- *   +0x02e0 -> line 1181
- *   +0x0308 -> line 1182
- *   +0x0330 -> line 1183
- *   +0x0338 -> line 1182
- *   +0x033c -> line 1183
- *   +0x0348 -> line 1188
- *   +0x0370 -> line 1192
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 651–1123 */
-/* addr: 0x0012e630  size: 2428 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 651
- *   +0x0018 -> line 670
- *   +0x001c -> line 691
- *   +0x0024 -> line 699
- *   +0x0028 -> line 696
- *   +0x0030 -> line 699
- *   +0x003c -> line 702
- *   +0x0048 -> line 716
- *   +0x0054 -> line 719
- *   +0x0084 -> line 726
- *   +0x0088 -> line 719
- *   +0x008c -> line 726
- *   +0x0098 -> line 729
- *   +0x00a4 -> line 732
- *   +0x00b4 -> line 740
- *   +0x00b8 -> line 752
- *   +0x00bc -> line 740
- *   +0x00c8 -> line 745
- *   +0x00d8 -> line 750
- *   +0x00e4 -> line 752
- *   +0x0128 -> line 757
- *   +0x012c -> line 758
- *   +0x0130 -> line 757
- *   +0x013c -> line 758
- *   +0x0144 -> line 759
- *   +0x014c -> line 760
- *   +0x016c -> line 763
- *   +0x0170 -> line 776
- *   +0x0180 -> line 763
- *   +0x018c -> line 765
- *   +0x0198 -> line 770
- *   +0x01a4 -> line 771
- *   +0x01ac -> line 776
- *   +0x01c4 -> line 786
- *   +0x01c8 -> line 776
- *   +0x01d4 -> line 786
- *   +0x01e4 -> line 791
- *   +0x01e8 -> line 786
- *   +0x01ec -> line 791
- *   +0x01fc -> line 794
- *   +0x021c -> line 799
- *   +0x0224 -> line 800
- *   +0x0294 -> line 805
- *   +0x02cc -> line 810
- *   +0x02d0 -> line 805
- *   +0x02dc -> line 810
- *   +0x02e4 -> line 811
- *   +0x0354 -> line 816
- *   +0x035c -> line 817
- *   +0x03cc -> line 822
- *   +0x03e8 -> line 823
- *   +0x03f0 -> line 828
- *   +0x03f4 -> line 823
- *   +0x0404 -> line 828
- *   +0x0418 -> line 830
- *   +0x041c -> line 831
- *   +0x0428 -> line 837
- *   +0x0430 -> line 845
- *   +0x0434 -> line 837
- *   +0x0440 -> line 843
- *   +0x0444 -> line 837
- *   +0x0448 -> line 843
- *   +0x0454 -> line 845
- *   +0x045c -> line 846
- *   +0x0490 -> line 848
- *   +0x0498 -> line 849
- *   +0x04d0 -> line 851
- *   +0x04d4 -> line 856
- *   +0x04ec -> line 858
- *   +0x0504 -> line 860
- *   +0x0508 -> line 858
- *   +0x050c -> line 860
- *   +0x0528 -> line 862
- *   +0x0530 -> line 864
- *   +0x0538 -> line 869
- *   +0x053c -> line 864
- *   +0x0544 -> line 869
- *   +0x0548 -> line 864
- *   +0x054c -> line 869
- *   +0x0550 -> line 864
- *   +0x0560 -> line 869
- *   +0x056c -> line 870
- *   +0x0574 -> line 872
- *   +0x0590 -> line 874
- *   +0x05ac -> line 903
- *   +0x05cc -> line 993
- *   +0x05d0 -> line 903
- *   +0x05d4 -> line 993
- *   +0x05d8 -> line 903
- *   +0x05dc -> line 993
- *   +0x0614 -> line 998
- *   +0x0618 -> line 1000
- *   +0x0620 -> line 998
- *   +0x062c -> line 1000
- *   +0x0634 -> line 1005
- *   +0x0638 -> line 1007
- *   +0x063c -> line 1005
- *   +0x0648 -> line 1007
- *   +0x0650 -> line 1008
- *   +0x0684 -> line 1027
- *   +0x0688 -> line 1039
- *   +0x0694 -> line 1027
- *   +0x06a0 -> line 1031
- *   +0x06a4 -> line 1027
- *   +0x06a8 -> line 1031
- *   +0x06b8 -> line 1039
- *   +0x06e8 -> line 1042
- *   +0x0704 -> line 1054
- *   +0x0714 -> line 1055
- *   +0x0748 -> line 1060
- *   +0x0768 -> line 1065
- *   +0x076c -> line 1060
- *   +0x0770 -> line 1065
- *   +0x0778 -> line 1060
- *   +0x077c -> line 1065
- *   +0x0798 -> line 1072
- *   +0x079c -> line 1065
- *   +0x07a0 -> line 1072
- *   +0x07ac -> line 1065
- *   +0x07b0 -> line 1072
- *   +0x07b8 -> line 1074
- *   +0x07dc -> line 1076
- *   +0x07e0 -> line 1074
- *   +0x07e4 -> line 1076
- *   +0x07e8 -> line 1074
- *   +0x07ec -> line 1076
- *   +0x0830 -> line 1084
- *   +0x083c -> line 1085
- *   +0x0844 -> line 1090
- *   +0x0854 -> line 1092
- *   +0x085c -> line 1093
- *   +0x087c -> line 1100
- *   +0x08b0 -> line 1112
- *   +0x08b4 -> line 1100
- *   +0x08b8 -> line 1112
- *   +0x08c0 -> line 1100
- *   +0x08d8 -> line 1106
- *   +0x08e8 -> line 1112
- *   +0x08f0 -> line 1114
- *   +0x08fc -> line 1120
- *   +0x0958 -> line 1122
- *   +0x0960 -> line 1123
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#define M_READ_STRUCTSP(dst, n) { if (dst) { unsigned int uN = p_stDef->u32ActualSize; memcpy((dst), pcCMBAddress, uN * (n)); } { unsigned int uS = p_stDef->u32ActualSize * (n); pcCMBAddress += uS; } }
-#define M_READ_STRUCTS(dst, id, n) { volatile stStructDef_* p_stDef = &g_stStructArray[id]; if (dst) { unsigned int uN = p_stDef->u32ActualSize; memcpy((dst), pcCMBAddress, uN * (n)); } { unsigned int uS = p_stDef->u32ActualSize * (n); pcCMBAddress += uS; } }
-
-#pragma opt_strength_reduction off
-#pragma opt_lifetimes off
-
-#pragma opt_strength_reduction reset
-#pragma opt_lifetimes reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 564–601 */
-/* addr: 0x0012efb0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 564
- *   +0x0014 -> line 568
- *   +0x001c -> line 570
- *   +0x0024 -> line 573
- *   +0x0034 -> line 577
- *   +0x0040 -> line 578
- *   +0x0060 -> line 593
- *   +0x006c -> line 594
- *   +0x008c -> line 600
- *   +0x0094 -> line 601
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 321–328 */
-/* addr: 0x0012f060  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 321
- *   +0x0008 -> line 322
- *   +0x0018 -> line 324
- *   +0x0030 -> line 325
- *   +0x0038 -> line 326
- *   +0x0048 -> line 327
- *   +0x004c -> line 328
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned char PLD_fn_bIsInFix(void* Ptr)
-{
-    unsigned int ulI;
-    unsigned int ulNbObject;
-    unsigned int ulOffset;
-    /* Permuter result: the redundant double assignment fixes register order (clean up later). */
-    ulNbObject = (ulNbObject = g_stFixInfo.ulNbObject);
-    for (ulI = 0; ulI < ulNbObject; ulI++)
-    {
-        if (g_stFixInfo.a20_stObjects[ulI] == Ptr)
-            return 1;
-    }
-    return 0;
-}
-
-char* PLD_fn_pcLoadArea(_tdeAreaName _eAreaId, char* _szAreaName)
-{
-    char* szFilename;
-    unsigned int u32AreaId;
-
-    szFilename = PLD_szLocationFromAreaId(_eAreaId, _szAreaName);
-    if (_eAreaId == 0)
-    {
-        strcpy(szLastFixLoaded, szFilename);
-    }
-    u32AreaId = _eAreaId;
-    if (_eAreaId == 2)
-    {
-        u32AreaId = (fn_lGetTransitionBloc() == 2) ? 2 : 3;
-    }
-    if (_eAreaId == 2)
-    {
-        return MNC_fn_pcLoadAreaWithAllocator(szFilename, u32AreaId, fn_pfnCurrentTransitionAllocator());
-    }
-    return MNC_fn_pcLoadArea(szFilename, u32AreaId);
-}
-
-#pragma opt_strength_reduction off
-#pragma opt_lifetimes off
-void PLD_fn_vLoadFix(void)
-{
-    unsigned int i;
-    char* pcStartCMBAddress;
-    char* volatile pcCMBAddress;
-    char* pcAnimCMBAddress;
-    unsigned int* volatile pu32SoundEventIdArray;
-    char* szFilename;
-    unsigned int u32NbProc;
-    unsigned int u32NbFunc;
-    unsigned int u32NbCond;
-    unsigned int u32DataClass;
-    unsigned int u32NbSoundEvent;
-    unsigned int* pulEvent;
-    unsigned int uwLanguage;
-    char szLanguage[32];
-    char* pcLanguage;
-    char* pcCur;
-    unsigned int ucNbFont;
-    char* pcDst;
-    unsigned int iIndex;
-    int iTemp;
-
-    PLD_vClearCop0Register24Sched();
-    ChosenLanguage = 1;
-    g_stEngineStructure.ucCurrentLanguage = *(unsigned char*)&ChosenLanguage;
-    printf("Loading fix\n");
-    GLI_PrintDebugString("Loading FIX");
-    GLI_vSetProgressCallBack(24000000);
-
-    szFilename = PLD_szLocationFromAreaId(0, 0);
-    strcpy(szLastFixLoaded, szFilename);
-    pcStartCMBAddress = pcCMBAddress = MNC_fn_pcLoadArea(szFilename, 0);
-    printf("fix@%08x\n", pcStartCMBAddress);
-
-    g_ulFixChecksum = MNC_fn_ulGetAreaChecksum();
-    printf("fix checksum: 0x%08x\n", g_ulFixChecksum);
-
-    u32NbProc = M_READ(unsigned int);
-    u32NbFunc = M_READ(unsigned int);
-    u32NbCond = M_READ(unsigned int);
-    if (u32NbProc != 876) printf("\nCurrent NbProc = %d instead of %d\n", 876, u32NbProc);
-    if (u32NbFunc != 446) printf("\nCurrent NbFunc = %d instead of %d\n", 446, u32NbFunc);
-    if (u32NbCond != 178) printf("\nCurrent Nbcond = %d instead of %d\n", 178, u32NbCond);
-
-    u32DataClass = M_READ(unsigned int);
-    if (u32DataClass != g_ulEngineClass)
-    {
-        printf("fix data class (0x%08x) not equal to engine class (0x%08x)\n", u32DataClass, g_ulEngineClass);
-        while (1)
-            ;
-    }
-
-    pcCMBAddress = (char*)(g_pcFixTimeStamp = (int)pcCMBAddress) + 40;
-    pcCMBAddress += 4;
-    pcCMBAddress += 4;
-    pcCMBAddress += 4;
-
-    M_READ_STRUCT(&FON_g_stGeneral, 171);
-
-    g_stEngineStructure.ucNumberOfLevels = M_READ(unsigned char);
-    g_stEngineStructure.ucNumberOfDemos = M_READ(unsigned char);
-    pcCur = pcCMBAddress;
-    iTemp = (int)pcCur & 3;
-    if (iTemp)
-        pcCMBAddress = pcCur + (4 - iTemp);
-
-    for (i = 0; i < g_stEngineStructure.ucNumberOfLevels; i++)
-        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 30; pcDst = (char*)&g_stEngineStructure + iIndex + 0x707; M_READ_STRUCTSP(pcDst, 30); }
-    M_READ_STRUCTS(g_stEngineStructure.szFirstLevelName, 114, 30);
-    for (i = 0; i < g_stEngineStructure.ucNumberOfDemos; i++)
-        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 12; pcDst = (char*)&g_stEngineStructure + iIndex + 0x189b; M_READ_STRUCTSP(pcDst, 12); }
-    for (i = 0; i < g_stEngineStructure.ucNumberOfDemos; i++)
-        { volatile stStructDef_* p_stDef = &g_stStructArray[114]; iIndex = i * 12; pcDst = (char*)&g_stEngineStructure + iIndex + 0x1a03; M_READ_STRUCTSP(pcDst, 12); }
-    pcCur = pcCMBAddress;
-    iTemp = (int)pcCur & 3;
-    if (iTemp)
-        pcCMBAddress = pcCur + (4 - iTemp);
-
-    g_stEngineStructure.ucNbLanguages = M_READ(unsigned int);
-    if (ChosenLanguage >= g_stEngineStructure.ucNbLanguages)
-    {
-        ChosenLanguage = 0;
-        g_stEngineStructure.ucCurrentLanguage = *(unsigned char*)&ChosenLanguage;
-    }
-    g_stEngineStructure.p_stLanguageTable = M_READ(tdstLanguageStructure_*);
-
-    gs_lNumberOfTextureToCreate = M_READ(int);
-    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
-        ((int*)gs_aDEFTableOfTextureAlreadyRead)[i] = M_READ(int);
-    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
-        ((int*)gs_aDEFTableOfTextureMemoryChannels)[i] = M_READ(int);
-    g_lNumberOfTexturesInFix = gs_lNumberOfTextureToCreate;
-
-    g_stFixInfo.ulNbObject = M_READ(unsigned int);
-    g_a_LinksOfSuperObjectInFix = (int)malloc(g_stFixInfo.ulNbObject * 0x18);
-    memset((void*)g_a_LinksOfSuperObjectInFix, 0, g_stFixInfo.ulNbObject * 0x18);
-    for (i = 0; i < g_stFixInfo.ulNbObject; i++)
-    {
-        tdstBrain_* h_Brain;
-        { void** ppv = &g_stFixInfo.a20_stObjects[i]; *ppv = M_READ(void*); }
-        h_Brain = ((HIE_tdstSuperObject_*)((void**)((char*)&g_stFixInfo + 4))[i])->hLinkedObject.p_stCharacter->h_Brain;
-        if (h_Brain)
-            memcpy((char*)g_a_LinksOfSuperObjectInFix + i * 0x18, (char*)h_Brain + 8, 0x18);
-    }
-
-    M_READ_STRUCT(&RND_g_stRandomStructure, 183);
-    GLI_PrintDebugString("INIT DATA SND");
-    PLD_vClearCop0Register24Open();
-    SND_fn_bInitDataLoadSnd("Rayman3");
-    SND_fn_vStartLoad();
-    SND_fn_bLoadBank("fixe");
-    SND_fn_vFinishLoad("fixe");
-
-    u32NbSoundEvent = M_READ(unsigned int);
-    printf("Nb Sound Events in fix = %d\n", u32NbSoundEvent);
-    pu32SoundEventIdArray = M_READ(unsigned int*);
-    i = 0;
-    goto L_SndTest;
-L_SndBody:
-    {
-        pulEvent = (unsigned int*)(pcStartCMBAddress + pu32SoundEventIdArray[iIndex = i]);
-        *pulEvent = (unsigned int)SND_fn_pstGetBlockEventFromId(*pulEvent);
-        i++;
-    }
-L_SndTest:
-    if (i < u32NbSoundEvent)
-        goto L_SndBody;
-
-    g_ucNbFontBitmap = M_READ(unsigned char);
-    g_NbFont = M_READ(unsigned char);
-    ucNbFont = g_NbFont;
-    M_READ_STRUCTS(&g_ListOfFonts, 213, ucNbFont);
-    pcCur = pcCMBAddress;
-    iTemp = (int)pcCur & 3;
-    if (iTemp)
-        pcCMBAddress = pcCur + (4 - iTemp);
-    for (i = 0; i < g_ucNbFontBitmap; i++)
-        ((int*)&g_TabBitmapFont)[i] = M_READ(int);
-
-    M_READ_STRUCT(&IPT_g_hInputStructure, 113);
-    M_READ_STRUCT(&g_st_3DOS_EntryActions, 111);
-
-    memcpy(&PLD_Saved_stNextVideoToPlay, &VID_g_stGeneralVideos.stNextVideoToPlay, 4);
-    M_READ_STRUCT(&VID_g_stGeneralVideos, 214);
-    if (PLD_Saved_stNextVideoToPlay.bPlayAfterLevel == 1 && PLD_Saved_stNextVideoToPlay.ucVideoNumber < VID_g_stGeneralVideos.ulTrueNumberOfVideos)
-    {
-        VID_g_stGeneralVideos.stNextVideoToPlay.ucVideoNumber = PLD_Saved_stNextVideoToPlay.ucVideoNumber;
-        VID_g_stGeneralVideos.stNextVideoToPlay.bPlayAfterLevel = PLD_Saved_stNextVideoToPlay.bPlayAfterLevel;
-        VID_g_stGeneralVideos.stNextVideoToPlay.bCanBeInterrupt = PLD_Saved_stNextVideoToPlay.bCanBeInterrupt;
-        VID_g_stGeneralVideos.stNextVideoToPlay.bLoop = PLD_Saved_stNextVideoToPlay.bLoop;
-    }
-
-    SND_fn_iSetNbMusicMarkerSlots(M_READ(int));
-    if (SND_fn_iGetNbMusicMarkerSlots())
-    {
-        SND_fn_p_stSetMusicMarkerSlots(pcCMBAddress);
-        pcCMBAddress += SND_fn_iGetNbMusicMarkerSlots() * 40;
-    }
-
-    M_READ_STRUCTS(&g_aBinDataForMenu, 223, 105);
-
-    pcAnimCMBAddress = M_READ(char*);
-    PLD_fn_vReadAnimationsBanks(&pcAnimCMBAddress, 0, 1);
-    GLI_PrintDebugString("FIX LOADED");
-
-    uwLanguage = (unsigned short)ChosenLanguage;
-    sprintf(szLanguage, "lang%d", uwLanguage);
-    pcLanguage = PLD_fn_pcLoadArea((_tdeAreaName)((unsigned short)uwLanguage + 207), szLanguage);
-    pcLanguage = (char*)(g_pcLanguageTimeStamp = (int)pcLanguage) + 40;
-    { stStructDef_* p_stDef; char* pcDest; p_stDef = &g_stStructArray[172]; pcDest = (char*)&FON_g_stGeneral.d_sLanguageArray[(unsigned short)uwLanguage]; if (pcDest) memcpy(pcDest, pcLanguage, p_stDef->u32ActualSize); }
-
-    HMU_fn_vSetMemoriesInFixMode();
-}
-#pragma opt_lifetimes reset
-#pragma opt_strength_reduction reset
-
-void PLD_fn_vReadAnimationsBanks(char** _ppcCMBAddress, unsigned short iStartBank, int iNumberOfBanks)
-{
-    char* pcCMBStartAddress;
-    int iEndBank;
-    int i;
-    /* TODO: decompile from asm/... */
-}
-
-#pragma optimize_for_size off
-void PLD_fn_vClearAnimationsBanks(int iStartBank, int iNumberOfBanks)
-{
-    int iEndBank;
-    int i;
-
-    iEndBank = iStartBank + iNumberOfBanks;
-    if (iStartBank < iEndBank) {
-        i = iStartBank;
-        do {
-            g_tdstStackInfos[i][0].ulMaxPos = 0;
-            g_ax_pA3dGENERAL[i] = 0;
-            g_tdstStackInfos[i][1].ulMaxPos = 0;
-            g_ax_pVectors[i] = 0;
-            g_tdstStackInfos[i][2].ulMaxPos = 0;
-            g_ax_pQuaternions[i] = 0;
-            g_tdstStackInfos[i][3].ulMaxPos = 0;
-            g_ax_pHierarchies[i] = 0;
-            g_tdstStackInfos[i][4].ulMaxPos = 0;
-            g_ax_pNTTO[i] = 0;
-            g_tdstStackInfos[i][5].ulMaxPos = 0;
-            g_ax_pOnlyFrames[i] = 0;
-            g_tdstStackInfos[i][6].ulMaxPos = 0;
-            g_ax_pChannels[i] = 0;
-            g_tdstStackInfos[i][7].ulMaxPos = 0;
-            g_ax_pFramesNumOfNTTO[i] = 0;
-            g_tdstStackInfos[i][8].ulMaxPos = 0;
-            g_ax_pFramesKFIndex[i] = 0;
-            g_tdstStackInfos[i][9].ulMaxPos = 0;
-            g_ax_pKeyFrames[i] = 0;
-            g_tdstStackInfos[i][10].ulMaxPos = 0;
-            g_ax_pEvents[i] = 0;
-            g_tdstStackInfos[i][11].ulMaxPos = 0;
-            g_ax_pMorphData[i] = 0;
-            g_tdstStackInfos[i][12].ulMaxPos = 0;
-            g_ax_pDeformations[i] = 0;
-            i++;
-        } while (i < iEndBank);
-    }
-}
-#pragma optimize_for_size reset
-
-void CheckForTutorial(char* Name)
-{
-    int i;
-    char TempString[256];
-    g_bIsInTutorial = 1;
-    g_bIsInMapinter = 0;
-    g_bIsInMenuMap = 0;
-    g_bIsInEncyclo = 0;
-    bSwamp_60 = 0;
-    G_IsLept15 = 0;
-    g_bEndGame = 0;
-    i = 0;
-    while (Name[i])
-    {
-        /* Not original source, needs cleaning up: the int-cast address keeps
-         * sp+0x30 and the index as a separate addu, as in retail. */
-        *(char*)((int)TempString + i) = toupper(Name[i]);
-        i++;
-    }
-    *(char*)((int)TempString + i) = 0;
-    if (strstr(TempString, "LEPT_15")) G_IsLept15 = 1;
-    if (strstr(TempString, "MAPINTER")) g_bIsInMapinter = 1;
-    if (strstr(TempString, "MENUMAP")) g_bIsInMenuMap = 1;
-    if (strstr(TempString, "ENCYCLO")) g_bIsInEncyclo = 1;
-    if (strstr(TempString, "ENDGAME")) g_bEndGame = 1;
-}
-
-void debug_printf(char* format, ...)
-{
-}
-
-void fn_v_Transition_CorrectTextureChannel(GLI_tdstTexture_* p_stTexture)
-{
-    int i;
-
-    for (i = 0; i < gs_lNumberOfTextureToCreate; i++)
-        if (((GLI_tdstTexture_**)gs_aDEFTableOfTextureAlreadyRead)[i] == p_stTexture)
-            break;
-    if (i == gs_lNumberOfTextureToCreate)
-    {
-        printf("unknown texture ????\n");
-        return;
-    }
-    debug_printf("transit. texture 0x%08x :", p_stTexture);
-    switch (((int*)gs_aDEFTableOfTextureMemoryChannels)[i])
-    {
-    case 0:
-        debug_printf("fix texture channel -> ok\n");
-        break;
-    case 2:
-        debug_printf("level texture channel -> changing to next transition channel\n");
-        ((int*)gs_aDEFTableOfTextureMemoryChannels)[i] = g_ucIdOfNextTransitionbloc;
-        break;
-    case 4:
-    case 6:
-        debug_printf("transition texture channel : ");
-        if (((int*)gs_aDEFTableOfTextureMemoryChannels)[i] == g_ucIdOfNextTransitionbloc)
-            debug_printf("ok\n");
-        else
-            debug_printf("not ok -> changing\n");
-        break;
-    default:
-        debug_printf("Unknown channel value !!!\n");
-        break;
-    }
-}
-
-void fn_v_Transition_CorrectTextureChannelTable(void)
-{
-    int i;
-    GLI_tdstMaterial_* pMat;
-    int j;
-
-    *(int*)(gs_aDEFTableOfTextureMemoryChannels + g_lNumberOfTexturesInFix * 4) = 2;
-    *(int*)(gs_aDEFTableOfTextureMemoryChannels + 4 + g_lNumberOfTexturesInFix * 4) = 2;
-
-    for (i = PLD_g_ulNumberOfFixVisualMaterials; i < PLD_g_ulNumberOfTransitionVisualMaterials; i++)
-    {
-        pMat = (GLI_tdstMaterial_*)GLI_g_StaticCopyOfArrayOfVisualMaterial[i];
-        if (!pMat->ulMultiTextureType)
-        {
-            fn_v_Transition_CorrectTextureChannel(pMat->p_stTexture);
-        }
-        else
-        {
-            for (j = 0; j < pMat->ulNbTextureStages; j++)
-                fn_v_Transition_CorrectTextureChannel(pMat->a_stMultiMaterial[j].pst_Texture);
-        }
-    }
-}
-
 #pragma opt_propagation off
 #pragma opt_dead_assignments off
 void PLD_fn_vLoadLevel(char* _szLevelName)
@@ -6366,7 +6283,7 @@ L_FamBody:
             if (!g_ax_pA3dGENERAL[p_stThisFamily->ucStorageBank] &&
                 GAM_fn_bIsFamilyToLoad(ucFamilyId))
             {
-                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea((unsigned char)ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, ucBank, 1); } }
+                { unsigned char ucBank = p_stThisFamily->ucStorageBank; char szAnimName[40]; char* pcFamilyAnimCMBAddress; sprintf(szAnimName, "%s\\ani%d", _szLevelName, ucBank - 5); pcFamilyAnimCMBAddress = PLD_fn_pcLoadArea((unsigned char)ucBank + 102, szAnimName); if (pcFamilyAnimCMBAddress) { g_pcAnimationsTimeStamp = (int)pcFamilyAnimCMBAddress; pcFamilyAnimCMBAddress += 40; pcFamilyAnimCMBAddress += 4; PLD_fn_vReadAnimationsBanks(&pcFamilyAnimCMBAddress, (unsigned short)ucBank, 1); } }
 
                 { static char s_szNumericName[4]; sprintf(s_szNumericName, "%d", ucFamilyId); SND_fn_bLoadBank(s_szNumericName); }
             }
@@ -6433,6 +6350,19 @@ L_ChrTest:
 #pragma opt_dead_assignments reset
 #pragma opt_propagation reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2582–2611 */
+/* addr: 0x0012c7c0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2582
+ *   +0x0010 -> line 2588
+ *   +0x0090 -> line 2592
+ *   +0x00a0 -> line 2596
+ *   +0x00d4 -> line 2599
+ *   +0x00e8 -> line 2610
+ *   +0x00f8 -> line 2611
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PLD_fn_vUnLoadLevelFamilies(void)
 {
     tdstFamilyList_* p_stThisFamily;
@@ -6451,6 +6381,29 @@ void PLD_fn_vUnLoadLevelFamilies(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2615–2668 */
+/* addr: 0x0012c700  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2615
+ *   +0x0004 -> line 2624
+ *   +0x0008 -> line 2615
+ *   +0x000c -> line 2624
+ *   +0x0034 -> line 2625
+ *   +0x0038 -> line 2640
+ *   +0x0048 -> line 2646
+ *   +0x0050 -> line 2651
+ *   +0x0058 -> line 2660
+ *   +0x006c -> line 2665
+ *   +0x0070 -> line 2662
+ *   +0x0074 -> line 2664
+ *   +0x0078 -> line 2662
+ *   +0x0080 -> line 2663
+ *   +0x008c -> line 2664
+ *   +0x0098 -> line 2665
+ *   +0x00ac -> line 2668
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PLD_fn_vUnLoadLevel(void)
 {
     int i;
@@ -6468,6 +6421,43 @@ void PLD_fn_vUnLoadLevel(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2677–2730 */
+/* addr: 0x0012c5e0  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2677
+ *   +0x0004 -> line 2680
+ *   +0x0008 -> line 2677
+ *   +0x000c -> line 2680
+ *   +0x0010 -> line 2677
+ *   +0x0014 -> line 2680
+ *   +0x0018 -> line 2677
+ *   +0x0024 -> line 2680
+ *   +0x0030 -> line 2684
+ *   +0x0038 -> line 2690
+ *   +0x0048 -> line 2691
+ *   +0x0060 -> line 2694
+ *   +0x006c -> line 2696
+ *   +0x0070 -> line 2697
+ *   +0x0074 -> line 2696
+ *   +0x0078 -> line 2698
+ *   +0x0080 -> line 2701
+ *   +0x0084 -> line 2699
+ *   +0x0088 -> line 2700
+ *   +0x008c -> line 2701
+ *   +0x0090 -> line 2704
+ *   +0x009c -> line 2706
+ *   +0x00ac -> line 2707
+ *   +0x00b4 -> line 2708
+ *   +0x00bc -> line 2711
+ *   +0x00cc -> line 2712
+ *   +0x00d4 -> line 2717
+ *   +0x00d8 -> line 2718
+ *   +0x00e4 -> line 2722
+ *   +0x00f0 -> line 2728
+ *   +0x00f8 -> line 2730
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PLD_fn_vUnLoadTransition(void)
 {
     int TransitionNumber;
@@ -6513,6 +6503,23 @@ void PLD_fn_vUnLoadTransition(void)
     fn_vAllocatorReset();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2767–2779 */
+/* addr: 0x0012c580  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2767
+ *   +0x0004 -> line 2768
+ *   +0x0008 -> line 2767
+ *   +0x000c -> line 2768
+ *   +0x0014 -> line 2769
+ *   +0x001c -> line 2771
+ *   +0x0024 -> line 2774
+ *   +0x0038 -> line 2776
+ *   +0x0044 -> line 2777
+ *   +0x004c -> line 2778
+ *   +0x0050 -> line 2779
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PLD_fn_vUnLoadFix(void)
 {
     SND_fn_bUnloadBank("fixe");
@@ -6524,6 +6531,19 @@ void PLD_fn_vUnLoadFix(void)
     g_a_LinksOfSuperObjectInFix = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\PLD\pld_call.c lines 2787–2792 */
+/* addr: 0x0012c4d0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2787
+ *   +0x0010 -> line 2789
+ *   +0x0014 -> line 2791
+ *   +0x0018 -> line 2789
+ *   +0x005c -> line 2790
+ *   +0x0094 -> line 2791
+ *   +0x00a8 -> line 2792
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PLD_fn_vReinitPositionOfFixCharacters(void)
 {
     unsigned long i;

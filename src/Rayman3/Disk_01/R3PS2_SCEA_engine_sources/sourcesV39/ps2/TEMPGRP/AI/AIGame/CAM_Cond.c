@@ -159,13 +159,16 @@ tdstNodeInterpret_* CAM_fn_p_stIs(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNod
     case eCond_Cam_IsFlagFixedOrientation:
         *p_lValue = hIntCineInfo->uwDNMFlags & 0x80;
         return p_stTree;
-    case eCond_Cam_IsFlagForcedPosition:
+    /* Retail's jump table swaps these two: ForcedTarget tests the
+       forced-position bit (0x1000) and ForcedPosition the forced-target bit
+       (0x2000), which the rest of the camera code uses the other way round. */
+    case eCond_Cam_IsFlagForcedTarget:
         *p_lValue = hIntCineInfo->uwIAFlags & 0x1000;
         return p_stTree;
     case eCond_Cam_IsFlagForcedAxis:
         *p_lValue = hIntCineInfo->uwIAFlags & 0x4000;
         return p_stTree;
-    case eCond_Cam_IsFlagForcedTarget:
+    case eCond_Cam_IsFlagForcedPosition:
         *p_lValue = hIntCineInfo->uwIAFlags & 0x2000;
         return p_stTree;
     }

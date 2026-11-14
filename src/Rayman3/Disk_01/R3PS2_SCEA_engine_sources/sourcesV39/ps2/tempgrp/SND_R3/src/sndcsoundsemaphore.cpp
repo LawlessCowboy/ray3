@@ -129,6 +129,23 @@ struct stree : streebase {
 };
 
 template <class K, class V, class KFN, class CMP, class ALLOC>
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 430–438 */
+/* addr: 0x001cb610  size: 160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 430
+ *   +0x0004 -> line 431
+ *   +0x0008 -> line 430
+ *   +0x000c -> line 431
+ *   +0x0010 -> line 430
+ *   +0x0020 -> line 431
+ *   +0x0028 -> line 433
+ *   +0x0068 -> line 436
+ *   +0x0074 -> line 437
+ *   +0x0088 -> line 438
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void stree<K, V, KFN, CMP, ALLOC>::_Erase(typename stree<K, V, KFN, CMP, ALLOC>::sTreeNode* po_Node)
 {
     if (po_Node == &_NilElmt)
@@ -201,26 +218,6 @@ void _NilElmt__Q24usnd9streebase(void)
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 62–98 */
-/* addr: 0x001cabd0  size: 640 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 62
- *   +0x001c -> line 65
- *   +0x0020 -> line 67
- *   +0x0044 -> line 69
- *   +0x0048 -> line 70
- *   +0x0090 -> line 84
- *   +0x00ac -> line 86
- *   +0x00b0 -> line 88
- *   +0x00bc -> line 90
- *   +0x00f0 -> line 92
- *   +0x00fc -> line 93
- *   +0x024c -> line 96
- *   +0x0258 -> line 97
- *   +0x0260 -> line 98
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Placeholder destructor: the retail object destroys the container with
  * erase(begin(), end()), which is what instantiates the out-of-line
  * stree::erase(iterator, iterator) and stree::_Erase template members. */
@@ -232,22 +229,6 @@ CSoundSemaphore::~CSoundSemaphore(void)
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 430–438 */
-/* addr: 0x001cb610  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 430
- *   +0x0004 -> line 431
- *   +0x0008 -> line 430
- *   +0x000c -> line 431
- *   +0x0010 -> line 430
- *   +0x0020 -> line 431
- *   +0x0028 -> line 433
- *   +0x0068 -> line 436
- *   +0x0074 -> line 437
- *   +0x0088 -> line 438
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The reconstructed body now lives in the usnd::stree template member
  * _Erase() defined above the smap stand-in; the original malformed
  * template-instantiation body is retained below as evidence. */
@@ -275,6 +256,26 @@ CSoundSemaphore::CSoundSemaphore(unsigned int u32_ChannelId, unsigned int u32_Ch
 {
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndcsoundsemaphore.cpp lines 62–98 */
+/* addr: 0x001cabd0  size: 640 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 62
+ *   +0x001c -> line 65
+ *   +0x0020 -> line 67
+ *   +0x0044 -> line 69
+ *   +0x0048 -> line 70
+ *   +0x0090 -> line 84
+ *   +0x00ac -> line 86
+ *   +0x00b0 -> line 88
+ *   +0x00bc -> line 90
+ *   +0x00f0 -> line 92
+ *   +0x00fc -> line 93
+ *   +0x024c -> line 96
+ *   +0x0258 -> line 97
+ *   +0x0260 -> line 98
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CSoundSemaphore::f_vSynchro(void)
 {
     /* The handles whose sound request finished are collected in a static

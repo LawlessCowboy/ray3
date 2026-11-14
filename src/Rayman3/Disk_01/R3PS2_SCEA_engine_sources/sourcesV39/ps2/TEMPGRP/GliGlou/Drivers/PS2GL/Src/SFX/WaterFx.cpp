@@ -937,10 +937,10 @@ struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
     GLI_tdstMaterial_** pArrayOfMaterials; /* +0x8 */
-    float ** pArrayOfVertexArrays[4]; /* +0xc */
+    float ** pArrayOfVertexArrays; /* +0xc */
     int pVertexArraySizes; /* +0x10 */
-    int pNbTrianglesPerElement; /* +0x14 */
-    int pbIsTransparent; /* +0x18 */
+    unsigned int* pNbTrianglesPerElement; /* +0x14 */
+    unsigned int* pbIsTransparent; /* +0x18 */
     unsigned int FrameDeformed; /* +0x1c */
     int pSDLs; /* +0x20 */
 };
@@ -1991,12 +1991,526 @@ struct MOR_stMorphObject_ {
     MOR_stMorphVector_* d_stMorphVector; /* +0x8 */
 };
 
+/* tagGScontext and its member types, as recovered for u_effects.c (the
+ * retail debug of this unit omits them: it only declares g_gsContext). */
+typedef struct anon_3 anon_3;
+typedef struct anon_42 anon_42;
+typedef struct anon_9 anon_9;
+typedef struct anon_23 anon_23;
+typedef struct anon_28 anon_28;
+typedef struct anon_36 anon_36;
+typedef struct anon_35 anon_35;
+typedef struct anon_33 anon_33;
+typedef struct anon_22 anon_22;
+typedef struct anon_14 anon_14;
+typedef struct anon_41 anon_41;
+typedef struct anon_0 anon_0;
+typedef struct anon_30 anon_30;
+typedef struct anon_5 anon_5;
+typedef struct anon_2 anon_2;
+typedef struct anon_11 anon_11;
+typedef struct anon_12 anon_12;
+typedef struct anon_27 anon_27;
+typedef struct anon_34 anon_34;
+typedef struct anon_4 anon_4;
+typedef struct anon_18 anon_18;
+typedef struct tagsceGsReg tagsceGsReg;
+typedef struct anon_16 anon_16;
+typedef struct anon_7 anon_7;
+typedef struct anon_31 anon_31;
+typedef struct anon_8 anon_8;
+typedef struct anon_29 anon_29;
+typedef struct anon_25 anon_25;
+typedef struct anon_39 anon_39;
+typedef struct anon_10 anon_10;
+typedef struct anon_20 anon_20;
+typedef struct anon_38 anon_38;
+typedef struct anon_13 anon_13;
+typedef struct anon_19 anon_19;
+typedef struct anon_24 anon_24;
+typedef struct anon_17 anon_17;
+typedef struct anon_21 anon_21;
+typedef struct anon_26 anon_26;
+typedef struct anon_32 anon_32;
+typedef union anon_1 anon_1;
+typedef struct tagGScontext tagGScontext;
+
+struct anon_42 {
+    unsigned long PRIM : 3; /* bit 0, byte +0x0 */
+    unsigned long IIP : 1; /* bit 3, byte +0x0 */
+    unsigned long TME : 1; /* bit 4, byte +0x0 */
+    unsigned long FGE : 1; /* bit 5, byte +0x0 */
+    unsigned long ABE : 1; /* bit 6, byte +0x0 */
+    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned long FST : 1; /* bit 8, byte +0x0 */
+    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
+    unsigned long FIX : 1; /* bit 10, byte +0x0 */
+    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+};
+
+struct anon_9 {
+    unsigned int R : 8; /* bit 0, byte +0x0 */
+    unsigned int G : 8; /* bit 8, byte +0x0 */
+    unsigned int B : 8; /* bit 16, byte +0x0 */
+    unsigned int A : 8; /* bit 24, byte +0x0 */
+    float Q; /* +0x4 */
+};
+
+struct anon_23 {
+    float S; /* +0x0 */
+    float T; /* +0x4 */
+};
+
+struct anon_28 {
+    unsigned long U : 14; /* bit 0, byte +0x0 */
+    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
+    unsigned long V : 14; /* bit 16, byte +0x0 */
+    unsigned long pad30 : 34; /* bit 30, byte +0x0 */
+};
+
+struct anon_36 {
+    unsigned long X : 16; /* bit 0, byte +0x0 */
+    unsigned long Y : 16; /* bit 16, byte +0x0 */
+    unsigned long Z : 24; /* bit 32, byte +0x0 */
+    unsigned long F : 8; /* bit 56, byte +0x0 */
+};
+
+struct anon_35 {
+    unsigned long X : 16; /* bit 0, byte +0x0 */
+    unsigned long Y : 16; /* bit 16, byte +0x0 */
+    unsigned long Z : 32; /* bit 32, byte +0x0 */
+};
+
+struct anon_33 {
+    unsigned long TBP0 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW : 6; /* bit 14, byte +0x0 */
+    unsigned long PSM : 6; /* bit 20, byte +0x0 */
+    unsigned long TW : 4; /* bit 26, byte +0x0 */
+    unsigned long TH : 4; /* bit 30, byte +0x0 */
+    unsigned long TCC : 1; /* bit 34, byte +0x0 */
+    unsigned long TFX : 2; /* bit 35, byte +0x0 */
+    unsigned long CBP : 14; /* bit 37, byte +0x0 */
+    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
+    unsigned long CSM : 1; /* bit 55, byte +0x0 */
+    unsigned long CSA : 5; /* bit 56, byte +0x0 */
+    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_22 {
+    unsigned long WMS : 2; /* bit 0, byte +0x0 */
+    unsigned long WMT : 2; /* bit 2, byte +0x0 */
+    unsigned long MINU : 10; /* bit 4, byte +0x0 */
+    unsigned long MAXU : 10; /* bit 14, byte +0x0 */
+    unsigned long MINV : 10; /* bit 24, byte +0x0 */
+    unsigned long MAXV : 10; /* bit 34, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_14 {
+    unsigned long pad00 : 56; /* bit 0, byte +0x0 */
+    unsigned long F : 8; /* bit 56, byte +0x0 */
+};
+
+struct anon_41 {
+    unsigned long LCM : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 1; /* bit 1, byte +0x0 */
+    unsigned long MXL : 3; /* bit 2, byte +0x0 */
+    unsigned long MMAG : 1; /* bit 5, byte +0x0 */
+    unsigned long MMIN : 3; /* bit 6, byte +0x0 */
+    unsigned long MTBA : 1; /* bit 9, byte +0x0 */
+    unsigned long pad10 : 9; /* bit 10, byte +0x0 */
+    unsigned long L : 2; /* bit 19, byte +0x0 */
+    unsigned long pad21 : 11; /* bit 21, byte +0x0 */
+    unsigned long K : 12; /* bit 32, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_0 {
+    unsigned long pad00 : 20; /* bit 0, byte +0x0 */
+    unsigned long PSM : 6; /* bit 20, byte +0x0 */
+    unsigned long pad26 : 11; /* bit 26, byte +0x0 */
+    unsigned long CBP : 14; /* bit 37, byte +0x0 */
+    unsigned long CPSM : 4; /* bit 51, byte +0x0 */
+    unsigned long CSM : 1; /* bit 55, byte +0x0 */
+    unsigned long CSA : 5; /* bit 56, byte +0x0 */
+    unsigned long CLD : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_30 {
+    unsigned long OFX : 16; /* bit 0, byte +0x0 */
+    unsigned long pad16 : 16; /* bit 16, byte +0x0 */
+    unsigned long OFY : 16; /* bit 32, byte +0x0 */
+    unsigned long pad48 : 16; /* bit 48, byte +0x0 */
+};
+
+struct anon_5 {
+    unsigned long AC : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_2 {
+    unsigned long pad00 : 3; /* bit 0, byte +0x0 */
+    unsigned long IIP : 1; /* bit 3, byte +0x0 */
+    unsigned long TME : 1; /* bit 4, byte +0x0 */
+    unsigned long FGE : 1; /* bit 5, byte +0x0 */
+    unsigned long ABE : 1; /* bit 6, byte +0x0 */
+    unsigned long AA1 : 1; /* bit 7, byte +0x0 */
+    unsigned long FST : 1; /* bit 8, byte +0x0 */
+    unsigned long CTXT : 1; /* bit 9, byte +0x0 */
+    unsigned long FIX : 1; /* bit 10, byte +0x0 */
+    unsigned long pad11 : 53; /* bit 11, byte +0x0 */
+};
+
+struct anon_11 {
+    unsigned long CBW : 6; /* bit 0, byte +0x0 */
+    unsigned long COU : 6; /* bit 6, byte +0x0 */
+    unsigned long COV : 10; /* bit 12, byte +0x0 */
+    unsigned long pad22 : 42; /* bit 22, byte +0x0 */
+};
+
+struct anon_12 {
+    unsigned long MSK : 2; /* bit 0, byte +0x0 */
+    unsigned long pad02 : 62; /* bit 2, byte +0x0 */
+};
+
+struct anon_27 {
+    unsigned long TBP1 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW1 : 6; /* bit 14, byte +0x0 */
+    unsigned long TBP2 : 14; /* bit 20, byte +0x0 */
+    unsigned long TBW2 : 6; /* bit 34, byte +0x0 */
+    unsigned long TBP3 : 14; /* bit 40, byte +0x0 */
+    unsigned long TBW3 : 6; /* bit 54, byte +0x0 */
+    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+};
+
+struct anon_34 {
+    unsigned long TBP4 : 14; /* bit 0, byte +0x0 */
+    unsigned long TBW4 : 6; /* bit 14, byte +0x0 */
+    unsigned long TBP5 : 14; /* bit 20, byte +0x0 */
+    unsigned long TBW5 : 6; /* bit 34, byte +0x0 */
+    unsigned long TBP6 : 14; /* bit 40, byte +0x0 */
+    unsigned long TBW6 : 6; /* bit 54, byte +0x0 */
+    unsigned long pad60 : 4; /* bit 60, byte +0x0 */
+};
+
+struct anon_4 {
+    unsigned long TA0 : 8; /* bit 0, byte +0x0 */
+    unsigned long pad08 : 7; /* bit 8, byte +0x0 */
+    unsigned long AEM : 1; /* bit 15, byte +0x0 */
+    unsigned long pad16 : 16; /* bit 16, byte +0x0 */
+    unsigned long TA1 : 8; /* bit 32, byte +0x0 */
+    unsigned long pad40 : 24; /* bit 40, byte +0x0 */
+};
+
+struct anon_18 {
+    unsigned long FCR : 8; /* bit 0, byte +0x0 */
+    unsigned long FCG : 8; /* bit 8, byte +0x0 */
+    unsigned long FCB : 8; /* bit 16, byte +0x0 */
+    unsigned long pad24 : 40; /* bit 24, byte +0x0 */
+};
+
+struct tagsceGsReg {
+    unsigned long DATA; /* +0x0 */
+};
+
+struct anon_16 {
+    unsigned long SCAX0 : 11; /* bit 0, byte +0x0 */
+    unsigned long pad11 : 5; /* bit 11, byte +0x0 */
+    unsigned long SCAX1 : 11; /* bit 16, byte +0x0 */
+    unsigned long pad27 : 5; /* bit 27, byte +0x0 */
+    unsigned long SCAY0 : 11; /* bit 32, byte +0x0 */
+    unsigned long pad43 : 5; /* bit 43, byte +0x0 */
+    unsigned long SCAY1 : 11; /* bit 48, byte +0x0 */
+    unsigned long pad59 : 5; /* bit 59, byte +0x0 */
+};
+
+struct anon_7 {
+    unsigned long A : 2; /* bit 0, byte +0x0 */
+    unsigned long B : 2; /* bit 2, byte +0x0 */
+    unsigned long C : 2; /* bit 4, byte +0x0 */
+    unsigned long D : 2; /* bit 6, byte +0x0 */
+    unsigned long pad8 : 24; /* bit 8, byte +0x0 */
+    unsigned long FIX : 8; /* bit 32, byte +0x0 */
+    unsigned long pad40 : 24; /* bit 40, byte +0x0 */
+};
+
+struct anon_31 {
+    unsigned long DIMX00 : 3; /* bit 0, byte +0x0 */
+    unsigned long pad00 : 1; /* bit 3, byte +0x0 */
+    unsigned long DIMX01 : 3; /* bit 4, byte +0x0 */
+    unsigned long pad01 : 1; /* bit 7, byte +0x0 */
+    unsigned long DIMX02 : 3; /* bit 8, byte +0x0 */
+    unsigned long pad02 : 1; /* bit 11, byte +0x0 */
+    unsigned long DIMX03 : 3; /* bit 12, byte +0x0 */
+    unsigned long pad03 : 1; /* bit 15, byte +0x0 */
+    unsigned long DIMX10 : 3; /* bit 16, byte +0x0 */
+    unsigned long pad10 : 1; /* bit 19, byte +0x0 */
+    unsigned long DIMX11 : 3; /* bit 20, byte +0x0 */
+    unsigned long pad11 : 1; /* bit 23, byte +0x0 */
+    unsigned long DIMX12 : 3; /* bit 24, byte +0x0 */
+    unsigned long pad12 : 1; /* bit 27, byte +0x0 */
+    unsigned long DIMX13 : 3; /* bit 28, byte +0x0 */
+    unsigned long pad13 : 1; /* bit 31, byte +0x0 */
+    unsigned long DIMX20 : 3; /* bit 32, byte +0x0 */
+    unsigned long pad20 : 1; /* bit 35, byte +0x0 */
+    unsigned long DIMX21 : 3; /* bit 36, byte +0x0 */
+    unsigned long pad21 : 1; /* bit 39, byte +0x0 */
+    unsigned long DIMX22 : 3; /* bit 40, byte +0x0 */
+    unsigned long pad22 : 1; /* bit 43, byte +0x0 */
+    unsigned long DIMX23 : 3; /* bit 44, byte +0x0 */
+    unsigned long pad23 : 1; /* bit 47, byte +0x0 */
+    unsigned long DIMX30 : 3; /* bit 48, byte +0x0 */
+    unsigned long pad30 : 1; /* bit 51, byte +0x0 */
+    unsigned long DIMX31 : 3; /* bit 52, byte +0x0 */
+    unsigned long pad31 : 1; /* bit 55, byte +0x0 */
+    unsigned long DIMX32 : 3; /* bit 56, byte +0x0 */
+    unsigned long pad32 : 1; /* bit 59, byte +0x0 */
+    unsigned long DIMX33 : 3; /* bit 60, byte +0x0 */
+    unsigned long pad33 : 1; /* bit 63, byte +0x0 */
+};
+
+struct anon_8 {
+    unsigned long DTHE : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_29 {
+    unsigned long CLAMP : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_25 {
+    unsigned long ATE : 1; /* bit 0, byte +0x0 */
+    unsigned long ATST : 3; /* bit 1, byte +0x0 */
+    unsigned long AREF : 8; /* bit 4, byte +0x0 */
+    unsigned long AFAIL : 2; /* bit 12, byte +0x0 */
+    unsigned long DATE : 1; /* bit 14, byte +0x0 */
+    unsigned long DATM : 1; /* bit 15, byte +0x0 */
+    unsigned long ZTE : 1; /* bit 16, byte +0x0 */
+    unsigned long ZTST : 2; /* bit 17, byte +0x0 */
+    unsigned long pad19 : 45; /* bit 19, byte +0x0 */
+};
+
+struct anon_39 {
+    unsigned long PABE : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_10 {
+    unsigned long FBA : 1; /* bit 0, byte +0x0 */
+    unsigned long pad01 : 63; /* bit 1, byte +0x0 */
+};
+
+struct anon_20 {
+    unsigned long FBP : 9; /* bit 0, byte +0x0 */
+    unsigned long pad09 : 7; /* bit 9, byte +0x0 */
+    unsigned long FBW : 6; /* bit 16, byte +0x0 */
+    unsigned long pad22 : 2; /* bit 22, byte +0x0 */
+    unsigned long PSM : 6; /* bit 24, byte +0x0 */
+    unsigned long pad30 : 2; /* bit 30, byte +0x0 */
+    unsigned long FBMSK : 32; /* bit 32, byte +0x0 */
+};
+
+struct anon_38 {
+    unsigned long ZBP : 9; /* bit 0, byte +0x0 */
+    unsigned long pad09 : 15; /* bit 9, byte +0x0 */
+    unsigned long PSM : 4; /* bit 24, byte +0x0 */
+    unsigned long pad28 : 4; /* bit 28, byte +0x0 */
+    unsigned long ZMSK : 1; /* bit 32, byte +0x0 */
+    unsigned long pad33 : 31; /* bit 33, byte +0x0 */
+};
+
+struct anon_13 {
+    unsigned long SBP : 14; /* bit 0, byte +0x0 */
+    unsigned long pad14 : 2; /* bit 14, byte +0x0 */
+    unsigned long SBW : 6; /* bit 16, byte +0x0 */
+    unsigned long pad22 : 2; /* bit 22, byte +0x0 */
+    unsigned long SPSM : 6; /* bit 24, byte +0x0 */
+    unsigned long pad30 : 2; /* bit 30, byte +0x0 */
+    unsigned long DBP : 14; /* bit 32, byte +0x0 */
+    unsigned long pad46 : 2; /* bit 46, byte +0x0 */
+    unsigned long DBW : 6; /* bit 48, byte +0x0 */
+    unsigned long pad54 : 2; /* bit 54, byte +0x0 */
+    unsigned long DPSM : 6; /* bit 56, byte +0x0 */
+    unsigned long pad62 : 2; /* bit 62, byte +0x0 */
+};
+
+struct anon_19 {
+    unsigned long SSAX : 11; /* bit 0, byte +0x0 */
+    unsigned long pad11 : 5; /* bit 11, byte +0x0 */
+    unsigned long SSAY : 11; /* bit 16, byte +0x0 */
+    unsigned long pad27 : 5; /* bit 27, byte +0x0 */
+    unsigned long DSAX : 11; /* bit 32, byte +0x0 */
+    unsigned long pad43 : 5; /* bit 43, byte +0x0 */
+    unsigned long DSAY : 11; /* bit 48, byte +0x0 */
+    unsigned long DIR : 2; /* bit 59, byte +0x0 */
+    unsigned long pad61 : 3; /* bit 61, byte +0x0 */
+};
+
+struct anon_24 {
+    unsigned long RRW : 12; /* bit 0, byte +0x0 */
+    unsigned long pad12 : 20; /* bit 12, byte +0x0 */
+    unsigned long RRH : 12; /* bit 32, byte +0x0 */
+    unsigned long pad44 : 20; /* bit 44, byte +0x0 */
+};
+
+struct anon_17 {
+    unsigned long XDR : 2; /* bit 0, byte +0x0 */
+    unsigned long pad02 : 62; /* bit 2, byte +0x0 */
+};
+
+struct anon_21 {
+    unsigned int ID; /* +0x0 */
+    unsigned int IDMSK; /* +0x4 */
+};
+
+struct anon_26 {
+    unsigned int ID; /* +0x0 */
+    unsigned int IDMSK; /* +0x4 */
+};
+
+struct anon_32 {
+    unsigned long PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned long RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned long ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned long UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned long XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned long XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned long TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned long TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned long CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned long CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned long FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned long XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned long XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned long TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned long TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned long TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned long TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned long XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned long XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned long PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned long PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned long TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned long SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned long MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned long MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned long MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned long MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned long TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned long FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned long TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned long SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned long SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned long ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned long ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned long DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned long DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned long COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned long TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned long TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned long PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned long FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned long FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned long FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned long FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned long ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned long ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned long BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned long TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned long TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned long TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned long HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned long SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned long FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned long LABEL_Modified : 1; /* bit 53, byte +0x0 */
+};
+
+union anon_1 {
+    signed char bData[16]; /* +0x0 */
+    unsigned char ubData[16]; /* +0x0 */
+    short sData[8]; /* +0x0 */
+    unsigned short usData[8]; /* +0x0 */
+    int iData[4]; /* +0x0 */
+    unsigned int uiData[4]; /* +0x0 */
+    long i64Data[2]; /* +0x0 */
+    unsigned long u64Data[2]; /* +0x0 */
+    float fData[4]; /* +0x0 */
+    double dData[2]; /* +0x0 */
+};
+
+struct tagGScontext {
+    anon_42 PRIM; /* +0x0 */
+    anon_9 RGBAQ; /* +0x8 */
+    anon_23 ST; /* +0x10 */
+    anon_28 UV; /* +0x18 */
+    anon_36 XYZF2; /* +0x20 */
+    anon_35 XYZ2; /* +0x28 */
+    anon_33 TEX0_1; /* +0x30 */
+    anon_33 TEX0_2; /* +0x38 */
+    anon_22 CLAMP_1; /* +0x40 */
+    anon_22 CLAMP_2; /* +0x48 */
+    anon_14 FOG; /* +0x50 */
+    anon_36 XYZF3; /* +0x58 */
+    anon_35 XYZ3; /* +0x60 */
+    anon_41 TEX1_1; /* +0x68 */
+    anon_41 TEX1_2; /* +0x70 */
+    anon_0 TEX2_1; /* +0x78 */
+    anon_0 TEX2_2; /* +0x80 */
+    anon_30 XYOFFSET_1; /* +0x88 */
+    anon_30 XYOFFSET_2; /* +0x90 */
+    anon_5 PRMODECONT; /* +0x98 */
+    anon_2 PRMODE; /* +0xa0 */
+    anon_11 TEXCLUT; /* +0xa8 */
+    anon_12 SCANMSK; /* +0xb0 */
+    anon_27 MIPTBP1_1; /* +0xb8 */
+    anon_27 MIPTBP1_2; /* +0xc0 */
+    anon_34 MIPTBP2_1; /* +0xc8 */
+    anon_34 MIPTBP2_2; /* +0xd0 */
+    anon_4 TEXA; /* +0xd8 */
+    anon_18 FOGCOL; /* +0xe0 */
+    tagsceGsReg TEXFLUSH; /* +0xe8 */
+    anon_16 SCISSOR_1; /* +0xf0 */
+    anon_16 SCISSOR_2; /* +0xf8 */
+    anon_7 ALPHA_1; /* +0x100 */
+    anon_7 ALPHA_2; /* +0x108 */
+    anon_31 DIMX; /* +0x110 */
+    anon_8 DTHE; /* +0x118 */
+    anon_29 COLCLAMP; /* +0x120 */
+    anon_25 TEST_1; /* +0x128 */
+    anon_25 TEST_2; /* +0x130 */
+    anon_39 PABE; /* +0x138 */
+    anon_10 FBA_1; /* +0x140 */
+    anon_10 FBA_2; /* +0x148 */
+    anon_20 FRAME_1; /* +0x150 */
+    anon_20 FRAME_2; /* +0x158 */
+    anon_38 ZBUF_1; /* +0x160 */
+    anon_38 ZBUF_2; /* +0x168 */
+    anon_13 BITBLTBUF; /* +0x170 */
+    anon_19 TRXPOS; /* +0x178 */
+    anon_24 TRXREG; /* +0x180 */
+    anon_17 TRXDIR; /* +0x188 */
+    tagsceGsReg HWREG; /* +0x190 */
+    anon_21 SIGNAL; /* +0x198 */
+    tagsceGsReg FINISH; /* +0x1a0 */
+    anon_26 LABEL; /* +0x1a8 */
+    anon_32 ModFlgs; /* +0x1b0 */
+    anon_32 GlobalModFlgs; /* +0x1b8 */
+    anon_1 PackageBuffer[518]; /* +0x1c0 */
+    int iBufCount; /* +0x2220 */
+    anon_1* pqCurrent; /* +0x2224 */
+    anon_3* pCurTag; /* +0x2228 */
+    signed char iRegs; /* +0x222c */
+};
+
+
 int WaterFx_hVisualMaterial;
 static char gs_cWATERFXISACTIVE;
 C_FxList WaterFx_g_List;
 C_FxList WaterFx_g_ListToDisplay;
 unsigned int GLI_g_NumberInList;
 tagGLcontext g_PS2glContext;
+tagGScontext g_gsContext;
 int GLI_g_HasVertexTransparency;
 unsigned int GLI_g_CurrentStage;
 float GLI_g_SPOMATRIX_Dummy[16];
@@ -2004,7 +2518,7 @@ unsigned int hCurrentSDL;
 MTH3D_tdstVector_ AGO_g_stMainCharacterFinalPosition;
 tdstEngineStructure_ g_stEngineStructure;
 void (*PS2glLiberator)(void*);
-int PS2glAllocator64;
+void* (*PS2glAllocator64)(unsigned int);
 int G_pSO;
 
 extern "C" void SDL_Destroy(unsigned int* phSDL);
@@ -2021,116 +2535,6 @@ extern "C" void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces);
 
 extern "C" void SDL_Preprocess(unsigned int hSDL);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 72–153 */
-/* addr: 0x002e9780  size: 1264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 72
- *   +0x0004 -> line 76
- *   +0x0008 -> line 72
- *   +0x000c -> line 76
- *   +0x0010 -> line 72
- *   +0x0014 -> line 76
- *   +0x0018 -> line 72
- *   +0x001c -> line 76
- *   +0x0020 -> line 72
- *   +0x0024 -> line 76
- *   +0x0068 -> line 77
- *   +0x0070 -> line 78
- *   +0x0084 -> line 79
- *   +0x008c -> line 78
- *   +0x00b4 -> line 81
- *   +0x00b8 -> line 79
- *   +0x00bc -> line 78
- *   +0x00c0 -> line 79
- *   +0x00d0 -> line 78
- *   +0x00d4 -> line 82
- *   +0x00dc -> line 78
- *   +0x00e0 -> line 79
- *   +0x00e4 -> line 78
- *   +0x00e8 -> line 80
- *   +0x00f0 -> line 78
- *   +0x00fc -> line 82
- *   +0x0100 -> line 78
- *   +0x0104 -> line 79
- *   +0x0108 -> line 80
- *   +0x010c -> line 79
- *   +0x0110 -> line 80
- *   +0x0114 -> line 82
- *   +0x0118 -> line 79
- *   +0x0124 -> line 82
- *   +0x0128 -> line 80
- *   +0x0138 -> line 79
- *   +0x013c -> line 80
- *   +0x0140 -> line 79
- *   +0x0144 -> line 83
- *   +0x0148 -> line 79
- *   +0x015c -> line 80
- *   +0x0160 -> line 79
- *   +0x0164 -> line 80
- *   +0x0168 -> line 79
- *   +0x0178 -> line 80
- *   +0x017c -> line 79
- *   +0x0180 -> line 80
- *   +0x0184 -> line 79
- *   +0x0188 -> line 80
- *   +0x018c -> line 79
- *   +0x0190 -> line 80
- *   +0x01b8 -> line 81
- *   +0x01c0 -> line 82
- *   +0x01c4 -> line 81
- *   +0x01c8 -> line 82
- *   +0x01e8 -> line 81
- *   +0x01ec -> line 82
- *   +0x01f0 -> line 81
- *   +0x01f4 -> line 82
- *   +0x023c -> line 83
- *   +0x0244 -> line 86
- *   +0x0298 -> line 88
- *   +0x02a8 -> line 90
- *   +0x02c4 -> line 94
- *   +0x02cc -> line 98
- *   +0x02d0 -> line 96
- *   +0x02d4 -> line 98
- *   +0x02d8 -> line 97
- *   +0x02dc -> line 96
- *   +0x02e8 -> line 97
- *   +0x0300 -> line 98
- *   +0x0318 -> line 99
- *   +0x0328 -> line 101
- *   +0x0330 -> line 102
- *   +0x0350 -> line 103
- *   +0x035c -> line 104
- *   +0x0370 -> line 105
- *   +0x0380 -> line 106
- *   +0x038c -> line 107
- *   +0x039c -> line 108
- *   +0x03b0 -> line 109
- *   +0x03b8 -> line 113
- *   +0x03bc -> line 114
- *   +0x03c4 -> line 118
- *   +0x03c8 -> line 116
- *   +0x03cc -> line 118
- *   +0x03d0 -> line 117
- *   +0x03d4 -> line 116
- *   +0x03e4 -> line 117
- *   +0x0400 -> line 118
- *   +0x0418 -> line 119
- *   +0x0428 -> line 120
- *   +0x0434 -> line 122
- *   +0x0450 -> line 124
- *   +0x0458 -> line 125
- *   +0x0470 -> line 126
- *   +0x047c -> line 127
- *   +0x0490 -> line 128
- *   +0x04a0 -> line 129
- *   +0x04ac -> line 130
- *   +0x04bc -> line 131
- *   +0x04d0 -> line 132
- *   +0x04d8 -> line 153
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 extern "C" void AE_Filter_BrightNess_n_Contrast(float* AE_Bright_Cont);
@@ -2144,134 +2548,6 @@ extern "C" void WaterFx_vDestroySDLs(void);
 extern "C" void WaterFx_vInit(void);
 extern "C" void WaterFx_vProcessAndDisplay(int bTransparent);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1350–1361 */
-/* addr: 0x002e9c70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1350
- *   +0x0018 -> line 1353
- *   +0x001c -> line 1355
- *   +0x0024 -> line 1357
- *   +0x0034 -> line 1358
- *   +0x0038 -> line 1359
- *   +0x0048 -> line 1361
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1338–1345 */
-/* addr: 0x002e9cd0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1338
- *   +0x0004 -> line 1340
- *   +0x000c -> line 1342
- *   +0x0080 -> line 1343
- *   +0x0084 -> line 1344
- *   +0x0090 -> line 1345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1321–1331 */
-/* addr: 0x002e9d70  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1321
- *   +0x0018 -> line 1324
- *   +0x001c -> line 1326
- *   +0x0024 -> line 1328
- *   +0x0034 -> line 1329
- *   +0x0038 -> line 1330
- *   +0x0048 -> line 1331
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1303–1316 */
-/* addr: 0x002e9dd0  size: 128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1303
- *   +0x0018 -> line 1307
- *   +0x002c -> line 1309
- *   +0x004c -> line 1311
- *   +0x0050 -> line 1313
- *   +0x005c -> line 1315
- *   +0x0068 -> line 1316
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1289–1299 */
-/* addr: 0x002e9e50  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1289
- *   +0x000c -> line 1292
- *   +0x001c -> line 1294
- *   +0x0024 -> line 1296
- *   +0x002c -> line 1297
- *   +0x0040 -> line 1299
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1282–1282 */
-/* addr: 0x002e9ea0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1282
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1276–1276 */
-/* addr: 0x002e9eb0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1276
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1248–1272 */
-/* addr: 0x002e9ec0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1248
- *   +0x0010 -> line 1252
- *   +0x0014 -> line 1254
- *   +0x001c -> line 1257
- *   +0x0028 -> line 1258
- *   +0x002c -> line 1259
- *   +0x0038 -> line 1261
- *   +0x003c -> line 1263
- *   +0x0044 -> line 1265
- *   +0x004c -> line 1266
- *   +0x0068 -> line 1267
- *   +0x0070 -> line 1269
- *   +0x0074 -> line 1270
- *   +0x0080 -> line 1272
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1216–1245 */
-/* addr: 0x002e9f60  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1216
- *   +0x0010 -> line 1218
- *   +0x0014 -> line 1220
- *   +0x001c -> line 1225
- *   +0x0024 -> line 1227
- *   +0x002c -> line 1229
- *   +0x003c -> line 1232
- *   +0x0044 -> line 1233
- *   +0x0048 -> line 1234
- *   +0x004c -> line 1235
- *   +0x0068 -> line 1236
- *   +0x0070 -> line 1238
- *   +0x0078 -> line 1239
- *   +0x0080 -> line 1241
- *   +0x0088 -> line 1243
- *   +0x0090 -> line 1244
- *   +0x0098 -> line 1245
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The target writes COP0 register 24 (mtbpc, i.e. mtc0 zero, $24) around the
  * processing and drawing; C cannot express it.  The R5900 alias mtbpc is used
  * so MWCC schedules it like an ordinary instruction (delay slots, hazard nop). */
@@ -2288,44 +2564,6 @@ extern "C" void SDL_Draw(unsigned int hSDL);
    is entered by an explicit jump, so the goto below reproduces it (and with it
    the retail line map). */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1118–1182 */
-/* addr: 0x002ea010  size: 496 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1118
- *   +0x000c -> line 1124
- *   +0x0014 -> line 1125
- *   +0x0018 -> line 1126
- *   +0x001c -> line 1125
- *   +0x0020 -> line 1126
- *   +0x0024 -> line 1125
- *   +0x0028 -> line 1127
- *   +0x002c -> line 1125
- *   +0x0064 -> line 1127
- *   +0x006c -> line 1128
- *   +0x0074 -> line 1135
- *   +0x0080 -> line 1136
- *   +0x008c -> line 1138
- *   +0x0094 -> line 1139
- *   +0x00a0 -> line 1142
- *   +0x00ac -> line 1144
- *   +0x00b0 -> line 1145
- *   +0x00b4 -> line 1144
- *   +0x00b8 -> line 1146
- *   +0x00c8 -> line 1147
- *   +0x00d0 -> line 1149
- *   +0x00d8 -> line 1152
- *   +0x00e0 -> line 1169
- *   +0x00ec -> line 1170
- *   +0x013c -> line 1171
- *   +0x0150 -> line 1172
- *   +0x0164 -> line 1173
- *   +0x0178 -> line 1174
- *   +0x0188 -> line 1175
- *   +0x0194 -> line 1176
- *   +0x01e0 -> line 1182
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void GLI_vInitGLProjectionMatrix(void);
 extern "C" void PS2glMatrixMode(unsigned int mode);
 extern "C" void PS2glLoadMatrixf(const float* m);
@@ -2338,132 +2576,608 @@ extern "C" void PS2glTexCoordPointer(int size, unsigned int type, int stride, vo
 extern "C" void impPS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
 extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
 extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
+extern "C" void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], unsigned int** pCOrg);
+extern "C" int printf(const char* format, ...);
+extern "C" void GLI_vSetFIXFullScreenOrthoProjection(void);
+extern "C" void PS2glDepthMask(unsigned char flag);
+extern "C" void PS2glSetGsRegister(int address, unsigned long value, unsigned long mask);
+extern "C" void PS2glBegin(unsigned int mode);
+extern "C" void PS2glEnd(void);
+extern "C" void PS2glColor4f(float r, float g, float b, float a);
+extern "C" void PS2glVertex2f(float x, float y);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 753–1111 */
-/* addr: 0x002ea200  size: 1260 bytes */
+extern "C" float FRR(float fMin, float fMax);
+
+extern "C" float fabsf(float x);
+extern "C" float PS2SQRTF(float x);
+
+inline int JR_bIsEqual(float a, float b)
+{
+    return (fabsf(a - b) < 1e-6f) ? 1 : 0;
+}
+
+/* R5900 accumulator forms MWCC cannot emit from C (mula.s, madd.s, msub.s). */
+inline float JR_xSqr2(float _x, float _y)
+{
+    float _r;
+    asm { mula.s _x, _x }
+    asm { madd.s _r, _y, _y }
+    return _r;
+}
+
+inline float JR_xDet2(float _a, float _b, float _c, float _d)
+{
+    float _r;
+    asm { mula.s _a, _b }
+    asm { msub.s _r, _c, _d }
+    return _r;
+}
+
+void JR_GetABCForInterpolation(float* p1, float* p2, float* p3, float* pInterpoledPoint, float* pABC);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 296–395 */
+/* addr: 0x002eb480  size: 1560 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 753
- *   +0x0004 -> line 763
- *   +0x0008 -> line 753
- *   +0x0030 -> line 763
- *   +0x003c -> line 770
- *   +0x0040 -> line 781
- *   +0x004c -> line 770
- *   +0x0050 -> line 774
- *   +0x0054 -> line 771
- *   +0x0058 -> line 770
- *   +0x005c -> line 771
- *   +0x0060 -> line 770
- *   +0x0064 -> line 771
- *   +0x0068 -> line 770
- *   +0x006c -> line 771
- *   +0x0070 -> line 781
- *   +0x0078 -> line 812
- *   +0x007c -> line 808
- *   +0x0080 -> line 812
- *   +0x0084 -> line 813
- *   +0x0088 -> line 821
- *   +0x0094 -> line 823
- *   +0x0120 -> line 825
- *   +0x01ac -> line 826
- *   +0x0234 -> line 827
- *   +0x0278 -> line 828
- *   +0x02b0 -> line 829
- *   +0x02c8 -> line 830
- *   +0x02cc -> line 829
- *   +0x02f4 -> line 830
- *   +0x02fc -> line 831
- *   +0x0300 -> line 883
- *   +0x0304 -> line 885
- *   +0x0308 -> line 883
- *   +0x030c -> line 885
- *   +0x0318 -> line 890
- *   +0x0328 -> line 993
- *   +0x032c -> line 994
- *   +0x0330 -> line 995
- *   +0x0334 -> line 996
- *   +0x0338 -> line 997
- *   +0x033c -> line 998
- *   +0x0340 -> line 999
- *   +0x0344 -> line 1000
- *   +0x0348 -> line 1001
- *   +0x034c -> line 1002
- *   +0x0350 -> line 1004
- *   +0x0354 -> line 1006
- *   +0x0358 -> line 1007
- *   +0x035c -> line 1008
- *   +0x0360 -> line 1009
- *   +0x0364 -> line 1010
- *   +0x0368 -> line 1012
- *   +0x036c -> line 1013
- *   +0x0370 -> line 1014
- *   +0x0374 -> line 1015
- *   +0x0378 -> line 1016
- *   +0x037c -> line 1018
- *   +0x0380 -> line 1019
- *   +0x0384 -> line 1020
- *   +0x0388 -> line 1022
- *   +0x038c -> line 1023
- *   +0x0390 -> line 1024
- *   +0x0394 -> line 1028
- *   +0x0398 -> line 1029
- *   +0x039c -> line 1031
- *   +0x03a0 -> line 1035
- *   +0x03a4 -> line 1036
- *   +0x03a8 -> line 1038
- *   +0x03ac -> line 1039
- *   +0x03b0 -> line 1041
- *   +0x03b4 -> line 1042
- *   +0x03b8 -> line 1046
- *   +0x03bc -> line 1050
- *   +0x03c0 -> line 1051
- *   +0x03c4 -> line 1052
- *   +0x03c8 -> line 1053
- *   +0x03cc -> line 1055
- *   +0x03d0 -> line 1056
- *   +0x03d4 -> line 1058
- *   +0x03d8 -> line 1059
- *   +0x03dc -> line 1063
- *   +0x03e0 -> line 1064
- *   +0x03e4 -> line 1065
- *   +0x03e8 -> line 1066
- *   +0x03ec -> line 1067
- *   +0x03f0 -> line 1068
- *   +0x03f4 -> line 1069
- *   +0x03f8 -> line 1070
- *   +0x03fc -> line 1071
- *   +0x0400 -> line 1072
- *   +0x0404 -> line 1073
- *   +0x0408 -> line 1074
- *   +0x040c -> line 1078
- *   +0x0410 -> line 1079
- *   +0x0414 -> line 1080
- *   +0x0418 -> line 1081
- *   +0x041c -> line 1082
- *   +0x0420 -> line 1083
- *   +0x0424 -> line 1084
- *   +0x0428 -> line 1085
- *   +0x042c -> line 1086
- *   +0x0430 -> line 1087
- *   +0x0434 -> line 1088
- *   +0x0438 -> line 1098
- *   +0x043c -> line 1093
- *   +0x0440 -> line 1094
- *   +0x0444 -> line 1098
- *   +0x0450 -> line 1099
- *   +0x0460 -> line 1102
- *   +0x0474 -> line 1103
- *   +0x047c -> line 1106
- *   +0x048c -> line 1105
- *   +0x0490 -> line 1107
- *   +0x0494 -> line 1105
- *   +0x049c -> line 1106
- *   +0x04a0 -> line 1107
- *   +0x04b0 -> line 1110
- *   +0x04bc -> line 1111
+ *   +0x0000 -> line 296
+ *   +0x0004 -> line 305
+ *   +0x0008 -> line 296
+ *   +0x0020 -> line 305
+ *   +0x002c -> line 307
+ *   +0x0030 -> line 331
+ *   +0x0034 -> line 307
+ *   +0x0050 -> line 316
+ *   +0x0054 -> line 313
+ *   +0x0058 -> line 317
+ *   +0x005c -> line 316
+ *   +0x0064 -> line 313
+ *   +0x0068 -> line 318
+ *   +0x006c -> line 316
+ *   +0x0070 -> line 317
+ *   +0x0074 -> line 326
+ *   +0x0078 -> line 318
+ *   +0x007c -> line 319
+ *   +0x0080 -> line 318
+ *   +0x0084 -> line 325
+ *   +0x0088 -> line 316
+ *   +0x008c -> line 319
+ *   +0x0090 -> line 317
+ *   +0x0094 -> line 318
+ *   +0x0098 -> line 322
+ *   +0x00a0 -> line 326
+ *   +0x00a4 -> line 325
+ *   +0x00a8 -> line 328
+ *   +0x00ac -> line 331
+ *   +0x00f0 -> line 340
+ *   +0x00fc -> line 341
+ *   +0x0140 -> line 350
+ *   +0x0154 -> line 351
+ *   +0x0198 -> line 360
+ *   +0x01b0 -> line 386
+ *   +0x05e8 -> line 391
+ *   +0x05f8 -> line 394
+ *   +0x05fc -> line 395
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+unsigned int GetInterpolatedColor(float* param0, float (*pVOrg)[4], unsigned int* pCOrg, unsigned int NbVerticesOrg)
+{
+    unsigned int i;
+    float NormalZ;
+    float Normal2Z;
+    unsigned int B;
+    unsigned int C;
+    float pABC[3];
+
+    for (i = 2; i < NbVerticesOrg; i++)
+    {
+        if (pVOrg[i][3] == 1.0f)
+        {
+            B = i - 1;
+            C = i - 2;
+            NormalZ = JR_xDet2(pVOrg[B][0] - pVOrg[i][0], pVOrg[C][1] - pVOrg[B][1], pVOrg[B][1] - pVOrg[i][1], pVOrg[C][0] - pVOrg[B][0]);
+            Normal2Z = JR_xDet2(pVOrg[B][0] - pVOrg[i][0], param0[1] - pVOrg[B][1], pVOrg[B][1] - pVOrg[i][1], param0[0] - pVOrg[B][0]);
+            if ((NormalZ > 0.0f && Normal2Z >= 0.0f) || (NormalZ < 0.0f && Normal2Z <= 0.0f))
+            {
+                Normal2Z = JR_xDet2(pVOrg[B][0] - param0[0], pVOrg[C][1] - pVOrg[B][1], pVOrg[B][1] - param0[1], pVOrg[C][0] - pVOrg[B][0]);
+                if ((NormalZ > 0.0f && Normal2Z >= 0.0f) || (NormalZ < 0.0f && Normal2Z <= 0.0f))
+                {
+                    Normal2Z = JR_xDet2(pVOrg[C][0] - param0[0], pVOrg[i][1] - pVOrg[C][1], pVOrg[C][1] - param0[1], pVOrg[i][0] - pVOrg[C][0]);
+                    if ((NormalZ > 0.0f && Normal2Z >= 0.0f) || (NormalZ < 0.0f && Normal2Z <= 0.0f))
+                    {
+                        JR_GetABCForInterpolation(pVOrg[i], pVOrg[B], pVOrg[C], param0, pABC);
+                        return (((unsigned int)((float)((pCOrg[i] & 0xFF000000) >> 24) * pABC[0] + (float)((pCOrg[B] & 0xFF000000) >> 24) * pABC[1] + (float)((pCOrg[C] & 0xFF000000) >> 24) * pABC[2]) & 0xFF) << 24) | (((unsigned int)((float)((pCOrg[i] & 0x00FF0000) >> 16) * pABC[0] + (float)((pCOrg[B] & 0x00FF0000) >> 16) * pABC[1] + (float)((pCOrg[C] & 0x00FF0000) >> 16) * pABC[2]) & 0xFF) << 16) | (((unsigned int)((float)((pCOrg[i] & 0x0000FF00) >> 8) * pABC[0] + (float)((pCOrg[B] & 0x0000FF00) >> 8) * pABC[1] + (float)((pCOrg[C] & 0x0000FF00) >> 8) * pABC[2]) & 0xFF) << 8) | ((unsigned int)((float)((pCOrg[i] & 0x000000FF) >> 0) * pABC[0] + (float)((pCOrg[B] & 0x000000FF) >> 0) * pABC[1] + (float)((pCOrg[C] & 0x000000FF) >> 0) * pABC[2]) & 0xFF);
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 161–288 */
+/* addr: 0x002ebaa0  size: 2156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 161
+ *   +0x0044 -> line 174
+ *   +0x0048 -> line 161
+ *   +0x005c -> line 169
+ *   +0x0060 -> line 170
+ *   +0x0064 -> line 171
+ *   +0x0068 -> line 176
+ *   +0x00c0 -> line 177
+ *   +0x0110 -> line 178
+ *   +0x0160 -> line 179
+ *   +0x0170 -> line 180
+ *   +0x0178 -> line 182
+ *   +0x017c -> line 180
+ *   +0x0180 -> line 179
+ *   +0x0184 -> line 180
+ *   +0x0188 -> line 181
+ *   +0x0190 -> line 182
+ *   +0x0194 -> line 181
+ *   +0x0198 -> line 179
+ *   +0x019c -> line 180
+ *   +0x01a8 -> line 181
+ *   +0x01b0 -> line 182
+ *   +0x01b8 -> line 184
+ *   +0x01c8 -> line 185
+ *   +0x01cc -> line 184
+ *   +0x01d0 -> line 185
+ *   +0x01d8 -> line 187
+ *   +0x01e0 -> line 189
+ *   +0x01f0 -> line 190
+ *   +0x01f8 -> line 192
+ *   +0x0204 -> line 194
+ *   +0x0210 -> line 197
+ *   +0x0234 -> line 198
+ *   +0x0254 -> line 199
+ *   +0x0260 -> line 200
+ *   +0x0264 -> line 199
+ *   +0x0268 -> line 200
+ *   +0x027c -> line 202
+ *   +0x0284 -> line 204
+ *   +0x0290 -> line 207
+ *   +0x02b4 -> line 208
+ *   +0x02d4 -> line 209
+ *   +0x02e0 -> line 211
+ *   +0x02e4 -> line 209
+ *   +0x02e8 -> line 210
+ *   +0x02ec -> line 211
+ *   +0x02f8 -> line 212
+ *   +0x0300 -> line 218
+ *   +0x0304 -> line 219
+ *   +0x0308 -> line 220
+ *   +0x0370 -> line 221
+ *   +0x037c -> line 223
+ *   +0x03f0 -> line 224
+ *   +0x03fc -> line 226
+ *   +0x041c -> line 227
+ *   +0x0420 -> line 226
+ *   +0x0438 -> line 227
+ *   +0x0474 -> line 229
+ *   +0x0478 -> line 231
+ *   +0x047c -> line 229
+ *   +0x048c -> line 231
+ *   +0x0490 -> line 229
+ *   +0x049c -> line 230
+ *   +0x04a4 -> line 229
+ *   +0x04a8 -> line 230
+ *   +0x04ac -> line 231
+ *   +0x04b0 -> line 230
+ *   +0x04b4 -> line 231
+ *   +0x04bc -> line 232
+ *   +0x04c4 -> line 237
+ *   +0x04d4 -> line 239
+ *   +0x04f0 -> line 240
+ *   +0x04f8 -> line 239
+ *   +0x0500 -> line 240
+ *   +0x053c -> line 242
+ *   +0x0540 -> line 244
+ *   +0x0544 -> line 242
+ *   +0x0554 -> line 244
+ *   +0x0558 -> line 242
+ *   +0x0564 -> line 243
+ *   +0x056c -> line 242
+ *   +0x0570 -> line 243
+ *   +0x0574 -> line 244
+ *   +0x0578 -> line 243
+ *   +0x057c -> line 244
+ *   +0x0584 -> line 245
+ *   +0x058c -> line 251
+ *   +0x0590 -> line 252
+ *   +0x0594 -> line 253
+ *   +0x0600 -> line 254
+ *   +0x060c -> line 256
+ *   +0x0680 -> line 257
+ *   +0x068c -> line 259
+ *   +0x06ac -> line 260
+ *   +0x06b0 -> line 259
+ *   +0x06c8 -> line 260
+ *   +0x0704 -> line 262
+ *   +0x0708 -> line 264
+ *   +0x070c -> line 262
+ *   +0x071c -> line 264
+ *   +0x0720 -> line 262
+ *   +0x072c -> line 263
+ *   +0x0734 -> line 262
+ *   +0x0738 -> line 263
+ *   +0x073c -> line 264
+ *   +0x0740 -> line 263
+ *   +0x0744 -> line 264
+ *   +0x074c -> line 265
+ *   +0x0754 -> line 270
+ *   +0x0764 -> line 272
+ *   +0x0780 -> line 273
+ *   +0x0784 -> line 272
+ *   +0x078c -> line 273
+ *   +0x07c8 -> line 275
+ *   +0x07cc -> line 277
+ *   +0x07d0 -> line 275
+ *   +0x07e0 -> line 277
+ *   +0x07e4 -> line 275
+ *   +0x07f0 -> line 276
+ *   +0x07f8 -> line 275
+ *   +0x07fc -> line 276
+ *   +0x0800 -> line 277
+ *   +0x0804 -> line 276
+ *   +0x0808 -> line 277
+ *   +0x0810 -> line 278
+ *   +0x0818 -> line 285
+ *   +0x0820 -> line 286
+ *   +0x0824 -> line 287
+ *   +0x0828 -> line 288
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void JR_GetABCForInterpolation(float* p1, float* p2, float* p3, float* pInterpoledPoint, float* pABC)
+{
+    float K1[3];
+    float K2[3];
+    float K3[3];
+    float denom;
+    int i;
+    int x;
+    int y;
+    int p12_dif;
+    int p13_dif;
+    int p32_dif;
+    int sum;
+    float Total;
+    float Dist;
+
+    p12_dif = 0;
+    p13_dif = 0;
+    p32_dif = 0;
+
+    for (i = 0; i < 3; i++)
+    {
+        if (!JR_bIsEqual(p1[i], p2[i])) p12_dif = 1;
+        if (!JR_bIsEqual(p1[i], p3[i])) p13_dif = 1;
+        if (!JR_bIsEqual(p3[i], p2[i])) p32_dif = 1;
+        K1[i] = p3[i] - p1[i];
+        K2[i] = p1[i] - pInterpoledPoint[i];
+        K3[i] = p1[i] - p2[i];
+    }
+
+    sum = p12_dif + p13_dif + p32_dif;
+
+    if (sum != 3)
+    {
+    if (sum == 0)
+        {
+            pABC[0] = pABC[1] = pABC[2] = 1.0f / 3.0f;
+        }
+        else if (sum == 2)
+        {
+            if (p12_dif)
+            {
+                Dist = PS2SQRTF(JR_xSqr2(K2[1], K2[0]) + K2[2] + K2[2]);
+                Total = PS2SQRTF(JR_xSqr2(K3[1], K3[0]) + K3[2] + K3[2]);
+                pABC[0] = Dist / Total;
+                pABC[1] = 1.0f - pABC[0];
+                pABC[2] = 0.0f;
+            }
+            else if (p13_dif)
+            {
+                Dist = PS2SQRTF(JR_xSqr2(K2[1], K2[0]) + K2[2] + K2[2]);
+                Total = PS2SQRTF(JR_xSqr2(K1[1], K1[0]) + K1[2] + K1[2]);
+                pABC[0] = Dist / Total;
+                pABC[1] = 0.0f;
+                pABC[2] = 1.0f - pABC[0];
+            }
+        }
+    }
+    else
+    {
+        for (x = 0; x < 3 && JR_bIsEqual(K3[x], 0.0f); x++)
+            ;
+        if (x != 3)
+        {
+            for (y = 0; y < 3 && (JR_bIsEqual(K1[y], 0.0f) || y == x); y++)
+                ;
+            if (y != 3)
+            {
+                denom = JR_xDet2(K3[x], K1[y], K3[y], K1[x]);
+                if (!JR_bIsEqual(denom, 0.0f))
+                {
+                    pABC[2] = JR_xDet2(K3[y], K2[x], K3[x], K2[y]) / denom;
+                    pABC[1] = (pABC[2] * K1[x] + K2[x]) / K3[x];
+                    pABC[0] = 1.0f - pABC[1] - pABC[2];
+                    return;
+                }
+                y++;
+                if (y != 3)
+                {
+                    denom = JR_xDet2(K3[x], K1[y], K3[y], K1[x]);
+                    if (!JR_bIsEqual(denom, 0.0f))
+                    {
+                        pABC[2] = JR_xDet2(K3[y], K2[x], K3[x], K2[y]) / denom;
+                        pABC[1] = (pABC[2] * K1[x] + K2[x]) / K3[x];
+                        pABC[0] = 1.0f - pABC[1] - pABC[2];
+                        return;
+                    }
+                }
+            }
+        }
+
+        for (x = 0; x < 3 && JR_bIsEqual(K1[x], 0.0f); x++)
+            ;
+        if (x != 3)
+        {
+            for (y = 0; y < 3 && (JR_bIsEqual(K3[y], 0.0f) || y == x); y++)
+                ;
+            if (y != 3)
+            {
+                denom = JR_xDet2(K3[y], K1[x], K3[x], K1[y]);
+                if (!JR_bIsEqual(denom, 0.0f))
+                {
+                    pABC[2] = JR_xDet2(K3[x], K2[y], K3[y], K2[x]) / denom;
+                    pABC[1] = (pABC[2] * K1[y] + K2[y]) / K3[y];
+                    pABC[0] = 1.0f - pABC[1] - pABC[2];
+                    return;
+                }
+                y++;
+                if (y != 3)
+                {
+                    denom = JR_xDet2(K3[y], K1[x], K3[x], K1[y]);
+                    if (!JR_bIsEqual(denom, 0.0f))
+                    {
+                        pABC[2] = JR_xDet2(K3[x], K2[y], K3[y], K2[x]) / denom;
+                        pABC[1] = (pABC[2] * K1[y] + K2[y]) / K3[y];
+                        pABC[0] = 1.0f - pABC[1] - pABC[2];
+                        return;
+                    }
+                }
+            }
+        }
+        pABC[0] = 1.0f;
+        pABC[1] = 0.0f;
+        pABC[2] = 0.0f;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 130–138 */
+/* addr: 0x002ec350  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 130
+ *   +0x0028 -> line 131
+ *   +0x0040 -> line 132
+ *   +0x0058 -> line 133
+ *   +0x0070 -> line 134
+ *   +0x0088 -> line 135
+ *   +0x00a0 -> line 136
+ *   +0x00b8 -> line 137
+ *   +0x00fc -> line 138
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+C_WaterFx::~C_WaterFx()
+{
+    if (m_pGrids[0])
+        PS2glLiberator((void*)m_pGrids[0]);
+    if (m_pGrids[1])
+        PS2glLiberator((void*)m_pGrids[1]);
+    if (m_pIndices)
+        PS2glLiberator((void*)m_pIndices);
+    if (m_pV)
+        PS2glLiberator(m_pV);
+    if (m_pT)
+        PS2glLiberator((void*)m_pT);
+    if (m_pC)
+        PS2glLiberator((void*)m_pC);
+    if (m_pSDL)
+        SDL_Destroy(&m_pSDL);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 141–144 */
+/* addr: 0x002ec310  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 141
+ *   +0x000c -> line 142
+ *   +0x0020 -> line 143
+ *   +0x0024 -> line 144
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_WaterFx::DeleteSDLs(void)
+{
+    if (m_pSDL)
+        SDL_Destroy(&m_pSDL);
+    m_pSDL = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 398–430 */
+/* addr: 0x002eb220  size: 596 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 398
+ *   +0x0024 -> line 406
+ *   +0x0028 -> line 402
+ *   +0x002c -> line 403
+ *   +0x0030 -> line 404
+ *   +0x0034 -> line 406
+ *   +0x0094 -> line 413
+ *   +0x0098 -> line 410
+ *   +0x009c -> line 411
+ *   +0x00a0 -> line 415
+ *   +0x00a4 -> line 414
+ *   +0x00ac -> line 411
+ *   +0x00b0 -> line 413
+ *   +0x00b4 -> line 414
+ *   +0x00b8 -> line 413
+ *   +0x00bc -> line 414
+ *   +0x00c0 -> line 415
+ *   +0x0138 -> line 416
+ *   +0x017c -> line 418
+ *   +0x0190 -> line 422
+ *   +0x01b0 -> line 425
+ *   +0x01dc -> line 426
+ *   +0x0200 -> line 427
+ *   +0x0230 -> line 430
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_WaterFx::PerturbFromCharacterPosition(float* WorldPosition, float Strength)
+{
+    float X;
+    float Y;
+    float Z;
+    unsigned int totalSize;
+    unsigned int sx;
+    unsigned int i;
+
+    X = WorldPosition[0];
+    Y = WorldPosition[1];
+    Z = WorldPosition[2];
+
+    if (X < m_MaxPos[0] && X > m_MinPos[0] && Y < m_MaxPos[1] && Y > m_MinPos[1] && Z < m_MaxPos[2])
+    {
+        sx = m_ulGridSize[0];
+        totalSize = m_ulGridSize[0] * m_ulGridSize[1];
+
+        X = (X - m_MinPos[0]) / m_fGridStepSize[0];
+        Y = (Y - m_MinPos[1]) / m_fGridStepSize[1];
+        X += (float)((unsigned int)Y * sx);
+        i = (unsigned int)X;
+
+        if (i + sx > totalSize)
+            i = totalSize - sx - 1;
+
+        if (((unsigned int*)m_pC)[i * 2] & 0xFF000000)
+        {
+            ((short*)m_pGrids[0])[i] = (short)FRR(0.5f * Strength, Strength);
+            ((short*)(m_pGrids[0] + 2))[i] = (short)FRR(0.5f * Strength, Strength);
+            ((short*)m_pGrids[0])[i + sx] = (short)FRR(0.5f * Strength, Strength);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 433–463 */
+/* addr: 0x002eaff0  size: 556 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 433
+ *   +0x0024 -> line 440
+ *   +0x0028 -> line 437
+ *   +0x002c -> line 438
+ *   +0x0030 -> line 440
+ *   +0x007c -> line 443
+ *   +0x0080 -> line 444
+ *   +0x0084 -> line 448
+ *   +0x0088 -> line 447
+ *   +0x0090 -> line 444
+ *   +0x0094 -> line 446
+ *   +0x0098 -> line 447
+ *   +0x009c -> line 446
+ *   +0x00a0 -> line 447
+ *   +0x00a4 -> line 448
+ *   +0x011c -> line 449
+ *   +0x0160 -> line 451
+ *   +0x0174 -> line 455
+ *   +0x0194 -> line 458
+ *   +0x01b4 -> line 459
+ *   +0x01d8 -> line 460
+ *   +0x0208 -> line 463
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_WaterFx::Perturb(float* WorldPosition, float Strength)
+{
+    float X;
+    float Y;
+    unsigned int totalSize;
+    unsigned int sx;
+    unsigned int i;
+
+    X = WorldPosition[0];
+    Y = WorldPosition[1];
+
+    if (X < m_MaxPos[0] && X > m_MinPos[0] && Y < m_MaxPos[1] && Y > m_MinPos[1])
+    {
+        sx = m_ulGridSize[0];
+        totalSize = m_ulGridSize[0] * m_ulGridSize[1];
+
+        X = (X - m_MinPos[0]) / m_fGridStepSize[0];
+        Y = (Y - m_MinPos[1]) / m_fGridStepSize[1];
+        X += (float)((unsigned int)Y * sx);
+        i = (unsigned int)X;
+
+        if (i + sx > totalSize)
+            i = totalSize - sx - 1;
+
+        if (((unsigned int*)m_pC)[i * 2] & 0xFF000000)
+        {
+            ((short*)m_pGrids[0])[i] = (short)FRR(-Strength, Strength);
+            ((short*)(m_pGrids[0] + 2))[i] = (short)FRR(-Strength, Strength);
+            ((short*)m_pGrids[0])[i + sx] = (short)FRR(-Strength, Strength);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 467–488 */
+/* addr: 0x002eaee0  size: 260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 467
+ *   +0x0058 -> line 473
+ *   +0x0064 -> line 474
+ *   +0x0074 -> line 475
+ *   +0x0084 -> line 476
+ *   +0x0094 -> line 477
+ *   +0x00a4 -> line 478
+ *   +0x00b4 -> line 480
+ *   +0x00bc -> line 481
+ *   +0x00c4 -> line 482
+ *   +0x00cc -> line 484
+ *   +0x00dc -> line 485
+ *   +0x00ec -> line 486
+ *   +0x00fc -> line 488
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_WaterFx::SetPosition(float* WorldPositionInWater, float* NewRelativePosition)
+{
+    if (WorldPositionInWater[0] < m_OrgMaxPos[0] && WorldPositionInWater[0] > m_OrgMinPos[0] && WorldPositionInWater[1] < m_OrgMaxPos[1] && WorldPositionInWater[1] > m_OrgMinPos[1])
+    {
+        m_MinPos[0] = m_OrgMinPos[0] + NewRelativePosition[0];
+        m_MinPos[1] = m_OrgMinPos[1] + NewRelativePosition[1];
+        m_MinPos[2] = m_OrgMinPos[2] + NewRelativePosition[2];
+        m_MaxPos[0] = m_OrgMaxPos[0] + NewRelativePosition[0];
+        m_MaxPos[1] = m_OrgMaxPos[1] + NewRelativePosition[1];
+        m_MaxPos[2] = m_OrgMaxPos[2] + NewRelativePosition[2];
+
+        m_LocalPosition[0] = NewRelativePosition[0];
+        m_LocalPosition[1] = NewRelativePosition[1];
+        m_LocalPosition[2] = NewRelativePosition[2];
+
+        m_Position.stCol_3.xX = m_LocalPosition[0] + m_BasePosition[0];
+        m_Position.stCol_3.xY = m_LocalPosition[1] + m_BasePosition[1];
+        m_Position.stCol_3.xZ = m_LocalPosition[2] + m_BasePosition[2];
+    }
+}
+
+/* Retail copies these float[4] vectors as whole 16-byte values (four lwc1,
+ * then four swc1), which a plain struct assignment reproduces; the aligned
+ * MTH4D_tdstVector_ and element-wise copies interleave the loads and stores. */
+typedef struct WaterFx_tdstVector4_ { float a[4]; } WaterFx_tdstVector4_;
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 514–746 */
 /* addr: 0x002ea6f0  size: 2028 bytes */
@@ -2613,474 +3327,455 @@ extern "C" void PS2glDrawArrays(unsigned int mode, int first, int count);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 467–488 */
-/* addr: 0x002eaee0  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 467
- *   +0x0058 -> line 473
- *   +0x0064 -> line 474
- *   +0x0074 -> line 475
- *   +0x0084 -> line 476
- *   +0x0094 -> line 477
- *   +0x00a4 -> line 478
- *   +0x00b4 -> line 480
- *   +0x00bc -> line 481
- *   +0x00c4 -> line 482
- *   +0x00cc -> line 484
- *   +0x00dc -> line 485
- *   +0x00ec -> line 486
- *   +0x00fc -> line 488
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 433–463 */
-/* addr: 0x002eaff0  size: 556 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 433
- *   +0x0024 -> line 440
- *   +0x0028 -> line 437
- *   +0x002c -> line 438
- *   +0x0030 -> line 440
- *   +0x007c -> line 443
- *   +0x0080 -> line 444
- *   +0x0084 -> line 448
- *   +0x0088 -> line 447
- *   +0x0090 -> line 444
- *   +0x0094 -> line 446
- *   +0x0098 -> line 447
- *   +0x009c -> line 446
- *   +0x00a0 -> line 447
- *   +0x00a4 -> line 448
- *   +0x011c -> line 449
- *   +0x0160 -> line 451
- *   +0x0174 -> line 455
- *   +0x0194 -> line 458
- *   +0x01b4 -> line 459
- *   +0x01d8 -> line 460
- *   +0x0208 -> line 463
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern "C" float FRR(float fMin, float fMax);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 398–430 */
-/* addr: 0x002eb220  size: 596 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 398
- *   +0x0024 -> line 406
- *   +0x0028 -> line 402
- *   +0x002c -> line 403
- *   +0x0030 -> line 404
- *   +0x0034 -> line 406
- *   +0x0094 -> line 413
- *   +0x0098 -> line 410
- *   +0x009c -> line 411
- *   +0x00a0 -> line 415
- *   +0x00a4 -> line 414
- *   +0x00ac -> line 411
- *   +0x00b0 -> line 413
- *   +0x00b4 -> line 414
- *   +0x00b8 -> line 413
- *   +0x00bc -> line 414
- *   +0x00c0 -> line 415
- *   +0x0138 -> line 416
- *   +0x017c -> line 418
- *   +0x0190 -> line 422
- *   +0x01b0 -> line 425
- *   +0x01dc -> line 426
- *   +0x0200 -> line 427
- *   +0x0230 -> line 430
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 296–395 */
-/* addr: 0x002eb480  size: 1560 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 296
- *   +0x0004 -> line 305
- *   +0x0008 -> line 296
- *   +0x0020 -> line 305
- *   +0x002c -> line 307
- *   +0x0030 -> line 331
- *   +0x0034 -> line 307
- *   +0x0050 -> line 316
- *   +0x0054 -> line 313
- *   +0x0058 -> line 317
- *   +0x005c -> line 316
- *   +0x0064 -> line 313
- *   +0x0068 -> line 318
- *   +0x006c -> line 316
- *   +0x0070 -> line 317
- *   +0x0074 -> line 326
- *   +0x0078 -> line 318
- *   +0x007c -> line 319
- *   +0x0080 -> line 318
- *   +0x0084 -> line 325
- *   +0x0088 -> line 316
- *   +0x008c -> line 319
- *   +0x0090 -> line 317
- *   +0x0094 -> line 318
- *   +0x0098 -> line 322
- *   +0x00a0 -> line 326
- *   +0x00a4 -> line 325
- *   +0x00a8 -> line 328
- *   +0x00ac -> line 331
- *   +0x00f0 -> line 340
- *   +0x00fc -> line 341
- *   +0x0140 -> line 350
- *   +0x0154 -> line 351
- *   +0x0198 -> line 360
- *   +0x01b0 -> line 386
- *   +0x05e8 -> line 391
- *   +0x05f8 -> line 394
- *   +0x05fc -> line 395
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int GetInterpolatedColor__FPfPA4_fPUiUi(float* param0, float (*pVOrg)[4], unsigned int* pCOrg, unsigned int NbVerticesOrg)
-{
-    float pABC[3];
-    unsigned int C;
-    unsigned int B;
-    float Normal2Z;
-    float NormalZ;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 161–288 */
-/* addr: 0x002ebaa0  size: 2156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 161
- *   +0x0044 -> line 174
- *   +0x0048 -> line 161
- *   +0x005c -> line 169
- *   +0x0060 -> line 170
- *   +0x0064 -> line 171
- *   +0x0068 -> line 176
- *   +0x00c0 -> line 177
- *   +0x0110 -> line 178
- *   +0x0160 -> line 179
- *   +0x0170 -> line 180
- *   +0x0178 -> line 182
- *   +0x017c -> line 180
- *   +0x0180 -> line 179
- *   +0x0184 -> line 180
- *   +0x0188 -> line 181
- *   +0x0190 -> line 182
- *   +0x0194 -> line 181
- *   +0x0198 -> line 179
- *   +0x019c -> line 180
- *   +0x01a8 -> line 181
- *   +0x01b0 -> line 182
- *   +0x01b8 -> line 184
- *   +0x01c8 -> line 185
- *   +0x01cc -> line 184
- *   +0x01d0 -> line 185
- *   +0x01d8 -> line 187
- *   +0x01e0 -> line 189
- *   +0x01f0 -> line 190
- *   +0x01f8 -> line 192
- *   +0x0204 -> line 194
- *   +0x0210 -> line 197
- *   +0x0234 -> line 198
- *   +0x0254 -> line 199
- *   +0x0260 -> line 200
- *   +0x0264 -> line 199
- *   +0x0268 -> line 200
- *   +0x027c -> line 202
- *   +0x0284 -> line 204
- *   +0x0290 -> line 207
- *   +0x02b4 -> line 208
- *   +0x02d4 -> line 209
- *   +0x02e0 -> line 211
- *   +0x02e4 -> line 209
- *   +0x02e8 -> line 210
- *   +0x02ec -> line 211
- *   +0x02f8 -> line 212
- *   +0x0300 -> line 218
- *   +0x0304 -> line 219
- *   +0x0308 -> line 220
- *   +0x0370 -> line 221
- *   +0x037c -> line 223
- *   +0x03f0 -> line 224
- *   +0x03fc -> line 226
- *   +0x041c -> line 227
- *   +0x0420 -> line 226
- *   +0x0438 -> line 227
- *   +0x0474 -> line 229
- *   +0x0478 -> line 231
- *   +0x047c -> line 229
- *   +0x048c -> line 231
- *   +0x0490 -> line 229
- *   +0x049c -> line 230
- *   +0x04a4 -> line 229
- *   +0x04a8 -> line 230
- *   +0x04ac -> line 231
- *   +0x04b0 -> line 230
- *   +0x04b4 -> line 231
- *   +0x04bc -> line 232
- *   +0x04c4 -> line 237
- *   +0x04d4 -> line 239
- *   +0x04f0 -> line 240
- *   +0x04f8 -> line 239
- *   +0x0500 -> line 240
- *   +0x053c -> line 242
- *   +0x0540 -> line 244
- *   +0x0544 -> line 242
- *   +0x0554 -> line 244
- *   +0x0558 -> line 242
- *   +0x0564 -> line 243
- *   +0x056c -> line 242
- *   +0x0570 -> line 243
- *   +0x0574 -> line 244
- *   +0x0578 -> line 243
- *   +0x057c -> line 244
- *   +0x0584 -> line 245
- *   +0x058c -> line 251
- *   +0x0590 -> line 252
- *   +0x0594 -> line 253
- *   +0x0600 -> line 254
- *   +0x060c -> line 256
- *   +0x0680 -> line 257
- *   +0x068c -> line 259
- *   +0x06ac -> line 260
- *   +0x06b0 -> line 259
- *   +0x06c8 -> line 260
- *   +0x0704 -> line 262
- *   +0x0708 -> line 264
- *   +0x070c -> line 262
- *   +0x071c -> line 264
- *   +0x0720 -> line 262
- *   +0x072c -> line 263
- *   +0x0734 -> line 262
- *   +0x0738 -> line 263
- *   +0x073c -> line 264
- *   +0x0740 -> line 263
- *   +0x0744 -> line 264
- *   +0x074c -> line 265
- *   +0x0754 -> line 270
- *   +0x0764 -> line 272
- *   +0x0780 -> line 273
- *   +0x0784 -> line 272
- *   +0x078c -> line 273
- *   +0x07c8 -> line 275
- *   +0x07cc -> line 277
- *   +0x07d0 -> line 275
- *   +0x07e0 -> line 277
- *   +0x07e4 -> line 275
- *   +0x07f0 -> line 276
- *   +0x07f8 -> line 275
- *   +0x07fc -> line 276
- *   +0x0800 -> line 277
- *   +0x0804 -> line 276
- *   +0x0808 -> line 277
- *   +0x0810 -> line 278
- *   +0x0818 -> line 285
- *   +0x0820 -> line 286
- *   +0x0824 -> line 287
- *   +0x0828 -> line 288
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void JR_GetABCForInterpolation__FPfPfPfPfPf(float* p1, float* p2, float* p3, float* pInterpoledPoint, float* pABC)
-{
-    float Dist;
-    float Total;
-    int sum;
-    int p32_dif;
-    int p13_dif;
-    int p12_dif;
-    int y;
-    int x;
-    int i;
-    float denom;
-    float K3[3];
-    float K2[3];
-    float K1[3];
-    /* TODO: decompile from asm/... */
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 141–144 */
-/* addr: 0x002ec310  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 141
- *   +0x000c -> line 142
- *   +0x0020 -> line 143
- *   +0x0024 -> line 144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 130–138 */
-/* addr: 0x002ec350  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 130
- *   +0x0028 -> line 131
- *   +0x0040 -> line 132
- *   +0x0058 -> line 133
- *   +0x0070 -> line 134
- *   +0x0088 -> line 135
- *   +0x00a0 -> line 136
- *   +0x00b8 -> line 137
- *   +0x00fc -> line 138
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-C_WaterFx::~C_WaterFx()
-{
-    if (m_pGrids[0])
-        PS2glLiberator((void*)m_pGrids[0]);
-    if (m_pGrids[1])
-        PS2glLiberator((void*)m_pGrids[1]);
-    if (m_pIndices)
-        PS2glLiberator((void*)m_pIndices);
-    if (m_pV)
-        PS2glLiberator(m_pV);
-    if (m_pT)
-        PS2glLiberator((void*)m_pT);
-    if (m_pC)
-        PS2glLiberator((void*)m_pC);
-    if (m_pSDL)
-        SDL_Destroy(&m_pSDL);
-}
-
-void C_WaterFx::DeleteSDLs(void)
-{
-    if (m_pSDL)
-        SDL_Destroy(&m_pSDL);
-    m_pSDL = 0;
-}
-
-void C_WaterFx::PerturbFromCharacterPosition(float* WorldPosition, float Strength)
-{
-    unsigned int totalSize;
-    unsigned int sx;
-    unsigned int i;
-    float Z;
-    float Y;
-    float X;
-
-    X = WorldPosition[0];
-    Y = WorldPosition[1];
-    Z = WorldPosition[2];
-
-    if (X < m_MaxPos[0] && X > m_MinPos[0] && Y < m_MaxPos[1] && Y > m_MinPos[1] && Z < m_MaxPos[2])
-    {
-        sx = m_ulGridSize[0];
-        totalSize = m_ulGridSize[0] * m_ulGridSize[1];
-
-        X = (X - m_MinPos[0]) / m_fGridStepSize[0];
-        Y = (Y - m_MinPos[1]) / m_fGridStepSize[1];
-        i = (unsigned int)(X + (float)((unsigned int)Y * sx));
-
-        if (i + sx > totalSize)
-            i = totalSize - sx - 1;
-
-        if (*(unsigned int*)(m_pC + i * 8) & 0xFF000000)
-        {
-            ((short*)m_pGrids[0])[i] = (short)FRR(0.5f * Strength, Strength);
-            ((short*)m_pGrids[0])[i + 1] = (short)FRR(0.5f * Strength, Strength);
-            ((short*)m_pGrids[0])[i + sx] = (short)FRR(0.5f * Strength, Strength);
-        }
-    }
-}
-
-void C_WaterFx::Perturb(float* WorldPosition, float Strength)
-{
-    unsigned int totalSize;
-    unsigned int sx;
-    unsigned int i;
-    float Y;
-    float X;
-
-    X = WorldPosition[0];
-    Y = WorldPosition[1];
-
-    if (X < m_MaxPos[0] && X > m_MinPos[0] && Y < m_MaxPos[1] && Y > m_MinPos[1])
-    {
-        sx = m_ulGridSize[0];
-        totalSize = m_ulGridSize[0] * m_ulGridSize[1];
-
-        X = (X - m_MinPos[0]) / m_fGridStepSize[0];
-        Y = (Y - m_MinPos[1]) / m_fGridStepSize[1];
-        i = (unsigned int)(X + (float)((unsigned int)Y * sx));
-
-        if (i + sx > totalSize)
-            i = totalSize - sx - 1;
-
-        if (*(unsigned int*)(m_pC + i * 8) & 0xFF000000)
-        {
-            ((short*)m_pGrids[0])[i] = (short)FRR(-Strength, Strength);
-            ((short*)m_pGrids[0])[i + 1] = (short)FRR(-Strength, Strength);
-            ((short*)m_pGrids[0])[i + sx] = (short)FRR(-Strength, Strength);
-        }
-    }
-}
-
-void C_WaterFx::SetPosition(float* WorldPositionInWater, float* NewRelativePosition)
-{
-    if (WorldPositionInWater[0] < m_OrgMaxPos[0] && WorldPositionInWater[0] > m_OrgMinPos[0] && WorldPositionInWater[1] < m_OrgMaxPos[1] && WorldPositionInWater[1] > m_OrgMinPos[1])
-    {
-        m_MinPos[0] = m_OrgMinPos[0] + NewRelativePosition[0];
-        m_MinPos[1] = m_OrgMinPos[1] + NewRelativePosition[1];
-        m_MinPos[2] = m_OrgMinPos[2] + NewRelativePosition[2];
-        m_MaxPos[0] = m_OrgMaxPos[0] + NewRelativePosition[0];
-        m_MaxPos[1] = m_OrgMaxPos[1] + NewRelativePosition[1];
-        m_MaxPos[2] = m_OrgMaxPos[2] + NewRelativePosition[2];
-
-        m_LocalPosition[0] = NewRelativePosition[0];
-        m_LocalPosition[1] = NewRelativePosition[1];
-        m_LocalPosition[2] = NewRelativePosition[2];
-
-        m_Position.stCol_3.xX = m_LocalPosition[0] + m_BasePosition[0];
-        m_Position.stCol_3.xY = m_LocalPosition[1] + m_BasePosition[1];
-        m_Position.stCol_3.xZ = m_LocalPosition[2] + m_BasePosition[2];
-    }
-}
-
 void C_WaterFx::Init(void)
 {
-    float (*pUVChrome)[4];
-    float (*pUV2)[4];
-    float (*pUV1)[4];
-    unsigned int* pCOrg;
-    float (*pVOrg)[4];
-    SDC_VertexArrays_* pSDC;
-    unsigned int i;
-    unsigned int NbVerticesOrg;
-    unsigned int Color;
-    float fADC;
-    float CurrentVertexPos[4];
-    unsigned int* _pC;
-    unsigned int* _pT;
-    float (*_pV)[4];
-    unsigned int ulCurrentIndex;
-    unsigned int NbVerticesPerLine;
-    unsigned int row;
     unsigned int line;
-    /* TODO: decompile from asm/... */
+    unsigned int row;
+    unsigned int NbVerticesPerLine;
+    unsigned int ulCurrentIndex;
+    float (*_pV)[4];
+    unsigned int* _pT;
+    unsigned int* _pC;
+    float CurrentVertexPos[4];
+    float fADC;
+    unsigned int Color;
+    unsigned int NbVerticesOrg;
+    unsigned int i;
+    SDC_VertexArrays_* pSDC;
+    float (*pVOrg)[4] __attribute__((aligned(16)));
+    unsigned int* pCOrg;
+    float (*pUV1)[4] __attribute__((aligned(16)));
+    float (*pUV2)[4] __attribute__((aligned(16)));
+    float (*pUVChrome)[4] __attribute__((aligned(16)));
+
+    *(unsigned int*)&fADC = 0x8000;
+
+    m_pSearchKey = (int)m_p_stEIT;
+
+    m_pSO = (HIE_tdstSuperObject_*)G_pSO;
+    m_BasePosition[0] = m_pSO->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+    m_BasePosition[1] = m_pSO->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+    m_BasePosition[2] = m_pSO->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+
+    m_hMaterial = m_p_stEIT->hVisualMaterial;
+
+    pSDC = (SDC_VertexArrays_*)m_pObj->pSDC_Data;
+    pVOrg = (float (*)[4])pSDC->pArrayOfVertexArrays[0];
+    NbVerticesOrg = *(unsigned int*)pVOrg;
+    GLI_vGetVertexPointersFromSDCStructure(pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pCOrg);
+
+    if (*pSDC->pbIsTransparent & 1)
+        m_bTransparent = 1;
+
+    m_MaxPos[0] = m_MinPos[0] = pVOrg[0][0];
+    m_MaxPos[1] = m_MinPos[1] = pVOrg[0][1];
+    m_MaxPos[2] = m_MinPos[2] = pVOrg[0][2];
+    m_MaxPos[3] = m_MinPos[3] = 1.0f;
+
+    for (i = 0; i < NbVerticesOrg; i++)
+    {
+        if (pVOrg[i][0] < m_MinPos[0]) m_MinPos[0] = pVOrg[i][0];
+        if (pVOrg[i][0] > m_MaxPos[0]) m_MaxPos[0] = pVOrg[i][0];
+        if (pVOrg[i][1] < m_MinPos[1]) m_MinPos[1] = pVOrg[i][1];
+        if (pVOrg[i][1] > m_MaxPos[1]) m_MaxPos[1] = pVOrg[i][1];
+    }
+
+    *(WaterFx_tdstVector4_*)m_OrgMinPos = *(WaterFx_tdstVector4_*)m_MinPos;
+    *(WaterFx_tdstVector4_*)m_OrgMaxPos = *(WaterFx_tdstVector4_*)m_MaxPos;
+
+    m_OrgMinPos[0] += m_BasePosition[0];
+    m_OrgMinPos[1] += m_BasePosition[1];
+    m_OrgMinPos[2] += m_BasePosition[2];
+    m_OrgMaxPos[0] += m_BasePosition[0];
+    m_OrgMaxPos[1] += m_BasePosition[1];
+    m_OrgMaxPos[2] += m_BasePosition[2];
+
+    m_ulGridSize[0] = (unsigned int)(1.5384616f * (m_MaxPos[0] - m_MinPos[0]));
+    m_ulGridSize[1] = (unsigned int)(1.5384616f * (m_MaxPos[1] - m_MinPos[1]));
+
+    m_ulGridSize[0] = (m_ulGridSize[0] + 16) & ~15;
+
+    m_fGridStepSize[0] = (m_MaxPos[0] - m_MinPos[0]) / ((float)m_ulGridSize[0] - 1.0f);
+    m_fGridStepSize[1] = (m_MaxPos[1] - m_MinPos[1]) / ((float)m_ulGridSize[1] - 1.0f);
+
+    m_pGrids[0] = (int)PS2glAllocator64(m_ulGridSize[0] * m_ulGridSize[1] * 2);
+    m_pGrids[1] = (int)PS2glAllocator64(m_ulGridSize[0] * m_ulGridSize[1] * 2);
+    m_pIndices = (int)PS2glAllocator64(m_ulGridSize[1] * (m_ulGridSize[0] * 4) * 2);
+
+    NbVerticesPerLine = (m_ulGridSize[0] - 2) * 2 + 4;
+    m_NbVertices = NbVerticesPerLine * (m_ulGridSize[1] - 1);
+
+    m_pV = (float (*)[4])PS2glAllocator64(m_NbVertices * 16);
+    m_pT = (int)PS2glAllocator64(m_NbVertices * 4);
+    m_pC = (int)PS2glAllocator64(m_NbVertices * 4);
+
+    if (!m_pGrids[0] || !m_pGrids[1] || !m_pIndices || !m_pV || !m_pT || !m_pC)
+        printf("Not enough memory for Water Fx !! The Water may be too large !\n");
+
+    ulCurrentIndex = 0;
+    for (line = 0; line < m_ulGridSize[1]; line++)
+    {
+        for (row = 0; row < m_ulGridSize[0]; row++)
+        {
+            i = row + line * m_ulGridSize[0];
+            ((unsigned int*)m_pIndices)[i * 2] = ulCurrentIndex;
+            if (line == 0 || line == m_ulGridSize[1] - 1)
+                ((unsigned int*)m_pIndices)[i * 2 + 1] = ulCurrentIndex;
+            else
+                ((unsigned int*)m_pIndices)[i * 2 + 1] = ulCurrentIndex + NbVerticesPerLine - 1;
+            ulCurrentIndex += 2;
+        }
+        if (line == 0)
+            ulCurrentIndex = ulCurrentIndex - NbVerticesPerLine + 1;
+    }
+
+    *(WaterFx_tdstVector4_*)CurrentVertexPos = *(WaterFx_tdstVector4_*)m_MinPos;
+    for (line = 0; line < m_ulGridSize[1]; line++)
+    {
+        CurrentVertexPos[0] = m_MinPos[0];
+        for (row = 0; row < m_ulGridSize[0]; row++)
+        {
+            ulCurrentIndex = row + line * m_ulGridSize[0];
+            i = ((unsigned int*)m_pIndices)[ulCurrentIndex * 2];
+            _pV = &m_pV[i];
+            _pT = &((unsigned int*)m_pT)[i];
+            _pC = &((unsigned int*)m_pC)[i];
+            Color = GetInterpolatedColor(CurrentVertexPos, pVOrg, pCOrg, NbVerticesOrg);
+            *_pC = Color;
+            *_pT = 0;
+            (*_pV)[0] = CurrentVertexPos[0];
+            (*_pV)[1] = CurrentVertexPos[1];
+            (*_pV)[2] = CurrentVertexPos[2];
+            if (row == 0)
+                (*_pV)[3] = fADC;
+            else
+                (*_pV)[3] = 1.0f;
+
+            i = ((unsigned int*)m_pIndices)[ulCurrentIndex * 2 + 1];
+            _pV = &m_pV[i];
+            _pT = &((unsigned int*)m_pT)[i];
+            _pC = &((unsigned int*)m_pC)[i];
+            *_pC = Color;
+            *_pT = 0;
+            (*_pV)[0] = CurrentVertexPos[0];
+            (*_pV)[1] = CurrentVertexPos[1];
+            (*_pV)[2] = CurrentVertexPos[2];
+            if (row == 0)
+                (*_pV)[3] = fADC;
+            else
+                (*_pV)[3] = 1.0f;
+
+            CurrentVertexPos[0] += m_fGridStepSize[0];
+        }
+        CurrentVertexPos[1] += m_fGridStepSize[1];
+    }
+
+    for (i = 0; i < m_ulGridSize[0] * m_ulGridSize[1]; i++)
+    {
+        ((short*)m_pGrids[0])[i] = 0;
+        ((short*)m_pGrids[1])[i] = 0;
+    }
+
+    *(WaterFx_tdstVector4_*)m_MinPos = *(WaterFx_tdstVector4_*)m_OrgMinPos;
+    *(WaterFx_tdstVector4_*)m_MaxPos = *(WaterFx_tdstVector4_*)m_OrgMaxPos;
+
+    PS2glLiberator((void*)m_pIndices);
+    m_pIndices = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 753–1111 */
+/* addr: 0x002ea200  size: 1260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 753
+ *   +0x0004 -> line 763
+ *   +0x0008 -> line 753
+ *   +0x0030 -> line 763
+ *   +0x003c -> line 770
+ *   +0x0040 -> line 781
+ *   +0x004c -> line 770
+ *   +0x0050 -> line 774
+ *   +0x0054 -> line 771
+ *   +0x0058 -> line 770
+ *   +0x005c -> line 771
+ *   +0x0060 -> line 770
+ *   +0x0064 -> line 771
+ *   +0x0068 -> line 770
+ *   +0x006c -> line 771
+ *   +0x0070 -> line 781
+ *   +0x0078 -> line 812
+ *   +0x007c -> line 808
+ *   +0x0080 -> line 812
+ *   +0x0084 -> line 813
+ *   +0x0088 -> line 821
+ *   +0x0094 -> line 823
+ *   +0x0120 -> line 825
+ *   +0x01ac -> line 826
+ *   +0x0234 -> line 827
+ *   +0x0278 -> line 828
+ *   +0x02b0 -> line 829
+ *   +0x02c8 -> line 830
+ *   +0x02cc -> line 829
+ *   +0x02f4 -> line 830
+ *   +0x02fc -> line 831
+ *   +0x0300 -> line 883
+ *   +0x0304 -> line 885
+ *   +0x0308 -> line 883
+ *   +0x030c -> line 885
+ *   +0x0318 -> line 890
+ *   +0x0328 -> line 993
+ *   +0x032c -> line 994
+ *   +0x0330 -> line 995
+ *   +0x0334 -> line 996
+ *   +0x0338 -> line 997
+ *   +0x033c -> line 998
+ *   +0x0340 -> line 999
+ *   +0x0344 -> line 1000
+ *   +0x0348 -> line 1001
+ *   +0x034c -> line 1002
+ *   +0x0350 -> line 1004
+ *   +0x0354 -> line 1006
+ *   +0x0358 -> line 1007
+ *   +0x035c -> line 1008
+ *   +0x0360 -> line 1009
+ *   +0x0364 -> line 1010
+ *   +0x0368 -> line 1012
+ *   +0x036c -> line 1013
+ *   +0x0370 -> line 1014
+ *   +0x0374 -> line 1015
+ *   +0x0378 -> line 1016
+ *   +0x037c -> line 1018
+ *   +0x0380 -> line 1019
+ *   +0x0384 -> line 1020
+ *   +0x0388 -> line 1022
+ *   +0x038c -> line 1023
+ *   +0x0390 -> line 1024
+ *   +0x0394 -> line 1028
+ *   +0x0398 -> line 1029
+ *   +0x039c -> line 1031
+ *   +0x03a0 -> line 1035
+ *   +0x03a4 -> line 1036
+ *   +0x03a8 -> line 1038
+ *   +0x03ac -> line 1039
+ *   +0x03b0 -> line 1041
+ *   +0x03b4 -> line 1042
+ *   +0x03b8 -> line 1046
+ *   +0x03bc -> line 1050
+ *   +0x03c0 -> line 1051
+ *   +0x03c4 -> line 1052
+ *   +0x03c8 -> line 1053
+ *   +0x03cc -> line 1055
+ *   +0x03d0 -> line 1056
+ *   +0x03d4 -> line 1058
+ *   +0x03d8 -> line 1059
+ *   +0x03dc -> line 1063
+ *   +0x03e0 -> line 1064
+ *   +0x03e4 -> line 1065
+ *   +0x03e8 -> line 1066
+ *   +0x03ec -> line 1067
+ *   +0x03f0 -> line 1068
+ *   +0x03f4 -> line 1069
+ *   +0x03f8 -> line 1070
+ *   +0x03fc -> line 1071
+ *   +0x0400 -> line 1072
+ *   +0x0404 -> line 1073
+ *   +0x0408 -> line 1074
+ *   +0x040c -> line 1078
+ *   +0x0410 -> line 1079
+ *   +0x0414 -> line 1080
+ *   +0x0418 -> line 1081
+ *   +0x041c -> line 1082
+ *   +0x0420 -> line 1083
+ *   +0x0424 -> line 1084
+ *   +0x0428 -> line 1085
+ *   +0x042c -> line 1086
+ *   +0x0430 -> line 1087
+ *   +0x0434 -> line 1088
+ *   +0x0438 -> line 1098
+ *   +0x043c -> line 1093
+ *   +0x0440 -> line 1094
+ *   +0x0444 -> line 1098
+ *   +0x0450 -> line 1099
+ *   +0x0460 -> line 1102
+ *   +0x0474 -> line 1103
+ *   +0x047c -> line 1106
+ *   +0x048c -> line 1105
+ *   +0x0490 -> line 1107
+ *   +0x0494 -> line 1105
+ *   +0x049c -> line 1106
+ *   +0x04a0 -> line 1107
+ *   +0x04b0 -> line 1110
+ *   +0x04bc -> line 1111
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::Process(void)
 {
-    unsigned int yy;
-    unsigned int xx;
-    unsigned int i;
-    unsigned int AddIndex;
-    unsigned int* _pT;
-    unsigned int sx;
-    unsigned int row;
-    unsigned int line;
     short* pOld;
     short* pCur;
-    /* TODO: decompile from asm/... */
+    unsigned int sx;
+    unsigned int* _pT;
+    unsigned int row;
+    unsigned int line;
+    unsigned int i;
+    unsigned int AddIndex;
+    unsigned int yy;
+    unsigned int xx;
+
+    if (g_stEngineStructure.bEngineFrozen)
+        return;
+
+    pOld = (short*)m_pGrids[m_ulCurrentBuffer];
+    pCur = (short*)m_pGrids[m_ulCurrentBuffer ^ 1];
+    sx = m_ulGridSize[0];
+    PerturbFromCharacterPosition((float*)&AGO_g_stMainCharacterFinalPosition, 400.0f);
+    _pT = (unsigned int*)m_pT;
+    pOld += sx;
+    pCur += sx;
+    _pT++;
+    if (m_bPerturbated)
+    {
+        for (i = (unsigned int)(0.2f * (float)m_ulGridSize[0]); i != 0; i--)
+        {
+            row = (unsigned int)FRR(1.0f, (float)(m_ulGridSize[0] - 1));
+            line = (unsigned int)FRR(1.0f, (float)(m_ulGridSize[1] - 1));
+            ((short*)m_pGrids[0])[row + sx * line] += FRR(-m_fPerturbationStrength, m_fPerturbationStrength);
+            ((short*)m_pGrids[0])[row + sx * line + 1] += FRR(-m_fPerturbationStrength, m_fPerturbationStrength);
+            ((short*)m_pGrids[0])[row + sx * (line + 1)] += FRR(-m_fPerturbationStrength, m_fPerturbationStrength);
+        }
+    }
+
+    AddIndex = m_ulGridSize[0] * 2 - 1;
+    yy = m_ulGridSize[1] - 2;
+    while (yy != 0)
+    {
+        xx = sx >> 3;
+        while (xx != 0)
+        {
+            asm {
+                lq zero, 0(_pT)
+                lq v0, -0x10(pCur)
+                sll a2, sx, 1
+                add a0, pCur, a2
+                sub a1, pCur, a2
+                lq at, 0(pCur)
+                lq v1, 0x10(pCur)
+                sub t1, pOld, a2
+                lq t0, -0x10(pOld)
+                lq t1, 0(t1)
+                psrah a2, at, 1
+                mtsah zero, 7
+                qfsrv v0, at, v0
+                lq a0, 0(a0)
+                lq a1, 0(a1)
+                lq a3, 0(pOld)
+                mtsah zero, 1
+                qfsrv v1, v1, at
+                paddsh v0, v0, v1
+                paddsh v0, v0, a0
+                paddsh v0, v0, a1
+                psllh v1, v0, 1
+                psllh v0, v0, 2
+                paddsh v0, v0, v1
+                psrah v0, v0, 4
+                paddsh v0, v0, a2
+                psubsh v0, v0, a3
+                psrah v1, v0, 5
+                psubsh v0, v0, v1
+                sq v0, 0(pOld)
+                mtsah zero, 7
+                qfsrv t0, v0, t0
+                paddsh v1, t0, v0
+                paddsh a0, t1, v0
+                psllh v1, v1, 2
+                psllh a0, a0, 2
+                pinteh a1, a0, v1
+                mtsah zero, 1
+                qfsrv v1, v1, v1
+                qfsrv a0, a0, a0
+                pinteh a2, a0, v1
+                pextuw t0, a2, a1
+                pextlw a3, a2, a1
+                sll t1, AddIndex, 2
+                add t1, _pT, t1
+                mtsah zero, 2
+                qfsrv v0, a3, a3
+                sw a3, 0(_pT)
+                sw a3, 0(t1)
+                qfsrv v1, v0, v0
+                sw v0, 8(_pT)
+                sw v0, 8(t1)
+                qfsrv v0, v1, v1
+                sw v1, 0x10(_pT)
+                sw v1, 0x10(t1)
+                sw v0, 0x18(_pT)
+                sw v0, 0x18(t1)
+                qfsrv v0, t0, t0
+                sw t0, 0x20(_pT)
+                sw t0, 0x20(t1)
+                qfsrv v1, v0, v0
+                sw v0, 0x28(_pT)
+                sw v0, 0x28(t1)
+                qfsrv v0, v1, v1
+                sw v1, 0x30(_pT)
+                sw v1, 0x30(t1)
+                sw v0, 0x38(_pT)
+                sw v0, 0x38(t1)
+            }
+            _pT += 16;
+            pOld += 8;
+            pCur += 8;
+            xx--;
+        }
+        yy--;
+    }
+
+    pOld = (short*)m_pGrids[m_ulCurrentBuffer];
+    for (yy = 0; yy < m_ulGridSize[1]; yy++)
+    {
+        pOld[yy * sx] = 0;
+        pOld[(yy + 1) * sx - 1] = 0;
+    }
+    m_ulCurrentBuffer ^= 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1118–1182 */
+/* addr: 0x002ea010  size: 496 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1118
+ *   +0x000c -> line 1124
+ *   +0x0014 -> line 1125
+ *   +0x0018 -> line 1126
+ *   +0x001c -> line 1125
+ *   +0x0020 -> line 1126
+ *   +0x0024 -> line 1125
+ *   +0x0028 -> line 1127
+ *   +0x002c -> line 1125
+ *   +0x0064 -> line 1127
+ *   +0x006c -> line 1128
+ *   +0x0074 -> line 1135
+ *   +0x0080 -> line 1136
+ *   +0x008c -> line 1138
+ *   +0x0094 -> line 1139
+ *   +0x00a0 -> line 1142
+ *   +0x00ac -> line 1144
+ *   +0x00b0 -> line 1145
+ *   +0x00b4 -> line 1144
+ *   +0x00b8 -> line 1146
+ *   +0x00c8 -> line 1147
+ *   +0x00d0 -> line 1149
+ *   +0x00d8 -> line 1152
+ *   +0x00e0 -> line 1169
+ *   +0x00ec -> line 1170
+ *   +0x013c -> line 1171
+ *   +0x0150 -> line 1172
+ *   +0x0164 -> line 1173
+ *   +0x0178 -> line 1174
+ *   +0x0188 -> line 1175
+ *   +0x0194 -> line 1176
+ *   +0x01e0 -> line 1182
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_WaterFx::DisplayInSDL(void)
 {
     unsigned int hRef;
@@ -3120,6 +3815,29 @@ void C_WaterFx::DisplayInSDL(void)
     if (g_PS2glContext.uiDmaOmitDataBits & 0x600) { *(int*)g_PS2glContext.pnColorMatMasks &= ~0x200; *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100; } g_PS2glContext.uiDmaOmitDataBits = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1216–1245 */
+/* addr: 0x002e9f60  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1216
+ *   +0x0010 -> line 1218
+ *   +0x0014 -> line 1220
+ *   +0x001c -> line 1225
+ *   +0x0024 -> line 1227
+ *   +0x002c -> line 1229
+ *   +0x003c -> line 1232
+ *   +0x0044 -> line 1233
+ *   +0x0048 -> line 1234
+ *   +0x004c -> line 1235
+ *   +0x0068 -> line 1236
+ *   +0x0070 -> line 1238
+ *   +0x0078 -> line 1239
+ *   +0x0080 -> line 1241
+ *   +0x0088 -> line 1243
+ *   +0x0090 -> line 1244
+ *   +0x0098 -> line 1245
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vProcessAndDisplay(int bTransparent)
 {
     tdstBaseFxListElement_* p;
@@ -3134,8 +3852,8 @@ void WaterFx_vProcessAndDisplay(int bTransparent)
         {
             pFx = (C_WaterFx*)p->pFx; if (pFx->m_bTransparent == bTransparent)
             {
-                pFx->Process();
                 WaterFx_vClearCop0Register24();
+                pFx->Process();
                 WaterFx_vClearCop0Register24();
                 WaterFx_vClearCop0Register24();
                 if (((C_WaterFx*)p->pFx)->m_pSDL) SDL_Draw(((C_WaterFx*)p->pFx)->m_pSDL);
@@ -3151,6 +3869,26 @@ void WaterFx_vProcessAndDisplay(int bTransparent)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1248–1272 */
+/* addr: 0x002e9ec0  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1248
+ *   +0x0010 -> line 1252
+ *   +0x0014 -> line 1254
+ *   +0x001c -> line 1257
+ *   +0x0028 -> line 1258
+ *   +0x002c -> line 1259
+ *   +0x0038 -> line 1261
+ *   +0x003c -> line 1263
+ *   +0x0044 -> line 1265
+ *   +0x004c -> line 1266
+ *   +0x0068 -> line 1267
+ *   +0x0070 -> line 1269
+ *   +0x0074 -> line 1270
+ *   +0x0080 -> line 1272
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vInit(void)
 {
     tdstBaseFxListElement_* p;
@@ -3169,16 +3907,42 @@ void WaterFx_vInit(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1276–1276 */
+/* addr: 0x002e9eb0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1276
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vDestroySDLs(void)
 {
     WaterFx_g_List.DeleteAllSDLs();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1282–1282 */
+/* addr: 0x002e9ea0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1282
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vDesinit(void)
 {
     WaterFx_g_List.DeleteAll();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1289–1299 */
+/* addr: 0x002e9e50  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1289
+ *   +0x000c -> line 1292
+ *   +0x001c -> line 1294
+ *   +0x0024 -> line 1296
+ *   +0x002c -> line 1297
+ *   +0x0040 -> line 1299
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_WaterFx* p;
@@ -3192,6 +3956,19 @@ void WaterFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1303–1316 */
+/* addr: 0x002e9dd0  size: 128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1303
+ *   +0x0018 -> line 1307
+ *   +0x002c -> line 1309
+ *   +0x004c -> line 1311
+ *   +0x0050 -> line 1313
+ *   +0x005c -> line 1315
+ *   +0x0068 -> line 1316
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_vAddObjectEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_WaterFx* p;
@@ -3210,6 +3987,19 @@ void WaterFx_vAddObjectEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1321–1331 */
+/* addr: 0x002e9d70  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1321
+ *   +0x0018 -> line 1324
+ *   +0x001c -> line 1326
+ *   +0x0024 -> line 1328
+ *   +0x0034 -> line 1329
+ *   +0x0038 -> line 1330
+ *   +0x0048 -> line 1331
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_Perturb(float* Position, float Strength)
 {
     tdstBaseFxListElement_* p;
@@ -3218,6 +4008,18 @@ void WaterFx_Perturb(float* Position, float Strength)
         ((C_WaterFx*)p->pFx)->Perturb(Position, Strength);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1338–1345 */
+/* addr: 0x002e9cd0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1338
+ *   +0x0004 -> line 1340
+ *   +0x000c -> line 1342
+ *   +0x0080 -> line 1343
+ *   +0x0084 -> line 1344
+ *   +0x0090 -> line 1345
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float Strength)
 {
     C_WaterFx* pFx;
@@ -3240,6 +4042,19 @@ void WaterFx_SetPerturbationMode(float* Position, int PerturbationMode, float St
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 1350–1361 */
+/* addr: 0x002e9c70  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1350
+ *   +0x0018 -> line 1353
+ *   +0x001c -> line 1355
+ *   +0x0024 -> line 1357
+ *   +0x0034 -> line 1358
+ *   +0x0038 -> line 1359
+ *   +0x0048 -> line 1361
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
 {
     tdstBaseFxListElement_* p;
@@ -3248,11 +4063,176 @@ void WaterFx_SetPosition(float* PositionInWater, float* NewPosition)
         ((C_WaterFx*)p->pFx)->SetPosition(PositionInWater, NewPosition);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\WaterFx.cpp lines 72–153 */
+/* addr: 0x002e9780  size: 1264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 72
+ *   +0x0004 -> line 76
+ *   +0x0008 -> line 72
+ *   +0x000c -> line 76
+ *   +0x0010 -> line 72
+ *   +0x0014 -> line 76
+ *   +0x0018 -> line 72
+ *   +0x001c -> line 76
+ *   +0x0020 -> line 72
+ *   +0x0024 -> line 76
+ *   +0x0068 -> line 77
+ *   +0x0070 -> line 78
+ *   +0x0084 -> line 79
+ *   +0x008c -> line 78
+ *   +0x00b4 -> line 81
+ *   +0x00b8 -> line 79
+ *   +0x00bc -> line 78
+ *   +0x00c0 -> line 79
+ *   +0x00d0 -> line 78
+ *   +0x00d4 -> line 82
+ *   +0x00dc -> line 78
+ *   +0x00e0 -> line 79
+ *   +0x00e4 -> line 78
+ *   +0x00e8 -> line 80
+ *   +0x00f0 -> line 78
+ *   +0x00fc -> line 82
+ *   +0x0100 -> line 78
+ *   +0x0104 -> line 79
+ *   +0x0108 -> line 80
+ *   +0x010c -> line 79
+ *   +0x0110 -> line 80
+ *   +0x0114 -> line 82
+ *   +0x0118 -> line 79
+ *   +0x0124 -> line 82
+ *   +0x0128 -> line 80
+ *   +0x0138 -> line 79
+ *   +0x013c -> line 80
+ *   +0x0140 -> line 79
+ *   +0x0144 -> line 83
+ *   +0x0148 -> line 79
+ *   +0x015c -> line 80
+ *   +0x0160 -> line 79
+ *   +0x0164 -> line 80
+ *   +0x0168 -> line 79
+ *   +0x0178 -> line 80
+ *   +0x017c -> line 79
+ *   +0x0180 -> line 80
+ *   +0x0184 -> line 79
+ *   +0x0188 -> line 80
+ *   +0x018c -> line 79
+ *   +0x0190 -> line 80
+ *   +0x01b8 -> line 81
+ *   +0x01c0 -> line 82
+ *   +0x01c4 -> line 81
+ *   +0x01c8 -> line 82
+ *   +0x01e8 -> line 81
+ *   +0x01ec -> line 82
+ *   +0x01f0 -> line 81
+ *   +0x01f4 -> line 82
+ *   +0x023c -> line 83
+ *   +0x0244 -> line 86
+ *   +0x0298 -> line 88
+ *   +0x02a8 -> line 90
+ *   +0x02c4 -> line 94
+ *   +0x02cc -> line 98
+ *   +0x02d0 -> line 96
+ *   +0x02d4 -> line 98
+ *   +0x02d8 -> line 97
+ *   +0x02dc -> line 96
+ *   +0x02e8 -> line 97
+ *   +0x0300 -> line 98
+ *   +0x0318 -> line 99
+ *   +0x0328 -> line 101
+ *   +0x0330 -> line 102
+ *   +0x0350 -> line 103
+ *   +0x035c -> line 104
+ *   +0x0370 -> line 105
+ *   +0x0380 -> line 106
+ *   +0x038c -> line 107
+ *   +0x039c -> line 108
+ *   +0x03b0 -> line 109
+ *   +0x03b8 -> line 113
+ *   +0x03bc -> line 114
+ *   +0x03c4 -> line 118
+ *   +0x03c8 -> line 116
+ *   +0x03cc -> line 118
+ *   +0x03d0 -> line 117
+ *   +0x03d4 -> line 116
+ *   +0x03e4 -> line 117
+ *   +0x0400 -> line 118
+ *   +0x0418 -> line 119
+ *   +0x0428 -> line 120
+ *   +0x0434 -> line 122
+ *   +0x0450 -> line 124
+ *   +0x0458 -> line 125
+ *   +0x0470 -> line 126
+ *   +0x047c -> line 127
+ *   +0x0490 -> line 128
+ *   +0x04a0 -> line 129
+ *   +0x04ac -> line 130
+ *   +0x04bc -> line 131
+ *   +0x04d0 -> line 132
+ *   +0x04d8 -> line 153
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AE_Filter_BrightNess_n_Contrast(float* AE_Bright_Cont)
 {
     unsigned int Alpha;
     unsigned int Found;
     unsigned int i;
     float Colors[3];
-    /* TODO: decompile from asm/... */
+
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    GLI_vSetFIXFullScreenOrthoProjection();
+    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~0x2 : ~0x200; g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+    g_PS2glContext.nEnableBits &= ~0x80; g_gsContext.PRMODE.FGE = 0; g_gsContext.ModFlgs.PRMODE_Modified = 1; *(unsigned char*)g_PS2glContext.pbFogging = 0;
+    g_PS2glContext.nLightBits &= ~0x400;
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glDepthMask(0);
+
+    Alpha = (unsigned int)(128.0f * AE_Bright_Cont[3]);
+    if (Alpha > 255)
+        Alpha = 255;
+    PS2glSetGsRegister(0x42, ((unsigned long)Alpha << 32) | 0x29, 0);
+
+    /* Retail rematerialises &Colors before each loop (addiu r,sp,0x40) and adds
+     * the index to it; the address round-trips through an integer reproduce
+     * that. Two different integer types keep MWCC from sharing one saved
+     * register for both loops. */
+    for (i = 0; i < 3; i++)
+    {
+        ((float*)(int)Colors)[i] = AE_Bright_Cont[i];
+        if (((float*)(int)Colors)[i] < 0.0f) ((float*)(int)Colors)[i] = 0.0f;
+        if (((float*)(int)Colors)[i] > 1.0f) ((float*)(int)Colors)[i] = 1.0f;
+    }
+
+    PS2glBegin(4);
+    PS2glColor4f(Colors[0], Colors[1], Colors[2], 1.0f);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+    PS2glVertex2f(0.0f, 0.0f);
+    PS2glVertex2f(100.0f, 100.0f);
+    PS2glVertex2f(0.0f, 100.0f);
+    PS2glEnd();
+
+    Found = 0;
+    for (i = 0; i < 3; i++)
+    {
+        ((float*)(unsigned int)Colors)[i] = -AE_Bright_Cont[i];
+        if (((float*)(unsigned int)Colors)[i] <= 0.0f) { ((float*)(unsigned int)Colors)[i] = 0.0f; Found++; }
+        if (((float*)(unsigned int)Colors)[i] > 1.0f) ((float*)(unsigned int)Colors)[i] = 1.0f;
+    }
+    if (Found < 3)
+    {
+        PS2glSetGsRegister(0x42, ((unsigned long)0x80 << 32) | 0xA1, 0);
+
+        PS2glBegin(4);
+        PS2glColor4f(Colors[0], Colors[1], Colors[2], 1.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glVertex2f(100.0f, 0.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glVertex2f(0.0f, 0.0f);
+        PS2glVertex2f(100.0f, 100.0f);
+        PS2glVertex2f(0.0f, 100.0f);
+        PS2glEnd();
+    }
 }

@@ -1154,6 +1154,373 @@ _sceDmaTag My_dma_start;
 _sceDmaTag My_dma_end;
 float matIdentity[4][4];
 
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void PS2glGet(unsigned int type, unsigned int pname, void* params);
+void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb);
+void PS2glInit(void);
+int MyGsSyncV(void);
+int VBLCallback(void);
+void InitVU1Package(tagGLcontext* pCtx);
+
+int printf(const char* format, ...);
+void* memset(void* pDest, int iValue, unsigned int uiCount);
+void sceDmaReset(int iChannel);
+void sceDmaGetEnv(anon_16* pEnv);
+void sceDmaPutEnv(anon_16* pEnv);
+void sceGsResetPath(void);
+void PS2glInitContext(tagGLcontext* pCtx);
+void GsResetBuffer(void);
+void impPS2glShadeModel(unsigned int uiMode);
+void impPS2glDepthFunc(unsigned int uiFunc);
+int CreateSema(SemaParam* pParam);
+
+int WaitSema(int sid);
+
+int iSignalSema(int sid);
+
+void* memcpy(void* pDest, const void* pSrc, unsigned int uiSize);
+void VU1SendPackage(_sceDmaTag* pTag, unsigned long ulArg);
+void gifSetTag(anon_1* pTag, unsigned long nLoop, unsigned long EOP, unsigned long PRE, unsigned long PRIM, unsigned long FLG, unsigned long nReg, unsigned char* pRegs);
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 649–749 */
+/* addr: 0x0017ff60  size: 1064 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 649
+ *   +0x0004 -> line 652
+ *   +0x0008 -> line 649
+ *   +0x000c -> line 658
+ *   +0x0010 -> line 649
+ *   +0x0014 -> line 652
+ *   +0x0018 -> line 649
+ *   +0x001c -> line 658
+ *   +0x0020 -> line 649
+ *   +0x0024 -> line 658
+ *   +0x0028 -> line 649
+ *   +0x002c -> line 658
+ *   +0x0030 -> line 649
+ *   +0x0048 -> line 652
+ *   +0x004c -> line 658
+ *   +0x0054 -> line 660
+ *   +0x0060 -> line 661
+ *   +0x0080 -> line 666
+ *   +0x0088 -> line 669
+ *   +0x0098 -> line 670
+ *   +0x00a8 -> line 672
+ *   +0x00b4 -> line 674
+ *   +0x00cc -> line 675
+ *   +0x00d0 -> line 674
+ *   +0x00d8 -> line 675
+ *   +0x00e8 -> line 676
+ *   +0x00f4 -> line 677
+ *   +0x0108 -> line 680
+ *   +0x010c -> line 681
+ *   +0x0110 -> line 680
+ *   +0x0114 -> line 740
+ *   +0x0118 -> line 680
+ *   +0x011c -> line 681
+ *   +0x0124 -> line 680
+ *   +0x0128 -> line 682
+ *   +0x012c -> line 738
+ *   +0x0130 -> line 682
+ *   +0x0134 -> line 741
+ *   +0x0138 -> line 681
+ *   +0x013c -> line 682
+ *   +0x0144 -> line 747
+ *   +0x0148 -> line 684
+ *   +0x014c -> line 738
+ *   +0x0150 -> line 684
+ *   +0x0154 -> line 740
+ *   +0x0158 -> line 684
+ *   +0x015c -> line 741
+ *   +0x0160 -> line 685
+ *   +0x0164 -> line 684
+ *   +0x0168 -> line 685
+ *   +0x016c -> line 747
+ *   +0x0170 -> line 685
+ *   +0x0174 -> line 747
+ *   +0x0178 -> line 685
+ *   +0x017c -> line 747
+ *   +0x0180 -> line 686
+ *   +0x0184 -> line 747
+ *   +0x0188 -> line 686
+ *   +0x018c -> line 747
+ *   +0x0190 -> line 686
+ *   +0x0194 -> line 687
+ *   +0x0198 -> line 686
+ *   +0x019c -> line 687
+ *   +0x01a8 -> line 688
+ *   +0x01b4 -> line 690
+ *   +0x01b8 -> line 688
+ *   +0x01bc -> line 690
+ *   +0x01c8 -> line 693
+ *   +0x01d4 -> line 694
+ *   +0x01d8 -> line 693
+ *   +0x01dc -> line 694
+ *   +0x01e8 -> line 695
+ *   +0x01f4 -> line 696
+ *   +0x01f8 -> line 695
+ *   +0x01fc -> line 696
+ *   +0x0208 -> line 698
+ *   +0x0214 -> line 704
+ *   +0x0218 -> line 698
+ *   +0x021c -> line 704
+ *   +0x0220 -> line 700
+ *   +0x0224 -> line 704
+ *   +0x0228 -> line 724
+ *   +0x0234 -> line 725
+ *   +0x023c -> line 700
+ *   +0x0240 -> line 725
+ *   +0x0244 -> line 700
+ *   +0x0248 -> line 727
+ *   +0x024c -> line 701
+ *   +0x0250 -> line 727
+ *   +0x0254 -> line 733
+ *   +0x0258 -> line 727
+ *   +0x025c -> line 733
+ *   +0x0260 -> line 728
+ *   +0x0264 -> line 733
+ *   +0x0268 -> line 728
+ *   +0x026c -> line 739
+ *   +0x0270 -> line 728
+ *   +0x0274 -> line 739
+ *   +0x0278 -> line 729
+ *   +0x027c -> line 701
+ *   +0x0280 -> line 729
+ *   +0x0284 -> line 701
+ *   +0x0288 -> line 729
+ *   +0x028c -> line 730
+ *   +0x0298 -> line 732
+ *   +0x02a4 -> line 734
+ *   +0x02b0 -> line 735
+ *   +0x02bc -> line 744
+ *   +0x02c8 -> line 702
+ *   +0x02d4 -> line 704
+ *   +0x02d8 -> line 705
+ *   +0x02e4 -> line 707
+ *   +0x02f0 -> line 709
+ *   +0x02fc -> line 710
+ *   +0x0308 -> line 711
+ *   +0x0314 -> line 712
+ *   +0x0320 -> line 713
+ *   +0x032c -> line 715
+ *   +0x0338 -> line 716
+ *   +0x0344 -> line 717
+ *   +0x0350 -> line 718
+ *   +0x035c -> line 719
+ *   +0x0368 -> line 720
+ *   +0x0374 -> line 721
+ *   +0x0380 -> line 722
+ *   +0x038c -> line 724
+ *   +0x0390 -> line 725
+ *   +0x0394 -> line 727
+ *   +0x0398 -> line 728
+ *   +0x039c -> line 729
+ *   +0x03a0 -> line 730
+ *   +0x03a4 -> line 732
+ *   +0x03a8 -> line 733
+ *   +0x03ac -> line 734
+ *   +0x03b0 -> line 735
+ *   +0x03b4 -> line 738
+ *   +0x03b8 -> line 739
+ *   +0x03bc -> line 740
+ *   +0x03c0 -> line 741
+ *   +0x03c4 -> line 744
+ *   +0x03c8 -> line 747
+ *   +0x03d4 -> line 748
+ *   +0x03f8 -> line 749
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void InitVU1Package(tagGLcontext* pCtx)
+{
+    int iOffset;
+    static unsigned char regs[3];
+
+    iOffset = (int)&pCtx->VU1Package[0] - (int)&My_dma_next;
+    if ((unsigned int)&My_dma_end - (unsigned int)&My_dma_next >= 0x2711)
+    {
+        printf("Error: VU1 package buffer overflows.");
+        while (1);
+    }
+    memcpy(pCtx->VU1Package, &My_dma_next, (unsigned int)&My_dma_end - (unsigned int)&My_dma_next);
+    VU1SendPackage(&My_dma_start, 0);
+    VU1SendPackage(&My_dma_next, 0);
+    if (pCtx->pVIFDMABuf == NULL)
+    {
+        pCtx->pVIFDMABufUnaligned = (float (*)[4])((unsigned int)PS2glAllocator64((uiMaxVifDmaBufLength << 5) + 0x40) | 0x30000000);
+        pCtx->pVIFDMABuf = (float (*)[4])((((unsigned int)pCtx->pVIFDMABufUnaligned) + 0x3F) & ~0x3F);
+        pCtx->pVIFIBufTail = pCtx->pVIFDMABuf; pCtx->pVIFInBuf = pCtx->pVIFDMABuf;
+        pCtx->pVIFOutBuf = &pCtx->pVIFDMABuf[uiMaxVifDmaBufLength];
+    }
+    pCtx->pVU1_DMA_parameters = (_sceDmaTag*)((int)&My_dma_next + iOffset);
+    pCtx->pVU1_DMA_buf0 = (_sceDmaTag*)((int)&My_vertex_start0 + iOffset);
+    pCtx->pVU1_DMA_buf1 = (_sceDmaTag*)((int)&My_vertex_start1 + iOffset);
+    pCtx->pmClipping = (float (*)[4][4])((int)&mClipping + iOffset);
+    pCtx->pmNormal = (float (*)[4][4])((int)&mNormal + iOffset);
+    pCtx->pmClippingScreen = (float (*)[4][4])((int)&mClippingScreen + iOffset);
+    pCtx->pmLocalScreen = (float (*)[4][4])((int)&mLocalScreen + iOffset);
+    pCtx->pmModelView = (float (*)[4][4])((int)&mModelView + iOffset);
+    pCtx->pvClampLimit = (float (*)[4])((int)&vClampLimit + iOffset);
+    pCtx->pmD = (float (*)[4][4])((int)&mD + iOffset);
+    pCtx->pmVP = (float (*)[4][4])((int)&mVP + iOffset);
+    pCtx->pmS = (float (*)[4][4])((int)&mS + iOffset);
+    pCtx->pmh = (float (*)[4][4])((int)&mh + iOffset);
+    pCtx->pvAmbient = (float (*)[4])((int)&avv + iOffset);
+    pCtx->pvScreenScale = (float (*)[4])((int)pCtx->pvAmbient + 0x10);
+    pCtx->pvEmission = (float (*)[4])((int)pCtx->pvAmbient + 0x20);
+    pCtx->pvColorRange = (float (*)[4])((int)pCtx->pvAmbient + 0x30);
+    pCtx->pfAlpha = (int)&parameters + iOffset;
+    pCtx->pfShininess = pCtx->pfAlpha + 4;
+    pCtx->pnColorMatMasks = pCtx->pfAlpha + 8;
+    pCtx->pbFogging = pCtx->pfAlpha + 0xC;
+    pCtx->peFogMode = pCtx->pfAlpha + 0x10;
+    pCtx->pfFogDensity = pCtx->pfAlpha + 0x14;
+    pCtx->pfFogLinearStart = pCtx->pfAlpha + 0x18;
+    pCtx->pfFogLinearEnd = pCtx->pfAlpha + 0x1C;
+    pCtx->pbTriangleFan = pCtx->pfAlpha + 0x20;
+    pCtx->pnClipMask = pCtx->pfAlpha + 0x24;
+    pCtx->piClipStep = pCtx->pfAlpha + 0x28;
+    pCtx->pbNormalize = pCtx->pfAlpha + 0x2C;
+    pCtx->piReturnAddress = pCtx->pfAlpha + 0x30;
+    pCtx->piEntryAddress = pCtx->pfAlpha + 0x34;
+    pCtx->peClippingMode = pCtx->pfAlpha + 0x38;
+    pCtx->peUseClippingMode = pCtx->pfAlpha + 0x3C;
+    pCtx->pGifTagBuf0 = (anon_1*)((int)&First_Buf + iOffset);
+    pCtx->pGifTagBuf1 = (anon_1*)((int)&Next_Buf + iOffset);
+    pCtx->pVBuf0 = (float (*)[4])((int)&vBuf0 + iOffset);
+    pCtx->pNBuf0 = (float (*)[4])((int)&nBuf0 + iOffset);
+    pCtx->pCBuf0 = (float (*)[4])((int)&cBuf0 + iOffset);
+    pCtx->pTBuf0 = (float (*)[4])((int)&tBuf0 + iOffset);
+    pCtx->pVBuf1 = (float (*)[4])((int)&vBuf1 + iOffset);
+    pCtx->pNBuf1 = (float (*)[4])((int)&nBuf1 + iOffset);
+    pCtx->pCBuf1 = (float (*)[4])((int)&cBuf1 + iOffset);
+    pCtx->pTBuf1 = (float (*)[4])((int)&tBuf1 + iOffset);
+    pCtx->pCBuf0_b = (float (*)[4])((int)&cBuf0_b + iOffset);
+    pCtx->pTBuf0_b = (float (*)[4])((int)&tBuf0_b + iOffset);
+    pCtx->pCBuf1_b = (float (*)[4])((int)&cBuf1_b + iOffset);
+    pCtx->pTBuf1_b = (float (*)[4])((int)&tBuf1_b + iOffset);
+    pCtx->pMSCAL = (tagstVIFCode*)((int)&MSCAL_Code + iOffset);
+    gifSetTag(pCtx->pGifTagBuf0, 0, 1, 1, 0, 0, 3, regs);
+    gifSetTag(pCtx->pGifTagBuf1, 0, 1, 1, 0, 0, 3, regs);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 770–783 */
+/* addr: 0x0017ff00  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 770
+ *   +0x0004 -> line 772
+ *   +0x0008 -> line 770
+ *   +0x000c -> line 772
+ *   +0x0024 -> line 774
+ *   +0x0030 -> line 776
+ *   +0x003c -> line 779
+ *   +0x0044 -> line 783
+ *   +0x0048 -> line 782
+ *   +0x004c -> line 783
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int VBLCallback(void)
+{
+    g_FIELD = (int)((*(volatile unsigned long*)0x12001000 >> 13) & 1);
+    if (g_waiting)
+    {
+        g_waiting = 0;
+        iSignalSema(VBL_Sid);
+    }
+    /* ExitHandler(): sync/ei have no C form. */
+    asm { sync }
+    asm { ei }
+    return 0;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 803–828 */
+/* addr: 0x0017fec0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 803
+ *   +0x0004 -> line 809
+ *   +0x0008 -> line 803
+ *   +0x000c -> line 809
+ *   +0x0010 -> line 811
+ *   +0x001c -> line 813
+ *   +0x0024 -> line 822
+ *   +0x002c -> line 828
+ *   +0x0030 -> line 827
+ *   +0x0034 -> line 828
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int MyGsSyncV(void)
+{
+    g_waiting = 1;
+    if (PS2GL_thingsToDoWhenYoureDead)
+        ((void (*)(void))PS2GL_thingsToDoWhenYoureDead)();
+    WaitSema(VBL_Sid);
+    return g_FIELD;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 837–891 */
+/* addr: 0x0017fdc0  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 837
+ *   +0x0004 -> line 841
+ *   +0x0008 -> line 837
+ *   +0x000c -> line 841
+ *   +0x0014 -> line 844
+ *   +0x0030 -> line 849
+ *   +0x003c -> line 855
+ *   +0x0044 -> line 856
+ *   +0x004c -> line 857
+ *   +0x0050 -> line 858
+ *   +0x005c -> line 859
+ *   +0x0064 -> line 863
+ *   +0x0070 -> line 864
+ *   +0x008c -> line 867
+ *   +0x00a4 -> line 869
+ *   +0x00a8 -> line 867
+ *   +0x00cc -> line 869
+ *   +0x00d4 -> line 870
+ *   +0x00dc -> line 873
+ *   +0x00f0 -> line 891
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glInit(void)
+{
+    anon_16 denv;
+    SemaParam sema;
+
+    printf("\n\n                       Open GL for PS2\n\n");
+    printf("                   Version %s  on SCE %s\n", "2.3 for Rayman3", "2.1.4");
+    printf("      Copyright by Ubisoft 1999-2001, all rights reserved\n\n");
+    sceDmaReset(1);
+    sceDmaGetEnv(&denv);
+    denv.notify = 0x100;
+    sceDmaPutEnv(&denv);
+    sceGsResetPath();
+    PS2glInitContext(&g_PS2glContext);
+    memset(&g_gsContext, 0, sizeof(g_gsContext)); GsResetBuffer();
+    g_gsContext.PRMODECONT.AC = 0; g_gsContext.ModFlgs.PRMODECONT_Modified = 1;
+    impPS2glShadeModel(0x1D01);
+    impPS2glDepthFunc(0x201);
+    sema.initCount = 0; sema.maxCount = 0; VBL_Sid = CreateSema(&sema);
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 898–899 */
+/* addr: 0x0017fd90  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 898
+ *   +0x0020 -> line 899
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
+{
+    return (void*)((unsigned int)(g_PS2glContext.pVIFDMABuf +
+        (BufferNb + 1) * uiMaxVifDmaBufLength) & 0x0FFFFFFF);
+}
+
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 17–1304 */
 /* addr: 0x0017e070  size: 7452 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1793,375 +2160,6 @@ float matIdentity[4][4];
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void PS2glGet(unsigned int type, unsigned int pname, void* params);
-void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb);
-void PS2glInit(void);
-int MyGsSyncV(void);
-int VBLCallback(void);
-void InitVU1Package(tagGLcontext* pCtx);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 898–899 */
-/* addr: 0x0017fd90  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 898
- *   +0x0020 -> line 899
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 837–891 */
-/* addr: 0x0017fdc0  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 837
- *   +0x0004 -> line 841
- *   +0x0008 -> line 837
- *   +0x000c -> line 841
- *   +0x0014 -> line 844
- *   +0x0030 -> line 849
- *   +0x003c -> line 855
- *   +0x0044 -> line 856
- *   +0x004c -> line 857
- *   +0x0050 -> line 858
- *   +0x005c -> line 859
- *   +0x0064 -> line 863
- *   +0x0070 -> line 864
- *   +0x008c -> line 867
- *   +0x00a4 -> line 869
- *   +0x00a8 -> line 867
- *   +0x00cc -> line 869
- *   +0x00d4 -> line 870
- *   +0x00dc -> line 873
- *   +0x00f0 -> line 891
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int printf(const char* format, ...);
-void* memset(void* pDest, int iValue, unsigned int uiCount);
-void sceDmaReset(int iChannel);
-void sceDmaGetEnv(anon_16* pEnv);
-void sceDmaPutEnv(anon_16* pEnv);
-void sceGsResetPath(void);
-void PS2glInitContext(tagGLcontext* pCtx);
-void GsResetBuffer(void);
-void impPS2glShadeModel(unsigned int uiMode);
-void impPS2glDepthFunc(unsigned int uiFunc);
-int CreateSema(SemaParam* pParam);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 803–828 */
-/* addr: 0x0017fec0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 803
- *   +0x0004 -> line 809
- *   +0x0008 -> line 803
- *   +0x000c -> line 809
- *   +0x0010 -> line 811
- *   +0x001c -> line 813
- *   +0x0024 -> line 822
- *   +0x002c -> line 828
- *   +0x0030 -> line 827
- *   +0x0034 -> line 828
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int WaitSema(int sid);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 770–783 */
-/* addr: 0x0017ff00  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 770
- *   +0x0004 -> line 772
- *   +0x0008 -> line 770
- *   +0x000c -> line 772
- *   +0x0024 -> line 774
- *   +0x0030 -> line 776
- *   +0x003c -> line 779
- *   +0x0044 -> line 783
- *   +0x0048 -> line 782
- *   +0x004c -> line 783
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int iSignalSema(int sid);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_InitContext.c lines 649–749 */
-/* addr: 0x0017ff60  size: 1064 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 649
- *   +0x0004 -> line 652
- *   +0x0008 -> line 649
- *   +0x000c -> line 658
- *   +0x0010 -> line 649
- *   +0x0014 -> line 652
- *   +0x0018 -> line 649
- *   +0x001c -> line 658
- *   +0x0020 -> line 649
- *   +0x0024 -> line 658
- *   +0x0028 -> line 649
- *   +0x002c -> line 658
- *   +0x0030 -> line 649
- *   +0x0048 -> line 652
- *   +0x004c -> line 658
- *   +0x0054 -> line 660
- *   +0x0060 -> line 661
- *   +0x0080 -> line 666
- *   +0x0088 -> line 669
- *   +0x0098 -> line 670
- *   +0x00a8 -> line 672
- *   +0x00b4 -> line 674
- *   +0x00cc -> line 675
- *   +0x00d0 -> line 674
- *   +0x00d8 -> line 675
- *   +0x00e8 -> line 676
- *   +0x00f4 -> line 677
- *   +0x0108 -> line 680
- *   +0x010c -> line 681
- *   +0x0110 -> line 680
- *   +0x0114 -> line 740
- *   +0x0118 -> line 680
- *   +0x011c -> line 681
- *   +0x0124 -> line 680
- *   +0x0128 -> line 682
- *   +0x012c -> line 738
- *   +0x0130 -> line 682
- *   +0x0134 -> line 741
- *   +0x0138 -> line 681
- *   +0x013c -> line 682
- *   +0x0144 -> line 747
- *   +0x0148 -> line 684
- *   +0x014c -> line 738
- *   +0x0150 -> line 684
- *   +0x0154 -> line 740
- *   +0x0158 -> line 684
- *   +0x015c -> line 741
- *   +0x0160 -> line 685
- *   +0x0164 -> line 684
- *   +0x0168 -> line 685
- *   +0x016c -> line 747
- *   +0x0170 -> line 685
- *   +0x0174 -> line 747
- *   +0x0178 -> line 685
- *   +0x017c -> line 747
- *   +0x0180 -> line 686
- *   +0x0184 -> line 747
- *   +0x0188 -> line 686
- *   +0x018c -> line 747
- *   +0x0190 -> line 686
- *   +0x0194 -> line 687
- *   +0x0198 -> line 686
- *   +0x019c -> line 687
- *   +0x01a8 -> line 688
- *   +0x01b4 -> line 690
- *   +0x01b8 -> line 688
- *   +0x01bc -> line 690
- *   +0x01c8 -> line 693
- *   +0x01d4 -> line 694
- *   +0x01d8 -> line 693
- *   +0x01dc -> line 694
- *   +0x01e8 -> line 695
- *   +0x01f4 -> line 696
- *   +0x01f8 -> line 695
- *   +0x01fc -> line 696
- *   +0x0208 -> line 698
- *   +0x0214 -> line 704
- *   +0x0218 -> line 698
- *   +0x021c -> line 704
- *   +0x0220 -> line 700
- *   +0x0224 -> line 704
- *   +0x0228 -> line 724
- *   +0x0234 -> line 725
- *   +0x023c -> line 700
- *   +0x0240 -> line 725
- *   +0x0244 -> line 700
- *   +0x0248 -> line 727
- *   +0x024c -> line 701
- *   +0x0250 -> line 727
- *   +0x0254 -> line 733
- *   +0x0258 -> line 727
- *   +0x025c -> line 733
- *   +0x0260 -> line 728
- *   +0x0264 -> line 733
- *   +0x0268 -> line 728
- *   +0x026c -> line 739
- *   +0x0270 -> line 728
- *   +0x0274 -> line 739
- *   +0x0278 -> line 729
- *   +0x027c -> line 701
- *   +0x0280 -> line 729
- *   +0x0284 -> line 701
- *   +0x0288 -> line 729
- *   +0x028c -> line 730
- *   +0x0298 -> line 732
- *   +0x02a4 -> line 734
- *   +0x02b0 -> line 735
- *   +0x02bc -> line 744
- *   +0x02c8 -> line 702
- *   +0x02d4 -> line 704
- *   +0x02d8 -> line 705
- *   +0x02e4 -> line 707
- *   +0x02f0 -> line 709
- *   +0x02fc -> line 710
- *   +0x0308 -> line 711
- *   +0x0314 -> line 712
- *   +0x0320 -> line 713
- *   +0x032c -> line 715
- *   +0x0338 -> line 716
- *   +0x0344 -> line 717
- *   +0x0350 -> line 718
- *   +0x035c -> line 719
- *   +0x0368 -> line 720
- *   +0x0374 -> line 721
- *   +0x0380 -> line 722
- *   +0x038c -> line 724
- *   +0x0390 -> line 725
- *   +0x0394 -> line 727
- *   +0x0398 -> line 728
- *   +0x039c -> line 729
- *   +0x03a0 -> line 730
- *   +0x03a4 -> line 732
- *   +0x03a8 -> line 733
- *   +0x03ac -> line 734
- *   +0x03b0 -> line 735
- *   +0x03b4 -> line 738
- *   +0x03b8 -> line 739
- *   +0x03bc -> line 740
- *   +0x03c0 -> line 741
- *   +0x03c4 -> line 744
- *   +0x03c8 -> line 747
- *   +0x03d4 -> line 748
- *   +0x03f8 -> line 749
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void* memcpy(void* pDest, const void* pSrc, unsigned int uiSize);
-void VU1SendPackage(_sceDmaTag* pTag, unsigned long ulArg);
-void gifSetTag(anon_1* pTag, unsigned long nLoop, unsigned long EOP, unsigned long PRE, unsigned long PRIM, unsigned long FLG, unsigned long nReg, unsigned char* pRegs);
-
-void InitVU1Package(tagGLcontext* pCtx)
-{
-    int iOffset;
-    static unsigned char regs[3];
-
-    iOffset = (int)&pCtx->VU1Package[0] - (int)&My_dma_next;
-    if ((unsigned int)&My_dma_end - (unsigned int)&My_dma_next >= 0x2711)
-    {
-        printf("Error: VU1 package buffer overflows.");
-        while (1);
-    }
-    memcpy(pCtx->VU1Package, &My_dma_next, (unsigned int)&My_dma_end - (unsigned int)&My_dma_next);
-    VU1SendPackage(&My_dma_start, 0);
-    VU1SendPackage(&My_dma_next, 0);
-    if (pCtx->pVIFDMABuf == NULL)
-    {
-        pCtx->pVIFDMABufUnaligned = (float (*)[4])((unsigned int)PS2glAllocator64((uiMaxVifDmaBufLength << 5) + 0x40) | 0x30000000);
-        pCtx->pVIFDMABuf = (float (*)[4])((((unsigned int)pCtx->pVIFDMABufUnaligned) + 0x3F) & ~0x3F);
-        pCtx->pVIFIBufTail = pCtx->pVIFDMABuf; pCtx->pVIFInBuf = pCtx->pVIFDMABuf;
-        pCtx->pVIFOutBuf = &pCtx->pVIFDMABuf[uiMaxVifDmaBufLength];
-    }
-    pCtx->pVU1_DMA_parameters = (_sceDmaTag*)((int)&My_dma_next + iOffset);
-    pCtx->pVU1_DMA_buf0 = (_sceDmaTag*)((int)&My_vertex_start0 + iOffset);
-    pCtx->pVU1_DMA_buf1 = (_sceDmaTag*)((int)&My_vertex_start1 + iOffset);
-    pCtx->pmClipping = (float (*)[4][4])((int)&mClipping + iOffset);
-    pCtx->pmNormal = (float (*)[4][4])((int)&mNormal + iOffset);
-    pCtx->pmClippingScreen = (float (*)[4][4])((int)&mClippingScreen + iOffset);
-    pCtx->pmLocalScreen = (float (*)[4][4])((int)&mLocalScreen + iOffset);
-    pCtx->pmModelView = (float (*)[4][4])((int)&mModelView + iOffset);
-    pCtx->pvClampLimit = (float (*)[4])((int)&vClampLimit + iOffset);
-    pCtx->pmD = (float (*)[4][4])((int)&mD + iOffset);
-    pCtx->pmVP = (float (*)[4][4])((int)&mVP + iOffset);
-    pCtx->pmS = (float (*)[4][4])((int)&mS + iOffset);
-    pCtx->pmh = (float (*)[4][4])((int)&mh + iOffset);
-    pCtx->pvAmbient = (float (*)[4])((int)&avv + iOffset);
-    pCtx->pvScreenScale = (float (*)[4])((int)pCtx->pvAmbient + 0x10);
-    pCtx->pvEmission = (float (*)[4])((int)pCtx->pvAmbient + 0x20);
-    pCtx->pvColorRange = (float (*)[4])((int)pCtx->pvAmbient + 0x30);
-    pCtx->pfAlpha = (int)&parameters + iOffset;
-    pCtx->pfShininess = pCtx->pfAlpha + 4;
-    pCtx->pnColorMatMasks = pCtx->pfAlpha + 8;
-    pCtx->pbFogging = pCtx->pfAlpha + 0xC;
-    pCtx->peFogMode = pCtx->pfAlpha + 0x10;
-    pCtx->pfFogDensity = pCtx->pfAlpha + 0x14;
-    pCtx->pfFogLinearStart = pCtx->pfAlpha + 0x18;
-    pCtx->pfFogLinearEnd = pCtx->pfAlpha + 0x1C;
-    pCtx->pbTriangleFan = pCtx->pfAlpha + 0x20;
-    pCtx->pnClipMask = pCtx->pfAlpha + 0x24;
-    pCtx->piClipStep = pCtx->pfAlpha + 0x28;
-    pCtx->pbNormalize = pCtx->pfAlpha + 0x2C;
-    pCtx->piReturnAddress = pCtx->pfAlpha + 0x30;
-    pCtx->piEntryAddress = pCtx->pfAlpha + 0x34;
-    pCtx->peClippingMode = pCtx->pfAlpha + 0x38;
-    pCtx->peUseClippingMode = pCtx->pfAlpha + 0x3C;
-    pCtx->pGifTagBuf0 = (anon_1*)((int)&First_Buf + iOffset);
-    pCtx->pGifTagBuf1 = (anon_1*)((int)&Next_Buf + iOffset);
-    pCtx->pVBuf0 = (float (*)[4])((int)&vBuf0 + iOffset);
-    pCtx->pNBuf0 = (float (*)[4])((int)&nBuf0 + iOffset);
-    pCtx->pCBuf0 = (float (*)[4])((int)&cBuf0 + iOffset);
-    pCtx->pTBuf0 = (float (*)[4])((int)&tBuf0 + iOffset);
-    pCtx->pVBuf1 = (float (*)[4])((int)&vBuf1 + iOffset);
-    pCtx->pNBuf1 = (float (*)[4])((int)&nBuf1 + iOffset);
-    pCtx->pCBuf1 = (float (*)[4])((int)&cBuf1 + iOffset);
-    pCtx->pTBuf1 = (float (*)[4])((int)&tBuf1 + iOffset);
-    pCtx->pCBuf0_b = (float (*)[4])((int)&cBuf0_b + iOffset);
-    pCtx->pTBuf0_b = (float (*)[4])((int)&tBuf0_b + iOffset);
-    pCtx->pCBuf1_b = (float (*)[4])((int)&cBuf1_b + iOffset);
-    pCtx->pTBuf1_b = (float (*)[4])((int)&tBuf1_b + iOffset);
-    pCtx->pMSCAL = (tagstVIFCode*)((int)&MSCAL_Code + iOffset);
-    gifSetTag(pCtx->pGifTagBuf0, 0, 1, 1, 0, 0, 3, regs);
-    gifSetTag(pCtx->pGifTagBuf1, 0, 1, 1, 0, 0, 3, regs);
-}
-
-int VBLCallback(void)
-{
-    g_FIELD = (int)((*(volatile unsigned long*)0x12001000 >> 13) & 1);
-    if (g_waiting)
-    {
-        g_waiting = 0;
-        iSignalSema(VBL_Sid);
-    }
-    /* ExitHandler(): sync/ei have no C form. */
-    asm { sync }
-    asm { ei }
-    return 0;
-}
-
-int MyGsSyncV(void)
-{
-    g_waiting = 1;
-    if (PS2GL_thingsToDoWhenYoureDead)
-        ((void (*)(void))PS2GL_thingsToDoWhenYoureDead)();
-    WaitSema(VBL_Sid);
-    return g_FIELD;
-}
-
-void PS2glInit(void)
-{
-    anon_16 denv;
-    SemaParam sema;
-
-    printf("\n\n                       Open GL for PS2\n\n");
-    printf("                   Version %s  on SCE %s\n", "2.3 for Rayman3", "2.1.4");
-    printf("      Copyright by Ubisoft 1999-2001, all rights reserved\n\n");
-    sceDmaReset(1);
-    sceDmaGetEnv(&denv);
-    denv.notify = 0x100;
-    sceDmaPutEnv(&denv);
-    sceGsResetPath();
-    PS2glInitContext(&g_PS2glContext);
-    memset(&g_gsContext, 0, sizeof(g_gsContext)); GsResetBuffer();
-    g_gsContext.PRMODECONT.AC = 0; g_gsContext.ModFlgs.PRMODECONT_Modified = 1;
-    impPS2glShadeModel(0x1D01);
-    impPS2glDepthFunc(0x201);
-    sema.initCount = 0; sema.maxCount = 0; VBL_Sid = CreateSema(&sema);
-}
-
-void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb)
-{
-    return (void*)((unsigned int)(g_PS2glContext.pVIFDMABuf +
-        (BufferNb + 1) * uiMaxVifDmaBufLength) & 0x0FFFFFFF);
-}
-
 void PS2glGet(unsigned int type, unsigned int pname, void* params)
 {
     tagListData** ppListData;

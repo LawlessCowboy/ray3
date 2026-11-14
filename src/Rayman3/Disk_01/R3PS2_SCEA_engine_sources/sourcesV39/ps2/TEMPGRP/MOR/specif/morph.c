@@ -1159,60 +1159,6 @@ struct MOR_DEntry_ {
 struct MOR_DEntry_ D_7D5384[50];
 tdstEngineStructure_ g_stEngineStructure;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 69–173 */
-/* addr: 0x003151a0  size: 2020 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 69
- *   +0x0020 -> line 80
- *   +0x0024 -> line 78
- *   +0x0028 -> line 79
- *   +0x002c -> line 81
- *   +0x0034 -> line 82
- *   +0x004c -> line 84
- *   +0x005c -> line 86
- *   +0x0070 -> line 88
- *   +0x0074 -> line 100
- *   +0x0088 -> line 88
- *   +0x008c -> line 89
- *   +0x00b0 -> line 92
- *   +0x00bc -> line 100
- *   +0x00cc -> line 106
- *   +0x00d0 -> line 110
- *   +0x00d8 -> line 106
- *   +0x00dc -> line 110
- *   +0x00f0 -> line 114
- *   +0x00fc -> line 115
- *   +0x0104 -> line 119
- *   +0x010c -> line 120
- *   +0x0128 -> line 123
- *   +0x0138 -> line 125
- *   +0x0168 -> line 128
- *   +0x01e8 -> line 129
- *   +0x0268 -> line 130
- *   +0x02e8 -> line 131
- *   +0x0368 -> line 132
- *   +0x03e8 -> line 133
- *   +0x0468 -> line 134
- *   +0x04e8 -> line 135
- *   +0x0568 -> line 136
- *   +0x05e8 -> line 137
- *   +0x0668 -> line 138
- *   +0x06e8 -> line 139
- *   +0x06f8 -> line 141
- *   +0x0710 -> line 144
- *   +0x0724 -> line 146
- *   +0x0738 -> line 148
- *   +0x075c -> line 150
- *   +0x0780 -> line 153
- *   +0x0788 -> line 150
- *   +0x0790 -> line 153
- *   +0x07ac -> line 165
- *   +0x07bc -> line 172
- *   +0x07c4 -> line 173
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 GEO_tdstGeometricObject_* MOR_fn_xCopyGeometricObjectForMorph(GEO_tdstGeometricObject_* hObject1);
@@ -1233,24 +1179,6 @@ short MOR_fn_xMorphing2(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartI
 short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType);
 short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1564–1582 */
-/* addr: 0x00315990  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1564
- *   +0x0028 -> line 1568
- *   +0x0030 -> line 1570
- *   +0x0038 -> line 1572
- *   +0x0060 -> line 1574
- *   +0x0064 -> line 1575
- *   +0x007c -> line 1577
- *   +0x00fc -> line 1580
- *   +0x0100 -> line 1581
- *   +0x0108 -> line 1577
- *   +0x010c -> line 1581
- *   +0x0124 -> line 1582
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline unsigned char MOR_fn_bReplaceMorphedObjectInHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut)
 {
     HIE_tdstSuperObject_* hChild;
@@ -1268,521 +1196,89 @@ inline unsigned char MOR_fn_bReplaceMorphedObjectInHierarchy(HIE_tdstSuperObject
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1529–1546 */
-/* addr: 0x00315ae0  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1529
- *   +0x0018 -> line 1531
- *   +0x001c -> line 1533
- *   +0x004c -> line 1537
- *   +0x0054 -> line 1538
- *   +0x0064 -> line 1539
- *   +0x0070 -> line 1543
- *   +0x0074 -> line 1544
- *   +0x0078 -> line 1545
- *   +0x0088 -> line 1546
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1486–1494 */
-/* addr: 0x00315b80  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1489
- *   +0x000c -> line 1486
- *   +0x0010 -> line 1489
- *   +0x001c -> line 1486
- *   +0x0020 -> line 1489
- *   +0x0024 -> line 1490
- *   +0x0028 -> line 1489
- *   +0x0034 -> line 1490
- *   +0x0040 -> line 1491
- *   +0x0050 -> line 1493
- *   +0x0058 -> line 1494
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MOR_fn_vMorphTo2(MOR_stMorphStruct_* mp);
 void MOR_fn_vMorphTo(MOR_stMorphStruct_* mp);
 int MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1467–1468 */
-/* addr: 0x00315bf0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1467
- *   +0x0028 -> line 1468
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1440–1457 */
-/* addr: 0x00315c20  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1440
- *   +0x001c -> line 1444
- *   +0x0028 -> line 1446
- *   +0x0038 -> line 1447
- *   +0x0040 -> line 1450
- *   +0x004c -> line 1452
- *   +0x00c0 -> line 1453
- *   +0x00c8 -> line 1454
- *   +0x00d8 -> line 1456
- *   +0x00dc -> line 1457
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1397–1429 */
-/* addr: 0x00315d20  size: 336 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1397
- *   +0x0024 -> line 1401
- *   +0x002c -> line 1403
- *   +0x0034 -> line 1405
- *   +0x0040 -> line 1408
- *   +0x00a8 -> line 1411
- *   +0x00b0 -> line 1414
- *   +0x00c4 -> line 1415
- *   +0x00d8 -> line 1418
- *   +0x00e0 -> line 1421
- *   +0x00e8 -> line 1424
- *   +0x0104 -> line 1425
- *   +0x0108 -> line 1426
- *   +0x0110 -> line 1424
- *   +0x0114 -> line 1426
- *   +0x012c -> line 1429
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1377–1388 */
-/* addr: 0x00315e70  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1377
- *   +0x001c -> line 1381
- *   +0x0040 -> line 1383
- *   +0x0048 -> line 1385
- *   +0x004c -> line 1383
- *   +0x0050 -> line 1385
- *   +0x006c -> line 1387
- *   +0x0070 -> line 1388
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1349–1360 */
-/* addr: 0x00315ef0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1349
- *   +0x0014 -> line 1353
- *   +0x002c -> line 1355
- *   +0x0034 -> line 1357
- *   +0x0038 -> line 1355
- *   +0x003c -> line 1357
- *   +0x005c -> line 1359
- *   +0x0060 -> line 1360
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1301–1332 */
-/* addr: 0x00315f60  size: 264 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1301
- *   +0x001c -> line 1305
- *   +0x0040 -> line 1311
- *   +0x0048 -> line 1307
- *   +0x004c -> line 1308
- *   +0x0050 -> line 1311
- *   +0x0058 -> line 1313
- *   +0x0080 -> line 1315
- *   +0x0084 -> line 1316
- *   +0x0088 -> line 1317
- *   +0x008c -> line 1315
- *   +0x0090 -> line 1317
- *   +0x0094 -> line 1318
- *   +0x00b0 -> line 1324
- *   +0x00c8 -> line 1325
- *   +0x00d0 -> line 1326
- *   +0x00d8 -> line 1329
- *   +0x00dc -> line 1326
- *   +0x00e0 -> line 1329
- *   +0x00fc -> line 1331
- *   +0x0100 -> line 1332
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1266–1288 */
-/* addr: 0x00316070  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1266
- *   +0x0018 -> line 1268
- *   +0x0020 -> line 1270
- *   +0x0038 -> line 1273
- *   +0x006c -> line 1276
- *   +0x0084 -> line 1280
- *   +0x0090 -> line 1283
- *   +0x009c -> line 1284
- *   +0x00a8 -> line 1285
- *   +0x00b8 -> line 1287
- *   +0x00c0 -> line 1285
- *   +0x00c4 -> line 1287
- *   +0x00dc -> line 1288
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1159–1245 */
-/* addr: 0x00316170  size: 716 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1159
- *   +0x0018 -> line 1165
- *   +0x0020 -> line 1167
- *   +0x0028 -> line 1169
- *   +0x0034 -> line 1172
- *   +0x0054 -> line 1176
- *   +0x0060 -> line 1178
- *   +0x0070 -> line 1179
- *   +0x0074 -> line 1178
- *   +0x0088 -> line 1179
- *   +0x00bc -> line 1180
- *   +0x00c4 -> line 1179
- *   +0x00cc -> line 1180
- *   +0x00d0 -> line 1179
- *   +0x00dc -> line 1180
- *   +0x00f8 -> line 1181
- *   +0x0124 -> line 1183
- *   +0x0128 -> line 1186
- *   +0x0158 -> line 1189
- *   +0x0160 -> line 1192
- *   +0x0178 -> line 1194
- *   +0x0180 -> line 1197
- *   +0x0188 -> line 1200
- *   +0x01a0 -> line 1203
- *   +0x01a8 -> line 1206
- *   +0x01b0 -> line 1208
- *   +0x01b8 -> line 1213
- *   +0x01e8 -> line 1216
- *   +0x01f4 -> line 1217
- *   +0x01f8 -> line 1220
- *   +0x0200 -> line 1222
- *   +0x0208 -> line 1227
- *   +0x0238 -> line 1230
- *   +0x0244 -> line 1231
- *   +0x0258 -> line 1232
- *   +0x026c -> line 1233
- *   +0x0280 -> line 1235
- *   +0x0288 -> line 1238
- *   +0x0290 -> line 1244
- *   +0x0298 -> line 1238
- *   +0x029c -> line 1244
- *   +0x02b4 -> line 1245
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline unsigned int MOR_fn_bIsMorphOver(MOR_stMorphStruct_* mp, float* axRate)
 {
     return mp->axCurrent[0] * axRate[0] > mp->axEnd[0] * axRate[0];
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1083–1134 */
-/* addr: 0x00316440  size: 588 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1083
- *   +0x0010 -> line 1100
- *   +0x0014 -> line 1083
- *   +0x0030 -> line 1091
- *   +0x0034 -> line 1097
- *   +0x0038 -> line 1100
- *   +0x0040 -> line 1102
- *   +0x0044 -> line 1103
- *   +0x0048 -> line 1102
- *   +0x004c -> line 1103
- *   +0x0050 -> line 1102
- *   +0x0054 -> line 1103
- *   +0x0058 -> line 1102
- *   +0x005c -> line 1103
- *   +0x0060 -> line 1106
- *   +0x007c -> line 1107
- *   +0x0080 -> line 1111
- *   +0x008c -> line 1107
- *   +0x0090 -> line 1108
- *   +0x00a4 -> line 1111
- *   +0x00b0 -> line 1114
- *   +0x00b8 -> line 1118
- *   +0x00bc -> line 1114
- *   +0x00c0 -> line 1118
- *   +0x00c8 -> line 1114
- *   +0x00fc -> line 1121
- *   +0x0108 -> line 1126
- *   +0x0110 -> line 1127
- *   +0x0114 -> line 1126
- *   +0x01ac -> line 1127
- *   +0x01c0 -> line 1128
- *   +0x01c4 -> line 1127
- *   +0x01c8 -> line 1128
- *   +0x01cc -> line 1127
- *   +0x01d0 -> line 1128
- *   +0x01f0 -> line 1129
- *   +0x01f4 -> line 1128
- *   +0x01f8 -> line 1129
- *   +0x021c -> line 1132
- *   +0x0224 -> line 1134
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 879–1052 */
-/* addr: 0x00316690  size: 1196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 879
- *   +0x0004 -> line 897
- *   +0x0008 -> line 879
- *   +0x002c -> line 892
- *   +0x0034 -> line 886
- *   +0x0038 -> line 897
- *   +0x003c -> line 892
- *   +0x0064 -> line 897
- *   +0x006c -> line 899
- *   +0x008c -> line 901
- *   +0x0094 -> line 906
- *   +0x0098 -> line 907
- *   +0x00a0 -> line 906
- *   +0x00a4 -> line 907
- *   +0x00b4 -> line 906
- *   +0x00bc -> line 907
- *   +0x00fc -> line 908
- *   +0x0100 -> line 907
- *   +0x0104 -> line 908
- *   +0x012c -> line 909
- *   +0x0134 -> line 914
- *   +0x0144 -> line 916
- *   +0x0158 -> line 918
- *   +0x0160 -> line 919
- *   +0x0168 -> line 921
- *   +0x0174 -> line 924
- *   +0x0178 -> line 926
- *   +0x017c -> line 924
- *   +0x0180 -> line 926
- *   +0x0184 -> line 924
- *   +0x018c -> line 926
- *   +0x01b0 -> line 927
- *   +0x01b4 -> line 926
- *   +0x01b8 -> line 927
- *   +0x01dc -> line 928
- *   +0x01e4 -> line 930
- *   +0x01f8 -> line 934
- *   +0x0204 -> line 936
- *   +0x0208 -> line 937
- *   +0x020c -> line 936
- *   +0x0210 -> line 937
- *   +0x0214 -> line 936
- *   +0x0218 -> line 937
- *   +0x021c -> line 936
- *   +0x0220 -> line 937
- *   +0x0224 -> line 942
- *   +0x0240 -> line 943
- *   +0x0244 -> line 947
- *   +0x0254 -> line 943
- *   +0x0258 -> line 944
- *   +0x026c -> line 947
- *   +0x0278 -> line 952
- *   +0x0280 -> line 955
- *   +0x0288 -> line 952
- *   +0x029c -> line 956
- *   +0x02a0 -> line 952
- *   +0x02c0 -> line 956
- *   +0x02c8 -> line 960
- *   +0x02e4 -> line 961
- *   +0x02f4 -> line 963
- *   +0x02f8 -> line 961
- *   +0x0308 -> line 962
- *   +0x030c -> line 963
- *   +0x0310 -> line 961
- *   +0x0314 -> line 963
- *   +0x031c -> line 962
- *   +0x0320 -> line 963
- *   +0x032c -> line 962
- *   +0x0330 -> line 963
- *   +0x0338 -> line 973
- *   +0x033c -> line 975
- *   +0x0340 -> line 972
- *   +0x0344 -> line 974
- *   +0x0348 -> line 973
- *   +0x034c -> line 975
- *   +0x0354 -> line 972
- *   +0x0358 -> line 975
- *   +0x035c -> line 974
- *   +0x0360 -> line 981
- *   +0x0364 -> line 987
- *   +0x0368 -> line 988
- *   +0x036c -> line 990
- *   +0x0370 -> line 992
- *   +0x0374 -> line 993
- *   +0x0378 -> line 994
- *   +0x037c -> line 995
- *   +0x0380 -> line 997
- *   +0x0384 -> line 998
- *   +0x0388 -> line 1000
- *   +0x038c -> line 1002
- *   +0x0390 -> line 1003
- *   +0x0394 -> line 1004
- *   +0x0398 -> line 1005
- *   +0x039c -> line 1006
- *   +0x03a0 -> line 1007
- *   +0x03a4 -> line 1008
- *   +0x03a8 -> line 1009
- *   +0x03ac -> line 1011
- *   +0x03b0 -> line 1012
- *   +0x03b4 -> line 1013
- *   +0x03b8 -> line 1014
- *   +0x03bc -> line 1016
- *   +0x03c0 -> line 1017
- *   +0x03c4 -> line 1019
- *   +0x03c8 -> line 1020
- *   +0x03cc -> line 1022
- *   +0x03d0 -> line 1028
- *   +0x03d4 -> line 1031
- *   +0x03d8 -> line 1028
- *   +0x03dc -> line 1031
- *   +0x03e0 -> line 1029
- *   +0x03e4 -> line 1034
- *   +0x0420 -> line 1045
- *   +0x0428 -> line 1034
- *   +0x0430 -> line 1045
- *   +0x0450 -> line 1046
- *   +0x0454 -> line 1045
- *   +0x0458 -> line 1046
- *   +0x047c -> line 1049
- *   +0x0484 -> line 1052
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 625–870 */
-/* addr: 0x00316b40  size: 1372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 625
- *   +0x0004 -> line 636
- *   +0x0008 -> line 625
- *   +0x000c -> line 639
- *   +0x0010 -> line 625
- *   +0x0014 -> line 636
- *   +0x0018 -> line 625
- *   +0x0050 -> line 639
- *   +0x0058 -> line 636
- *   +0x005c -> line 632
- *   +0x0060 -> line 636
- *   +0x0078 -> line 639
- *   +0x007c -> line 636
- *   +0x0088 -> line 639
- *   +0x0098 -> line 641
- *   +0x00e4 -> line 646
- *   +0x00e8 -> line 649
- *   +0x00ec -> line 645
- *   +0x00f0 -> line 646
- *   +0x00f4 -> line 649
- *   +0x0104 -> line 651
- *   +0x0128 -> line 658
- *   +0x012c -> line 659
- *   +0x0130 -> line 660
- *   +0x0138 -> line 662
- *   +0x013c -> line 660
- *   +0x0140 -> line 662
- *   +0x0160 -> line 664
- *   +0x0174 -> line 667
- *   +0x0188 -> line 669
- *   +0x01a0 -> line 676
- *   +0x01ac -> line 678
- *   +0x01b0 -> line 679
- *   +0x01b4 -> line 680
- *   +0x01c4 -> line 678
- *   +0x01c8 -> line 680
- *   +0x01dc -> line 681
- *   +0x01e4 -> line 687
- *   +0x01e8 -> line 698
- *   +0x01f0 -> line 687
- *   +0x01f4 -> line 698
- *   +0x020c -> line 699
- *   +0x0210 -> line 700
- *   +0x0224 -> line 701
- *   +0x022c -> line 705
- *   +0x0230 -> line 710
- *   +0x0244 -> line 711
- *   +0x0248 -> line 710
- *   +0x024c -> line 718
- *   +0x0250 -> line 710
- *   +0x0254 -> line 721
- *   +0x0258 -> line 710
- *   +0x026c -> line 721
- *   +0x0270 -> line 711
- *   +0x0274 -> line 721
- *   +0x0278 -> line 714
- *   +0x027c -> line 721
- *   +0x0280 -> line 715
- *   +0x0284 -> line 716
- *   +0x028c -> line 718
- *   +0x0294 -> line 721
- *   +0x029c -> line 723
- *   +0x02a4 -> line 724
- *   +0x02a8 -> line 723
- *   +0x02ac -> line 724
- *   +0x02c0 -> line 726
- *   +0x02c4 -> line 727
- *   +0x02c8 -> line 729
- *   +0x02d0 -> line 732
- *   +0x02d8 -> line 733
- *   +0x02dc -> line 734
- *   +0x02e0 -> line 736
- *   +0x02e4 -> line 734
- *   +0x02ec -> line 736
- *   +0x0300 -> line 737
- *   +0x0308 -> line 740
- *   +0x030c -> line 742
- *   +0x0318 -> line 792
- *   +0x0320 -> line 796
- *   +0x0330 -> line 799
- *   +0x0334 -> line 802
- *   +0x0348 -> line 803
- *   +0x0358 -> line 804
- *   +0x0364 -> line 807
- *   +0x036c -> line 810
- *   +0x0370 -> line 813
- *   +0x0380 -> line 815
- *   +0x03ac -> line 817
- *   +0x03c4 -> line 819
- *   +0x03dc -> line 820
- *   +0x03e8 -> line 823
- *   +0x03f0 -> line 825
- *   +0x03f8 -> line 828
- *   +0x0410 -> line 830
- *   +0x0428 -> line 831
- *   +0x0430 -> line 834
- *   +0x0438 -> line 836
- *   +0x0440 -> line 837
- *   +0x0444 -> line 836
- *   +0x0448 -> line 837
- *   +0x0460 -> line 840
- *   +0x0468 -> line 843
- *   +0x0474 -> line 845
- *   +0x0498 -> line 846
- *   +0x04b4 -> line 847
- *   +0x04c0 -> line 846
- *   +0x04d0 -> line 847
- *   +0x04ec -> line 849
- *   +0x04f4 -> line 853
- *   +0x0500 -> line 856
- *   +0x0508 -> line 859
- *   +0x0520 -> line 862
- *   +0x0528 -> line 869
- *   +0x052c -> line 870
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 extern GEO_tdstVisualSet_* GLI_p_stCreateTMPVisualSet(int lNbLOD);
 extern void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphElementDyn* hMorphList, unsigned short uwChannel, short IndexOfMorphList);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 321–369 */
+/* addr: 0x00317710  size: 472 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 321
+ *   +0x001c -> line 327
+ *   +0x0020 -> line 321
+ *   +0x002c -> line 327
+ *   +0x0048 -> line 328
+ *   +0x0080 -> line 329
+ *   +0x0088 -> line 332
+ *   +0x009c -> line 334
+ *   +0x00a0 -> line 336
+ *   +0x00c4 -> line 337
+ *   +0x00c8 -> line 339
+ *   +0x00d0 -> line 338
+ *   +0x00d8 -> line 339
+ *   +0x00f8 -> line 341
+ *   +0x0100 -> line 342
+ *   +0x0108 -> line 345
+ *   +0x0188 -> line 359
+ *   +0x0194 -> line 362
+ *   +0x01a8 -> line 365
+ *   +0x01b0 -> line 368
+ *   +0x01b4 -> line 369
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex)
+{
+    MOR_stMorphStruct_* mp;
+    tdstObjectsTablesList_* hObjectsTable;
+    tdstObjectsTablesList_* hTable;
+    HIE_tdstSuperObject_* hSuperObject;
+    PO_tdstPhysicalObject_* pMorphedPhysicalObject;
+    PO_tdstPhysicalObject_* pEndPhysicalObject;
+    unsigned short uwChannelNumber;
+    short j;
+    short xMorphListIndex;
+
+    mp = NULL;
+    uwChannelNumber = (unsigned short)_xChannelIndex;
+    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, _xChannelIndex);
+    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse)
+        return -1;
+
+    for (j = 0; j < 50; j++)
+    {
+        mp = &g_MorphTasksList[j];
+        if (mp->bInUse && mp->hActorSuperObject == _hActorSuperObject && mp->xChannelIndex == _xChannelIndex)
+            break;
+        mp = NULL;
+    }
+    if (mp == NULL)
+        return -1;
+
+    hSuperObject = mp->hActorSuperObject;
+    pMorphedPhysicalObject = mp->pMorphedPhysicalObject;
+    hObjectsTable = ((tdstEngineObject_*)mp->hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable;
+    /* permuter: the copy into hTable gives retail register allocation */
+    hTable = hObjectsTable;
+    pEndPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&hTable->d_stObjectsTable[0].h_Target + mp->axEndIndexInObjectTable[0] * sizeof(tdstObjectsTableElement_));
+    MOR_fn_bReplaceMorphedObjectInHierarchy(hSuperObject, pMorphedPhysicalObject, pEndPhysicalObject);
+
+    mp->bInUse = 0;
+    fn_vPushAllocModeAccordingToObject(_hActorSuperObject);
+    fn_vRemoveChannelFromMorphList(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber);
+    GAM_fn_vPopAllocMode();
+    return 0;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 380–603 */
 /* addr: 0x003170a0  size: 1648 bytes */
@@ -1919,78 +1415,6 @@ extern void fn_vPutMorphElementInChannel(LST2_tdstAnchorToCHN_tdxHandleToMorphEl
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 321–369 */
-/* addr: 0x00317710  size: 472 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 321
- *   +0x001c -> line 327
- *   +0x0020 -> line 321
- *   +0x002c -> line 327
- *   +0x0048 -> line 328
- *   +0x0080 -> line 329
- *   +0x0088 -> line 332
- *   +0x009c -> line 334
- *   +0x00a0 -> line 336
- *   +0x00c4 -> line 337
- *   +0x00c8 -> line 339
- *   +0x00d0 -> line 338
- *   +0x00d8 -> line 339
- *   +0x00f8 -> line 341
- *   +0x0100 -> line 342
- *   +0x0108 -> line 345
- *   +0x0188 -> line 359
- *   +0x0194 -> line 362
- *   +0x01a8 -> line 365
- *   +0x01b0 -> line 368
- *   +0x01b4 -> line 369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex)
-{
-    MOR_stMorphStruct_* mp;
-    tdstObjectsTablesList_* hObjectsTable;
-    tdstObjectsTablesList_* hTable;
-    HIE_tdstSuperObject_* hSuperObject;
-    PO_tdstPhysicalObject_* pMorphedPhysicalObject;
-    PO_tdstPhysicalObject_* pEndPhysicalObject;
-    unsigned short uwChannelNumber;
-    short j;
-    short xMorphListIndex;
-
-    mp = NULL;
-    uwChannelNumber = (unsigned short)_xChannelIndex;
-    xMorphListIndex = fn_hMorphListIndex(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, _xChannelIndex);
-    if (xMorphListIndex == -1 || !g_MorphTasksList[xMorphListIndex].bInUse)
-        return -1;
-
-    for (j = 0; j < 50; j++)
-    {
-        mp = &g_MorphTasksList[j];
-        if (mp->bInUse && mp->hActorSuperObject == _hActorSuperObject && mp->xChannelIndex == _xChannelIndex)
-            break;
-        mp = NULL;
-    }
-    if (mp == NULL)
-        return -1;
-
-    hSuperObject = mp->hActorSuperObject;
-    pMorphedPhysicalObject = mp->pMorphedPhysicalObject;
-    hObjectsTable = ((tdstEngineObject_*)mp->hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->h_CurrentObjectsTable;
-    /* permuter: the copy into hTable gives retail register allocation */
-    hTable = hObjectsTable;
-    pEndPhysicalObject = *(PO_tdstPhysicalObject_**)(void*)((char*)&hTable->d_stObjectsTable[0].h_Target + mp->axEndIndexInObjectTable[0] * sizeof(tdstObjectsTableElement_));
-    MOR_fn_bReplaceMorphedObjectInHierarchy(hSuperObject, pMorphedPhysicalObject, pEndPhysicalObject);
-
-    mp->bInUse = 0;
-    fn_vPushAllocModeAccordingToObject(_hActorSuperObject);
-    fn_vRemoveChannelFromMorphList(((tdstEngineObject_*)_hActorSuperObject->hLinkedObject.p_stCharacter)->h_3dData->hMorphChannelList, uwChannelNumber);
-    GAM_fn_vPopAllocMode();
-    return 0;
-}
-
 short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType)
 {
     unsigned char uc;
@@ -2138,6 +1562,126 @@ short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIn
     return xMorphListIndex;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 625–870 */
+/* addr: 0x00316b40  size: 1372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 625
+ *   +0x0004 -> line 636
+ *   +0x0008 -> line 625
+ *   +0x000c -> line 639
+ *   +0x0010 -> line 625
+ *   +0x0014 -> line 636
+ *   +0x0018 -> line 625
+ *   +0x0050 -> line 639
+ *   +0x0058 -> line 636
+ *   +0x005c -> line 632
+ *   +0x0060 -> line 636
+ *   +0x0078 -> line 639
+ *   +0x007c -> line 636
+ *   +0x0088 -> line 639
+ *   +0x0098 -> line 641
+ *   +0x00e4 -> line 646
+ *   +0x00e8 -> line 649
+ *   +0x00ec -> line 645
+ *   +0x00f0 -> line 646
+ *   +0x00f4 -> line 649
+ *   +0x0104 -> line 651
+ *   +0x0128 -> line 658
+ *   +0x012c -> line 659
+ *   +0x0130 -> line 660
+ *   +0x0138 -> line 662
+ *   +0x013c -> line 660
+ *   +0x0140 -> line 662
+ *   +0x0160 -> line 664
+ *   +0x0174 -> line 667
+ *   +0x0188 -> line 669
+ *   +0x01a0 -> line 676
+ *   +0x01ac -> line 678
+ *   +0x01b0 -> line 679
+ *   +0x01b4 -> line 680
+ *   +0x01c4 -> line 678
+ *   +0x01c8 -> line 680
+ *   +0x01dc -> line 681
+ *   +0x01e4 -> line 687
+ *   +0x01e8 -> line 698
+ *   +0x01f0 -> line 687
+ *   +0x01f4 -> line 698
+ *   +0x020c -> line 699
+ *   +0x0210 -> line 700
+ *   +0x0224 -> line 701
+ *   +0x022c -> line 705
+ *   +0x0230 -> line 710
+ *   +0x0244 -> line 711
+ *   +0x0248 -> line 710
+ *   +0x024c -> line 718
+ *   +0x0250 -> line 710
+ *   +0x0254 -> line 721
+ *   +0x0258 -> line 710
+ *   +0x026c -> line 721
+ *   +0x0270 -> line 711
+ *   +0x0274 -> line 721
+ *   +0x0278 -> line 714
+ *   +0x027c -> line 721
+ *   +0x0280 -> line 715
+ *   +0x0284 -> line 716
+ *   +0x028c -> line 718
+ *   +0x0294 -> line 721
+ *   +0x029c -> line 723
+ *   +0x02a4 -> line 724
+ *   +0x02a8 -> line 723
+ *   +0x02ac -> line 724
+ *   +0x02c0 -> line 726
+ *   +0x02c4 -> line 727
+ *   +0x02c8 -> line 729
+ *   +0x02d0 -> line 732
+ *   +0x02d8 -> line 733
+ *   +0x02dc -> line 734
+ *   +0x02e0 -> line 736
+ *   +0x02e4 -> line 734
+ *   +0x02ec -> line 736
+ *   +0x0300 -> line 737
+ *   +0x0308 -> line 740
+ *   +0x030c -> line 742
+ *   +0x0318 -> line 792
+ *   +0x0320 -> line 796
+ *   +0x0330 -> line 799
+ *   +0x0334 -> line 802
+ *   +0x0348 -> line 803
+ *   +0x0358 -> line 804
+ *   +0x0364 -> line 807
+ *   +0x036c -> line 810
+ *   +0x0370 -> line 813
+ *   +0x0380 -> line 815
+ *   +0x03ac -> line 817
+ *   +0x03c4 -> line 819
+ *   +0x03dc -> line 820
+ *   +0x03e8 -> line 823
+ *   +0x03f0 -> line 825
+ *   +0x03f8 -> line 828
+ *   +0x0410 -> line 830
+ *   +0x0428 -> line 831
+ *   +0x0430 -> line 834
+ *   +0x0438 -> line 836
+ *   +0x0440 -> line 837
+ *   +0x0444 -> line 836
+ *   +0x0448 -> line 837
+ *   +0x0460 -> line 840
+ *   +0x0468 -> line 843
+ *   +0x0474 -> line 845
+ *   +0x0498 -> line 846
+ *   +0x04b4 -> line 847
+ *   +0x04c0 -> line 846
+ *   +0x04d0 -> line 847
+ *   +0x04ec -> line 849
+ *   +0x04f4 -> line 853
+ *   +0x0500 -> line 856
+ *   +0x0508 -> line 859
+ *   +0x0520 -> line 862
+ *   +0x0528 -> line 869
+ *   +0x052c -> line 870
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short MOR_fn_xMorphing2(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType)
 {
     unsigned char uc;
@@ -2269,6 +1813,132 @@ short MOR_fn_xMorphing2(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartI
     return xMorphListIndex;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 879–1052 */
+/* addr: 0x00316690  size: 1196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 879
+ *   +0x0004 -> line 897
+ *   +0x0008 -> line 879
+ *   +0x002c -> line 892
+ *   +0x0034 -> line 886
+ *   +0x0038 -> line 897
+ *   +0x003c -> line 892
+ *   +0x0064 -> line 897
+ *   +0x006c -> line 899
+ *   +0x008c -> line 901
+ *   +0x0094 -> line 906
+ *   +0x0098 -> line 907
+ *   +0x00a0 -> line 906
+ *   +0x00a4 -> line 907
+ *   +0x00b4 -> line 906
+ *   +0x00bc -> line 907
+ *   +0x00fc -> line 908
+ *   +0x0100 -> line 907
+ *   +0x0104 -> line 908
+ *   +0x012c -> line 909
+ *   +0x0134 -> line 914
+ *   +0x0144 -> line 916
+ *   +0x0158 -> line 918
+ *   +0x0160 -> line 919
+ *   +0x0168 -> line 921
+ *   +0x0174 -> line 924
+ *   +0x0178 -> line 926
+ *   +0x017c -> line 924
+ *   +0x0180 -> line 926
+ *   +0x0184 -> line 924
+ *   +0x018c -> line 926
+ *   +0x01b0 -> line 927
+ *   +0x01b4 -> line 926
+ *   +0x01b8 -> line 927
+ *   +0x01dc -> line 928
+ *   +0x01e4 -> line 930
+ *   +0x01f8 -> line 934
+ *   +0x0204 -> line 936
+ *   +0x0208 -> line 937
+ *   +0x020c -> line 936
+ *   +0x0210 -> line 937
+ *   +0x0214 -> line 936
+ *   +0x0218 -> line 937
+ *   +0x021c -> line 936
+ *   +0x0220 -> line 937
+ *   +0x0224 -> line 942
+ *   +0x0240 -> line 943
+ *   +0x0244 -> line 947
+ *   +0x0254 -> line 943
+ *   +0x0258 -> line 944
+ *   +0x026c -> line 947
+ *   +0x0278 -> line 952
+ *   +0x0280 -> line 955
+ *   +0x0288 -> line 952
+ *   +0x029c -> line 956
+ *   +0x02a0 -> line 952
+ *   +0x02c0 -> line 956
+ *   +0x02c8 -> line 960
+ *   +0x02e4 -> line 961
+ *   +0x02f4 -> line 963
+ *   +0x02f8 -> line 961
+ *   +0x0308 -> line 962
+ *   +0x030c -> line 963
+ *   +0x0310 -> line 961
+ *   +0x0314 -> line 963
+ *   +0x031c -> line 962
+ *   +0x0320 -> line 963
+ *   +0x032c -> line 962
+ *   +0x0330 -> line 963
+ *   +0x0338 -> line 973
+ *   +0x033c -> line 975
+ *   +0x0340 -> line 972
+ *   +0x0344 -> line 974
+ *   +0x0348 -> line 973
+ *   +0x034c -> line 975
+ *   +0x0354 -> line 972
+ *   +0x0358 -> line 975
+ *   +0x035c -> line 974
+ *   +0x0360 -> line 981
+ *   +0x0364 -> line 987
+ *   +0x0368 -> line 988
+ *   +0x036c -> line 990
+ *   +0x0370 -> line 992
+ *   +0x0374 -> line 993
+ *   +0x0378 -> line 994
+ *   +0x037c -> line 995
+ *   +0x0380 -> line 997
+ *   +0x0384 -> line 998
+ *   +0x0388 -> line 1000
+ *   +0x038c -> line 1002
+ *   +0x0390 -> line 1003
+ *   +0x0394 -> line 1004
+ *   +0x0398 -> line 1005
+ *   +0x039c -> line 1006
+ *   +0x03a0 -> line 1007
+ *   +0x03a4 -> line 1008
+ *   +0x03a8 -> line 1009
+ *   +0x03ac -> line 1011
+ *   +0x03b0 -> line 1012
+ *   +0x03b4 -> line 1013
+ *   +0x03b8 -> line 1014
+ *   +0x03bc -> line 1016
+ *   +0x03c0 -> line 1017
+ *   +0x03c4 -> line 1019
+ *   +0x03c8 -> line 1020
+ *   +0x03cc -> line 1022
+ *   +0x03d0 -> line 1028
+ *   +0x03d4 -> line 1031
+ *   +0x03d8 -> line 1028
+ *   +0x03dc -> line 1031
+ *   +0x03e0 -> line 1029
+ *   +0x03e4 -> line 1034
+ *   +0x0420 -> line 1045
+ *   +0x0428 -> line 1034
+ *   +0x0430 -> line 1045
+ *   +0x0450 -> line 1046
+ *   +0x0454 -> line 1045
+ *   +0x0458 -> line 1046
+ *   +0x047c -> line 1049
+ *   +0x0484 -> line 1052
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MOR_fn_vMorphTo(MOR_stMorphStruct_* mp)
 {
     short i;
@@ -2392,6 +2062,52 @@ void MOR_fn_vMorphTo(MOR_stMorphStruct_* mp)
     GLI_vSetObjectDeformed(geo3);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1083–1134 */
+/* addr: 0x00316440  size: 588 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1083
+ *   +0x0010 -> line 1100
+ *   +0x0014 -> line 1083
+ *   +0x0030 -> line 1091
+ *   +0x0034 -> line 1097
+ *   +0x0038 -> line 1100
+ *   +0x0040 -> line 1102
+ *   +0x0044 -> line 1103
+ *   +0x0048 -> line 1102
+ *   +0x004c -> line 1103
+ *   +0x0050 -> line 1102
+ *   +0x0054 -> line 1103
+ *   +0x0058 -> line 1102
+ *   +0x005c -> line 1103
+ *   +0x0060 -> line 1106
+ *   +0x007c -> line 1107
+ *   +0x0080 -> line 1111
+ *   +0x008c -> line 1107
+ *   +0x0090 -> line 1108
+ *   +0x00a4 -> line 1111
+ *   +0x00b0 -> line 1114
+ *   +0x00b8 -> line 1118
+ *   +0x00bc -> line 1114
+ *   +0x00c0 -> line 1118
+ *   +0x00c8 -> line 1114
+ *   +0x00fc -> line 1121
+ *   +0x0108 -> line 1126
+ *   +0x0110 -> line 1127
+ *   +0x0114 -> line 1126
+ *   +0x01ac -> line 1127
+ *   +0x01c0 -> line 1128
+ *   +0x01c4 -> line 1127
+ *   +0x01c8 -> line 1128
+ *   +0x01cc -> line 1127
+ *   +0x01d0 -> line 1128
+ *   +0x01f0 -> line 1129
+ *   +0x01f4 -> line 1128
+ *   +0x01f8 -> line 1129
+ *   +0x021c -> line 1132
+ *   +0x0224 -> line 1134
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MOR_fn_vMorphTo2(MOR_stMorphStruct_* mp)
 {
     float xMorphRatio;
@@ -2427,6 +2143,54 @@ void MOR_fn_vMorphTo2(MOR_stMorphStruct_* mp)
     GLI_vSetObjectDeformed(geo3);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1159–1245 */
+/* addr: 0x00316170  size: 716 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1159
+ *   +0x0018 -> line 1165
+ *   +0x0020 -> line 1167
+ *   +0x0028 -> line 1169
+ *   +0x0034 -> line 1172
+ *   +0x0054 -> line 1176
+ *   +0x0060 -> line 1178
+ *   +0x0070 -> line 1179
+ *   +0x0074 -> line 1178
+ *   +0x0088 -> line 1179
+ *   +0x00bc -> line 1180
+ *   +0x00c4 -> line 1179
+ *   +0x00cc -> line 1180
+ *   +0x00d0 -> line 1179
+ *   +0x00dc -> line 1180
+ *   +0x00f8 -> line 1181
+ *   +0x0124 -> line 1183
+ *   +0x0128 -> line 1186
+ *   +0x0158 -> line 1189
+ *   +0x0160 -> line 1192
+ *   +0x0178 -> line 1194
+ *   +0x0180 -> line 1197
+ *   +0x0188 -> line 1200
+ *   +0x01a0 -> line 1203
+ *   +0x01a8 -> line 1206
+ *   +0x01b0 -> line 1208
+ *   +0x01b8 -> line 1213
+ *   +0x01e8 -> line 1216
+ *   +0x01f4 -> line 1217
+ *   +0x01f8 -> line 1220
+ *   +0x0200 -> line 1222
+ *   +0x0208 -> line 1227
+ *   +0x0238 -> line 1230
+ *   +0x0244 -> line 1231
+ *   +0x0258 -> line 1232
+ *   +0x026c -> line 1233
+ *   +0x0280 -> line 1235
+ *   +0x0288 -> line 1238
+ *   +0x0290 -> line 1244
+ *   +0x0298 -> line 1238
+ *   +0x029c -> line 1244
+ *   +0x02b4 -> line 1245
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_fn_vMorphAddInMainLoop(void)
 {
     float axTmp[10];
@@ -2496,6 +2260,25 @@ void GEO_fn_vMorphAddInMainLoop(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1266–1288 */
+/* addr: 0x00316070  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1266
+ *   +0x0018 -> line 1268
+ *   +0x0020 -> line 1270
+ *   +0x0038 -> line 1273
+ *   +0x006c -> line 1276
+ *   +0x0084 -> line 1280
+ *   +0x0090 -> line 1283
+ *   +0x009c -> line 1284
+ *   +0x00a8 -> line 1285
+ *   +0x00b8 -> line 1287
+ *   +0x00c0 -> line 1285
+ *   +0x00c4 -> line 1287
+ *   +0x00dc -> line 1288
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vLastDeinitMorphTaskList(void) { short i; int lOffset = 0; MOR_stMorphStruct_* mp; HIE_tdstSuperObject_* hSuperObject; HIE_tdstSuperObject_* pFix;
 
     for (i = 0; i < 50; i++, lOffset += sizeof(MOR_stMorphStruct_)) {
@@ -2515,6 +2298,33 @@ void fn_vLastDeinitMorphTaskList(void) { short i; int lOffset = 0; MOR_stMorphSt
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1301–1332 */
+/* addr: 0x00315f60  size: 264 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1301
+ *   +0x001c -> line 1305
+ *   +0x0040 -> line 1311
+ *   +0x0048 -> line 1307
+ *   +0x004c -> line 1308
+ *   +0x0050 -> line 1311
+ *   +0x0058 -> line 1313
+ *   +0x0080 -> line 1315
+ *   +0x0084 -> line 1316
+ *   +0x0088 -> line 1317
+ *   +0x008c -> line 1315
+ *   +0x0090 -> line 1317
+ *   +0x0094 -> line 1318
+ *   +0x00b0 -> line 1324
+ *   +0x00c8 -> line 1325
+ *   +0x00d0 -> line 1326
+ *   +0x00d8 -> line 1329
+ *   +0x00dc -> line 1326
+ *   +0x00e0 -> line 1329
+ *   +0x00fc -> line 1331
+ *   +0x0100 -> line 1332
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex)
 {
     short i;
@@ -2541,6 +2351,20 @@ unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject,
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1349–1360 */
+/* addr: 0x00315ef0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1349
+ *   +0x0014 -> line 1353
+ *   +0x002c -> line 1355
+ *   +0x0034 -> line 1357
+ *   +0x0038 -> line 1355
+ *   +0x003c -> line 1357
+ *   +0x005c -> line 1359
+ *   +0x0060 -> line 1360
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObject)
 {
     short i;
@@ -2555,6 +2379,20 @@ unsigned char MOR_fn_bIsCharacterMorphed(HIE_tdstSuperObject_* _hActorSuperObjec
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1377–1388 */
+/* addr: 0x00315e70  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1377
+ *   +0x001c -> line 1381
+ *   +0x0040 -> line 1383
+ *   +0x0048 -> line 1385
+ *   +0x004c -> line 1383
+ *   +0x0050 -> line 1385
+ *   +0x006c -> line 1387
+ *   +0x0070 -> line 1388
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short MOR_fn_xGetMorphTaskIndex(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex)
 {
     MOR_stMorphStruct_* mp;
@@ -2569,6 +2407,28 @@ short MOR_fn_xGetMorphTaskIndex(HIE_tdstSuperObject_* _hActorSuperObject, short 
     return -1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1397–1429 */
+/* addr: 0x00315d20  size: 336 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1397
+ *   +0x0024 -> line 1401
+ *   +0x002c -> line 1403
+ *   +0x0034 -> line 1405
+ *   +0x0040 -> line 1408
+ *   +0x00a8 -> line 1411
+ *   +0x00b0 -> line 1414
+ *   +0x00c4 -> line 1415
+ *   +0x00d8 -> line 1418
+ *   +0x00e0 -> line 1421
+ *   +0x00e8 -> line 1424
+ *   +0x0104 -> line 1425
+ *   +0x0108 -> line 1426
+ *   +0x0110 -> line 1424
+ *   +0x0114 -> line 1426
+ *   +0x012c -> line 1429
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MOR_fn_vRemoveAllMorphedObjects(void)
 {
     short i;
@@ -2597,6 +2457,22 @@ void MOR_fn_vRemoveAllMorphedObjects(void)
 
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1440–1457 */
+/* addr: 0x00315c20  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1440
+ *   +0x001c -> line 1444
+ *   +0x0028 -> line 1446
+ *   +0x0038 -> line 1447
+ *   +0x0040 -> line 1450
+ *   +0x004c -> line 1452
+ *   +0x00c0 -> line 1453
+ *   +0x00c8 -> line 1454
+ *   +0x00d8 -> line 1456
+ *   +0x00dc -> line 1457
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject, PO_tdstPhysicalObject_* p_stPhysicalObjectToRemove, PO_tdstPhysicalObject_* p_stPhysicalObjectToPut)
 {
     HIE_tdstSuperObject_* hChild;
@@ -2614,11 +2490,36 @@ int MOR_fn_bRemoveMorphedObjectFromHierarchy(HIE_tdstSuperObject_* hSuperObject,
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1467–1468 */
+/* addr: 0x00315bf0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1467
+ *   +0x0028 -> line 1468
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 PO_tdstPhysicalObject_* MOR_fn_hGetMorphedObject(short _xIndex)
 {
     return g_MorphTasksList[(int)_xIndex].pMorphedPhysicalObject;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1486–1494 */
+/* addr: 0x00315b80  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1489
+ *   +0x000c -> line 1486
+ *   +0x0010 -> line 1489
+ *   +0x001c -> line 1486
+ *   +0x0020 -> line 1489
+ *   +0x0024 -> line 1490
+ *   +0x0028 -> line 1489
+ *   +0x0034 -> line 1490
+ *   +0x0040 -> line 1491
+ *   +0x0050 -> line 1493
+ *   +0x0058 -> line 1494
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MOR_fn_vDoMorph(short _xIndex)
 {
     MOR_stMorphStruct_* mp;
@@ -2630,6 +2531,22 @@ void MOR_fn_vDoMorph(short _xIndex)
         MOR_fn_vMorphTo2(mp);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1529–1546 */
+/* addr: 0x00315ae0  size: 160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1529
+ *   +0x0018 -> line 1531
+ *   +0x001c -> line 1533
+ *   +0x004c -> line 1537
+ *   +0x0054 -> line 1538
+ *   +0x0064 -> line 1539
+ *   +0x0070 -> line 1543
+ *   +0x0074 -> line 1544
+ *   +0x0078 -> line 1545
+ *   +0x0088 -> line 1546
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MOR_fn_vTerminateMorphsForThisFrame(void)
 { unsigned int i; int lOffset = 0; MOR_stMorphStruct_* mp;
     i = 0;
@@ -2644,6 +2561,24 @@ void MOR_fn_vTerminateMorphsForThisFrame(void)
 }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 1564–1582 */
+/* addr: 0x00315990  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1564
+ *   +0x0028 -> line 1568
+ *   +0x0030 -> line 1570
+ *   +0x0038 -> line 1572
+ *   +0x0060 -> line 1574
+ *   +0x0064 -> line 1575
+ *   +0x007c -> line 1577
+ *   +0x00fc -> line 1580
+ *   +0x0100 -> line 1581
+ *   +0x0108 -> line 1577
+ *   +0x010c -> line 1581
+ *   +0x0124 -> line 1582
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MOR_fn_vRemoveMorph2(HIE_tdstSuperObject_* hSuperObject)
 {
     short i;
@@ -2663,6 +2598,59 @@ void MOR_fn_vRemoveMorph2(HIE_tdstSuperObject_* hSuperObject)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MOR\specif\morph.c lines 69–173 */
+/* addr: 0x003151a0  size: 2020 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 69
+ *   +0x0020 -> line 80
+ *   +0x0024 -> line 78
+ *   +0x0028 -> line 79
+ *   +0x002c -> line 81
+ *   +0x0034 -> line 82
+ *   +0x004c -> line 84
+ *   +0x005c -> line 86
+ *   +0x0070 -> line 88
+ *   +0x0074 -> line 100
+ *   +0x0088 -> line 88
+ *   +0x008c -> line 89
+ *   +0x00b0 -> line 92
+ *   +0x00bc -> line 100
+ *   +0x00cc -> line 106
+ *   +0x00d0 -> line 110
+ *   +0x00d8 -> line 106
+ *   +0x00dc -> line 110
+ *   +0x00f0 -> line 114
+ *   +0x00fc -> line 115
+ *   +0x0104 -> line 119
+ *   +0x010c -> line 120
+ *   +0x0128 -> line 123
+ *   +0x0138 -> line 125
+ *   +0x0168 -> line 128
+ *   +0x01e8 -> line 129
+ *   +0x0268 -> line 130
+ *   +0x02e8 -> line 131
+ *   +0x0368 -> line 132
+ *   +0x03e8 -> line 133
+ *   +0x0468 -> line 134
+ *   +0x04e8 -> line 135
+ *   +0x0568 -> line 136
+ *   +0x05e8 -> line 137
+ *   +0x0668 -> line 138
+ *   +0x06e8 -> line 139
+ *   +0x06f8 -> line 141
+ *   +0x0710 -> line 144
+ *   +0x0724 -> line 146
+ *   +0x0738 -> line 148
+ *   +0x075c -> line 150
+ *   +0x0780 -> line 153
+ *   +0x0788 -> line 150
+ *   +0x0790 -> line 153
+ *   +0x07ac -> line 165
+ *   +0x07bc -> line 172
+ *   +0x07c4 -> line 173
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 GEO_tdstGeometricObject_* MOR_fn_xCopyGeometricObjectForMorph(GEO_tdstGeometricObject_* hObject1)
 {
     short hElement;

@@ -745,30 +745,6 @@ void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction);
 void fn_vEncrypt(unsigned char* _LastKey, int length);
 int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _NewValues, int _NewValuesLength);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 41–66 */
-/* addr: 0x0029ffe0  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 41
- *   +0x0004 -> line 44
- *   +0x0008 -> line 41
- *   +0x001c -> line 44
- *   +0x0028 -> line 47
- *   +0x0030 -> line 49
- *   +0x0048 -> line 50
- *   +0x004c -> line 49
- *   +0x0054 -> line 50
- *   +0x0058 -> line 49
- *   +0x005c -> line 50
- *   +0x0064 -> line 52
- *   +0x006c -> line 57
- *   +0x0078 -> line 59
- *   +0x0080 -> line 64
- *   +0x00b0 -> line 65
- *   +0x00e0 -> line 66
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void fn_vInitSoundInGameMenu2D(unsigned int uiPause);
@@ -776,153 +752,6 @@ void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages
 void fn_vEncrypt(unsigned char* _LastKey, int length);
 void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction);
 int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _NewValues, int _NewValuesLength);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 315–370 */
-/* addr: 0x002a00e0  size: 616 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 315
- *   +0x0004 -> line 327
- *   +0x0008 -> line 315
- *   +0x0028 -> line 327
- *   +0x0030 -> line 328
- *   +0x0034 -> line 332
- *   +0x0048 -> line 333
- *   +0x004c -> line 342
- *   +0x0050 -> line 343
- *   +0x0054 -> line 342
- *   +0x0058 -> line 343
- *   +0x005c -> line 342
- *   +0x0060 -> line 344
- *   +0x0064 -> line 343
- *   +0x0068 -> line 342
- *   +0x006c -> line 343
- *   +0x0070 -> line 345
- *   +0x0074 -> line 343
- *   +0x0078 -> line 347
- *   +0x007c -> line 348
- *   +0x0080 -> line 350
- *   +0x0088 -> line 342
- *   +0x008c -> line 343
- *   +0x0090 -> line 342
- *   +0x0094 -> line 343
- *   +0x0098 -> line 342
- *   +0x009c -> line 350
- *   +0x00a0 -> line 342
- *   +0x00a4 -> line 350
- *   +0x00a8 -> line 343
- *   +0x00ac -> line 345
- *   +0x00b0 -> line 346
- *   +0x00b8 -> line 347
- *   +0x00c0 -> line 348
- *   +0x00c4 -> line 350
- *   +0x00dc -> line 353
- *   +0x00e0 -> line 354
- *   +0x00e8 -> line 355
- *   +0x00ec -> line 356
- *   +0x00f0 -> line 355
- *   +0x00f4 -> line 358
- *   +0x00fc -> line 356
- *   +0x0100 -> line 358
- *   +0x011c -> line 362
- *   +0x0120 -> line 361
- *   +0x0124 -> line 362
- *   +0x0138 -> line 363
- *   +0x01c0 -> line 364
- *   +0x01c8 -> line 369
- *   +0x01cc -> line 364
- *   +0x01d8 -> line 369
- *   +0x01e0 -> line 364
- *   +0x01e4 -> line 369
- *   +0x0240 -> line 370
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 194–256 */
-/* addr: 0x002a0350  size: 468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 194
- *   +0x0004 -> line 201
- *   +0x0008 -> line 194
- *   +0x0018 -> line 201
- *   +0x0020 -> line 208
- *   +0x0024 -> line 207
- *   +0x0028 -> line 208
- *   +0x0034 -> line 214
- *   +0x0038 -> line 216
- *   +0x003c -> line 214
- *   +0x0040 -> line 216
- *   +0x0044 -> line 214
- *   +0x0074 -> line 215
- *   +0x0078 -> line 214
- *   +0x007c -> line 215
- *   +0x0080 -> line 216
- *   +0x0088 -> line 219
- *   +0x0098 -> line 223
- *   +0x009c -> line 222
- *   +0x00a0 -> line 223
- *   +0x00ac -> line 229
- *   +0x00b0 -> line 232
- *   +0x00b4 -> line 229
- *   +0x00b8 -> line 232
- *   +0x00bc -> line 229
- *   +0x00f4 -> line 230
- *   +0x00f8 -> line 229
- *   +0x00fc -> line 230
- *   +0x0100 -> line 229
- *   +0x0104 -> line 231
- *   +0x0108 -> line 230
- *   +0x010c -> line 231
- *   +0x0110 -> line 232
- *   +0x0118 -> line 235
- *   +0x0128 -> line 239
- *   +0x012c -> line 238
- *   +0x0130 -> line 239
- *   +0x013c -> line 245
- *   +0x0148 -> line 249
- *   +0x014c -> line 245
- *   +0x0150 -> line 249
- *   +0x0154 -> line 245
- *   +0x017c -> line 246
- *   +0x0180 -> line 245
- *   +0x0184 -> line 246
- *   +0x0188 -> line 245
- *   +0x018c -> line 247
- *   +0x0190 -> line 246
- *   +0x0194 -> line 247
- *   +0x019c -> line 248
- *   +0x01a4 -> line 249
- *   +0x01b0 -> line 253
- *   +0x01c0 -> line 256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 164–187 */
-/* addr: 0x002a0530  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 164
- *   +0x0008 -> line 166
- *   +0x000c -> line 167
- *   +0x0010 -> line 166
- *   +0x0014 -> line 168
- *   +0x0018 -> line 178
- *   +0x001c -> line 180
- *   +0x0024 -> line 182
- *   +0x0028 -> line 183
- *   +0x002c -> line 184
- *   +0x0030 -> line 186
- *   +0x0034 -> line 183
- *   +0x0038 -> line 185
- *   +0x003c -> line 183
- *   +0x0040 -> line 185
- *   +0x0044 -> line 186
- *   +0x0048 -> line 185
- *   +0x004c -> line 186
- *   +0x0058 -> line 187
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 111–147 */
 /* addr: 0x002a0590  size: 308 bytes */
@@ -992,6 +821,31 @@ int fn_iAppendKey(unsigned char* _LastKey, int _LastKeyLength, unsigned char* _N
     return NewLength;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 164–187 */
+/* addr: 0x002a0530  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 164
+ *   +0x0008 -> line 166
+ *   +0x000c -> line 167
+ *   +0x0010 -> line 166
+ *   +0x0014 -> line 168
+ *   +0x0018 -> line 178
+ *   +0x001c -> line 180
+ *   +0x0024 -> line 182
+ *   +0x0028 -> line 183
+ *   +0x002c -> line 184
+ *   +0x0030 -> line 186
+ *   +0x0034 -> line 183
+ *   +0x0038 -> line 185
+ *   +0x003c -> line 183
+ *   +0x0040 -> line 185
+ *   +0x0044 -> line 186
+ *   +0x0048 -> line 185
+ *   +0x004c -> line 186
+ *   +0x0058 -> line 187
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)
 {
     int i;
@@ -1023,6 +877,65 @@ void fn_vXorEncrypt(unsigned char* _LastKey, int length, int direction)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 194–256 */
+/* addr: 0x002a0350  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 194
+ *   +0x0004 -> line 201
+ *   +0x0008 -> line 194
+ *   +0x0018 -> line 201
+ *   +0x0020 -> line 208
+ *   +0x0024 -> line 207
+ *   +0x0028 -> line 208
+ *   +0x0034 -> line 214
+ *   +0x0038 -> line 216
+ *   +0x003c -> line 214
+ *   +0x0040 -> line 216
+ *   +0x0044 -> line 214
+ *   +0x0074 -> line 215
+ *   +0x0078 -> line 214
+ *   +0x007c -> line 215
+ *   +0x0080 -> line 216
+ *   +0x0088 -> line 219
+ *   +0x0098 -> line 223
+ *   +0x009c -> line 222
+ *   +0x00a0 -> line 223
+ *   +0x00ac -> line 229
+ *   +0x00b0 -> line 232
+ *   +0x00b4 -> line 229
+ *   +0x00b8 -> line 232
+ *   +0x00bc -> line 229
+ *   +0x00f4 -> line 230
+ *   +0x00f8 -> line 229
+ *   +0x00fc -> line 230
+ *   +0x0100 -> line 229
+ *   +0x0104 -> line 231
+ *   +0x0108 -> line 230
+ *   +0x010c -> line 231
+ *   +0x0110 -> line 232
+ *   +0x0118 -> line 235
+ *   +0x0128 -> line 239
+ *   +0x012c -> line 238
+ *   +0x0130 -> line 239
+ *   +0x013c -> line 245
+ *   +0x0148 -> line 249
+ *   +0x014c -> line 245
+ *   +0x0150 -> line 249
+ *   +0x0154 -> line 245
+ *   +0x017c -> line 246
+ *   +0x0180 -> line 245
+ *   +0x0184 -> line 246
+ *   +0x0188 -> line 245
+ *   +0x018c -> line 247
+ *   +0x0190 -> line 246
+ *   +0x0194 -> line 247
+ *   +0x019c -> line 248
+ *   +0x01a4 -> line 249
+ *   +0x01b0 -> line 253
+ *   +0x01c0 -> line 256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vEncrypt(unsigned char* _LastKey, int length)
 {
     unsigned char* p;
@@ -1059,6 +972,66 @@ for (i = 0; i < length - 3; i += 4)
     fn_vXorEncrypt(_LastKey, length, 1);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 315–370 */
+/* addr: 0x002a00e0  size: 616 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 315
+ *   +0x0004 -> line 327
+ *   +0x0008 -> line 315
+ *   +0x0028 -> line 327
+ *   +0x0030 -> line 328
+ *   +0x0034 -> line 332
+ *   +0x0048 -> line 333
+ *   +0x004c -> line 342
+ *   +0x0050 -> line 343
+ *   +0x0054 -> line 342
+ *   +0x0058 -> line 343
+ *   +0x005c -> line 342
+ *   +0x0060 -> line 344
+ *   +0x0064 -> line 343
+ *   +0x0068 -> line 342
+ *   +0x006c -> line 343
+ *   +0x0070 -> line 345
+ *   +0x0074 -> line 343
+ *   +0x0078 -> line 347
+ *   +0x007c -> line 348
+ *   +0x0080 -> line 350
+ *   +0x0088 -> line 342
+ *   +0x008c -> line 343
+ *   +0x0090 -> line 342
+ *   +0x0094 -> line 343
+ *   +0x0098 -> line 342
+ *   +0x009c -> line 350
+ *   +0x00a0 -> line 342
+ *   +0x00a4 -> line 350
+ *   +0x00a8 -> line 343
+ *   +0x00ac -> line 345
+ *   +0x00b0 -> line 346
+ *   +0x00b8 -> line 347
+ *   +0x00c0 -> line 348
+ *   +0x00c4 -> line 350
+ *   +0x00dc -> line 353
+ *   +0x00e0 -> line 354
+ *   +0x00e8 -> line 355
+ *   +0x00ec -> line 356
+ *   +0x00f0 -> line 355
+ *   +0x00f4 -> line 358
+ *   +0x00fc -> line 356
+ *   +0x0100 -> line 358
+ *   +0x011c -> line 362
+ *   +0x0120 -> line 361
+ *   +0x0124 -> line 362
+ *   +0x0138 -> line 363
+ *   +0x01c0 -> line 364
+ *   +0x01c8 -> line 369
+ *   +0x01cc -> line 364
+ *   +0x01d8 -> line 369
+ *   +0x01e0 -> line 364
+ *   +0x01e4 -> line 369
+ *   +0x0240 -> line 370
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages, unsigned int _Id)
 {
     unsigned int Cages_Platform_Score;
@@ -1120,6 +1093,29 @@ void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages
     _Key[total] = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\KeyMenu2D.c lines 41–66 */
+/* addr: 0x0029ffe0  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 41
+ *   +0x0004 -> line 44
+ *   +0x0008 -> line 41
+ *   +0x001c -> line 44
+ *   +0x0028 -> line 47
+ *   +0x0030 -> line 49
+ *   +0x0048 -> line 50
+ *   +0x004c -> line 49
+ *   +0x0054 -> line 50
+ *   +0x0058 -> line 49
+ *   +0x005c -> line 50
+ *   +0x0064 -> line 52
+ *   +0x006c -> line 57
+ *   +0x0078 -> line 59
+ *   +0x0080 -> line 64
+ *   +0x00b0 -> line 65
+ *   +0x00e0 -> line 66
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitSoundInGameMenu2D(unsigned int uiPause)
 {
     int i;

@@ -1225,36 +1225,6 @@ tagGScontext g_gsContext;
 void (*PS2glLiberator)(void*);
 void* (*PS2glAllocator64)(unsigned int);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 224–264 */
-/* addr: 0x002cedf0  size: 392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 224
- *   +0x0004 -> line 230
- *   +0x0008 -> line 224
- *   +0x0020 -> line 230
- *   +0x002c -> line 231
- *   +0x003c -> line 233
- *   +0x0058 -> line 235
- *   +0x0068 -> line 236
- *   +0x0078 -> line 238
- *   +0x0084 -> line 239
- *   +0x0088 -> line 243
- *   +0x0098 -> line 246
- *   +0x00a4 -> line 245
- *   +0x00b0 -> line 247
- *   +0x00b8 -> line 249
- *   +0x00c8 -> line 251
- *   +0x00e4 -> line 252
- *   +0x0110 -> line 253
- *   +0x0118 -> line 256
- *   +0x0130 -> line 257
- *   +0x015c -> line 261
- *   +0x0168 -> line 263
- *   +0x016c -> line 264
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 extern "C" void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);
@@ -1264,73 +1234,84 @@ extern "C" void VAC_ReinitForNewFrame(void* hContainer);
 extern "C" void VAC_Destroy(void* hContainer);
 extern "C" void* VAC_Create(unsigned int NbSprites);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 415–416 */
-/* addr: 0x002cef80  size: 16 bytes */
+/* Reconstructed from the retail disassembly (asm/.../u_SPGArray.s, 0x002cf140).
+   Notes on the recovered shape:
+   - the whole body is guarded by 'if (NbSprites != 0)'; the tail always adds
+     NbSprites * 6 to m_CurrentIndex (recomputed there, not reused from s0).
+   - GLI_vInitGLProjectionMatrix is called with no argument; the retail passes
+     no argument either (a0 keeps its old value), and NbSprites * 6 is
+     computed in the call's delay slot.
+   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
+     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
+     updated through byte accesses, which needs ZTE/ZTST and the ModFlgs flags
+     32-39 in unsigned char bitfield containers.
+   - the retail calls PS2glNormalPointer with three arguments (no size), the
+     other three pointer calls with four. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 146–154 */
+/* addr: 0x002cf470  size: 244 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 415
- *   +0x0008 -> line 416
+ *   +0x0000 -> line 146
+ *   +0x001c -> line 148
+ *   +0x0038 -> line 149
+ *   +0x0054 -> line 150
+ *   +0x0070 -> line 151
+ *   +0x008c -> line 152
+ *   +0x00a8 -> line 153
+ *   +0x00e0 -> line 154
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 387–395 */
-/* addr: 0x002cef90  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 387
- *   +0x0008 -> line 389
- *   +0x0014 -> line 390
- *   +0x0018 -> line 391
- *   +0x001c -> line 392
- *   +0x0020 -> line 393
- *   +0x0024 -> line 394
- *   +0x0028 -> line 395
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+C_VertexArrayContainer::~C_VertexArrayContainer()
+{
+    if (m_pV[0] != 0) { PS2glLiberator((void*)m_pV[0]); m_pV[0] = 0; }
+    if (m_pV[1] != 0) { PS2glLiberator((void*)m_pV[1]); m_pV[1] = 0; }
+    if (m_pC[0] != 0) { PS2glLiberator((void*)m_pC[0]); m_pC[0] = 0; }
+    if (m_pC[1] != 0) { PS2glLiberator((void*)m_pC[1]); m_pC[1] = 0; }
+    if (m_pT[0] != 0) { PS2glLiberator((void*)m_pT[0]); m_pT[0] = 0; }
+    if (m_pT[1] != 0) { PS2glLiberator((void*)m_pT[1]); m_pT[1] = 0; }
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 365–371 */
-/* addr: 0x002cefd0  size: 232 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 205–220 */
+/* addr: 0x002cf430  size: 64 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 365
- *   +0x0014 -> line 367
- *   +0x00c0 -> line 368
- *   +0x00cc -> line 369
- *   +0x00d0 -> line 371
- *   +0x00dc -> line 370
- *   +0x00e0 -> line 371
+ *   +0x0000 -> line 205
+ *   +0x0008 -> line 208
+ *   +0x000c -> line 207
+ *   +0x0010 -> line 209
+ *   +0x0014 -> line 210
+ *   +0x0018 -> line 211
+ *   +0x001c -> line 212
+ *   +0x0020 -> line 213
+ *   +0x0024 -> line 214
+ *   +0x0028 -> line 215
+ *   +0x002c -> line 218
+ *   +0x0034 -> line 219
+ *   +0x0038 -> line 220
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 361–362 */
-/* addr: 0x002cf0c0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 361
- *   +0x000c -> line 362
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 349–355 */
-/* addr: 0x002cf0e0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 349
- *   +0x0004 -> line 351
- *   +0x000c -> line 353
- *   +0x0014 -> line 355
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 341–345 */
-/* addr: 0x002cf100  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 341
- *   +0x0010 -> line 343
- *   +0x0028 -> line 345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void C_VertexArrayContainer::SetMatrix(float (*pMatrix)[4][4])
+{
+    float (*pDst)[4][4];
+    if (pMatrix != 0) {
+        m_bMatrixWasSet = 1;
+        pDst = &m_Matrix;
+        asm {
+            lqc2 vf1, 0x0(pMatrix)
+            lqc2 vf2, 0x10(pMatrix)
+            lqc2 vf3, 0x20(pMatrix)
+            lqc2 vf4, 0x30(pMatrix)
+            sqc2 vf1, 0x0(pDst)
+            sqc2 vf2, 0x10(pDst)
+            sqc2 vf3, 0x20(pDst)
+            sqc2 vf4, 0x30(pDst)
+        }
+    } else {
+        m_bMatrixWasSet = 0;
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 258–316 */
 /* addr: 0x002cf140  size: 748 bytes */
@@ -1379,86 +1360,6 @@ extern "C" void* VAC_Create(unsigned int NbSprites);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Reconstructed from the retail disassembly (asm/.../u_SPGArray.s, 0x002cf140).
-   Notes on the recovered shape:
-   - the whole body is guarded by 'if (NbSprites != 0)'; the tail always adds
-     NbSprites * 6 to m_CurrentIndex (recomputed there, not reused from s0).
-   - GLI_vInitGLProjectionMatrix is called with no argument; the retail passes
-     no argument either (a0 keeps its old value), and NbSprites * 6 is
-     computed in the call's delay slot.
-   - the depth-function block is the PS2GL library's impPS2glDepthFunc switch
-     (cases 0x200/0x207/0x203/0x201 in that order), and the GS context is
-     updated through byte accesses, which needs ZTE/ZTST and the ModFlgs flags
-     32-39 in unsigned char bitfield containers.
-   - the retail calls PS2glNormalPointer with three arguments (no size), the
-     other three pointer calls with four. */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 205–220 */
-/* addr: 0x002cf430  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 205
- *   +0x0008 -> line 208
- *   +0x000c -> line 207
- *   +0x0010 -> line 209
- *   +0x0014 -> line 210
- *   +0x0018 -> line 211
- *   +0x001c -> line 212
- *   +0x0020 -> line 213
- *   +0x0024 -> line 214
- *   +0x0028 -> line 215
- *   +0x002c -> line 218
- *   +0x0034 -> line 219
- *   +0x0038 -> line 220
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 146–154 */
-/* addr: 0x002cf470  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 146
- *   +0x001c -> line 148
- *   +0x0038 -> line 149
- *   +0x0054 -> line 150
- *   +0x0070 -> line 151
- *   +0x008c -> line 152
- *   +0x00a8 -> line 153
- *   +0x00e0 -> line 154
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-C_VertexArrayContainer::~C_VertexArrayContainer()
-{
-    if (m_pV[0] != 0) { PS2glLiberator((void*)m_pV[0]); m_pV[0] = 0; }
-    if (m_pV[1] != 0) { PS2glLiberator((void*)m_pV[1]); m_pV[1] = 0; }
-    if (m_pC[0] != 0) { PS2glLiberator((void*)m_pC[0]); m_pC[0] = 0; }
-    if (m_pC[1] != 0) { PS2glLiberator((void*)m_pC[1]); m_pC[1] = 0; }
-    if (m_pT[0] != 0) { PS2glLiberator((void*)m_pT[0]); m_pT[0] = 0; }
-    if (m_pT[1] != 0) { PS2glLiberator((void*)m_pT[1]); m_pT[1] = 0; }
-}
-
-void C_VertexArrayContainer::SetMatrix(float (*pMatrix)[4][4])
-{
-    float (*pDst)[4][4];
-    if (pMatrix != 0) {
-        m_bMatrixWasSet = 1;
-        pDst = &m_Matrix;
-        asm {
-            lqc2 vf1, 0x0(pMatrix)
-            lqc2 vf2, 0x10(pMatrix)
-            lqc2 vf3, 0x20(pMatrix)
-            lqc2 vf4, 0x30(pMatrix)
-            sqc2 vf1, 0x0(pDst)
-            sqc2 vf2, 0x10(pDst)
-            sqc2 vf3, 0x20(pDst)
-            sqc2 vf4, 0x30(pDst)
-        }
-    } else {
-        m_bMatrixWasSet = 0;
-    }
-}
-
 void C_VertexArrayContainer::UnAcquireAndDraw(unsigned int NbSprites)
 {
     unsigned char zTst;
@@ -1514,11 +1415,30 @@ void C_VertexArrayContainer::UnAcquireAndDraw(unsigned int NbSprites)
     m_CurrentIndex += NbSprites * 6;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 341–345 */
+/* addr: 0x002cf100  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 341
+ *   +0x0010 -> line 343
+ *   +0x0028 -> line 345
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void* VAC_Create(unsigned int NbSprites)
 {
     return new C_VertexArrayContainer(NbSprites);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 349–355 */
+/* addr: 0x002cf0e0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 349
+ *   +0x0004 -> line 351
+ *   +0x000c -> line 353
+ *   +0x0014 -> line 355
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void VAC_Destroy(void* hContainer)
 {
     C_VertexArrayContainer* pContainer;
@@ -1528,6 +1448,14 @@ void VAC_Destroy(void* hContainer)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 361–362 */
+/* addr: 0x002cf0c0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 361
+ *   +0x000c -> line 362
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void VAC_ReinitForNewFrame(void* hContainer)
 {
     C_VertexArrayContainer* pContainer;
@@ -1536,6 +1464,19 @@ void VAC_ReinitForNewFrame(void* hContainer)
     pContainer->m_CurrentIndex = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 365–371 */
+/* addr: 0x002cefd0  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 365
+ *   +0x0014 -> line 367
+ *   +0x00c0 -> line 368
+ *   +0x00cc -> line 369
+ *   +0x00d0 -> line 371
+ *   +0x00dc -> line 370
+ *   +0x00e0 -> line 371
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat)
 {
     C_VertexArrayContainer* pContainer;
@@ -1560,6 +1501,20 @@ int VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMa
     return VAC_g_NbSpritesLefts;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 387–395 */
+/* addr: 0x002cef90  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 387
+ *   +0x0008 -> line 389
+ *   +0x0014 -> line 390
+ *   +0x0018 -> line 391
+ *   +0x001c -> line 392
+ *   +0x0020 -> line 393
+ *   +0x0024 -> line 394
+ *   +0x0028 -> line 395
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites)
 {
     C_VertexArrayContainer* pContainer;
@@ -1572,6 +1527,14 @@ void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites)
     VAC_g_CurrentNbSprites = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 415–416 */
+/* addr: 0x002cef80  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 415
+ *   +0x0008 -> line 416
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat)
 {
     C_VertexArrayContainer* pContainer;
@@ -1580,6 +1543,35 @@ void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat)
     pContainer->m_pMat = pMat;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_SPGArray.cpp lines 224–264 */
+/* addr: 0x002cedf0  size: 392 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 224
+ *   +0x0004 -> line 230
+ *   +0x0008 -> line 224
+ *   +0x0020 -> line 230
+ *   +0x002c -> line 231
+ *   +0x003c -> line 233
+ *   +0x0058 -> line 235
+ *   +0x0068 -> line 236
+ *   +0x0078 -> line 238
+ *   +0x0084 -> line 239
+ *   +0x0088 -> line 243
+ *   +0x0098 -> line 246
+ *   +0x00a4 -> line 245
+ *   +0x00b0 -> line 247
+ *   +0x00b8 -> line 249
+ *   +0x00c8 -> line 251
+ *   +0x00e4 -> line 252
+ *   +0x0110 -> line 253
+ *   +0x0118 -> line 256
+ *   +0x0130 -> line 257
+ *   +0x015c -> line 261
+ *   +0x0168 -> line 263
+ *   +0x016c -> line 264
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int C_LoadingScreen::LoadTexture(char* TextureFileName, unsigned int** ppTextureData, unsigned int* pTextureName)
 {
     unsigned int SizeOfFile;

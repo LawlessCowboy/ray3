@@ -3,6 +3,9 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+char* strncpy(char*, const char*, size_t);
+char* strncat(char*, const char*, size_t);
+size_t strlen(const char*);
 
 /* R5900 accumulator multiply-add, as in MECBhv.c / DNMCame.c. */
 #define MTH_SQR3_TO(_result, _x, _y, _z) \
@@ -1052,19 +1055,6 @@ tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* h_Nod
 
 HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 67–73 */
-/* addr: 0x00265510  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 67
- *   +0x0010 -> line 69
- *   +0x001c -> line 70
- *   +0x0024 -> line 71
- *   +0x0030 -> line 72
- *   +0x0034 -> line 73
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter);
@@ -1097,241 +1087,451 @@ int fn_s32RetObjectSwitchNull(int s32_ObjectId, int s32_InfoId);
 void fn_vRetObjectExtraCoefNull(int s32_Unused, _SND_tduRefEvt u_Unused, int* pr_Pitch, int* pr_Pan, int* pr_Vol);
 unsigned char fn_u8RetObjectReverbNull(int s32_ObjectId);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 764–765 */
-/* addr: 0x00265550  size: 24 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 24–24 */
+/* addr: 0x00266530  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 764
- *   +0x0010 -> line 765
+ *   +0x0000 -> line 24
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 751–752 */
-/* addr: 0x00265570  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 751
- *   +0x0010 -> line 752
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+unsigned char fn_u8RetObjectReverbNull(int s32_ObjectId)
+{
+    return 0;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 629–739 */
-/* addr: 0x00265590  size: 448 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 26–32 */
+/* addr: 0x00266500  size: 44 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 629
- *   +0x0004 -> line 630
- *   +0x0008 -> line 629
- *   +0x000c -> line 630
- *   +0x0014 -> line 647
- *   +0x0018 -> line 630
- *   +0x001c -> line 664
- *   +0x0020 -> line 630
- *   +0x0024 -> line 681
- *   +0x0028 -> line 630
- *   +0x0030 -> line 647
- *   +0x0038 -> line 664
- *   +0x0040 -> line 681
- *   +0x0048 -> line 630
- *   +0x0060 -> line 647
- *   +0x0088 -> line 664
- *   +0x00b0 -> line 681
- *   +0x00d4 -> line 703
- *   +0x00e0 -> line 704
- *   +0x00ec -> line 705
- *   +0x00fc -> line 710
- *   +0x0108 -> line 711
- *   +0x0114 -> line 712
- *   +0x0124 -> line 717
- *   +0x0130 -> line 718
- *   +0x013c -> line 719
- *   +0x014c -> line 724
- *   +0x0158 -> line 725
- *   +0x0164 -> line 726
- *   +0x0174 -> line 731
- *   +0x0180 -> line 732
- *   +0x018c -> line 733
- *   +0x019c -> line 737
- *   +0x01b0 -> line 739
- *   +0x01b4 -> line 738
- *   +0x01b8 -> line 739
+ *   +0x0000 -> line 26
+ *   +0x0008 -> line 27
+ *   +0x000c -> line 28
+ *   +0x0014 -> line 29
+ *   +0x0018 -> line 30
+ *   +0x0020 -> line 31
+ *   +0x0024 -> line 32
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vRetObjectExtraCoefNull(int s32_Unused, _SND_tduRefEvt u_Unused, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
+{
+    if (pr_Pitch != NULL)
+        *pr_Pitch = 0x10000;
+    if (pr_Pan != NULL)
+        *pr_Pan = 0x400000;
+    if (pr_Vol != NULL)
+        *pr_Vol = 0x400000;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 603–606 */
-/* addr: 0x00265750  size: 48 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 33–33 */
+/* addr: 0x002664f0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 603
- *   +0x0008 -> line 604
- *   +0x0010 -> line 603
- *   +0x0014 -> line 604
- *   +0x0020 -> line 606
- *   +0x0024 -> line 605
- *   +0x0028 -> line 606
+ *   +0x0000 -> line 33
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_s32RetObjectSwitchNull(int s32_ObjectId, int s32_InfoId)
+{
+    return 0;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 580–583 */
-/* addr: 0x00265780  size: 48 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 34–34 */
+/* addr: 0x002664e0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 580
- *   +0x0008 -> line 581
- *   +0x0010 -> line 580
- *   +0x0014 -> line 581
- *   +0x0020 -> line 583
- *   +0x0024 -> line 582
- *   +0x0028 -> line 583
+ *   +0x0000 -> line 34
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_bRetObjectLinkNull(int s32_ObjectId, int s32_MicroId)
+{
+    return 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 530–560 */
-/* addr: 0x002657b0  size: 292 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 39–46 */
+/* addr: 0x002664c0  size: 32 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 530
- *   +0x0004 -> line 534
- *   +0x0008 -> line 530
- *   +0x0024 -> line 534
- *   +0x002c -> line 537
- *   +0x0068 -> line 538
- *   +0x0070 -> line 541
- *   +0x0078 -> line 542
- *   +0x009c -> line 543
- *   +0x00ac -> line 547
- *   +0x00b0 -> line 546
- *   +0x00b4 -> line 547
- *   +0x00c4 -> line 548
- *   +0x00cc -> line 550
- *   +0x00e4 -> line 554
- *   +0x00ec -> line 557
- *   +0x0104 -> line 559
- *   +0x0108 -> line 560
+ *   +0x0000 -> line 39
+ *   +0x0008 -> line 40
+ *   +0x000c -> line 43
+ *   +0x0010 -> line 41
+ *   +0x0014 -> line 42
+ *   +0x0018 -> line 46
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_bObjectPositionNull(int s32_Unused0, int s32_Unused1, _stVector* pst_Vector)
+{
+    int b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        pst_Vector->f32x = 0;
+        b_Answer = 1;
+        pst_Vector->f32y = 0;
+        pst_Vector->f32z = 0;
+    }
+    return b_Answer;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 452–508 */
-/* addr: 0x002658e0  size: 332 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 47–47 */
+/* addr: 0x002664b0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 452
- *   +0x0004 -> line 457
- *   +0x0008 -> line 452
- *   +0x0020 -> line 457
- *   +0x0060 -> line 458
- *   +0x0068 -> line 467
- *   +0x0074 -> line 469
- *   +0x0090 -> line 470
- *   +0x00ac -> line 474
- *   +0x00b0 -> line 473
- *   +0x00b4 -> line 474
- *   +0x00c4 -> line 478
- *   +0x00d4 -> line 479
- *   +0x00e0 -> line 481
- *   +0x00e4 -> line 483
- *   +0x0108 -> line 501
- *   +0x0110 -> line 503
- *   +0x0118 -> line 504
- *   +0x012c -> line 507
- *   +0x0130 -> line 508
+ *   +0x0000 -> line 47
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_bRetObjectLinkBisNull(int s32_ObjectId, int s32_MicroId, int s32_InfoId)
+{
+    return 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 448–450 */
-/* addr: 0x00265a30  size: 116 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 52–58 */
+/* addr: 0x00266490  size: 28 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 448
- *   +0x0014 -> line 449
- *   +0x0060 -> line 450
+ *   +0x0000 -> line 52
+ *   +0x0008 -> line 53
+ *   +0x000c -> line 55
+ *   +0x0010 -> line 54
+ *   +0x0014 -> line 58
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_bRetObjectRollOffNull(int s32_Unused0, int s32_Unused1, _RollOffParam* pst_RollOff)
+{
+    int b_Answer = 0;
+    if (pst_RollOff != NULL)
+    {
+        pst_RollOff->rDistBackGround = 0;
+        b_Answer = 1;
+        pst_RollOff->rDistSatur = 0;
+    }
+    return b_Answer;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 419–419 */
-/* addr: 0x00265ab0  size: 8 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 68–82 */
+/* addr: 0x00266440  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 419
+ *   +0x0000 -> line 68
+ *   +0x0014 -> line 72
+ *   +0x001c -> line 75
+ *   +0x0028 -> line 77
+ *   +0x0030 -> line 79
+ *   +0x003c -> line 80
+ *   +0x0040 -> line 82
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId)
+{
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Answer;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 367–416 */
-/* addr: 0x00265ac0  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 367
- *   +0x0004 -> line 375
- *   +0x0008 -> line 367
- *   +0x0020 -> line 375
- *   +0x002c -> line 378
- *   +0x0034 -> line 379
- *   +0x0058 -> line 381
- *   +0x0060 -> line 382
- *   +0x0068 -> line 386
- *   +0x0078 -> line 388
- *   +0x0080 -> line 389
- *   +0x0094 -> line 392
- *   +0x00a0 -> line 394
- *   +0x00a8 -> line 396
- *   +0x00b0 -> line 398
- *   +0x00b8 -> line 399
- *   +0x00c0 -> line 401
- *   +0x00cc -> line 402
- *   +0x00d8 -> line 405
- *   +0x00e4 -> line 406
- *   +0x00ec -> line 407
- *   +0x00f4 -> line 408
- *   +0x0104 -> line 411
- *   +0x0110 -> line 412
- *   +0x011c -> line 413
- *   +0x0128 -> line 415
- *   +0x012c -> line 416
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+    h_Answer = NULL;
+    if (s32_ObjectId != 0 && s32_ObjectId != -1)
+    {
+        for (h_Object = (HIE_tdstSuperObject_*)s32_ObjectId; h_Object != NULL; h_Object = h_Object->hFatherDyn)
+        {
+            if (h_Object->ulTypeOfLinkedObject == 2)
+            {
+                h_Answer = h_Object;
+                break;
+            }
+        }
+    }
+    return h_Answer;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 280–363 */
-/* addr: 0x00265c10  size: 328 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 84–112 */
+/* addr: 0x00266360  size: 220 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 280
- *   +0x0004 -> line 286
- *   +0x0008 -> line 280
- *   +0x0018 -> line 285
- *   +0x001c -> line 286
- *   +0x0024 -> line 289
- *   +0x0060 -> line 290
- *   +0x0068 -> line 295
- *   +0x006c -> line 294
- *   +0x0070 -> line 295
- *   +0x0074 -> line 296
- *   +0x007c -> line 299
- *   +0x0084 -> line 300
- *   +0x008c -> line 301
- *   +0x0090 -> line 303
- *   +0x0098 -> line 304
- *   +0x00a0 -> line 308
- *   +0x00a8 -> line 310
- *   +0x00b0 -> line 311
- *   +0x00c0 -> line 315
- *   +0x00c4 -> line 316
- *   +0x00cc -> line 320
- *   +0x00d0 -> line 323
- *   +0x00dc -> line 325
- *   +0x00e4 -> line 328
- *   +0x00ec -> line 330
- *   +0x00f4 -> line 333
- *   +0x0100 -> line 334
- *   +0x0104 -> line 342
- *   +0x010c -> line 345
- *   +0x0110 -> line 346
- *   +0x0118 -> line 349
- *   +0x0120 -> line 350
- *   +0x0128 -> line 351
- *   +0x012c -> line 362
- *   +0x0130 -> line 363
+ *   +0x0000 -> line 84
+ *   +0x0004 -> line 88
+ *   +0x000c -> line 91
+ *   +0x0048 -> line 92
+ *   +0x0050 -> line 96
+ *   +0x0088 -> line 97
+ *   +0x0090 -> line 98
+ *   +0x0094 -> line 99
+ *   +0x0098 -> line 100
+ *   +0x00a0 -> line 103
+ *   +0x00a4 -> line 107
+ *   +0x00a8 -> line 103
+ *   +0x00b0 -> line 104
+ *   +0x00b4 -> line 103
+ *   +0x00c0 -> line 104
+ *   +0x00c4 -> line 105
+ *   +0x00cc -> line 106
+ *   +0x00d4 -> line 112
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int fn_bObjectTypeAnimationPosition(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
+{
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Channel;
+    HIE_tdstSuperObject_* h_Loop;
+    MAT_tdstTransformation_* h_Matrix;
+    int b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        h_Object = NULL;
+        if (s32_ObjectId != 0 && s32_ObjectId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ObjectId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Object = h_Loop; break; } } }
+        if (h_Object != NULL)
+        {
+            h_Channel = NULL;
+            if (s32_ChannelId != 0 && s32_ChannelId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ChannelId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Channel = h_Loop; break; } } }
+            if (h_Channel != NULL) {
+            h_Object = h_Channel; }
+            h_Matrix = h_Object->hGlobalMatrix;
+            if (h_Matrix != NULL)
+            {
+                st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ;
+                pst_Vector->f32x = st_Vertex.v.xX;
+                pst_Vector->f32y = st_Vertex.v.xY;
+                pst_Vector->f32z = st_Vertex.v.xZ;
+                b_Answer = 1;
+            }
+        }
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 114–147 */
+/* addr: 0x00266240  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 114
+ *   +0x0014 -> line 118
+ *   +0x001c -> line 121
+ *   +0x0058 -> line 122
+ *   +0x0060 -> line 126
+ *   +0x00a0 -> line 127
+ *   +0x00a8 -> line 128
+ *   +0x00ac -> line 129
+ *   +0x00b4 -> line 130
+ *   +0x00bc -> line 133
+ *   +0x00c4 -> line 134
+ *   +0x00cc -> line 137
+ *   +0x00d0 -> line 141
+ *   +0x00d4 -> line 137
+ *   +0x00dc -> line 138
+ *   +0x00e0 -> line 137
+ *   +0x00ec -> line 138
+ *   +0x00f0 -> line 139
+ *   +0x00f8 -> line 140
+ *   +0x0100 -> line 146
+ *   +0x0104 -> line 147
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
+{
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    DNM_stDynamics* pst_Dynamics;
+    tdstDynam_* h_Dynamic;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Channel;
+    HIE_tdstSuperObject_* h_Loop;
+    tdstEngineObject_* h_Engine;
+    int b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        h_Object = NULL;
+        if (s32_ObjectId != 0 && s32_ObjectId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ObjectId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Object = h_Loop; break; } } }
+        if (h_Object != NULL)
+        {
+            h_Channel = NULL;
+            if (s32_ChannelId != 0 && s32_ChannelId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ChannelId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Channel = h_Loop; break; } } }
+            if (h_Channel != NULL) {
+            h_Object = h_Channel; }
+            h_Engine = h_Object->hLinkedObject.p_stCharacter;
+            h_Dynamic = h_Engine->h_Dynam;
+            if (h_Dynamic != NULL)
+            {
+                pst_Dynamics = fn_p_stDynamGetDynamics(h_Dynamic);
+                if (pst_Dynamics != NULL)
+                {
+                    st_Vertex.i[0] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX; st_Vertex.i[1] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY; st_Vertex.i[2] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+                    pst_Vector->f32x = st_Vertex.v.xX;
+                    pst_Vector->f32y = st_Vertex.v.xY;
+                    pst_Vector->f32z = st_Vertex.v.xZ;
+                    b_Answer = 1;
+                }
+            }
+        }
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 149–155 */
+/* addr: 0x00266190  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 149
+ *   +0x0008 -> line 153
+ *   +0x000c -> line 149
+ *   +0x0010 -> line 153
+ *   +0x007c -> line 154
+ *   +0x0088 -> line 155
+ *   +0x0090 -> line 154
+ *   +0x009c -> line 155
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_s32ObjectTypeAnimationX(int s32_ObjectId)
+{
+    _stVector st_Answer;
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Other;
+    MAT_tdstTransformation_* h_Matrix;
+    _stVector* pst_Answer = &st_Answer;
+    st_Answer.f32x = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; st_Answer.f32y = st_Vertex.v.xY; st_Answer.f32z = st_Vertex.v.xZ; } } }
+    return (int)(st_Answer.f32x * 65536.0f);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 157–163 */
+/* addr: 0x002660e0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 157
+ *   +0x0008 -> line 161
+ *   +0x000c -> line 157
+ *   +0x0014 -> line 160
+ *   +0x0018 -> line 161
+ *   +0x0084 -> line 162
+ *   +0x0090 -> line 163
+ *   +0x0098 -> line 162
+ *   +0x009c -> line 163
+ *   +0x00a0 -> line 162
+ *   +0x00a8 -> line 163
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_s32ObjectTypeAnimationY(int s32_ObjectId)
+{
+    _stVector st_Answer;
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Other;
+    MAT_tdstTransformation_* h_Matrix;
+    _stVector* pst_Answer = &st_Answer;
+    float* pf_Answer = &st_Answer.f32y;
+    *pf_Answer = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; *pf_Answer = st_Vertex.v.xY; st_Answer.f32z = st_Vertex.v.xZ; } } }
+    return (int)(*pf_Answer * 65536.0f);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 165–171 */
+/* addr: 0x00266030  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 165
+ *   +0x0008 -> line 169
+ *   +0x000c -> line 165
+ *   +0x0014 -> line 168
+ *   +0x0018 -> line 169
+ *   +0x0084 -> line 170
+ *   +0x0090 -> line 171
+ *   +0x0098 -> line 170
+ *   +0x009c -> line 171
+ *   +0x00a0 -> line 170
+ *   +0x00a8 -> line 171
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_s32ObjectTypeAnimationZ(int s32_ObjectId)
+{
+    _stVector st_Answer;
+    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Other;
+    MAT_tdstTransformation_* h_Matrix;
+    _stVector* pst_Answer = &st_Answer;
+    float* pf_Answer = &st_Answer.f32z;
+    *pf_Answer = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; st_Answer.f32y = st_Vertex.v.xY; *pf_Answer = st_Vertex.v.xZ; } } }
+    return (int)(*pf_Answer * 65536.0f);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 173–179 */
+/* addr: 0x00265ff0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 173
+ *   +0x0004 -> line 177
+ *   +0x0008 -> line 173
+ *   +0x000c -> line 177
+ *   +0x0018 -> line 178
+ *   +0x0024 -> line 179
+ *   +0x0028 -> line 178
+ *   +0x0034 -> line 179
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_s32ObjectTypeAnimationVX(int s32_ObjectId)
+{
+    _stVector st_Answer;
+    int s32_Answer;
+
+    st_Answer.f32x = 0.0f;
+    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
+    s32_Answer = st_Answer.f32x * 65536.0f;
+    return s32_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 181–187 */
+/* addr: 0x00265fa0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 181
+ *   +0x0004 -> line 185
+ *   +0x0008 -> line 181
+ *   +0x000c -> line 185
+ *   +0x0010 -> line 181
+ *   +0x0014 -> line 184
+ *   +0x0018 -> line 185
+ *   +0x0020 -> line 186
+ *   +0x002c -> line 187
+ *   +0x0030 -> line 186
+ *   +0x0034 -> line 187
+ *   +0x0038 -> line 186
+ *   +0x0040 -> line 187
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_s32ObjectTypeAnimationVY(int s32_ObjectId)
+{
+    _stVector st_Answer;
+    int s32_Answer;
+
+    st_Answer.f32y = 0.0f;
+    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
+    s32_Answer = st_Answer.f32y * 65536.0f;
+    return s32_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 189–195 */
+/* addr: 0x00265f50  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 189
+ *   +0x0004 -> line 193
+ *   +0x0008 -> line 189
+ *   +0x000c -> line 193
+ *   +0x0010 -> line 189
+ *   +0x0014 -> line 192
+ *   +0x0018 -> line 193
+ *   +0x0020 -> line 194
+ *   +0x002c -> line 195
+ *   +0x0030 -> line 194
+ *   +0x0034 -> line 195
+ *   +0x0038 -> line 194
+ *   +0x0040 -> line 195
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_s32ObjectTypeAnimationVZ(int s32_ObjectId)
+{
+    _stVector st_Answer;
+    int s32_Answer;
+
+    st_Answer.f32z = 0.0f;
+    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
+    s32_Answer = st_Answer.f32z * 65536.0f;
+    return s32_Answer;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 199–278 */
 /* addr: 0x00265d60  size: 484 bytes */
@@ -1376,468 +1576,6 @@ unsigned char fn_u8RetObjectReverbNull(int s32_ObjectId);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 189–195 */
-/* addr: 0x00265f50  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 189
- *   +0x0004 -> line 193
- *   +0x0008 -> line 189
- *   +0x000c -> line 193
- *   +0x0010 -> line 189
- *   +0x0014 -> line 192
- *   +0x0018 -> line 193
- *   +0x0020 -> line 194
- *   +0x002c -> line 195
- *   +0x0030 -> line 194
- *   +0x0034 -> line 195
- *   +0x0038 -> line 194
- *   +0x0040 -> line 195
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 181–187 */
-/* addr: 0x00265fa0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 181
- *   +0x0004 -> line 185
- *   +0x0008 -> line 181
- *   +0x000c -> line 185
- *   +0x0010 -> line 181
- *   +0x0014 -> line 184
- *   +0x0018 -> line 185
- *   +0x0020 -> line 186
- *   +0x002c -> line 187
- *   +0x0030 -> line 186
- *   +0x0034 -> line 187
- *   +0x0038 -> line 186
- *   +0x0040 -> line 187
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 173–179 */
-/* addr: 0x00265ff0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 173
- *   +0x0004 -> line 177
- *   +0x0008 -> line 173
- *   +0x000c -> line 177
- *   +0x0018 -> line 178
- *   +0x0024 -> line 179
- *   +0x0028 -> line 178
- *   +0x0034 -> line 179
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 165–171 */
-/* addr: 0x00266030  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 165
- *   +0x0008 -> line 169
- *   +0x000c -> line 165
- *   +0x0014 -> line 168
- *   +0x0018 -> line 169
- *   +0x0084 -> line 170
- *   +0x0090 -> line 171
- *   +0x0098 -> line 170
- *   +0x009c -> line 171
- *   +0x00a0 -> line 170
- *   +0x00a8 -> line 171
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 157–163 */
-/* addr: 0x002660e0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 157
- *   +0x0008 -> line 161
- *   +0x000c -> line 157
- *   +0x0014 -> line 160
- *   +0x0018 -> line 161
- *   +0x0084 -> line 162
- *   +0x0090 -> line 163
- *   +0x0098 -> line 162
- *   +0x009c -> line 163
- *   +0x00a0 -> line 162
- *   +0x00a8 -> line 163
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 149–155 */
-/* addr: 0x00266190  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0008 -> line 153
- *   +0x000c -> line 149
- *   +0x0010 -> line 153
- *   +0x007c -> line 154
- *   +0x0088 -> line 155
- *   +0x0090 -> line 154
- *   +0x009c -> line 155
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 114–147 */
-/* addr: 0x00266240  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0014 -> line 118
- *   +0x001c -> line 121
- *   +0x0058 -> line 122
- *   +0x0060 -> line 126
- *   +0x00a0 -> line 127
- *   +0x00a8 -> line 128
- *   +0x00ac -> line 129
- *   +0x00b4 -> line 130
- *   +0x00bc -> line 133
- *   +0x00c4 -> line 134
- *   +0x00cc -> line 137
- *   +0x00d0 -> line 141
- *   +0x00d4 -> line 137
- *   +0x00dc -> line 138
- *   +0x00e0 -> line 137
- *   +0x00ec -> line 138
- *   +0x00f0 -> line 139
- *   +0x00f8 -> line 140
- *   +0x0100 -> line 146
- *   +0x0104 -> line 147
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 84–112 */
-/* addr: 0x00266360  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 84
- *   +0x0004 -> line 88
- *   +0x000c -> line 91
- *   +0x0048 -> line 92
- *   +0x0050 -> line 96
- *   +0x0088 -> line 97
- *   +0x0090 -> line 98
- *   +0x0094 -> line 99
- *   +0x0098 -> line 100
- *   +0x00a0 -> line 103
- *   +0x00a4 -> line 107
- *   +0x00a8 -> line 103
- *   +0x00b0 -> line 104
- *   +0x00b4 -> line 103
- *   +0x00c0 -> line 104
- *   +0x00c4 -> line 105
- *   +0x00cc -> line 106
- *   +0x00d4 -> line 112
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 68–82 */
-/* addr: 0x00266440  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 68
- *   +0x0014 -> line 72
- *   +0x001c -> line 75
- *   +0x0028 -> line 77
- *   +0x0030 -> line 79
- *   +0x003c -> line 80
- *   +0x0040 -> line 82
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 52–58 */
-/* addr: 0x00266490  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 52
- *   +0x0008 -> line 53
- *   +0x000c -> line 55
- *   +0x0010 -> line 54
- *   +0x0014 -> line 58
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 47–47 */
-/* addr: 0x002664b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 47
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 39–46 */
-/* addr: 0x002664c0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 39
- *   +0x0008 -> line 40
- *   +0x000c -> line 43
- *   +0x0010 -> line 41
- *   +0x0014 -> line 42
- *   +0x0018 -> line 46
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 34–34 */
-/* addr: 0x002664e0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 34
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 33–33 */
-/* addr: 0x002664f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 33
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 26–32 */
-/* addr: 0x00266500  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 26
- *   +0x0008 -> line 27
- *   +0x000c -> line 28
- *   +0x0014 -> line 29
- *   +0x0018 -> line 30
- *   +0x0020 -> line 31
- *   +0x0024 -> line 32
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 24–24 */
-/* addr: 0x00266530  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 24
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned char fn_u8RetObjectReverbNull(int s32_ObjectId)
-{
-    return 0;
-}
-
-void fn_vRetObjectExtraCoefNull(int s32_Unused, _SND_tduRefEvt u_Unused, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
-{
-    if (pr_Pitch != NULL)
-        *pr_Pitch = 0x10000;
-    if (pr_Pan != NULL)
-        *pr_Pan = 0x400000;
-    if (pr_Vol != NULL)
-        *pr_Vol = 0x400000;
-}
-
-int fn_s32RetObjectSwitchNull(int s32_ObjectId, int s32_InfoId)
-{
-    return 0;
-}
-
-int fn_bRetObjectLinkNull(int s32_ObjectId, int s32_MicroId)
-{
-    return 1;
-}
-
-int fn_bObjectPositionNull(int s32_Unused0, int s32_Unused1, _stVector* pst_Vector)
-{
-    int b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        pst_Vector->f32x = 0;
-        b_Answer = 1;
-        pst_Vector->f32y = 0;
-        pst_Vector->f32z = 0;
-    }
-    return b_Answer;
-}
-
-int fn_bRetObjectLinkBisNull(int s32_ObjectId, int s32_MicroId, int s32_InfoId)
-{
-    return 1;
-}
-
-int fn_bRetObjectRollOffNull(int s32_Unused0, int s32_Unused1, _RollOffParam* pst_RollOff)
-{
-    int b_Answer = 0;
-    if (pst_RollOff != NULL)
-    {
-        pst_RollOff->rDistBackGround = 0;
-        b_Answer = 1;
-        pst_RollOff->rDistSatur = 0;
-    }
-    return b_Answer;
-}
-
-HIE_tdstSuperObject_* fn_hGetSuperObjectActorHandle(int s32_ObjectId)
-{
-    HIE_tdstSuperObject_* h_Object;
-    HIE_tdstSuperObject_* h_Answer;
-
-    h_Answer = NULL;
-    if (s32_ObjectId != 0 && s32_ObjectId != -1)
-    {
-        for (h_Object = (HIE_tdstSuperObject_*)s32_ObjectId; h_Object != NULL; h_Object = h_Object->hFatherDyn)
-        {
-            if (h_Object->ulTypeOfLinkedObject == 2)
-            {
-                h_Answer = h_Object;
-                break;
-            }
-        }
-    }
-    return h_Answer;
-}
-
-int fn_bObjectTypeAnimationPosition(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
-{
-    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
-    HIE_tdstSuperObject_* h_Object;
-    HIE_tdstSuperObject_* h_Channel;
-    HIE_tdstSuperObject_* h_Loop;
-    MAT_tdstTransformation_* h_Matrix;
-    int b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        h_Object = NULL;
-        if (s32_ObjectId != 0 && s32_ObjectId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ObjectId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Object = h_Loop; break; } } }
-        if (h_Object != NULL)
-        {
-            h_Channel = NULL;
-            if (s32_ChannelId != 0 && s32_ChannelId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ChannelId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Channel = h_Loop; break; } } }
-            if (h_Channel != NULL) {
-            h_Object = h_Channel; }
-            h_Matrix = h_Object->hGlobalMatrix;
-            if (h_Matrix != NULL)
-            {
-                st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ;
-                pst_Vector->f32x = st_Vertex.v.xX;
-                pst_Vector->f32y = st_Vertex.v.xY;
-                pst_Vector->f32z = st_Vertex.v.xZ;
-                b_Answer = 1;
-            }
-        }
-    }
-    return b_Answer;
-}
-
-int fn_bObjectTypeAnimationVelocity(int s32_ObjectId, int s32_ChannelId, _stVector* pst_Vector)
-{
-    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
-    DNM_stDynamics* pst_Dynamics;
-    tdstDynam_* h_Dynamic;
-    HIE_tdstSuperObject_* h_Object;
-    HIE_tdstSuperObject_* h_Channel;
-    HIE_tdstSuperObject_* h_Loop;
-    tdstEngineObject_* h_Engine;
-    int b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        h_Object = NULL;
-        if (s32_ObjectId != 0 && s32_ObjectId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ObjectId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Object = h_Loop; break; } } }
-        if (h_Object != NULL)
-        {
-            h_Channel = NULL;
-            if (s32_ChannelId != 0 && s32_ChannelId != -1) { for (h_Loop = (HIE_tdstSuperObject_*)s32_ChannelId; h_Loop != NULL; h_Loop = h_Loop->hFatherDyn) { if (h_Loop->ulTypeOfLinkedObject == 2) { h_Channel = h_Loop; break; } } }
-            if (h_Channel != NULL) {
-            h_Object = h_Channel; }
-            h_Engine = h_Object->hLinkedObject.p_stCharacter;
-            h_Dynamic = h_Engine->h_Dynam;
-            if (h_Dynamic != NULL)
-            {
-                pst_Dynamics = fn_p_stDynamGetDynamics(h_Dynamic);
-                if (pst_Dynamics != NULL)
-                {
-                    st_Vertex.i[0] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX; st_Vertex.i[1] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY; st_Vertex.i[2] = *(int*)&pst_Dynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
-                    pst_Vector->f32x = st_Vertex.v.xX;
-                    pst_Vector->f32y = st_Vertex.v.xY;
-                    pst_Vector->f32z = st_Vertex.v.xZ;
-                    b_Answer = 1;
-                }
-            }
-        }
-    }
-    return b_Answer;
-}
-
-int fn_s32ObjectTypeAnimationX(int s32_ObjectId)
-{
-    _stVector st_Answer;
-    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
-    HIE_tdstSuperObject_* h_Object;
-    HIE_tdstSuperObject_* h_Other;
-    MAT_tdstTransformation_* h_Matrix;
-    _stVector* pst_Answer = &st_Answer;
-    st_Answer.f32x = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; st_Answer.f32y = st_Vertex.v.xY; st_Answer.f32z = st_Vertex.v.xZ; } } }
-    return (int)(st_Answer.f32x * 65536.0f);
-}
-
-int fn_s32ObjectTypeAnimationY(int s32_ObjectId)
-{
-    _stVector st_Answer;
-    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
-    HIE_tdstSuperObject_* h_Object;
-    HIE_tdstSuperObject_* h_Other;
-    MAT_tdstTransformation_* h_Matrix;
-    _stVector* pst_Answer = &st_Answer;
-    float* pf_Answer = &st_Answer.f32y;
-    *pf_Answer = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; *pf_Answer = st_Vertex.v.xY; st_Answer.f32z = st_Vertex.v.xZ; } } }
-    return (int)(*pf_Answer * 65536.0f);
-}
-
-int fn_s32ObjectTypeAnimationZ(int s32_ObjectId)
-{
-    _stVector st_Answer;
-    union { MTH3D_tdstVector_ v; int i[3]; } st_Vertex;
-    HIE_tdstSuperObject_* h_Object;
-    HIE_tdstSuperObject_* h_Other;
-    MAT_tdstTransformation_* h_Matrix;
-    _stVector* pst_Answer = &st_Answer;
-    float* pf_Answer = &st_Answer.f32z;
-    *pf_Answer = 0.0f; if (pst_Answer != NULL) { h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_Other = fn_hGetSuperObjectActorHandle(-1); if (h_Other != NULL) { h_Object = h_Other; } h_Matrix = h_Object->hGlobalMatrix; if (h_Matrix != NULL) { st_Vertex.i[0] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xX; st_Vertex.i[1] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xY; st_Vertex.i[2] = *(int*)&h_Matrix->stTransformMatrix.stCol_3.xZ; st_Answer.f32x = st_Vertex.v.xX; st_Answer.f32y = st_Vertex.v.xY; *pf_Answer = st_Vertex.v.xZ; } } }
-    return (int)(*pf_Answer * 65536.0f);
-}
-
-int fn_s32ObjectTypeAnimationVX(int s32_ObjectId)
-{
-    _stVector st_Answer;
-    int s32_Answer;
-
-    st_Answer.f32x = 0.0f;
-    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
-    s32_Answer = st_Answer.f32x * 65536.0f;
-    return s32_Answer;
-}
-
-int fn_s32ObjectTypeAnimationVY(int s32_ObjectId)
-{
-    _stVector st_Answer;
-    int s32_Answer;
-
-    st_Answer.f32y = 0.0f;
-    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
-    s32_Answer = st_Answer.f32y * 65536.0f;
-    return s32_Answer;
-}
-
-int fn_s32ObjectTypeAnimationVZ(int s32_ObjectId)
-{
-    _stVector st_Answer;
-    int s32_Answer;
-
-    st_Answer.f32z = 0.0f;
-    fn_bObjectTypeAnimationVelocity(s32_ObjectId, -1, &st_Answer);
-    s32_Answer = st_Answer.f32z * 65536.0f;
-    return s32_Answer;
-}
-
 void fn_s32ObjectTypeAnimationExtraCoef(int s32_ObjectId, _SND_tduRefEvt u_RefEvt, int* pr_Pitch, int* pr_Pan, int* pr_Vol)
 {
     HIE_tdstSuperObject_* hParent;
@@ -1897,6 +1635,48 @@ end:
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 280–363 */
+/* addr: 0x00265c10  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 280
+ *   +0x0004 -> line 286
+ *   +0x0008 -> line 280
+ *   +0x0018 -> line 285
+ *   +0x001c -> line 286
+ *   +0x0024 -> line 289
+ *   +0x0060 -> line 290
+ *   +0x0068 -> line 295
+ *   +0x006c -> line 294
+ *   +0x0070 -> line 295
+ *   +0x0074 -> line 296
+ *   +0x007c -> line 299
+ *   +0x0084 -> line 300
+ *   +0x008c -> line 301
+ *   +0x0090 -> line 303
+ *   +0x0098 -> line 304
+ *   +0x00a0 -> line 308
+ *   +0x00a8 -> line 310
+ *   +0x00b0 -> line 311
+ *   +0x00c0 -> line 315
+ *   +0x00c4 -> line 316
+ *   +0x00cc -> line 320
+ *   +0x00d0 -> line 323
+ *   +0x00dc -> line 325
+ *   +0x00e4 -> line 328
+ *   +0x00ec -> line 330
+ *   +0x00f4 -> line 333
+ *   +0x0100 -> line 334
+ *   +0x0104 -> line 342
+ *   +0x010c -> line 345
+ *   +0x0110 -> line 346
+ *   +0x0118 -> line 349
+ *   +0x0120 -> line 350
+ *   +0x0128 -> line 351
+ *   +0x012c -> line 362
+ *   +0x0130 -> line 363
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_s32ObjectTypeAnimationSwitch(int s32_ObjectId, int s32_InfoId)
 {
     int s32_Answer;
@@ -1971,6 +1751,39 @@ int fn_s32ObjectTypeAnimationSwitch(int s32_ObjectId, int s32_InfoId)
     return s32_Answer;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 367–416 */
+/* addr: 0x00265ac0  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 367
+ *   +0x0004 -> line 375
+ *   +0x0008 -> line 367
+ *   +0x0020 -> line 375
+ *   +0x002c -> line 378
+ *   +0x0034 -> line 379
+ *   +0x0058 -> line 381
+ *   +0x0060 -> line 382
+ *   +0x0068 -> line 386
+ *   +0x0078 -> line 388
+ *   +0x0080 -> line 389
+ *   +0x0094 -> line 392
+ *   +0x00a0 -> line 394
+ *   +0x00a8 -> line 396
+ *   +0x00b0 -> line 398
+ *   +0x00b8 -> line 399
+ *   +0x00c0 -> line 401
+ *   +0x00cc -> line 402
+ *   +0x00d8 -> line 405
+ *   +0x00e4 -> line 406
+ *   +0x00ec -> line 407
+ *   +0x00f4 -> line 408
+ *   +0x0104 -> line 411
+ *   +0x0110 -> line 412
+ *   +0x011c -> line 413
+ *   +0x0128 -> line 415
+ *   +0x012c -> line 416
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bObjectTypeAnimationLink(int objet, int micro)
 {
     HIE_tdstSuperObject_* hParent;
@@ -2024,16 +1837,58 @@ int fn_bObjectTypeAnimationLink(int objet, int micro)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 419–419 */
+/* addr: 0x00265ab0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 419
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bObjectTypeAnimationLinkBis(int s32_Unused, int s32_ObjectId, int s32_MicroId)
 {
     return fn_bObjectTypeAnimationLink(s32_Unused, s32_MicroId);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 448–450 */
+/* addr: 0x00265a30  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 448
+ *   +0x0014 -> line 449
+ *   +0x0060 -> line 450
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bObjectTypeAnimationRollOff(int s32_ObjectId, int s32_Unused, _RollOffParam* pst_RollOff)
 {
     HIE_tdstSuperObject_* h_Object; tdstMSSound_* h_MSSound; int b_Answer = 0; h_Object = fn_hGetSuperObjectActorHandle(s32_ObjectId); if (h_Object != NULL) { h_MSSound = h_Object->hLinkedObject.p_stCharacter->h_MSSound; if (h_MSSound != NULL) { pst_RollOff->rDistSatur = h_MSSound->stRollOff.rDistSatur; pst_RollOff->rDistBackGround = h_MSSound->stRollOff.rDistBackGround; pst_RollOff->ucBackgroundVol = h_MSSound->stRollOff.ucBackgroundVol; } else { SND_fn_vGetDefaultRollOff(pst_RollOff); } b_Answer = 1; } return b_Answer;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 452–508 */
+/* addr: 0x002658e0  size: 332 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 452
+ *   +0x0004 -> line 457
+ *   +0x0008 -> line 452
+ *   +0x0020 -> line 457
+ *   +0x0060 -> line 458
+ *   +0x0068 -> line 467
+ *   +0x0074 -> line 469
+ *   +0x0090 -> line 470
+ *   +0x00ac -> line 474
+ *   +0x00b0 -> line 473
+ *   +0x00b4 -> line 474
+ *   +0x00c4 -> line 478
+ *   +0x00d4 -> line 479
+ *   +0x00e0 -> line 481
+ *   +0x00e4 -> line 483
+ *   +0x0108 -> line 501
+ *   +0x0110 -> line 503
+ *   +0x0118 -> line 504
+ *   +0x012c -> line 507
+ *   +0x0130 -> line 508
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bObjectTypeAnimationInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
 {
     char* pch_PersoName;
@@ -2083,26 +1938,163 @@ int fn_bObjectTypeAnimationInfo(int s32_ObjectId, int s32_Unused, char* pch_Stri
     return b_Answer;
 }
 
-int fn_bObjectTypeVoiceInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 530–560 */
+/* addr: 0x002657b0  size: 292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 530
+ *   +0x0004 -> line 534
+ *   +0x0008 -> line 530
+ *   +0x0024 -> line 534
+ *   +0x002c -> line 537
+ *   +0x0068 -> line 538
+ *   +0x0070 -> line 541
+ *   +0x0078 -> line 542
+ *   +0x009c -> line 543
+ *   +0x00ac -> line 547
+ *   +0x00b0 -> line 546
+ *   +0x00b4 -> line 547
+ *   +0x00c4 -> line 548
+ *   +0x00cc -> line 550
+ *   +0x00e4 -> line 554
+ *   +0x00ec -> line 557
+ *   +0x0104 -> line 559
+ *   +0x0108 -> line 560
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+inline HIE_tdstSuperObject_* fn_hGetActorInline(int s32_ObjectId)
 {
-    char* pch_StringToCat;
-    HIE_tduLinkedObject_ h_LinkedObj;
-    int b_Answer;
-    /* TODO: decompile from asm/... */
+    HIE_tdstSuperObject_* h_Object;
+    HIE_tdstSuperObject_* h_Answer;
+
+    h_Answer = NULL;
+    if (s32_ObjectId != 0 && s32_ObjectId != -1)
+    {
+        for (h_Object = (HIE_tdstSuperObject_*)s32_ObjectId; h_Object != NULL; h_Object = h_Object->hFatherDyn)
+        {
+            if (h_Object->ulTypeOfLinkedObject == 2)
+            {
+                h_Answer = h_Object;
+                break;
+            }
+        }
+    }
+    return h_Answer;
 }
 
+int fn_bObjectTypeVoiceInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
+{
+    HIE_tdstSuperObject_* h_Actor;
+    HIE_tduLinkedObject_ h_LinkedObj;
+    char* pch_StringToCat;
+    int b_Answer;
+
+    b_Answer = 0;
+    if (s32_ObjectId != -1)
+    {
+        h_Actor = fn_hGetActorInline(s32_ObjectId);
+        if (h_Actor != NULL)
+        {
+            h_LinkedObj = h_Actor->hLinkedObject;
+            if (strncpy(pch_String, "Lips:", s32_Size) != NULL)
+            {
+                if (((HIE_tdstSuperObject_*)s32_ObjectId)->ulTypeOfLinkedObject == 2)
+                {
+                    pch_StringToCat = "Always";
+                    if (!fn_ucIsAnAlwaysObject(h_LinkedObj.p_stSuperObject))
+                        pch_StringToCat = "";
+                    b_Answer = strncat(pch_String, pch_StringToCat, s32_Size - strlen(pch_String)) != NULL;
+                }
+            }
+        }
+    }
+    else
+    {
+        b_Answer = strncpy(pch_String, "Ghost Object", s32_Size) != NULL;
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 580–583 */
+/* addr: 0x00265780  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 580
+ *   +0x0008 -> line 581
+ *   +0x0010 -> line 580
+ *   +0x0014 -> line 581
+ *   +0x0020 -> line 583
+ *   +0x0024 -> line 582
+ *   +0x0028 -> line 583
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bObjectTypeMusicInfo(int s32_ObjectId, int s32_Unused, char* pch_String, int s32_Size)
 {
     sprintf(pch_String, "Object type music n\xb0 %d\n", s32_ObjectId);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 603–606 */
+/* addr: 0x00265750  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 603
+ *   +0x0008 -> line 604
+ *   +0x0010 -> line 603
+ *   +0x0014 -> line 604
+ *   +0x0020 -> line 606
+ *   +0x0024 -> line 605
+ *   +0x0028 -> line 606
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_bObjectTypeAmbianceInfo(int s32_ObjectId, int s32_Unused, char* pch_Buffer, int s32_Size)
 {
     sprintf(pch_Buffer, "Object type ambiance n\xb0 %d\n", s32_ObjectId);
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 629–739 */
+/* addr: 0x00265590  size: 448 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 629
+ *   +0x0004 -> line 630
+ *   +0x0008 -> line 629
+ *   +0x000c -> line 630
+ *   +0x0014 -> line 647
+ *   +0x0018 -> line 630
+ *   +0x001c -> line 664
+ *   +0x0020 -> line 630
+ *   +0x0024 -> line 681
+ *   +0x0028 -> line 630
+ *   +0x0030 -> line 647
+ *   +0x0038 -> line 664
+ *   +0x0040 -> line 681
+ *   +0x0048 -> line 630
+ *   +0x0060 -> line 647
+ *   +0x0088 -> line 664
+ *   +0x00b0 -> line 681
+ *   +0x00d4 -> line 703
+ *   +0x00e0 -> line 704
+ *   +0x00ec -> line 705
+ *   +0x00fc -> line 710
+ *   +0x0108 -> line 711
+ *   +0x0114 -> line 712
+ *   +0x0124 -> line 717
+ *   +0x0130 -> line 718
+ *   +0x013c -> line 719
+ *   +0x014c -> line 724
+ *   +0x0158 -> line 725
+ *   +0x0164 -> line 726
+ *   +0x0174 -> line 731
+ *   +0x0180 -> line 732
+ *   +0x018c -> line 733
+ *   +0x019c -> line 737
+ *   +0x01b0 -> line 739
+ *   +0x01b4 -> line 738
+ *   +0x01b8 -> line 739
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GAM_fn_bInitSoundTypes(void)
 {
     _tdstAllRetObjectSound st_IObjectTypeAnimation = {
@@ -2198,16 +2190,44 @@ int GAM_fn_bInitSoundTypes(void)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 751–752 */
+/* addr: 0x00265570  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 751
+ *   +0x0010 -> line 752
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vSaveBlockEventSlotMemory(_SND_tdstBlockEvent* pst_BlockEvent, int s32_Index)
 {
     ga_pstBlockEventSlotMemory[s32_Index] = (int)pst_BlockEvent;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 764–765 */
+/* addr: 0x00265550  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 764
+ *   +0x0010 -> line 765
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 _SND_tdstBlockEvent* GAM_p_stGetBlockEventSlotMemory(int s32_Index)
 {
     return (_SND_tdstBlockEvent*)ga_pstBlockEventSlotMemory[s32_Index];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Micros.c lines 67–73 */
+/* addr: 0x00265510  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 67
+ *   +0x0010 -> line 69
+ *   +0x001c -> line 70
+ *   +0x0024 -> line 71
+ *   +0x0030 -> line 72
+ *   +0x0034 -> line 73
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char MC_fn_ucIsCharacterInMainCharacterList(HIE_tdstSuperObject_* hCharacter) { tdstNodeMainCharacter_* hMainCharNode = g_stEngineStructure.hMainCharacterList.hFirstElementDyn; while (hMainCharNode != NULL) {
     if (hMainCharNode->hCharacter == hCharacter) {
         return 1;

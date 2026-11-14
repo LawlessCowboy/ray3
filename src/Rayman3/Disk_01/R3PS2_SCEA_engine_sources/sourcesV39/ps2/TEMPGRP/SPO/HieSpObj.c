@@ -195,96 +195,6 @@ short g_xFixIndex;
 int gd_hFixSPO[32];
 int gd_hFixSPOSave[32];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 654–907 */
-/* addr: 0x00320e90  size: 1580 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 654
- *   +0x0038 -> line 675
- *   +0x003c -> line 672
- *   +0x0040 -> line 675
- *   +0x0048 -> line 677
- *   +0x0054 -> line 679
- *   +0x005c -> line 683
- *   +0x0060 -> line 687
- *   +0x0064 -> line 683
- *   +0x0068 -> line 687
- *   +0x0074 -> line 689
- *   +0x0084 -> line 690
- *   +0x008c -> line 694
- *   +0x00a8 -> line 696
- *   +0x00b0 -> line 707
- *   +0x00b4 -> line 700
- *   +0x00b8 -> line 701
- *   +0x00bc -> line 707
- *   +0x00c4 -> line 710
- *   +0x00cc -> line 712
- *   +0x00d8 -> line 715
- *   +0x00e0 -> line 716
- *   +0x00ec -> line 723
- *   +0x00f4 -> line 724
- *   +0x0100 -> line 725
- *   +0x0104 -> line 727
- *   +0x0140 -> line 728
- *   +0x0178 -> line 730
- *   +0x0180 -> line 734
- *   +0x0188 -> line 738
- *   +0x01a0 -> line 742
- *   +0x01a8 -> line 743
- *   +0x01b4 -> line 746
- *   +0x0218 -> line 747
- *   +0x0220 -> line 751
- *   +0x0244 -> line 755
- *   +0x0250 -> line 758
- *   +0x0260 -> line 762
- *   +0x0268 -> line 764
- *   +0x0270 -> line 766
- *   +0x0278 -> line 767
- *   +0x0298 -> line 768
- *   +0x02a0 -> line 770
- *   +0x02ac -> line 772
- *   +0x02bc -> line 786
- *   +0x02dc -> line 787
- *   +0x02e4 -> line 789
- *   +0x02ec -> line 791
- *   +0x02f8 -> line 794
- *   +0x0304 -> line 798
- *   +0x030c -> line 801
- *   +0x0354 -> line 803
- *   +0x0374 -> line 804
- *   +0x037c -> line 807
- *   +0x038c -> line 811
- *   +0x03f0 -> line 814
- *   +0x0404 -> line 811
- *   +0x041c -> line 814
- *   +0x0424 -> line 818
- *   +0x044c -> line 822
- *   +0x0458 -> line 825
- *   +0x0488 -> line 826
- *   +0x048c -> line 830
- *   +0x0490 -> line 827
- *   +0x0494 -> line 832
- *   +0x0498 -> line 828
- *   +0x04a0 -> line 830
- *   +0x04a4 -> line 832
- *   +0x04d8 -> line 833
- *   +0x04e0 -> line 838
- *   +0x04f8 -> line 842
- *   +0x0524 -> line 843
- *   +0x0528 -> line 847
- *   +0x052c -> line 844
- *   +0x0530 -> line 845
- *   +0x0538 -> line 847
- *   +0x0570 -> line 889
- *   +0x0594 -> line 892
- *   +0x05a0 -> line 895
- *   +0x05b8 -> line 903
- *   +0x05c4 -> line 904
- *   +0x05c8 -> line 905
- *   +0x05f8 -> line 906
- *   +0x0600 -> line 907
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 struct HIE_tdstPickInfo_ {
     HIE_tdstSuperObject_* hSprObject; /* +0x0 */
     GEO_tdstGeometricObject_* hGeoObject; /* +0x4 */
@@ -390,119 +300,11 @@ HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex);
 
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 730–730 */
-/* addr: 0x003214c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 730
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 688–726 */
-/* addr: 0x003214d0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 688
- *   +0x0018 -> line 689
- *   +0x001c -> line 690
- *   +0x0020 -> line 691
- *   +0x0024 -> line 692
- *   +0x0028 -> line 693
- *   +0x002c -> line 694
- *   +0x0030 -> line 695
- *   +0x0034 -> line 696
- *   +0x0038 -> line 698
- *   +0x003c -> line 699
- *   +0x0040 -> line 700
- *   +0x0044 -> line 702
- *   +0x0048 -> line 703
- *   +0x004c -> line 704
- *   +0x0050 -> line 706
- *   +0x0054 -> line 707
- *   +0x0058 -> line 708
- *   +0x005c -> line 710
- *   +0x0060 -> line 711
- *   +0x0064 -> line 712
- *   +0x0068 -> line 713
- *   +0x006c -> line 715
- *   +0x0070 -> line 716
- *   +0x0074 -> line 717
- *   +0x0078 -> line 718
- *   +0x007c -> line 725
- *   +0x0080 -> line 723
- *   +0x0084 -> line 725
- *   +0x0088 -> line 723
- *   +0x008c -> line 726
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 669–669 */
-/* addr: 0x00321570  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 669
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 655–664 */
-/* addr: 0x00321580  size: 288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 655
- *   +0x0008 -> line 657
- *   +0x0014 -> line 658
- *   +0x0018 -> line 657
- *   +0x001c -> line 661
- *   +0x0020 -> line 657
- *   +0x0024 -> line 661
- *   +0x0028 -> line 658
- *   +0x002c -> line 661
- *   +0x0030 -> line 659
- *   +0x0034 -> line 660
- *   +0x0038 -> line 661
- *   +0x00e4 -> line 657
- *   +0x00e8 -> line 661
- *   +0x00ec -> line 658
- *   +0x00f0 -> line 661
- *   +0x00f4 -> line 662
- *   +0x00f8 -> line 661
- *   +0x00fc -> line 662
- *   +0x0100 -> line 661
- *   +0x0110 -> line 662
- *   +0x0118 -> line 664
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 515–523 */
-/* addr: 0x003216a0  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 515
- *   +0x001c -> line 519
- *   +0x0024 -> line 521
- *   +0x0030 -> line 522
- *   +0x00a0 -> line 523
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* Retail inlines the recursive walkers HIE_fn_vInvalidateHierarchy and
    HIE_fn_vRefreshHierarchy two levels deep, with their per-node helper inlined
    at the first two levels: auto-inlining with an inline depth of 2. */
 #pragma auto_inline on
 #pragma inline_depth(2)
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 504–512 */
-/* addr: 0x00321760  size: 256 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x0004 -> line 508
- *   +0x0008 -> line 504
- *   +0x0018 -> line 508
- *   +0x0044 -> line 510
- *   +0x0050 -> line 511
- *   +0x00e8 -> line 512
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj);
 #define HIE_M_vInvalidateOneGlobalMatrix(p_stSprObj) \
     if ((p_stSprObj)->lLastComputeFrame != -1) { \
@@ -512,217 +314,171 @@ void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj);
             (p_stSprObj)->lLastComputeFrame = HIE_gs_lCurrentFrame - 2; \
     }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 491–501 */
-/* addr: 0x00321860  size: 800 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 491
- *   +0x0018 -> line 495
- *   +0x0114 -> line 497
- *   +0x0120 -> line 498
- *   +0x02d8 -> line 500
- *   +0x0308 -> line 501
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 472–483 */
-/* addr: 0x00321b80  size: 584 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 472
- *   +0x000c -> line 473
- *   +0x008c -> line 474
- *   +0x0094 -> line 476
- *   +0x0150 -> line 477
- *   +0x0158 -> line 480
- *   +0x0218 -> line 482
- *   +0x0238 -> line 483
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
 void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
 void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 463–468 */
-/* addr: 0x00321dd0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 463
- *   +0x000c -> line 466
- *   +0x0020 -> line 467
- *   +0x0030 -> line 468
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 423–437 */
-/* addr: 0x00321e10  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 423
- *   +0x0010 -> line 424
- *   +0x003c -> line 426
- *   +0x0088 -> line 427
- *   +0x0090 -> line 430
- *   +0x00b4 -> line 434
- *   +0x0104 -> line 435
- *   +0x010c -> line 437
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 416–420 */
-/* addr: 0x00321f30  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 416
- *   +0x000c -> line 417
- *   +0x0014 -> line 419
- *   +0x0018 -> line 420
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 393–406 */
-/* addr: 0x00321f50  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 393
- *   +0x0010 -> line 398
- *   +0x001c -> line 400
- *   +0x0020 -> line 401
- *   +0x0028 -> line 404
- *   +0x0030 -> line 406
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 386–388 */
-/* addr: 0x00321f90  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 386
- *   +0x0004 -> line 387
- *   +0x0008 -> line 386
- *   +0x0010 -> line 387
- *   +0x0020 -> line 388
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 380–382 */
-/* addr: 0x00321fc0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 380
- *   +0x0034 -> line 382
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 364–373 */
-/* addr: 0x00322000  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 364
- *   +0x0004 -> line 365
- *   +0x0008 -> line 364
- *   +0x001c -> line 365
- *   +0x0024 -> line 367
- *   +0x0098 -> line 369
- *   +0x00a8 -> line 373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 348–361 */
-/* addr: 0x003220d0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 348
- *   +0x0018 -> line 351
- *   +0x001c -> line 352
- *   +0x0024 -> line 354
- *   +0x0098 -> line 355
- *   +0x00a8 -> line 359
- *   +0x00b0 -> line 361
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 340–343 */
-/* addr: 0x003221a0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- *   +0x0014 -> line 343
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 332–335 */
-/* addr: 0x003221c0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 332
- *   +0x0014 -> line 335
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 272–325 */
-/* addr: 0x003221e0  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 272
- *   +0x0004 -> line 278
- *   +0x0008 -> line 272
- *   +0x001c -> line 278
- *   +0x002c -> line 279
- *   +0x003c -> line 281
- *   +0x0040 -> line 283
- *   +0x0044 -> line 281
- *   +0x0048 -> line 288
- *   +0x004c -> line 281
- *   +0x0050 -> line 282
- *   +0x005c -> line 283
- *   +0x0064 -> line 285
- *   +0x0068 -> line 286
- *   +0x006c -> line 288
- *   +0x0070 -> line 291
- *   +0x007c -> line 292
- *   +0x0084 -> line 294
- *   +0x0088 -> line 295
- *   +0x00b8 -> line 297
- *   +0x00c0 -> line 299
- *   +0x00c4 -> line 297
- *   +0x00c8 -> line 301
- *   +0x00cc -> line 299
- *   +0x00d0 -> line 323
- *   +0x00d4 -> line 301
- *   +0x00dc -> line 323
- *   +0x00e0 -> line 301
- *   +0x00e8 -> line 304
- *   +0x00ec -> line 307
- *   +0x00f0 -> line 312
- *   +0x00f4 -> line 315
- *   +0x00f8 -> line 317
- *   +0x0104 -> line 318
- *   +0x0110 -> line 319
- *   +0x011c -> line 322
- *   +0x0120 -> line 323
- *   +0x0128 -> line 324
- *   +0x012c -> line 325
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 201–202 */
-/* addr: 0x00322330  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 201
- *   +0x0080 -> line 202
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* HIE_fn_vChangeFather inlines this body three times (retail code shape), so the
    callee must be auto-inlinable.  The pragma state is read at the end of the
    unit, so it must stay on: a 'reset' here would drop the inline expansions. */
 #pragma auto_inline on
+
+unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj);
+
+void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 54–58 */
+/* addr: 0x00322850  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 54
+ *   +0x0030 -> line 58
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+#pragma auto_inline reset
+#pragma auto_inline reset
+#pragma auto_inline on
+HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex)
+{
+    if (xIndex < g_xFixIndex) {
+        return (HIE_tdstSuperObject_*)gd_hFixSPO[xIndex];
+    }
+    return NULL;
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 62–77 */
+/* addr: 0x00322800  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 62
+ *   +0x0014 -> line 67
+ *   +0x0018 -> line 72
+ *   +0x0028 -> line 73
+ *   +0x0038 -> line 74
+ *   +0x0044 -> line 77
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
+{
+    if ((_hSO->ulFlags & 0x20) != 0x20) {
+        _hSO->ulFlags |= 0x21;
+        if (g_xFixIndex < 0x20) {
+            gd_hFixSPO[g_xFixIndex] = (int)_hSO;
+            g_xFixIndex++;
+        }
+    }
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 83–107 */
+/* addr: 0x00322740  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 83
+ *   +0x0014 -> line 88
+ *   +0x001c -> line 90
+ *   +0x0028 -> line 95
+ *   +0x0038 -> line 97
+ *   +0x0044 -> line 100
+ *   +0x0050 -> line 101
+ *   +0x005c -> line 102
+ *   +0x0074 -> line 103
+ *   +0x0084 -> line 104
+ *   +0x0090 -> line 106
+ *   +0x00b0 -> line 107
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
+{
+    short xIndex;
+    int lFixIndex;
+    if ((_hSO->ulFlags & 0x20) != 0x20) return;
+    _hSO->ulFlags &= ~0x21;
+    if (!g_xFixIndex) return;
+    for (xIndex = 0; xIndex < 32; xIndex++) {
+        if ((HIE_tdstSuperObject_*)gd_hFixSPO[xIndex] == _hSO) {
+            g_xFixIndex--;
+            lFixIndex = g_xFixIndex; if (lFixIndex) {
+                gd_hFixSPO[xIndex] = gd_hFixSPO[lFixIndex];
+            }
+            gd_hFixSPO[lFixIndex] = 0;
+            break;
+        }
+    }
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 112–118 */
+/* addr: 0x00322700  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 112
+ *   +0x0008 -> line 113
+ *   +0x001c -> line 115
+ *   +0x0030 -> line 118
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_* _hSO, int bMode, unsigned int ulColor)
+{
+    if (bMode != 0) {
+        _hSO->ulFlags |= 0x80000;
+    } else {
+        _hSO->ulFlags &= ~0x80000;
+    }
+    _hSO->ulOutlineColor = ulColor;
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 129–137 */
+/* addr: 0x003226b0  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 129
+ *   +0x0004 -> line 131
+ *   +0x0008 -> line 129
+ *   +0x000c -> line 131
+ *   +0x001c -> line 134
+ *   +0x0028 -> line 136
+ *   +0x003c -> line 137
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void HIE_fn_SO_SetSuperImposedClipping(HIE_tdstSuperObject_* _hSO, int _lTop, int _lLeft, int _lBottom, int _lRight)
+{
+    if ((_hSO->ulFlags & 0x20) == 0x20) {
+        _hSO->ulFlags |= 0x40000;
+        GAM_fn_vSetFixClippingCoordinates(_lTop, _lLeft, _lBottom, _lRight);
+    }
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 142–143 */
+/* addr: 0x00322690  size: 24 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 142
+ *   +0x0010 -> line 143
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void HIE_fn_SO_UnsetSuperImposedClipping(HIE_tdstSuperObject_* _hSO)
+{
+    _hSO->ulFlags &= ~0x40000;
+}
+#pragma auto_inline reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 151–184 */
 /* addr: 0x003223c0  size: 716 bytes */
@@ -779,159 +535,6 @@ void MAT_fn_vSetIdentity(MAT_tdstTransformation_* p_stMatrix);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-unsigned char fn_ucStdGameCheckValidity(HIE_tdstSuperObject_* _h_SprObj);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 142–143 */
-/* addr: 0x00322690  size: 24 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 142
- *   +0x0010 -> line 143
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 129–137 */
-/* addr: 0x003226b0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 129
- *   +0x0004 -> line 131
- *   +0x0008 -> line 129
- *   +0x000c -> line 131
- *   +0x001c -> line 134
- *   +0x0028 -> line 136
- *   +0x003c -> line 137
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GAM_fn_vSetFixClippingCoordinates(int _lTop, int _lLeft, int _lBottom, int _lRight);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 112–118 */
-/* addr: 0x00322700  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 112
- *   +0x0008 -> line 113
- *   +0x001c -> line 115
- *   +0x0030 -> line 118
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 83–107 */
-/* addr: 0x00322740  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 83
- *   +0x0014 -> line 88
- *   +0x001c -> line 90
- *   +0x0028 -> line 95
- *   +0x0038 -> line 97
- *   +0x0044 -> line 100
- *   +0x0050 -> line 101
- *   +0x005c -> line 102
- *   +0x0074 -> line 103
- *   +0x0084 -> line 104
- *   +0x0090 -> line 106
- *   +0x00b0 -> line 107
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 62–77 */
-/* addr: 0x00322800  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 62
- *   +0x0014 -> line 67
- *   +0x0018 -> line 72
- *   +0x0028 -> line 73
- *   +0x0038 -> line 74
- *   +0x0044 -> line 77
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 54–58 */
-/* addr: 0x00322850  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 54
- *   +0x0030 -> line 58
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-#pragma auto_inline reset
-#pragma auto_inline reset
-#pragma auto_inline on
-HIE_tdstSuperObject_* HIE_fn_hGetElementFormFixViewport(short xIndex)
-{
-    if (xIndex < g_xFixIndex) {
-        return (HIE_tdstSuperObject_*)gd_hFixSPO[xIndex];
-    }
-    return NULL;
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
-{
-    if ((_hSO->ulFlags & 0x20) != 0x20) {
-        _hSO->ulFlags |= 0x21;
-        if (g_xFixIndex < 0x20) {
-            gd_hFixSPO[g_xFixIndex] = (int)_hSO;
-            g_xFixIndex++;
-        }
-    }
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void HIE_fn_SO_vClearSuperimposedFlag(HIE_tdstSuperObject_* _hSO)
-{
-    short xIndex;
-    int lFixIndex;
-    if ((_hSO->ulFlags & 0x20) != 0x20) return;
-    _hSO->ulFlags &= ~0x21;
-    if (!g_xFixIndex) return;
-    for (xIndex = 0; xIndex < 32; xIndex++) {
-        if ((HIE_tdstSuperObject_*)gd_hFixSPO[xIndex] == _hSO) {
-            g_xFixIndex--;
-            lFixIndex = g_xFixIndex; if (lFixIndex) {
-                gd_hFixSPO[xIndex] = gd_hFixSPO[lFixIndex];
-            }
-            gd_hFixSPO[lFixIndex] = 0;
-            break;
-        }
-    }
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void HIE_fn_SO_vSetOutLineMode(HIE_tdstSuperObject_* _hSO, int bMode, unsigned int ulColor)
-{
-    if (bMode != 0) {
-        _hSO->ulFlags |= 0x80000;
-    } else {
-        _hSO->ulFlags &= ~0x80000;
-    }
-    _hSO->ulOutlineColor = ulColor;
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void HIE_fn_SO_SetSuperImposedClipping(HIE_tdstSuperObject_* _hSO, int _lTop, int _lLeft, int _lBottom, int _lRight)
-{
-    if ((_hSO->ulFlags & 0x20) == 0x20) {
-        _hSO->ulFlags |= 0x40000;
-        GAM_fn_vSetFixClippingCoordinates(_lTop, _lLeft, _lBottom, _lRight);
-    }
-}
-#pragma auto_inline reset
-
-#pragma auto_inline on
-void HIE_fn_SO_UnsetSuperImposedClipping(HIE_tdstSuperObject_* _hSO)
-{
-    _hSO->ulFlags &= ~0x40000;
-}
-#pragma auto_inline reset
-
 #pragma auto_inline on
 void HIE_fn_SO_SwitchSuperImposedTab(int lParam)
 {
@@ -962,6 +565,14 @@ void HIE_fn_SO_SwitchSuperImposedTab(int lParam)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 201–202 */
+/* addr: 0x00322330  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 201
+ *   +0x0080 -> line 202
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -986,6 +597,51 @@ void HIE_fn_vIsolate(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 272–325 */
+/* addr: 0x003221e0  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 272
+ *   +0x0004 -> line 278
+ *   +0x0008 -> line 272
+ *   +0x001c -> line 278
+ *   +0x002c -> line 279
+ *   +0x003c -> line 281
+ *   +0x0040 -> line 283
+ *   +0x0044 -> line 281
+ *   +0x0048 -> line 288
+ *   +0x004c -> line 281
+ *   +0x0050 -> line 282
+ *   +0x005c -> line 283
+ *   +0x0064 -> line 285
+ *   +0x0068 -> line 286
+ *   +0x006c -> line 288
+ *   +0x0070 -> line 291
+ *   +0x007c -> line 292
+ *   +0x0084 -> line 294
+ *   +0x0088 -> line 295
+ *   +0x00b8 -> line 297
+ *   +0x00c0 -> line 299
+ *   +0x00c4 -> line 297
+ *   +0x00c8 -> line 301
+ *   +0x00cc -> line 299
+ *   +0x00d0 -> line 323
+ *   +0x00d4 -> line 301
+ *   +0x00dc -> line 323
+ *   +0x00e0 -> line 301
+ *   +0x00e8 -> line 304
+ *   +0x00ec -> line 307
+ *   +0x00f0 -> line 312
+ *   +0x00f4 -> line 315
+ *   +0x00f8 -> line 317
+ *   +0x0104 -> line 318
+ *   +0x0110 -> line 319
+ *   +0x011c -> line 322
+ *   +0x0120 -> line 323
+ *   +0x0128 -> line 324
+ *   +0x012c -> line 325
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize)
 {
@@ -1037,6 +693,14 @@ HIE_tdstSuperObject_* HIE_fn_p_stCreateSuperObjectTab(int lSize)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 332–335 */
+/* addr: 0x003221c0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 332
+ *   +0x0014 -> line 335
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1045,6 +709,14 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject
     return _hSprObj; }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 340–343 */
+/* addr: 0x003221a0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 340
+ *   +0x0014 -> line 343
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1053,6 +725,19 @@ HIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectPrevBrother(HIE_tdstSuperObject
     return _hSprObj; }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 348–361 */
+/* addr: 0x003220d0  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 348
+ *   +0x0018 -> line 351
+ *   +0x001c -> line 352
+ *   +0x0024 -> line 354
+ *   +0x0098 -> line 355
+ *   +0x00a8 -> line 359
+ *   +0x00b0 -> line 361
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
 {
@@ -1070,6 +755,19 @@ int HIE_fn_vRecUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 364–373 */
+/* addr: 0x00322000  size: 196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 364
+ *   +0x0004 -> line 365
+ *   +0x0008 -> line 364
+ *   +0x001c -> line 365
+ *   +0x0024 -> line 367
+ *   +0x0098 -> line 369
+ *   +0x00a8 -> line 373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
 {
@@ -1083,6 +781,14 @@ void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSO)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 380–382 */
+/* addr: 0x00321fc0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 380
+ *   +0x0034 -> line 382
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* _hParent, int _lNumber)
 {
@@ -1094,6 +800,17 @@ HIE_tdstSuperObject_* HIE_fn_hGetChildNumber(HIE_tdstSuperObject_* _hParent, int
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 386–388 */
+/* addr: 0x00321f90  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 386
+ *   +0x0004 -> line 387
+ *   +0x0008 -> line 386
+ *   +0x0010 -> line 387
+ *   +0x0020 -> line 388
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vInvalidateAllGlobalMatrices(void)
 {
@@ -1103,6 +820,18 @@ void HIE_fn_vInvalidateAllGlobalMatrices(void)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 393–406 */
+/* addr: 0x00321f50  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 393
+ *   +0x0010 -> line 398
+ *   +0x001c -> line 400
+ *   +0x0020 -> line 401
+ *   +0x0028 -> line 404
+ *   +0x0030 -> line 406
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1115,6 +844,16 @@ void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 416–420 */
+/* addr: 0x00321f30  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 416
+ *   +0x000c -> line 417
+ *   +0x0014 -> line 419
+ *   +0x0018 -> line 420
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue)
 {
@@ -1125,6 +864,20 @@ void HIE_fn_vInitGlobalMatrixFrameCounter(int lValue)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 423–437 */
+/* addr: 0x00321e10  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 423
+ *   +0x0010 -> line 424
+ *   +0x003c -> line 426
+ *   +0x0088 -> line 427
+ *   +0x0090 -> line 430
+ *   +0x00b4 -> line 434
+ *   +0x0104 -> line 435
+ *   +0x010c -> line 437
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1149,6 +902,16 @@ void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 463–468 */
+/* addr: 0x00321dd0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 463
+ *   +0x000c -> line 466
+ *   +0x0020 -> line 467
+ *   +0x0030 -> line 468
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1158,6 +921,20 @@ void HIE_fn_vComputeNewRelativeMatrix(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 472–483 */
+/* addr: 0x00321b80  size: 584 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 472
+ *   +0x000c -> line 473
+ *   +0x008c -> line 474
+ *   +0x0094 -> line 476
+ *   +0x0150 -> line 477
+ *   +0x0158 -> line 480
+ *   +0x0218 -> line 482
+ *   +0x0238 -> line 483
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* _hNewFather, unsigned char _bAtHead)
 {
@@ -1174,6 +951,18 @@ void HIE_fn_vChangeFather(HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_* 
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 491–501 */
+/* addr: 0x00321860  size: 800 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 491
+ *   +0x0018 -> line 495
+ *   +0x0114 -> line 497
+ *   +0x0120 -> line 498
+ *   +0x02d8 -> line 500
+ *   +0x0308 -> line 501
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1186,6 +975,19 @@ void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 504–512 */
+/* addr: 0x00321760  size: 256 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x0004 -> line 508
+ *   +0x0008 -> line 504
+ *   +0x0018 -> line 508
+ *   +0x0044 -> line 510
+ *   +0x0050 -> line 511
+ *   +0x00e8 -> line 512
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma auto_inline on
 void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj)
 {
@@ -1197,6 +999,17 @@ void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* _hSprObj)
 }
 #pragma auto_inline reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 515–523 */
+/* addr: 0x003216a0  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 515
+ *   +0x001c -> line 519
+ *   +0x0024 -> line 521
+ *   +0x0030 -> line 522
+ *   +0x00a0 -> line 523
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void HIE_fn_vApplyFunctionOnHierarchy(HIE_tdstSuperObject_* _hSprObj, void (*_fn_vApplyFunction)(HIE_tdstSuperObject_*))
 {
     HIE_tdstSuperObject_* hChild;
@@ -1208,6 +1021,34 @@ void HIE_fn_vApplyFunctionOnHierarchy(HIE_tdstSuperObject_* _hSprObj, void (*_fn
         _fn_vApplyFunction(hChild); for (hChild2 = hChild->hFirstElementDyn; hChild2; hChild2 = hChild2->hNextBrotherDyn) { _fn_vApplyFunction(hChild2); for (hChild3 = hChild2->hFirstElementDyn; hChild3; hChild3 = hChild3->hNextBrotherDyn) { HIE_fn_vApplyFunctionOnHierarchy(hChild3, _fn_vApplyFunction); } } }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 655–664 */
+/* addr: 0x00321580  size: 288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 655
+ *   +0x0008 -> line 657
+ *   +0x0014 -> line 658
+ *   +0x0018 -> line 657
+ *   +0x001c -> line 661
+ *   +0x0020 -> line 657
+ *   +0x0024 -> line 661
+ *   +0x0028 -> line 658
+ *   +0x002c -> line 661
+ *   +0x0030 -> line 659
+ *   +0x0034 -> line 660
+ *   +0x0038 -> line 661
+ *   +0x00e4 -> line 657
+ *   +0x00e8 -> line 661
+ *   +0x00ec -> line 658
+ *   +0x00f0 -> line 661
+ *   +0x00f4 -> line 662
+ *   +0x00f8 -> line 661
+ *   +0x00fc -> line 662
+ *   +0x0100 -> line 661
+ *   +0x0110 -> line 662
+ *   +0x0118 -> line 664
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void HIE_fn_vInitPS2MatStack(void)
 {
     unsigned int i;
@@ -1221,11 +1062,55 @@ void HIE_fn_vInitPS2MatStack(void)
     PS2_MatStackIndex = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 669–669 */
+/* addr: 0x00321570  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 669
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void HIE_fn_vStartPS2MatStack(void)
 {
     PS2_MatStackIndex = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 688–726 */
+/* addr: 0x003214d0  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 688
+ *   +0x0018 -> line 689
+ *   +0x001c -> line 690
+ *   +0x0020 -> line 691
+ *   +0x0024 -> line 692
+ *   +0x0028 -> line 693
+ *   +0x002c -> line 694
+ *   +0x0030 -> line 695
+ *   +0x0034 -> line 696
+ *   +0x0038 -> line 698
+ *   +0x003c -> line 699
+ *   +0x0040 -> line 700
+ *   +0x0044 -> line 702
+ *   +0x0048 -> line 703
+ *   +0x004c -> line 704
+ *   +0x0050 -> line 706
+ *   +0x0054 -> line 707
+ *   +0x0058 -> line 708
+ *   +0x005c -> line 710
+ *   +0x0060 -> line 711
+ *   +0x0064 -> line 712
+ *   +0x0068 -> line 713
+ *   +0x006c -> line 715
+ *   +0x0070 -> line 716
+ *   +0x0074 -> line 717
+ *   +0x0078 -> line 718
+ *   +0x007c -> line 725
+ *   +0x0080 -> line 723
+ *   +0x0084 -> line 725
+ *   +0x0088 -> line 723
+ *   +0x008c -> line 726
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void)
 {
     MTH4D_tdstMatrix_* p_stResultMatrix = &Global_tempCamStackMatrix.stTransformMatrix;
@@ -1273,11 +1158,108 @@ MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2(void)
     return &Global_tempCamStackMatrix;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 730–730 */
+/* addr: 0x003214c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 730
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void)
 {
     return HIE_fn_pGetCurrentInCamCoordsMatrixFastPS2();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HieSpObj.c lines 654–907 */
+/* addr: 0x00320e90  size: 1580 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 654
+ *   +0x0038 -> line 675
+ *   +0x003c -> line 672
+ *   +0x0040 -> line 675
+ *   +0x0048 -> line 677
+ *   +0x0054 -> line 679
+ *   +0x005c -> line 683
+ *   +0x0060 -> line 687
+ *   +0x0064 -> line 683
+ *   +0x0068 -> line 687
+ *   +0x0074 -> line 689
+ *   +0x0084 -> line 690
+ *   +0x008c -> line 694
+ *   +0x00a8 -> line 696
+ *   +0x00b0 -> line 707
+ *   +0x00b4 -> line 700
+ *   +0x00b8 -> line 701
+ *   +0x00bc -> line 707
+ *   +0x00c4 -> line 710
+ *   +0x00cc -> line 712
+ *   +0x00d8 -> line 715
+ *   +0x00e0 -> line 716
+ *   +0x00ec -> line 723
+ *   +0x00f4 -> line 724
+ *   +0x0100 -> line 725
+ *   +0x0104 -> line 727
+ *   +0x0140 -> line 728
+ *   +0x0178 -> line 730
+ *   +0x0180 -> line 734
+ *   +0x0188 -> line 738
+ *   +0x01a0 -> line 742
+ *   +0x01a8 -> line 743
+ *   +0x01b4 -> line 746
+ *   +0x0218 -> line 747
+ *   +0x0220 -> line 751
+ *   +0x0244 -> line 755
+ *   +0x0250 -> line 758
+ *   +0x0260 -> line 762
+ *   +0x0268 -> line 764
+ *   +0x0270 -> line 766
+ *   +0x0278 -> line 767
+ *   +0x0298 -> line 768
+ *   +0x02a0 -> line 770
+ *   +0x02ac -> line 772
+ *   +0x02bc -> line 786
+ *   +0x02dc -> line 787
+ *   +0x02e4 -> line 789
+ *   +0x02ec -> line 791
+ *   +0x02f8 -> line 794
+ *   +0x0304 -> line 798
+ *   +0x030c -> line 801
+ *   +0x0354 -> line 803
+ *   +0x0374 -> line 804
+ *   +0x037c -> line 807
+ *   +0x038c -> line 811
+ *   +0x03f0 -> line 814
+ *   +0x0404 -> line 811
+ *   +0x041c -> line 814
+ *   +0x0424 -> line 818
+ *   +0x044c -> line 822
+ *   +0x0458 -> line 825
+ *   +0x0488 -> line 826
+ *   +0x048c -> line 830
+ *   +0x0490 -> line 827
+ *   +0x0494 -> line 832
+ *   +0x0498 -> line 828
+ *   +0x04a0 -> line 830
+ *   +0x04a4 -> line 832
+ *   +0x04d8 -> line 833
+ *   +0x04e0 -> line 838
+ *   +0x04f8 -> line 842
+ *   +0x0524 -> line 843
+ *   +0x0528 -> line 847
+ *   +0x052c -> line 844
+ *   +0x0530 -> line 845
+ *   +0x0538 -> line 847
+ *   +0x0570 -> line 889
+ *   +0x0594 -> line 892
+ *   +0x05a0 -> line 895
+ *   +0x05b8 -> line 903
+ *   +0x05c4 -> line 904
+ *   +0x05c8 -> line 905
+ *   +0x05f8 -> line 906
+ *   +0x0600 -> line 907
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short fn_xIntersectSegmentWithRepositioningSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, HIE_tdstPickInfo_* p_stPickInfo, short* p_xNbPickInfo)
 {
     static COL_tdstBoundingSphere_* hBoundingSphere;

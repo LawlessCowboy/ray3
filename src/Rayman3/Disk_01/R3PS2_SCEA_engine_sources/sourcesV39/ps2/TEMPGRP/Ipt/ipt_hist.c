@@ -155,6 +155,12 @@ unsigned int IPT_g_ulPadAndJoyButtonFlag;
 IPT_tdstScriptValue_ IPT_g_hScriptPadValue;
 IPT_tdstScriptValue_ IPT_g_hScriptKeyValue;
 
+extern int INO_fn_wReadAllDevices();
+extern int IPT_fn_bIsEnabled();
+extern int IPT_fn_bIsEntryActionValid();
+extern void IPT_fn_vActualizeHistoric();
+extern void IPT_fn_vForceFeedBackRunTime();
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_hist.c lines 36–106 */
 /* addr: 0x002f5c40  size: 668 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -199,12 +205,6 @@ IPT_tdstScriptValue_ IPT_g_hScriptKeyValue;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern int INO_fn_wReadAllDevices();
-extern int IPT_fn_bIsEnabled();
-extern int IPT_fn_bIsEntryActionValid();
-extern void IPT_fn_vActualizeHistoric();
-extern void IPT_fn_vForceFeedBackRunTime();
-
 void IPT_fn_vReadInput(unsigned int ulCurrentTime)
 {
     unsigned char ucValid;

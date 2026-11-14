@@ -224,82 +224,6 @@ struct GEO_tdstIndexedAlignedBox_ {
     GLI_tdstMaterial_* hVisualMaterial; /* +0x4 */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj2.c lines 38–126 */
-/* addr: 0x002a28a0  size: 2112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 38
- *   +0x0010 -> line 47
- *   +0x001c -> line 50
- *   +0x0028 -> line 53
- *   +0x0040 -> line 57
- *   +0x0044 -> line 56
- *   +0x0048 -> line 57
- *   +0x0058 -> line 58
- *   +0x0064 -> line 60
- *   +0x0070 -> line 61
- *   +0x0088 -> line 63
- *   +0x0098 -> line 65
- *   +0x00b0 -> line 67
- *   +0x00bc -> line 70
- *   +0x00c0 -> line 69
- *   +0x00c4 -> line 70
- *   +0x00d4 -> line 71
- *   +0x00e0 -> line 81
- *   +0x00e4 -> line 73
- *   +0x00e8 -> line 81
- *   +0x00ec -> line 73
- *   +0x00f0 -> line 81
- *   +0x00f4 -> line 74
- *   +0x00f8 -> line 73
- *   +0x0198 -> line 74
- *   +0x01b8 -> line 76
- *   +0x01f8 -> line 78
- *   +0x026c -> line 79
- *   +0x02dc -> line 80
- *   +0x034c -> line 81
- *   +0x03c4 -> line 82
- *   +0x03c8 -> line 83
- *   +0x03d8 -> line 84
- *   +0x03e0 -> line 85
- *   +0x03ec -> line 87
- *   +0x03f8 -> line 90
- *   +0x03fc -> line 89
- *   +0x0400 -> line 90
- *   +0x0410 -> line 91
- *   +0x041c -> line 107
- *   +0x0420 -> line 93
- *   +0x0424 -> line 107
- *   +0x0428 -> line 93
- *   +0x042c -> line 107
- *   +0x0430 -> line 100
- *   +0x0434 -> line 91
- *   +0x0438 -> line 93
- *   +0x04d8 -> line 100
- *   +0x04f8 -> line 102
- *   +0x0538 -> line 104
- *   +0x05ac -> line 105
- *   +0x061c -> line 106
- *   +0x068c -> line 107
- *   +0x0704 -> line 108
- *   +0x0708 -> line 109
- *   +0x0718 -> line 111
- *   +0x0720 -> line 109
- *   +0x0728 -> line 111
- *   +0x0748 -> line 114
- *   +0x074c -> line 113
- *   +0x0750 -> line 114
- *   +0x0760 -> line 115
- *   +0x076c -> line 123
- *   +0x0774 -> line 117
- *   +0x07b0 -> line 119
- *   +0x07b8 -> line 120
- *   +0x07c0 -> line 123
- *   +0x081c -> line 124
- *   +0x0820 -> line 125
- *   +0x0830 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 
 /* The R5900 accumulator ops and sqrt.s have no C form under the baseline. */
@@ -625,6 +549,82 @@ void GEO_vComputeObjectParallelBox(GEO_tdstGeometricObject_* hObject, short xPar
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GEO\GeoObj2.c lines 38–126 */
+/* addr: 0x002a28a0  size: 2112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 38
+ *   +0x0010 -> line 47
+ *   +0x001c -> line 50
+ *   +0x0028 -> line 53
+ *   +0x0040 -> line 57
+ *   +0x0044 -> line 56
+ *   +0x0048 -> line 57
+ *   +0x0058 -> line 58
+ *   +0x0064 -> line 60
+ *   +0x0070 -> line 61
+ *   +0x0088 -> line 63
+ *   +0x0098 -> line 65
+ *   +0x00b0 -> line 67
+ *   +0x00bc -> line 70
+ *   +0x00c0 -> line 69
+ *   +0x00c4 -> line 70
+ *   +0x00d4 -> line 71
+ *   +0x00e0 -> line 81
+ *   +0x00e4 -> line 73
+ *   +0x00e8 -> line 81
+ *   +0x00ec -> line 73
+ *   +0x00f0 -> line 81
+ *   +0x00f4 -> line 74
+ *   +0x00f8 -> line 73
+ *   +0x0198 -> line 74
+ *   +0x01b8 -> line 76
+ *   +0x01f8 -> line 78
+ *   +0x026c -> line 79
+ *   +0x02dc -> line 80
+ *   +0x034c -> line 81
+ *   +0x03c4 -> line 82
+ *   +0x03c8 -> line 83
+ *   +0x03d8 -> line 84
+ *   +0x03e0 -> line 85
+ *   +0x03ec -> line 87
+ *   +0x03f8 -> line 90
+ *   +0x03fc -> line 89
+ *   +0x0400 -> line 90
+ *   +0x0410 -> line 91
+ *   +0x041c -> line 107
+ *   +0x0420 -> line 93
+ *   +0x0424 -> line 107
+ *   +0x0428 -> line 93
+ *   +0x042c -> line 107
+ *   +0x0430 -> line 100
+ *   +0x0434 -> line 91
+ *   +0x0438 -> line 93
+ *   +0x04d8 -> line 100
+ *   +0x04f8 -> line 102
+ *   +0x0538 -> line 104
+ *   +0x05ac -> line 105
+ *   +0x061c -> line 106
+ *   +0x068c -> line 107
+ *   +0x0704 -> line 108
+ *   +0x0708 -> line 109
+ *   +0x0718 -> line 111
+ *   +0x0720 -> line 109
+ *   +0x0728 -> line 111
+ *   +0x0748 -> line 114
+ *   +0x074c -> line 113
+ *   +0x0750 -> line 114
+ *   +0x0760 -> line 115
+ *   +0x076c -> line 123
+ *   +0x0774 -> line 117
+ *   +0x07b0 -> line 119
+ *   +0x07b8 -> line 120
+ *   +0x07c0 -> line 123
+ *   +0x081c -> line 124
+ *   +0x0820 -> line 125
+ *   +0x0830 -> line 126
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GEO_xComputeObjectNormals(GEO_tdstGeometricObject_* p_stObj)
 {
     float xNorm;

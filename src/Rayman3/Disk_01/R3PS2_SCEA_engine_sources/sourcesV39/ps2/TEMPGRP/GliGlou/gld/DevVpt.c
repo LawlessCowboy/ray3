@@ -149,15 +149,6 @@ extern short TMR_fn_wInitLibrary(void);
 extern void GLD_fn_vInitSmoothSynchro(void);
 void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_stVP);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 313–315 */
-/* addr: 0x002ac030  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 313
- *   +0x0020 -> line 315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDistance);
@@ -176,318 +167,6 @@ int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib
 int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev);
 int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice);
 void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_stVP);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1704–1706 */
-/* addr: 0x002ac060  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1704
- *   +0x0004 -> line 1706
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1685–1695 */
-/* addr: 0x002ac070  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1685
- *   +0x001c -> line 1692
- *   +0x0020 -> line 1685
- *   +0x0024 -> line 1692
- *   +0x005c -> line 1694
- *   +0x0060 -> line 1692
- *   +0x0064 -> line 1695
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1191–1231 */
-/* addr: 0x002ac0e0  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1191
- *   +0x0004 -> line 1201
- *   +0x0008 -> line 1191
- *   +0x000c -> line 1201
- *   +0x0010 -> line 1191
- *   +0x0014 -> line 1201
- *   +0x0018 -> line 1191
- *   +0x001c -> line 1201
- *   +0x0020 -> line 1191
- *   +0x0024 -> line 1201
- *   +0x0028 -> line 1191
- *   +0x002c -> line 1201
- *   +0x0030 -> line 1191
- *   +0x0034 -> line 1206
- *   +0x0040 -> line 1209
- *   +0x004c -> line 1211
- *   +0x0058 -> line 1214
- *   +0x0064 -> line 1216
- *   +0x0068 -> line 1218
- *   +0x0070 -> line 1216
- *   +0x0074 -> line 1218
- *   +0x008c -> line 1219
- *   +0x0090 -> line 1222
- *   +0x00a0 -> line 1225
- *   +0x00bc -> line 1228
- *   +0x00c0 -> line 1230
- *   +0x00c4 -> line 1231
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1144–1183 */
-/* addr: 0x002ac1d0  size: 252 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1144
- *   +0x0004 -> line 1157
- *   +0x0008 -> line 1144
- *   +0x0018 -> line 1157
- *   +0x001c -> line 1158
- *   +0x0044 -> line 1164
- *   +0x0060 -> line 1165
- *   +0x0064 -> line 1164
- *   +0x0068 -> line 1165
- *   +0x0078 -> line 1169
- *   +0x0090 -> line 1173
- *   +0x0094 -> line 1169
- *   +0x00a0 -> line 1173
- *   +0x00a4 -> line 1169
- *   +0x00ac -> line 1173
- *   +0x00b4 -> line 1176
- *   +0x00d0 -> line 1179
- *   +0x00d4 -> line 1182
- *   +0x00d8 -> line 1179
- *   +0x00e0 -> line 1181
- *   +0x00e4 -> line 1183
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1097–1134 */
-/* addr: 0x002ac2d0  size: 272 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1097
- *   +0x0004 -> line 1107
- *   +0x0008 -> line 1097
- *   +0x001c -> line 1107
- *   +0x0020 -> line 1108
- *   +0x0048 -> line 1113
- *   +0x0064 -> line 1114
- *   +0x0068 -> line 1113
- *   +0x006c -> line 1114
- *   +0x007c -> line 1118
- *   +0x0094 -> line 1121
- *   +0x0098 -> line 1118
- *   +0x00a4 -> line 1121
- *   +0x00a8 -> line 1118
- *   +0x00b0 -> line 1121
- *   +0x00b8 -> line 1122
- *   +0x00c8 -> line 1123
- *   +0x00d4 -> line 1125
- *   +0x00d8 -> line 1126
- *   +0x00dc -> line 1129
- *   +0x00e4 -> line 1126
- *   +0x00e8 -> line 1129
- *   +0x00f0 -> line 1132
- *   +0x00f4 -> line 1133
- *   +0x00f8 -> line 1134
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 933–935 */
-/* addr: 0x002ac3e0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 933
- *   +0x0030 -> line 934
- *   +0x0034 -> line 933
- *   +0x0038 -> line 935
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 882–913 */
-/* addr: 0x002ac420  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 882
- *   +0x0004 -> line 893
- *   +0x0008 -> line 882
- *   +0x0010 -> line 893
- *   +0x0014 -> line 894
- *   +0x003c -> line 897
- *   +0x0058 -> line 898
- *   +0x005c -> line 897
- *   +0x0060 -> line 898
- *   +0x0070 -> line 902
- *   +0x0098 -> line 905
- *   +0x009c -> line 902
- *   +0x00a0 -> line 906
- *   +0x00b0 -> line 909
- *   +0x00b8 -> line 911
- *   +0x00bc -> line 913
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 864–864 */
-/* addr: 0x002ac4f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 864
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 845–848 */
-/* addr: 0x002ac500  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 845
- *   +0x0008 -> line 846
- *   +0x0010 -> line 847
- *   +0x0018 -> line 848
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 794–825 */
-/* addr: 0x002ac530  size: 196 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 794
- *   +0x0004 -> line 804
- *   +0x0008 -> line 794
- *   +0x000c -> line 804
- *   +0x0010 -> line 805
- *   +0x0038 -> line 810
- *   +0x0054 -> line 815
- *   +0x0058 -> line 810
- *   +0x005c -> line 815
- *   +0x0094 -> line 817
- *   +0x0098 -> line 815
- *   +0x009c -> line 821
- *   +0x00a4 -> line 817
- *   +0x00a8 -> line 821
- *   +0x00b0 -> line 823
- *   +0x00b4 -> line 824
- *   +0x00b8 -> line 825
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 731–785 */
-/* addr: 0x002ac600  size: 492 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 731
- *   +0x0004 -> line 739
- *   +0x0008 -> line 731
- *   +0x000c -> line 739
- *   +0x0010 -> line 731
- *   +0x0028 -> line 739
- *   +0x002c -> line 731
- *   +0x0030 -> line 739
- *   +0x0034 -> line 731
- *   +0x0038 -> line 739
- *   +0x003c -> line 731
- *   +0x0040 -> line 739
- *   +0x004c -> line 742
- *   +0x00a4 -> line 744
- *   +0x00a8 -> line 745
- *   +0x00ac -> line 744
- *   +0x00b0 -> line 745
- *   +0x00bc -> line 746
- *   +0x00e4 -> line 747
- *   +0x00ec -> line 751
- *   +0x010c -> line 752
- *   +0x0114 -> line 754
- *   +0x0118 -> line 755
- *   +0x011c -> line 754
- *   +0x0120 -> line 755
- *   +0x012c -> line 756
- *   +0x0134 -> line 760
- *   +0x0140 -> line 761
- *   +0x0150 -> line 764
- *   +0x015c -> line 765
- *   +0x0160 -> line 769
- *   +0x0164 -> line 774
- *   +0x0170 -> line 765
- *   +0x0174 -> line 766
- *   +0x017c -> line 767
- *   +0x0180 -> line 768
- *   +0x0184 -> line 769
- *   +0x0188 -> line 774
- *   +0x0190 -> line 777
- *   +0x019c -> line 780
- *   +0x01a4 -> line 782
- *   +0x01a8 -> line 777
- *   +0x01b8 -> line 782
- *   +0x01c0 -> line 784
- *   +0x01c4 -> line 785
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 705–720 */
-/* addr: 0x002ac7f0  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 705
- *   +0x0004 -> line 710
- *   +0x0008 -> line 705
- *   +0x000c -> line 710
- *   +0x0010 -> line 711
- *   +0x0038 -> line 714
- *   +0x005c -> line 715
- *   +0x0064 -> line 716
- *   +0x0074 -> line 718
- *   +0x0078 -> line 719
- *   +0x007c -> line 720
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 517–565 */
-/* addr: 0x002ac880  size: 492 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 517
- *   +0x0018 -> line 526
- *   +0x0024 -> line 528
- *   +0x00e4 -> line 529
- *   +0x00ec -> line 530
- *   +0x00f0 -> line 534
- *   +0x0110 -> line 535
- *   +0x0120 -> line 546
- *   +0x0124 -> line 547
- *   +0x0128 -> line 546
- *   +0x012c -> line 551
- *   +0x0134 -> line 547
- *   +0x013c -> line 551
- *   +0x0184 -> line 552
- *   +0x018c -> line 553
- *   +0x0190 -> line 552
- *   +0x0194 -> line 553
- *   +0x0198 -> line 556
- *   +0x019c -> line 559
- *   +0x01a8 -> line 552
- *   +0x01b4 -> line 553
- *   +0x01b8 -> line 554
- *   +0x01bc -> line 555
- *   +0x01c0 -> line 559
- *   +0x01c8 -> line 561
- *   +0x01cc -> line 564
- *   +0x01d0 -> line 562
- *   +0x01d4 -> line 565
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 472–476 */
-/* addr: 0x002aca70  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 472
- *   +0x000c -> line 473
- *   +0x0014 -> line 474
- *   +0x002c -> line 476
- *   +0x0030 -> line 475
- *   +0x0034 -> line 476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 166–273 */
 /* addr: 0x002acab0  size: 736 bytes */
@@ -712,6 +391,18 @@ void fn_vUpdateViewportSizesInPixels(GLD_stDevice* p_stDev, GLD_stViewport* p_st
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 472–476 */
+/* addr: 0x002aca70  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 472
+ *   +0x000c -> line 473
+ *   +0x0014 -> line 474
+ *   +0x002c -> line 476
+ *   +0x0030 -> line 475
+ *   +0x0034 -> line 476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice)
 {
     GLI_vReinitViewport();
@@ -719,11 +410,45 @@ int GLD_bClearViewportWithChoice(short hDev, short hVP, short sChoice)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 517–565 */
+/* addr: 0x002ac880  size: 492 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 517
+ *   +0x0018 -> line 526
+ *   +0x0024 -> line 528
+ *   +0x00e4 -> line 529
+ *   +0x00ec -> line 530
+ *   +0x00f0 -> line 534
+ *   +0x0110 -> line 535
+ *   +0x0120 -> line 546
+ *   +0x0124 -> line 547
+ *   +0x0128 -> line 546
+ *   +0x012c -> line 551
+ *   +0x0134 -> line 547
+ *   +0x013c -> line 551
+ *   +0x0184 -> line 552
+ *   +0x018c -> line 553
+ *   +0x0190 -> line 552
+ *   +0x0194 -> line 553
+ *   +0x0198 -> line 556
+ *   +0x019c -> line 559
+ *   +0x01a8 -> line 552
+ *   +0x01b4 -> line 553
+ *   +0x01b8 -> line 554
+ *   +0x01bc -> line 555
+ *   +0x01c0 -> line 559
+ *   +0x01c8 -> line 561
+ *   +0x01cc -> line 564
+ *   +0x01d0 -> line 562
+ *   +0x01d4 -> line 565
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
 {
     static int bFirstTime;
     GLD_stDevice* pstDev;
-    int i;
+    short i;
     int bOk;
 
     if (bFirstTime)
@@ -739,9 +464,15 @@ int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
         if (TMR_fn_wInitLibrary() == 0x7FFF)
         {
             Erm_fn_v_UpdateLastError(0x34, g_ucGLDModuleId, 0, 0x36, -1, 0xFF, 0xFF, "V5.9.0 - August 11th 1997");
-            return 0;
+            bOk = 0;
         }
-        GLD_fn_vInitSmoothSynchro();
+        else
+        {
+            GLD_fn_vInitSmoothSynchro();
+            bOk = 1;
+        }
+        if (!bOk)
+            return 0;
         bFirstTime = 0;
     }
     Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
@@ -772,6 +503,23 @@ int GLD_bCreateDevice(GLD_tdstDeviceAttributes_* pstDevAttrib, short* phDev)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 705–720 */
+/* addr: 0x002ac7f0  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 705
+ *   +0x0004 -> line 710
+ *   +0x0008 -> line 705
+ *   +0x000c -> line 710
+ *   +0x0010 -> line 711
+ *   +0x0038 -> line 714
+ *   +0x005c -> line 715
+ *   +0x0064 -> line 716
+ *   +0x0074 -> line 718
+ *   +0x0078 -> line 719
+ *   +0x007c -> line 720
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib)
 {
     GLD_stDevice* pstDev;
@@ -787,6 +535,57 @@ int GLD_bGetDeviceAttributes(short hDev, GLD_tdstDeviceAttributes_* pstDevAttrib
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 731–785 */
+/* addr: 0x002ac600  size: 492 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 731
+ *   +0x0004 -> line 739
+ *   +0x0008 -> line 731
+ *   +0x000c -> line 739
+ *   +0x0010 -> line 731
+ *   +0x0028 -> line 739
+ *   +0x002c -> line 731
+ *   +0x0030 -> line 739
+ *   +0x0034 -> line 731
+ *   +0x0038 -> line 739
+ *   +0x003c -> line 731
+ *   +0x0040 -> line 739
+ *   +0x004c -> line 742
+ *   +0x00a4 -> line 744
+ *   +0x00a8 -> line 745
+ *   +0x00ac -> line 744
+ *   +0x00b0 -> line 745
+ *   +0x00bc -> line 746
+ *   +0x00e4 -> line 747
+ *   +0x00ec -> line 751
+ *   +0x010c -> line 752
+ *   +0x0114 -> line 754
+ *   +0x0118 -> line 755
+ *   +0x011c -> line 754
+ *   +0x0120 -> line 755
+ *   +0x012c -> line 756
+ *   +0x0134 -> line 760
+ *   +0x0140 -> line 761
+ *   +0x0150 -> line 764
+ *   +0x015c -> line 765
+ *   +0x0160 -> line 769
+ *   +0x0164 -> line 774
+ *   +0x0170 -> line 765
+ *   +0x0174 -> line 766
+ *   +0x017c -> line 767
+ *   +0x0180 -> line 768
+ *   +0x0184 -> line 769
+ *   +0x0188 -> line 774
+ *   +0x0190 -> line 777
+ *   +0x019c -> line 780
+ *   +0x01a4 -> line 782
+ *   +0x01a8 -> line 777
+ *   +0x01b8 -> line 782
+ *   +0x01c0 -> line 784
+ *   +0x01c4 -> line 785
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, short* phVP)
 {
     GLD_stViewport* pstVP;
@@ -837,6 +636,29 @@ int GLD_bCreateViewport(short hDev, GLD_tdstViewportAttributes_* pstViewAttrib, 
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 794–825 */
+/* addr: 0x002ac530  size: 196 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 794
+ *   +0x0004 -> line 804
+ *   +0x0008 -> line 794
+ *   +0x000c -> line 804
+ *   +0x0010 -> line 805
+ *   +0x0038 -> line 810
+ *   +0x0054 -> line 815
+ *   +0x0058 -> line 810
+ *   +0x005c -> line 815
+ *   +0x0094 -> line 817
+ *   +0x0098 -> line 815
+ *   +0x009c -> line 821
+ *   +0x00a4 -> line 817
+ *   +0x00a8 -> line 821
+ *   +0x00b0 -> line 823
+ *   +0x00b4 -> line 824
+ *   +0x00b8 -> line 825
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
 {
     GLD_stDevice* pstDev;
@@ -859,17 +681,56 @@ int GLD_bGetViewportAttributes(int _unused, short hVP, GLD_tdstViewportAttribute
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 845–848 */
+/* addr: 0x002ac500  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 845
+ *   +0x0008 -> line 846
+ *   +0x0010 -> line 847
+ *   +0x0018 -> line 848
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bBeginWriteToDevice(void)
 {
     GLI_vReinitViewport();
     return GLI_DRV_bBeginScene();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 864–864 */
+/* addr: 0x002ac4f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 864
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bEndWriteToDevice(void)
 {
     return GLI_DRV_bEndScene();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 882–913 */
+/* addr: 0x002ac420  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 882
+ *   +0x0004 -> line 893
+ *   +0x0008 -> line 882
+ *   +0x0010 -> line 893
+ *   +0x0014 -> line 894
+ *   +0x003c -> line 897
+ *   +0x0058 -> line 898
+ *   +0x005c -> line 897
+ *   +0x0060 -> line 898
+ *   +0x0070 -> line 902
+ *   +0x0098 -> line 905
+ *   +0x009c -> line 902
+ *   +0x00a0 -> line 906
+ *   +0x00b0 -> line 909
+ *   +0x00b8 -> line 911
+ *   +0x00bc -> line 913
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bRequestWriteToViewport(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib, int* pbCanWrite)
 {
     GLD_stDevice* pstDev;
@@ -892,6 +753,16 @@ int GLD_bRequestWriteToViewport(int _unused, short hVP, GLD_tdstViewportAttribut
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 933–935 */
+/* addr: 0x002ac3e0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 933
+ *   +0x0030 -> line 934
+ *   +0x0034 -> line 933
+ *   +0x0038 -> line 935
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bWriteToViewportFinished(int _unused, short hVP)
 {
     GLD_stDevice* p_stDev;
@@ -907,6 +778,37 @@ int GLD_bWriteToViewportFinished(int _unused, short hVP)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1097–1134 */
+/* addr: 0x002ac2d0  size: 272 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1097
+ *   +0x0004 -> line 1107
+ *   +0x0008 -> line 1097
+ *   +0x001c -> line 1107
+ *   +0x0020 -> line 1108
+ *   +0x0048 -> line 1113
+ *   +0x0064 -> line 1114
+ *   +0x0068 -> line 1113
+ *   +0x006c -> line 1114
+ *   +0x007c -> line 1118
+ *   +0x0094 -> line 1121
+ *   +0x0098 -> line 1118
+ *   +0x00a4 -> line 1121
+ *   +0x00a8 -> line 1118
+ *   +0x00b0 -> line 1121
+ *   +0x00b8 -> line 1122
+ *   +0x00c8 -> line 1123
+ *   +0x00d4 -> line 1125
+ *   +0x00d8 -> line 1126
+ *   +0x00dc -> line 1129
+ *   +0x00e4 -> line 1126
+ *   +0x00e8 -> line 1129
+ *   +0x00f0 -> line 1132
+ *   +0x00f4 -> line 1133
+ *   +0x00f8 -> line 1134
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bSetViewportPosition(int _unused, short hVP, GLD_tdstViewportAttributes_* pstViewAttrib)
 {
     GLD_stDevice* pstDev;
@@ -932,6 +834,33 @@ int GLD_bSetViewportPosition(int _unused, short hVP, GLD_tdstViewportAttributes_
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1144–1183 */
+/* addr: 0x002ac1d0  size: 252 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1144
+ *   +0x0004 -> line 1157
+ *   +0x0008 -> line 1144
+ *   +0x0018 -> line 1157
+ *   +0x001c -> line 1158
+ *   +0x0044 -> line 1164
+ *   +0x0060 -> line 1165
+ *   +0x0064 -> line 1164
+ *   +0x0068 -> line 1165
+ *   +0x0078 -> line 1169
+ *   +0x0090 -> line 1173
+ *   +0x0094 -> line 1169
+ *   +0x00a0 -> line 1173
+ *   +0x00a4 -> line 1169
+ *   +0x00ac -> line 1173
+ *   +0x00b4 -> line 1176
+ *   +0x00d0 -> line 1179
+ *   +0x00d4 -> line 1182
+ *   +0x00d8 -> line 1179
+ *   +0x00e0 -> line 1181
+ *   +0x00e4 -> line 1183
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bDeleteViewport(int _unused, short hVP)
 {
     GLD_stDevice* pstDev;
@@ -955,6 +884,39 @@ int GLD_bDeleteViewport(int _unused, short hVP)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1191–1231 */
+/* addr: 0x002ac0e0  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1191
+ *   +0x0004 -> line 1201
+ *   +0x0008 -> line 1191
+ *   +0x000c -> line 1201
+ *   +0x0010 -> line 1191
+ *   +0x0014 -> line 1201
+ *   +0x0018 -> line 1191
+ *   +0x001c -> line 1201
+ *   +0x0020 -> line 1191
+ *   +0x0024 -> line 1201
+ *   +0x0028 -> line 1191
+ *   +0x002c -> line 1201
+ *   +0x0030 -> line 1191
+ *   +0x0034 -> line 1206
+ *   +0x0040 -> line 1209
+ *   +0x004c -> line 1211
+ *   +0x0058 -> line 1214
+ *   +0x0064 -> line 1216
+ *   +0x0068 -> line 1218
+ *   +0x0070 -> line 1216
+ *   +0x0074 -> line 1218
+ *   +0x008c -> line 1219
+ *   +0x0090 -> line 1222
+ *   +0x00a0 -> line 1225
+ *   +0x00bc -> line 1228
+ *   +0x00c0 -> line 1230
+ *   +0x00c4 -> line 1231
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bDeleteDevice(short hDev)
 {
     GLD_stDevice* pstDev;
@@ -981,6 +943,19 @@ int GLD_bDeleteDevice(short hDev)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1685–1695 */
+/* addr: 0x002ac070  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1685
+ *   +0x001c -> line 1692
+ *   +0x0020 -> line 1685
+ *   +0x0024 -> line 1692
+ *   +0x005c -> line 1694
+ *   +0x0060 -> line 1692
+ *   +0x0064 -> line 1695
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAttrib)
 {
     GLD_stDevice* pstDev;
@@ -996,6 +971,14 @@ int GLD_bGiveSpecificAttributesToViewport(short hDev, short hVP, void* p_vSpecAt
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 1704–1706 */
+/* addr: 0x002ac060  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1704
+ *   +0x0004 -> line 1706
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
 {
     (void)hDevice;
@@ -1003,6 +986,14 @@ int GLD_bSetBackgroundColorForDevice(short hDevice, unsigned int crRGB)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\gld\DevVpt.c lines 313–315 */
+/* addr: 0x002ac030  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 313
+ *   +0x0020 -> line 315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetWaterplane(int _unused, MTH3D_tdstVector_* p_stNormale, float xDistance)
 {
     stWaterPlaneNormale = *p_stNormale;

@@ -1013,44 +1013,6 @@ int GLI_BIG_GLOBALS_gs_st_CameraMatrix;
 int g_p_stCurrentMatrix;
 int GLI_BIG_GLOBALS_p_stObj;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 20–77 */
-/* addr: 0x002db3a0  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 20
- *   +0x0008 -> line 22
- *   +0x000c -> line 23
- *   +0x0010 -> line 20
- *   +0x0014 -> line 22
- *   +0x0018 -> line 23
- *   +0x0034 -> line 26
- *   +0x0038 -> line 27
- *   +0x003c -> line 29
- *   +0x0044 -> line 32
- *   +0x0058 -> line 34
- *   +0x0060 -> line 42
- *   +0x0064 -> line 46
- *   +0x0068 -> line 44
- *   +0x006c -> line 46
- *   +0x0074 -> line 48
- *   +0x0094 -> line 49
- *   +0x00a4 -> line 52
- *   +0x00ac -> line 54
- *   +0x00bc -> line 56
- *   +0x00ec -> line 58
- *   +0x00f0 -> line 60
- *   +0x00f8 -> line 63
- *   +0x0100 -> line 65
- *   +0x0104 -> line 67
- *   +0x0108 -> line 68
- *   +0x0118 -> line 69
- *   +0x0120 -> line 70
- *   +0x0124 -> line 72
- *   +0x013c -> line 73
- *   +0x0154 -> line 74
- *   +0x0168 -> line 77
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 struct SDC_VertexArrays_ {
     unsigned int OptType; /* +0x0 */
     unsigned int NbElements; /* +0x4 */
@@ -1073,429 +1035,21 @@ extern "C" void GLI_vCalculateLightingMatricesGhost(void);
 int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 939–1079 */
-/* addr: 0x002db510  size: 564 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 939
- *   +0x0004 -> line 949
- *   +0x0008 -> line 939
- *   +0x000c -> line 950
- *   +0x0010 -> line 939
- *   +0x0014 -> line 949
- *   +0x0018 -> line 939
- *   +0x0020 -> line 954
- *   +0x0040 -> line 956
- *   +0x0048 -> line 959
- *   +0x004c -> line 961
- *   +0x0050 -> line 964
- *   +0x0054 -> line 966
- *   +0x005c -> line 961
- *   +0x0060 -> line 966
- *   +0x0064 -> line 962
- *   +0x006c -> line 963
- *   +0x0074 -> line 964
- *   +0x0078 -> line 967
- *   +0x007c -> line 968
- *   +0x0080 -> line 969
- *   +0x0084 -> line 970
- *   +0x0088 -> line 971
- *   +0x008c -> line 973
- *   +0x0090 -> line 974
- *   +0x0094 -> line 975
- *   +0x0098 -> line 976
- *   +0x009c -> line 977
- *   +0x00a0 -> line 995
- *   +0x00ac -> line 1003
- *   +0x00b0 -> line 1008
- *   +0x00b8 -> line 997
- *   +0x00c4 -> line 1003
- *   +0x00d8 -> line 1005
- *   +0x00dc -> line 1007
- *   +0x00e8 -> line 1008
- *   +0x00f8 -> line 1010
- *   +0x00fc -> line 1011
- *   +0x0104 -> line 1012
- *   +0x0108 -> line 1015
- *   +0x010c -> line 1016
- *   +0x0110 -> line 1017
- *   +0x0114 -> line 1018
- *   +0x0118 -> line 1019
- *   +0x011c -> line 1020
- *   +0x0120 -> line 1021
- *   +0x0124 -> line 1022
- *   +0x012c -> line 1025
- *   +0x013c -> line 1027
- *   +0x0140 -> line 1029
- *   +0x0148 -> line 1032
- *   +0x014c -> line 1035
- *   +0x0158 -> line 1038
- *   +0x015c -> line 1039
- *   +0x0160 -> line 1042
- *   +0x0170 -> line 1043
- *   +0x0178 -> line 1047
- *   +0x0180 -> line 1048
- *   +0x0188 -> line 1051
- *   +0x0198 -> line 1053
- *   +0x01a8 -> line 1056
- *   +0x01b0 -> line 1059
- *   +0x01bc -> line 1061
- *   +0x01c4 -> line 1065
- *   +0x01cc -> line 1070
- *   +0x01dc -> line 1065
- *   +0x01e0 -> line 1066
- *   +0x01ec -> line 1067
- *   +0x01f4 -> line 1070
- *   +0x01fc -> line 1072
- *   +0x0204 -> line 1075
- *   +0x020c -> line 1076
- *   +0x0220 -> line 1079
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" int GLI_xSetViewportLightsOnOff(int bOnOff);
 extern "C" void GLI_vResetTableOfActiveLightsForChar(int bReset);
 extern "C" void GLI_vAddInternalLightToViewport(GLD_tdstViewportAttributes_* hVpt, MTH3D_tdstVector_* pAmbient, MTH3D_tdstVector_* pDirection, MTH3D_tdstVector_* pColor);
 extern "C" void GLI_vAddInternalLightToViewportGhost(GLD_tdstViewportAttributes_* hVpt, MTH3D_tdstVector_* pAmbient, MTH3D_tdstVector_* pDirection, MTH3D_tdstVector_* pColor);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 792–898 */
-/* addr: 0x002db750  size: 592 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 792
- *   +0x0004 -> line 802
- *   +0x0008 -> line 792
- *   +0x000c -> line 793
- *   +0x0010 -> line 792
- *   +0x0014 -> line 802
- *   +0x0018 -> line 792
- *   +0x001c -> line 795
- *   +0x0020 -> line 794
- *   +0x0024 -> line 793
- *   +0x0028 -> line 794
- *   +0x002c -> line 795
- *   +0x0030 -> line 804
- *   +0x0034 -> line 806
- *   +0x0038 -> line 808
- *   +0x003c -> line 809
- *   +0x0040 -> line 810
- *   +0x0044 -> line 811
- *   +0x0048 -> line 813
- *   +0x004c -> line 814
- *   +0x0050 -> line 815
- *   +0x0054 -> line 820
- *   +0x005c -> line 822
- *   +0x0060 -> line 827
- *   +0x006c -> line 822
- *   +0x0070 -> line 823
- *   +0x0078 -> line 824
- *   +0x0080 -> line 825
- *   +0x0088 -> line 827
- *   +0x0094 -> line 828
- *   +0x00a0 -> line 829
- *   +0x00ac -> line 830
- *   +0x00b8 -> line 833
- *   +0x00d0 -> line 837
- *   +0x00dc -> line 853
- *   +0x00e0 -> line 837
- *   +0x00e4 -> line 850
- *   +0x00e8 -> line 837
- *   +0x00f4 -> line 838
- *   +0x0108 -> line 839
- *   +0x011c -> line 840
- *   +0x0128 -> line 842
- *   +0x0134 -> line 843
- *   +0x0140 -> line 844
- *   +0x014c -> line 845
- *   +0x0150 -> line 847
- *   +0x0158 -> line 848
- *   +0x0160 -> line 849
- *   +0x0168 -> line 853
- *   +0x0174 -> line 854
- *   +0x017c -> line 861
- *   +0x0188 -> line 877
- *   +0x018c -> line 861
- *   +0x0190 -> line 864
- *   +0x0198 -> line 877
- *   +0x019c -> line 868
- *   +0x01a0 -> line 871
- *   +0x01a4 -> line 861
- *   +0x01a8 -> line 871
- *   +0x01ac -> line 861
- *   +0x01b0 -> line 862
- *   +0x01bc -> line 863
- *   +0x01c8 -> line 864
- *   +0x01d4 -> line 866
- *   +0x01d8 -> line 867
- *   +0x01dc -> line 868
- *   +0x01e0 -> line 869
- *   +0x01e4 -> line 871
- *   +0x01e8 -> line 872
- *   +0x01ec -> line 873
- *   +0x01f0 -> line 877
- *   +0x01f8 -> line 880
- *   +0x0204 -> line 883
- *   +0x0208 -> line 884
- *   +0x020c -> line 885
- *   +0x0210 -> line 886
- *   +0x0214 -> line 887
- *   +0x0218 -> line 888
- *   +0x021c -> line 889
- *   +0x0220 -> line 890
- *   +0x0224 -> line 891
- *   +0x0228 -> line 892
- *   +0x022c -> line 893
- *   +0x0230 -> line 894
- *   +0x0234 -> line 895
- *   +0x0238 -> line 896
- *   +0x023c -> line 898
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void sceVu0ScaleVector(float* v0, float* v1, float s);
 extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
 int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4]);
 extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 508–788 */
-/* addr: 0x002db9a0  size: 912 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 508
- *   +0x0004 -> line 525
- *   +0x0008 -> line 508
- *   +0x000c -> line 525
- *   +0x0010 -> line 508
- *   +0x0018 -> line 513
- *   +0x001c -> line 508
- *   +0x0020 -> line 518
- *   +0x0024 -> line 508
- *   +0x0028 -> line 518
- *   +0x002c -> line 508
- *   +0x0030 -> line 516
- *   +0x0034 -> line 508
- *   +0x0038 -> line 516
- *   +0x003c -> line 508
- *   +0x0044 -> line 517
- *   +0x0048 -> line 508
- *   +0x004c -> line 515
- *   +0x0050 -> line 510
- *   +0x0054 -> line 511
- *   +0x0058 -> line 515
- *   +0x005c -> line 517
- *   +0x0060 -> line 527
- *   +0x0064 -> line 529
- *   +0x0068 -> line 531
- *   +0x006c -> line 532
- *   +0x0070 -> line 533
- *   +0x0074 -> line 534
- *   +0x0078 -> line 536
- *   +0x007c -> line 537
- *   +0x0080 -> line 538
- *   +0x0084 -> line 571
- *   +0x008c -> line 573
- *   +0x0090 -> line 578
- *   +0x009c -> line 573
- *   +0x00a0 -> line 574
- *   +0x00a8 -> line 575
- *   +0x00b0 -> line 576
- *   +0x00b8 -> line 578
- *   +0x00c4 -> line 579
- *   +0x00d0 -> line 580
- *   +0x00dc -> line 581
- *   +0x00e8 -> line 616
- *   +0x00ec -> line 612
- *   +0x00f0 -> line 616
- *   +0x00f4 -> line 612
- *   +0x00f8 -> line 616
- *   +0x0108 -> line 623
- *   +0x0130 -> line 625
- *   +0x013c -> line 629
- *   +0x0140 -> line 630
- *   +0x0144 -> line 632
- *   +0x0148 -> line 633
- *   +0x014c -> line 634
- *   +0x0150 -> line 638
- *   +0x015c -> line 639
- *   +0x0168 -> line 640
- *   +0x0174 -> line 641
- *   +0x0180 -> line 662
- *   +0x0184 -> line 663
- *   +0x0188 -> line 664
- *   +0x018c -> line 666
- *   +0x0190 -> line 667
- *   +0x0198 -> line 670
- *   +0x019c -> line 672
- *   +0x01a0 -> line 673
- *   +0x01c0 -> line 675
- *   +0x01c4 -> line 678
- *   +0x01c8 -> line 675
- *   +0x01cc -> line 678
- *   +0x01d4 -> line 680
- *   +0x01fc -> line 683
- *   +0x020c -> line 686
- *   +0x0210 -> line 685
- *   +0x0214 -> line 686
- *   +0x0220 -> line 687
- *   +0x0234 -> line 688
- *   +0x0248 -> line 689
- *   +0x0258 -> line 698
- *   +0x0260 -> line 699
- *   +0x0274 -> line 701
- *   +0x028c -> line 702
- *   +0x0298 -> line 703
- *   +0x02ac -> line 705
- *   +0x02c8 -> line 709
- *   +0x02d8 -> line 711
- *   +0x02e4 -> line 712
- *   +0x02e8 -> line 713
- *   +0x02ec -> line 714
- *   +0x02f0 -> line 716
- *   +0x02f4 -> line 717
- *   +0x02f8 -> line 720
- *   +0x0304 -> line 749
- *   +0x030c -> line 752
- *   +0x0314 -> line 755
- *   +0x0318 -> line 756
- *   +0x031c -> line 769
- *   +0x0328 -> line 772
- *   +0x032c -> line 773
- *   +0x0330 -> line 774
- *   +0x0334 -> line 775
- *   +0x0338 -> line 776
- *   +0x033c -> line 777
- *   +0x0340 -> line 778
- *   +0x0344 -> line 779
- *   +0x0348 -> line 780
- *   +0x034c -> line 781
- *   +0x0350 -> line 782
- *   +0x0354 -> line 783
- *   +0x0358 -> line 784
- *   +0x035c -> line 785
- *   +0x0360 -> line 788
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 419–491 */
-/* addr: 0x002dbd30  size: 356 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 419
- *   +0x0004 -> line 428
- *   +0x0010 -> line 419
- *   +0x0014 -> line 428
- *   +0x0020 -> line 430
- *   +0x0024 -> line 431
- *   +0x0028 -> line 432
- *   +0x002c -> line 433
- *   +0x0030 -> line 434
- *   +0x0034 -> line 438
- *   +0x0044 -> line 439
- *   +0x0048 -> line 440
- *   +0x004c -> line 458
- *   +0x0054 -> line 455
- *   +0x005c -> line 453
- *   +0x0060 -> line 458
- *   +0x0068 -> line 459
- *   +0x0078 -> line 461
- *   +0x0084 -> line 462
- *   +0x0088 -> line 461
- *   +0x008c -> line 481
- *   +0x0090 -> line 462
- *   +0x0094 -> line 481
- *   +0x0098 -> line 461
- *   +0x009c -> line 471
- *   +0x00a0 -> line 481
- *   +0x00b0 -> line 461
- *   +0x00c0 -> line 462
- *   +0x00c4 -> line 464
- *   +0x00cc -> line 465
- *   +0x00d8 -> line 466
- *   +0x00e4 -> line 471
- *   +0x00f0 -> line 472
- *   +0x0100 -> line 473
- *   +0x0104 -> line 476
- *   +0x010c -> line 473
- *   +0x0118 -> line 477
- *   +0x0120 -> line 478
- *   +0x0128 -> line 474
- *   +0x0130 -> line 479
- *   +0x0138 -> line 482
- *   +0x013c -> line 483
- *   +0x0140 -> line 484
- *   +0x0144 -> line 485
- *   +0x0148 -> line 489
- *   +0x0158 -> line 491
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void MAT_fn_vInvert(MAT_tdstTransformation_* _p_stDest, MAT_tdstTransformation_* _p_stSrc);
 extern "C" void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* _p_stDest, MAT_tdstTransformation_* _p_stTransform, MTH3D_tdstVector_* _p_stSrc);
 extern "C" void sceVu0TransposeMatrix(float (*m0)[4], float (*m1)[4]);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 319–413 */
-/* addr: 0x002dbea0  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 319
- *   +0x0004 -> line 323
- *   +0x0008 -> line 319
- *   +0x000c -> line 323
- *   +0x001c -> line 325
- *   +0x0020 -> line 326
- *   +0x0024 -> line 327
- *   +0x0028 -> line 328
- *   +0x002c -> line 329
- *   +0x0030 -> line 330
- *   +0x0034 -> line 331
- *   +0x0038 -> line 334
- *   +0x003c -> line 335
- *   +0x0040 -> line 336
- *   +0x0044 -> line 337
- *   +0x0048 -> line 339
- *   +0x004c -> line 340
- *   +0x0050 -> line 342
- *   +0x0054 -> line 343
- *   +0x0058 -> line 344
- *   +0x005c -> line 345
- *   +0x0060 -> line 346
- *   +0x0064 -> line 355
- *   +0x0078 -> line 357
- *   +0x0084 -> line 358
- *   +0x0088 -> line 359
- *   +0x008c -> line 362
- *   +0x0094 -> line 373
- *   +0x00c0 -> line 382
- *   +0x00c4 -> line 383
- *   +0x00cc -> line 379
- *   +0x00d0 -> line 384
- *   +0x00d4 -> line 382
- *   +0x00d8 -> line 384
- *   +0x00dc -> line 388
- *   +0x00e0 -> line 385
- *   +0x00e4 -> line 387
- *   +0x00e8 -> line 385
- *   +0x00ec -> line 388
- *   +0x00f0 -> line 389
- *   +0x00f8 -> line 379
- *   +0x00fc -> line 390
- *   +0x0100 -> line 379
- *   +0x0104 -> line 382
- *   +0x0108 -> line 390
- *   +0x010c -> line 379
- *   +0x0110 -> line 382
- *   +0x0114 -> line 379
- *   +0x011c -> line 382
- *   +0x0120 -> line 383
- *   +0x012c -> line 384
- *   +0x0138 -> line 385
- *   +0x013c -> line 387
- *   +0x0144 -> line 388
- *   +0x014c -> line 389
- *   +0x0154 -> line 390
- *   +0x015c -> line 409
- *   +0x0164 -> line 412
- *   +0x0168 -> line 413
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void sceVu0ScaleVector(float* v0, float* v1, float s);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 146–310 */
@@ -1655,6 +1209,71 @@ int GLI_vSetSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 319–413 */
+/* addr: 0x002dbea0  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 319
+ *   +0x0004 -> line 323
+ *   +0x0008 -> line 319
+ *   +0x000c -> line 323
+ *   +0x001c -> line 325
+ *   +0x0020 -> line 326
+ *   +0x0024 -> line 327
+ *   +0x0028 -> line 328
+ *   +0x002c -> line 329
+ *   +0x0030 -> line 330
+ *   +0x0034 -> line 331
+ *   +0x0038 -> line 334
+ *   +0x003c -> line 335
+ *   +0x0040 -> line 336
+ *   +0x0044 -> line 337
+ *   +0x0048 -> line 339
+ *   +0x004c -> line 340
+ *   +0x0050 -> line 342
+ *   +0x0054 -> line 343
+ *   +0x0058 -> line 344
+ *   +0x005c -> line 345
+ *   +0x0060 -> line 346
+ *   +0x0064 -> line 355
+ *   +0x0078 -> line 357
+ *   +0x0084 -> line 358
+ *   +0x0088 -> line 359
+ *   +0x008c -> line 362
+ *   +0x0094 -> line 373
+ *   +0x00c0 -> line 382
+ *   +0x00c4 -> line 383
+ *   +0x00cc -> line 379
+ *   +0x00d0 -> line 384
+ *   +0x00d4 -> line 382
+ *   +0x00d8 -> line 384
+ *   +0x00dc -> line 388
+ *   +0x00e0 -> line 385
+ *   +0x00e4 -> line 387
+ *   +0x00e8 -> line 385
+ *   +0x00ec -> line 388
+ *   +0x00f0 -> line 389
+ *   +0x00f8 -> line 379
+ *   +0x00fc -> line 390
+ *   +0x0100 -> line 379
+ *   +0x0104 -> line 382
+ *   +0x0108 -> line 390
+ *   +0x010c -> line 379
+ *   +0x0110 -> line 382
+ *   +0x0114 -> line 379
+ *   +0x011c -> line 382
+ *   +0x0120 -> line 383
+ *   +0x012c -> line 384
+ *   +0x0138 -> line 385
+ *   +0x013c -> line 387
+ *   +0x0144 -> line 388
+ *   +0x014c -> line 389
+ *   +0x0154 -> line 390
+ *   +0x015c -> line 409
+ *   +0x0164 -> line 412
+ *   +0x0168 -> line 413
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, float (*LightPos)[4][4], float (*LightColor)[4][4], float (*AmbientLight)[4])
 {
     MTH3D_tdstVector_ stVect;
@@ -1725,6 +1344,58 @@ int GLI_vSetParaSphericalLight(GLI_tdstLight_* pLight, unsigned int LightID, flo
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 419–491 */
+/* addr: 0x002dbd30  size: 356 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 419
+ *   +0x0004 -> line 428
+ *   +0x0010 -> line 419
+ *   +0x0014 -> line 428
+ *   +0x0020 -> line 430
+ *   +0x0024 -> line 431
+ *   +0x0028 -> line 432
+ *   +0x002c -> line 433
+ *   +0x0030 -> line 434
+ *   +0x0034 -> line 438
+ *   +0x0044 -> line 439
+ *   +0x0048 -> line 440
+ *   +0x004c -> line 458
+ *   +0x0054 -> line 455
+ *   +0x005c -> line 453
+ *   +0x0060 -> line 458
+ *   +0x0068 -> line 459
+ *   +0x0078 -> line 461
+ *   +0x0084 -> line 462
+ *   +0x0088 -> line 461
+ *   +0x008c -> line 481
+ *   +0x0090 -> line 462
+ *   +0x0094 -> line 481
+ *   +0x0098 -> line 461
+ *   +0x009c -> line 471
+ *   +0x00a0 -> line 481
+ *   +0x00b0 -> line 461
+ *   +0x00c0 -> line 462
+ *   +0x00c4 -> line 464
+ *   +0x00cc -> line 465
+ *   +0x00d8 -> line 466
+ *   +0x00e4 -> line 471
+ *   +0x00f0 -> line 472
+ *   +0x0100 -> line 473
+ *   +0x0104 -> line 476
+ *   +0x010c -> line 473
+ *   +0x0118 -> line 477
+ *   +0x0120 -> line 478
+ *   +0x0128 -> line 474
+ *   +0x0130 -> line 479
+ *   +0x0138 -> line 482
+ *   +0x013c -> line 483
+ *   +0x0140 -> line 484
+ *   +0x0144 -> line 485
+ *   +0x0148 -> line 489
+ *   +0x0158 -> line 491
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vCalculateLightingMatricesGhost(void)
 {
     MAT_tdstTransformation_ TempMat;
@@ -1795,6 +1466,124 @@ void GLI_vCalculateLightingMatricesGhost(void)
     sceVu0TransposeMatrix(GLI_g_LightPositions, GLI_g_LightPositions);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 508–788 */
+/* addr: 0x002db9a0  size: 912 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 508
+ *   +0x0004 -> line 525
+ *   +0x0008 -> line 508
+ *   +0x000c -> line 525
+ *   +0x0010 -> line 508
+ *   +0x0018 -> line 513
+ *   +0x001c -> line 508
+ *   +0x0020 -> line 518
+ *   +0x0024 -> line 508
+ *   +0x0028 -> line 518
+ *   +0x002c -> line 508
+ *   +0x0030 -> line 516
+ *   +0x0034 -> line 508
+ *   +0x0038 -> line 516
+ *   +0x003c -> line 508
+ *   +0x0044 -> line 517
+ *   +0x0048 -> line 508
+ *   +0x004c -> line 515
+ *   +0x0050 -> line 510
+ *   +0x0054 -> line 511
+ *   +0x0058 -> line 515
+ *   +0x005c -> line 517
+ *   +0x0060 -> line 527
+ *   +0x0064 -> line 529
+ *   +0x0068 -> line 531
+ *   +0x006c -> line 532
+ *   +0x0070 -> line 533
+ *   +0x0074 -> line 534
+ *   +0x0078 -> line 536
+ *   +0x007c -> line 537
+ *   +0x0080 -> line 538
+ *   +0x0084 -> line 571
+ *   +0x008c -> line 573
+ *   +0x0090 -> line 578
+ *   +0x009c -> line 573
+ *   +0x00a0 -> line 574
+ *   +0x00a8 -> line 575
+ *   +0x00b0 -> line 576
+ *   +0x00b8 -> line 578
+ *   +0x00c4 -> line 579
+ *   +0x00d0 -> line 580
+ *   +0x00dc -> line 581
+ *   +0x00e8 -> line 616
+ *   +0x00ec -> line 612
+ *   +0x00f0 -> line 616
+ *   +0x00f4 -> line 612
+ *   +0x00f8 -> line 616
+ *   +0x0108 -> line 623
+ *   +0x0130 -> line 625
+ *   +0x013c -> line 629
+ *   +0x0140 -> line 630
+ *   +0x0144 -> line 632
+ *   +0x0148 -> line 633
+ *   +0x014c -> line 634
+ *   +0x0150 -> line 638
+ *   +0x015c -> line 639
+ *   +0x0168 -> line 640
+ *   +0x0174 -> line 641
+ *   +0x0180 -> line 662
+ *   +0x0184 -> line 663
+ *   +0x0188 -> line 664
+ *   +0x018c -> line 666
+ *   +0x0190 -> line 667
+ *   +0x0198 -> line 670
+ *   +0x019c -> line 672
+ *   +0x01a0 -> line 673
+ *   +0x01c0 -> line 675
+ *   +0x01c4 -> line 678
+ *   +0x01c8 -> line 675
+ *   +0x01cc -> line 678
+ *   +0x01d4 -> line 680
+ *   +0x01fc -> line 683
+ *   +0x020c -> line 686
+ *   +0x0210 -> line 685
+ *   +0x0214 -> line 686
+ *   +0x0220 -> line 687
+ *   +0x0234 -> line 688
+ *   +0x0248 -> line 689
+ *   +0x0258 -> line 698
+ *   +0x0260 -> line 699
+ *   +0x0274 -> line 701
+ *   +0x028c -> line 702
+ *   +0x0298 -> line 703
+ *   +0x02ac -> line 705
+ *   +0x02c8 -> line 709
+ *   +0x02d8 -> line 711
+ *   +0x02e4 -> line 712
+ *   +0x02e8 -> line 713
+ *   +0x02ec -> line 714
+ *   +0x02f0 -> line 716
+ *   +0x02f4 -> line 717
+ *   +0x02f8 -> line 720
+ *   +0x0304 -> line 749
+ *   +0x030c -> line 752
+ *   +0x0314 -> line 755
+ *   +0x0318 -> line 756
+ *   +0x031c -> line 769
+ *   +0x0328 -> line 772
+ *   +0x032c -> line 773
+ *   +0x0330 -> line 774
+ *   +0x0334 -> line 775
+ *   +0x0338 -> line 776
+ *   +0x033c -> line 777
+ *   +0x0340 -> line 778
+ *   +0x0344 -> line 779
+ *   +0x0348 -> line 780
+ *   +0x034c -> line 781
+ *   +0x0350 -> line 782
+ *   +0x0354 -> line 783
+ *   +0x0358 -> line 784
+ *   +0x035c -> line 785
+ *   +0x0360 -> line 788
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat)
 {
     float Diffuse[4];
@@ -1966,6 +1755,99 @@ void GLI_vCalculateLightingMatrices(GLI_tdstMaterial_* pMat)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 792–898 */
+/* addr: 0x002db750  size: 592 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 792
+ *   +0x0004 -> line 802
+ *   +0x0008 -> line 792
+ *   +0x000c -> line 793
+ *   +0x0010 -> line 792
+ *   +0x0014 -> line 802
+ *   +0x0018 -> line 792
+ *   +0x001c -> line 795
+ *   +0x0020 -> line 794
+ *   +0x0024 -> line 793
+ *   +0x0028 -> line 794
+ *   +0x002c -> line 795
+ *   +0x0030 -> line 804
+ *   +0x0034 -> line 806
+ *   +0x0038 -> line 808
+ *   +0x003c -> line 809
+ *   +0x0040 -> line 810
+ *   +0x0044 -> line 811
+ *   +0x0048 -> line 813
+ *   +0x004c -> line 814
+ *   +0x0050 -> line 815
+ *   +0x0054 -> line 820
+ *   +0x005c -> line 822
+ *   +0x0060 -> line 827
+ *   +0x006c -> line 822
+ *   +0x0070 -> line 823
+ *   +0x0078 -> line 824
+ *   +0x0080 -> line 825
+ *   +0x0088 -> line 827
+ *   +0x0094 -> line 828
+ *   +0x00a0 -> line 829
+ *   +0x00ac -> line 830
+ *   +0x00b8 -> line 833
+ *   +0x00d0 -> line 837
+ *   +0x00dc -> line 853
+ *   +0x00e0 -> line 837
+ *   +0x00e4 -> line 850
+ *   +0x00e8 -> line 837
+ *   +0x00f4 -> line 838
+ *   +0x0108 -> line 839
+ *   +0x011c -> line 840
+ *   +0x0128 -> line 842
+ *   +0x0134 -> line 843
+ *   +0x0140 -> line 844
+ *   +0x014c -> line 845
+ *   +0x0150 -> line 847
+ *   +0x0158 -> line 848
+ *   +0x0160 -> line 849
+ *   +0x0168 -> line 853
+ *   +0x0174 -> line 854
+ *   +0x017c -> line 861
+ *   +0x0188 -> line 877
+ *   +0x018c -> line 861
+ *   +0x0190 -> line 864
+ *   +0x0198 -> line 877
+ *   +0x019c -> line 868
+ *   +0x01a0 -> line 871
+ *   +0x01a4 -> line 861
+ *   +0x01a8 -> line 871
+ *   +0x01ac -> line 861
+ *   +0x01b0 -> line 862
+ *   +0x01bc -> line 863
+ *   +0x01c8 -> line 864
+ *   +0x01d4 -> line 866
+ *   +0x01d8 -> line 867
+ *   +0x01dc -> line 868
+ *   +0x01e0 -> line 869
+ *   +0x01e4 -> line 871
+ *   +0x01e8 -> line 872
+ *   +0x01ec -> line 873
+ *   +0x01f0 -> line 877
+ *   +0x01f8 -> line 880
+ *   +0x0204 -> line 883
+ *   +0x0208 -> line 884
+ *   +0x020c -> line 885
+ *   +0x0210 -> line 886
+ *   +0x0214 -> line 887
+ *   +0x0218 -> line 888
+ *   +0x021c -> line 889
+ *   +0x0220 -> line 890
+ *   +0x0224 -> line 891
+ *   +0x0228 -> line 892
+ *   +0x022c -> line 893
+ *   +0x0230 -> line 894
+ *   +0x0234 -> line 895
+ *   +0x0238 -> line 896
+ *   +0x023c -> line 898
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_tdstMaterial_* pMat)
 {
     float Diffuse[4];
@@ -2062,6 +1944,85 @@ void GLI_vCalculateLightingMatricesForCheap(HIE_tdstSuperObject_* _hSprObj, GLI_
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 939–1079 */
+/* addr: 0x002db510  size: 564 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 939
+ *   +0x0004 -> line 949
+ *   +0x0008 -> line 939
+ *   +0x000c -> line 950
+ *   +0x0010 -> line 939
+ *   +0x0014 -> line 949
+ *   +0x0018 -> line 939
+ *   +0x0020 -> line 954
+ *   +0x0040 -> line 956
+ *   +0x0048 -> line 959
+ *   +0x004c -> line 961
+ *   +0x0050 -> line 964
+ *   +0x0054 -> line 966
+ *   +0x005c -> line 961
+ *   +0x0060 -> line 966
+ *   +0x0064 -> line 962
+ *   +0x006c -> line 963
+ *   +0x0074 -> line 964
+ *   +0x0078 -> line 967
+ *   +0x007c -> line 968
+ *   +0x0080 -> line 969
+ *   +0x0084 -> line 970
+ *   +0x0088 -> line 971
+ *   +0x008c -> line 973
+ *   +0x0090 -> line 974
+ *   +0x0094 -> line 975
+ *   +0x0098 -> line 976
+ *   +0x009c -> line 977
+ *   +0x00a0 -> line 995
+ *   +0x00ac -> line 1003
+ *   +0x00b0 -> line 1008
+ *   +0x00b8 -> line 997
+ *   +0x00c4 -> line 1003
+ *   +0x00d8 -> line 1005
+ *   +0x00dc -> line 1007
+ *   +0x00e8 -> line 1008
+ *   +0x00f8 -> line 1010
+ *   +0x00fc -> line 1011
+ *   +0x0104 -> line 1012
+ *   +0x0108 -> line 1015
+ *   +0x010c -> line 1016
+ *   +0x0110 -> line 1017
+ *   +0x0114 -> line 1018
+ *   +0x0118 -> line 1019
+ *   +0x011c -> line 1020
+ *   +0x0120 -> line 1021
+ *   +0x0124 -> line 1022
+ *   +0x012c -> line 1025
+ *   +0x013c -> line 1027
+ *   +0x0140 -> line 1029
+ *   +0x0148 -> line 1032
+ *   +0x014c -> line 1035
+ *   +0x0158 -> line 1038
+ *   +0x015c -> line 1039
+ *   +0x0160 -> line 1042
+ *   +0x0170 -> line 1043
+ *   +0x0178 -> line 1047
+ *   +0x0180 -> line 1048
+ *   +0x0188 -> line 1051
+ *   +0x0198 -> line 1053
+ *   +0x01a8 -> line 1056
+ *   +0x01b0 -> line 1059
+ *   +0x01bc -> line 1061
+ *   +0x01c4 -> line 1065
+ *   +0x01cc -> line 1070
+ *   +0x01dc -> line 1065
+ *   +0x01e0 -> line 1066
+ *   +0x01ec -> line 1067
+ *   +0x01f4 -> line 1070
+ *   +0x01fc -> line 1072
+ *   +0x0204 -> line 1075
+ *   +0x020c -> line 1076
+ *   +0x0220 -> line 1079
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int bBoundingSphere, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
     GLI_tdstLight_** ppLights = (GLI_tdstLight_**)gs_aDEF_p_CurrentListOfLight;
@@ -2183,6 +2144,44 @@ void GLIPS2_vManageLightsForThisCharacter(GLD_tdstViewportAttributes_* _hVpt, HI
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLLights.cpp lines 20–77 */
+/* addr: 0x002db3a0  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 20
+ *   +0x0008 -> line 22
+ *   +0x000c -> line 23
+ *   +0x0010 -> line 20
+ *   +0x0014 -> line 22
+ *   +0x0018 -> line 23
+ *   +0x0034 -> line 26
+ *   +0x0038 -> line 27
+ *   +0x003c -> line 29
+ *   +0x0044 -> line 32
+ *   +0x0058 -> line 34
+ *   +0x0060 -> line 42
+ *   +0x0064 -> line 46
+ *   +0x0068 -> line 44
+ *   +0x006c -> line 46
+ *   +0x0074 -> line 48
+ *   +0x0094 -> line 49
+ *   +0x00a4 -> line 52
+ *   +0x00ac -> line 54
+ *   +0x00bc -> line 56
+ *   +0x00ec -> line 58
+ *   +0x00f0 -> line 60
+ *   +0x00f8 -> line 63
+ *   +0x0100 -> line 65
+ *   +0x0104 -> line 67
+ *   +0x0108 -> line 68
+ *   +0x0118 -> line 69
+ *   +0x0120 -> line 70
+ *   +0x0124 -> line 72
+ *   +0x013c -> line 73
+ *   +0x0154 -> line 74
+ *   +0x0168 -> line 77
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vGetVertexPointersFromSDCStructure(SDC_VertexArrays_* pSDC, unsigned int iElement, float (**pVOrg)[4], float (**pUV1)[4], float (**pUV2)[4], float (**pUVChrome)[4], float (**pNormals)[4])
 {
     unsigned int NbVertices;

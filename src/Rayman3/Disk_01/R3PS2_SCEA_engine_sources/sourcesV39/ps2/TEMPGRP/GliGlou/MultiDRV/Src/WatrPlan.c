@@ -104,40 +104,6 @@ int gs_lXBase;
 float a64_fSinTable[512];
 char g_cSinusEffectState;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 118–152 */
-/* addr: 0x002ab670  size: 484 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 118
- *   +0x0004 -> line 124
- *   +0x0008 -> line 118
- *   +0x001c -> line 124
- *   +0x0028 -> line 125
- *   +0x0030 -> line 126
- *   +0x0038 -> line 129
- *   +0x0048 -> line 130
- *   +0x0054 -> line 131
- *   +0x005c -> line 134
- *   +0x0064 -> line 135
- *   +0x0068 -> line 137
- *   +0x0074 -> line 138
- *   +0x007c -> line 140
- *   +0x0080 -> line 142
- *   +0x0098 -> line 144
- *   +0x009c -> line 145
- *   +0x00ac -> line 144
- *   +0x00b4 -> line 145
- *   +0x0178 -> line 142
- *   +0x0180 -> line 145
- *   +0x0184 -> line 146
- *   +0x0190 -> line 145
- *   +0x01a8 -> line 146
- *   +0x01c0 -> line 148
- *   +0x01c4 -> line 149
- *   +0x01c8 -> line 151
- *   +0x01cc -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
 float powf(float x, float y);
 float cosf(float x);
@@ -176,270 +142,48 @@ void GLI_vWaterplaneDisable2DSinus(void);
 void GLI_vSetWaterplaneOff(void);
 void GLI_vSetWaterplaneOn(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1173–1184 */
-/* addr: 0x002ab860  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1173
- *   +0x0004 -> line 1178
- *   +0x0008 -> line 1173
- *   +0x000c -> line 1178
- *   +0x0010 -> line 1179
- *   +0x0018 -> line 1178
- *   +0x0020 -> line 1179
- *   +0x0028 -> line 1174
- *   +0x0030 -> line 1175
- *   +0x0038 -> line 1176
- *   +0x0050 -> line 1173
- *   +0x0058 -> line 1174
- *   +0x0060 -> line 1175
- *   +0x0068 -> line 1176
- *   +0x00e0 -> line 1178
- *   +0x00f0 -> line 1179
- *   +0x0100 -> line 1180
- *   +0x0104 -> line 1181
- *   +0x0108 -> line 1182
- *   +0x010c -> line 1180
- *   +0x0110 -> line 1181
- *   +0x0114 -> line 1184
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1159–1169 */
-/* addr: 0x002ab980  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1159
- *   +0x0004 -> line 1164
- *   +0x0008 -> line 1159
- *   +0x000c -> line 1164
- *   +0x0010 -> line 1165
- *   +0x0018 -> line 1164
- *   +0x0020 -> line 1165
- *   +0x0028 -> line 1160
- *   +0x0030 -> line 1161
- *   +0x0038 -> line 1162
- *   +0x0050 -> line 1159
- *   +0x0058 -> line 1160
- *   +0x0060 -> line 1161
- *   +0x0068 -> line 1162
- *   +0x00e0 -> line 1164
- *   +0x00f0 -> line 1165
- *   +0x0100 -> line 1166
- *   +0x0104 -> line 1167
- *   +0x0108 -> line 1168
- *   +0x010c -> line 1166
- *   +0x0110 -> line 1167
- *   +0x0114 -> line 1169
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1154–1154 */
-/* addr: 0x002abaa0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1154
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1147–1150 */
-/* addr: 0x002abab0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1147
- *   +0x0008 -> line 1148
- *   +0x0010 -> line 1149
- *   +0x0014 -> line 1150
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1141–1144 */
-/* addr: 0x002abad0  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1141
- *   +0x0008 -> line 1142
- *   +0x0010 -> line 1143
- *   +0x0014 -> line 1144
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1109–1137 */
-/* addr: 0x002abaf0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1124
- *   +0x000c -> line 1125
- *   +0x0010 -> line 1124
- *   +0x0014 -> line 1109
- *   +0x0018 -> line 1124
- *   +0x001c -> line 1125
- *   +0x0020 -> line 1124
- *   +0x0024 -> line 1121
- *   +0x0028 -> line 1127
- *   +0x002c -> line 1124
- *   +0x0030 -> line 1125
- *   +0x0038 -> line 1124
- *   +0x0044 -> line 1127
- *   +0x0048 -> line 1124
- *   +0x004c -> line 1125
- *   +0x0050 -> line 1127
- *   +0x0054 -> line 1125
- *   +0x0058 -> line 1127
- *   +0x005c -> line 1125
- *   +0x0064 -> line 1127
- *   +0x0068 -> line 1125
- *   +0x006c -> line 1127
- *   +0x0070 -> line 1128
- *   +0x0074 -> line 1127
- *   +0x0078 -> line 1125
- *   +0x007c -> line 1128
- *   +0x0080 -> line 1127
- *   +0x0088 -> line 1125
- *   +0x008c -> line 1130
- *   +0x0090 -> line 1128
- *   +0x0098 -> line 1130
- *   +0x009c -> line 1128
- *   +0x00a4 -> line 1130
- *   +0x00a8 -> line 1128
- *   +0x00ac -> line 1125
- *   +0x00b0 -> line 1131
- *   +0x00b4 -> line 1130
- *   +0x00c0 -> line 1128
- *   +0x00c4 -> line 1130
- *   +0x00c8 -> line 1131
- *   +0x00cc -> line 1130
- *   +0x00d0 -> line 1128
- *   +0x00d4 -> line 1131
- *   +0x00d8 -> line 1128
- *   +0x00dc -> line 1131
- *   +0x00f4 -> line 1133
- *   +0x00f8 -> line 1131
- *   +0x00fc -> line 1134
- *   +0x0100 -> line 1135
- *   +0x0104 -> line 1137
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1055–1075 */
-/* addr: 0x002abc00  size: 336 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1055
- *   +0x000c -> line 1058
- *   +0x002c -> line 1060
- *   +0x0064 -> line 1062
- *   +0x006c -> line 1060
- *   +0x0070 -> line 1062
- *   +0x007c -> line 1063
- *   +0x0084 -> line 1062
- *   +0x0088 -> line 1063
- *   +0x0094 -> line 1064
- *   +0x009c -> line 1063
- *   +0x00a0 -> line 1064
- *   +0x00ac -> line 1066
- *   +0x00b4 -> line 1064
- *   +0x00b8 -> line 1066
- *   +0x00c4 -> line 1067
- *   +0x00cc -> line 1066
- *   +0x00d0 -> line 1067
- *   +0x00dc -> line 1068
- *   +0x00e4 -> line 1067
- *   +0x00e8 -> line 1068
- *   +0x00f4 -> line 1062
- *   +0x0100 -> line 1068
- *   +0x0104 -> line 1063
- *   +0x0110 -> line 1064
- *   +0x011c -> line 1066
- *   +0x0128 -> line 1067
- *   +0x0134 -> line 1068
- *   +0x0140 -> line 1075
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char fn_bIsEngineInPause(void);
 unsigned char EngineIsFrozen(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 982–983 */
-/* addr: 0x002abd50  size: 40 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 348–349 */
+/* addr: 0x002ac020  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 982
- *   +0x0020 -> line 983
+ *   +0x0000 -> line 348
+ *   +0x0008 -> line 349
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 970–973 */
-/* addr: 0x002abd80  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 970
- *   +0x0008 -> line 971
- *   +0x0010 -> line 972
- *   +0x0014 -> line 973
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void GLI_vSetWaterplaneOn(void)
+{
+    bWaterPlaneState |= 1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 963–966 */
-/* addr: 0x002abda0  size: 28 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 358–359 */
+/* addr: 0x002ac000  size: 20 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 963
- *   +0x0008 -> line 964
- *   +0x0010 -> line 965
- *   +0x0014 -> line 966
+ *   +0x0000 -> line 358
+ *   +0x000c -> line 359
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void GLI_vSetWaterplaneOff(void)
+{
+    bWaterPlaneState &= ~1;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 952–953 */
-/* addr: 0x002abdc0  size: 12 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 384–385 */
+/* addr: 0x002abff0  size: 16 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 952
- *   +0x0004 -> line 953
+ *   +0x0000 -> line 384
+ *   +0x0008 -> line 385
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 941–941 */
-/* addr: 0x002abdd0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 941
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 936–936 */
-/* addr: 0x002abde0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 936
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 926–926 */
-/* addr: 0x002abdf0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 926
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 921–921 */
-/* addr: 0x002abe00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 921
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 905–909 */
-/* addr: 0x002abe10  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 905
- *   +0x0004 -> line 906
- *   +0x0008 -> line 909
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void GLI_vWaterplaneDisable2DSinus(void)
+{
+    bWaterPlaneState |= 0x20;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 832–893 */
 /* addr: 0x002abe20  size: 456 bytes */
@@ -529,49 +273,6 @@ unsigned char EngineIsFrozen(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 384–385 */
-/* addr: 0x002abff0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 384
- *   +0x0008 -> line 385
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 358–359 */
-/* addr: 0x002ac000  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 358
- *   +0x000c -> line 359
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 348–349 */
-/* addr: 0x002ac020  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 348
- *   +0x0008 -> line 349
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void GLI_vSetWaterplaneOn(void)
-{
-    bWaterPlaneState |= 1;
-}
-
-void GLI_vSetWaterplaneOff(void)
-{
-    bWaterPlaneState &= ~1;
-}
-
-void GLI_vWaterplaneDisable2DSinus(void)
-{
-    bWaterPlaneState |= 0x20;
-}
-
 void GLI_vInitWaterplaneModule(void)
 {
     int lCounter;
@@ -629,6 +330,15 @@ void GLI_vInitWaterplaneModule(void)
     g_cSinusEffectFlag = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 905–909 */
+/* addr: 0x002abe10  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 905
+ *   +0x0004 -> line 906
+ *   +0x0008 -> line 909
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_vSetSinusPreMultiplier(float X, float Y, float Z)
 {
     g_xSinusSizeMulx.f = X;
@@ -636,31 +346,77 @@ void GLI_fn_vSetSinusPreMultiplier(float X, float Y, float Z)
     g_xSinusSizeMulz.f = Z;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 921–921 */
+/* addr: 0x002abe00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_SinusEffect_vSetState(char _cState)
 {
     g_cSinusEffectState = _cState;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 926–926 */
+/* addr: 0x002abdf0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 926
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 char GLI_fn_SinusEffect_vGetState(void)
 {
     return g_cSinusEffectState;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 936–936 */
+/* addr: 0x002abde0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 936
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_SinusEffect_vSetFlag(char _cFlag)
 {
     g_cSinusEffectFlag = _cFlag;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 941–941 */
+/* addr: 0x002abdd0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 941
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 char GLI_fn_SinusEffect_vGetFlag(void)
 {
     return g_cSinusEffectFlag;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 952–953 */
+/* addr: 0x002abdc0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 952
+ *   +0x0004 -> line 953
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 char GLI_fn_SinusEffect_cIsSecondViewportAffected(void)
 {
     return g_cSinusEffectFlag & 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 963–966 */
+/* addr: 0x002abda0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 963
+ *   +0x0008 -> line 964
+ *   +0x0010 -> line 965
+ *   +0x0014 -> line 966
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_SinusEffect_vSetFreqMesh(int _lXFreq, int _lYFreq, int _lZFreq)
 {
     a3_lSinEffectFreqMesh[0] = _lXFreq;
@@ -668,6 +424,16 @@ void GLI_fn_SinusEffect_vSetFreqMesh(int _lXFreq, int _lYFreq, int _lZFreq)
     a3_lSinEffectFreqMesh[2] = _lZFreq;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 970–973 */
+/* addr: 0x002abd80  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 970
+ *   +0x0008 -> line 971
+ *   +0x0010 -> line 972
+ *   +0x0014 -> line 973
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_SinusEffect_vSetFreqRLI(int _lXFreq, int _lYFreq, int _lZFreq)
 {
     a3_lSinEffectFreqRLI[0] = _lXFreq;
@@ -675,6 +441,14 @@ void GLI_fn_SinusEffect_vSetFreqRLI(int _lXFreq, int _lYFreq, int _lZFreq)
     a3_lSinEffectFreqRLI[2] = _lZFreq;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 982–983 */
+/* addr: 0x002abd50  size: 40 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 982
+ *   +0x0020 -> line 983
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_fn_SinusEffect_vSetAmplitude(GLI_tdstSinEffectAmp_* _p_stAmpVector)
 {
     stSinEffectAmp.l.xX = _p_stAmpVector->l.xX;
@@ -682,6 +456,41 @@ void GLI_fn_SinusEffect_vSetAmplitude(GLI_tdstSinEffectAmp_* _p_stAmpVector)
     stSinEffectAmp.l.xZ = _p_stAmpVector->l.xZ;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1055–1075 */
+/* addr: 0x002abc00  size: 336 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1055
+ *   +0x000c -> line 1058
+ *   +0x002c -> line 1060
+ *   +0x0064 -> line 1062
+ *   +0x006c -> line 1060
+ *   +0x0070 -> line 1062
+ *   +0x007c -> line 1063
+ *   +0x0084 -> line 1062
+ *   +0x0088 -> line 1063
+ *   +0x0094 -> line 1064
+ *   +0x009c -> line 1063
+ *   +0x00a0 -> line 1064
+ *   +0x00ac -> line 1066
+ *   +0x00b4 -> line 1064
+ *   +0x00b8 -> line 1066
+ *   +0x00c4 -> line 1067
+ *   +0x00cc -> line 1066
+ *   +0x00d0 -> line 1067
+ *   +0x00dc -> line 1068
+ *   +0x00e4 -> line 1067
+ *   +0x00e8 -> line 1068
+ *   +0x00f4 -> line 1062
+ *   +0x0100 -> line 1068
+ *   +0x0104 -> line 1063
+ *   +0x0110 -> line 1064
+ *   +0x011c -> line 1066
+ *   +0x0128 -> line 1067
+ *   +0x0134 -> line 1068
+ *   +0x0140 -> line 1075
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vUpdateEffectData(unsigned int _ulDeltaT)
 {
     float xFactor;
@@ -700,6 +509,62 @@ void GLI_vUpdateEffectData(unsigned int _ulDeltaT)
     a3_xSinEffectBaseRLI[2] += (float)a3_lSinEffectFreqRLI[2] * xFactor;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1109–1137 */
+/* addr: 0x002abaf0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1124
+ *   +0x000c -> line 1125
+ *   +0x0010 -> line 1124
+ *   +0x0014 -> line 1109
+ *   +0x0018 -> line 1124
+ *   +0x001c -> line 1125
+ *   +0x0020 -> line 1124
+ *   +0x0024 -> line 1121
+ *   +0x0028 -> line 1127
+ *   +0x002c -> line 1124
+ *   +0x0030 -> line 1125
+ *   +0x0038 -> line 1124
+ *   +0x0044 -> line 1127
+ *   +0x0048 -> line 1124
+ *   +0x004c -> line 1125
+ *   +0x0050 -> line 1127
+ *   +0x0054 -> line 1125
+ *   +0x0058 -> line 1127
+ *   +0x005c -> line 1125
+ *   +0x0064 -> line 1127
+ *   +0x0068 -> line 1125
+ *   +0x006c -> line 1127
+ *   +0x0070 -> line 1128
+ *   +0x0074 -> line 1127
+ *   +0x0078 -> line 1125
+ *   +0x007c -> line 1128
+ *   +0x0080 -> line 1127
+ *   +0x0088 -> line 1125
+ *   +0x008c -> line 1130
+ *   +0x0090 -> line 1128
+ *   +0x0098 -> line 1130
+ *   +0x009c -> line 1128
+ *   +0x00a4 -> line 1130
+ *   +0x00a8 -> line 1128
+ *   +0x00ac -> line 1125
+ *   +0x00b0 -> line 1131
+ *   +0x00b4 -> line 1130
+ *   +0x00c0 -> line 1128
+ *   +0x00c4 -> line 1130
+ *   +0x00c8 -> line 1131
+ *   +0x00cc -> line 1130
+ *   +0x00d0 -> line 1128
+ *   +0x00d4 -> line 1131
+ *   +0x00d8 -> line 1128
+ *   +0x00dc -> line 1131
+ *   +0x00f4 -> line 1133
+ *   +0x00f8 -> line 1131
+ *   +0x00fc -> line 1134
+ *   +0x0100 -> line 1135
+ *   +0x0104 -> line 1137
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSinusEffetOn3DVertex(MTH3D_tdstVector_* p_stVertex3D)
 {
     float fFreq;
@@ -719,6 +584,16 @@ void GLI_vSinusEffetOn3DVertex(MTH3D_tdstVector_* p_stVertex3D)
     p_stVertex3D->xZ = xZ;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1141–1144 */
+/* addr: 0x002abad0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1141
+ *   +0x0008 -> line 1142
+ *   +0x0010 -> line 1143
+ *   +0x0014 -> line 1144
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetSinusEffectOnRLIAmp(float xRed, float xGreen, float xBlue)
 {
     a3_lSinRLIAmp[0] = xRed;
@@ -726,6 +601,16 @@ void GLI_vSetSinusEffectOnRLIAmp(float xRed, float xGreen, float xBlue)
     a3_lSinRLIAmp[2] = xBlue;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1147–1150 */
+/* addr: 0x002abab0  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1147
+ *   +0x0008 -> line 1148
+ *   +0x0010 -> line 1149
+ *   +0x0014 -> line 1150
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetSinusEffectOnRLIBase(float xRed, float xGreen, float xBlue)
 {
     a3_lSinRLIBase[0] = xRed;
@@ -733,11 +618,46 @@ void GLI_vSetSinusEffectOnRLIBase(float xRed, float xGreen, float xBlue)
     a3_lSinRLIBase[2] = xBlue;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1154–1154 */
+/* addr: 0x002abaa0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1154
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetSinEffetBase(float xBase)
 {
     GLI_fSinEffectBase = xBase;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1159–1169 */
+/* addr: 0x002ab980  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1159
+ *   +0x0004 -> line 1164
+ *   +0x0008 -> line 1159
+ *   +0x000c -> line 1164
+ *   +0x0010 -> line 1165
+ *   +0x0018 -> line 1164
+ *   +0x0020 -> line 1165
+ *   +0x0028 -> line 1160
+ *   +0x0030 -> line 1161
+ *   +0x0038 -> line 1162
+ *   +0x0050 -> line 1159
+ *   +0x0058 -> line 1160
+ *   +0x0060 -> line 1161
+ *   +0x0068 -> line 1162
+ *   +0x00e0 -> line 1164
+ *   +0x00f0 -> line 1165
+ *   +0x0100 -> line 1166
+ *   +0x0104 -> line 1167
+ *   +0x0108 -> line 1168
+ *   +0x010c -> line 1166
+ *   +0x0110 -> line 1167
+ *   +0x0114 -> line 1169
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSaveSinusContext(void)
 {
     int i;
@@ -757,6 +677,34 @@ void GLI_vSaveSinusContext(void)
     g_cSinusEffectFlagSaved = g_cSinusEffectFlag;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 1173–1184 */
+/* addr: 0x002ab860  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1173
+ *   +0x0004 -> line 1178
+ *   +0x0008 -> line 1173
+ *   +0x000c -> line 1178
+ *   +0x0010 -> line 1179
+ *   +0x0018 -> line 1178
+ *   +0x0020 -> line 1179
+ *   +0x0028 -> line 1174
+ *   +0x0030 -> line 1175
+ *   +0x0038 -> line 1176
+ *   +0x0050 -> line 1173
+ *   +0x0058 -> line 1174
+ *   +0x0060 -> line 1175
+ *   +0x0068 -> line 1176
+ *   +0x00e0 -> line 1178
+ *   +0x00f0 -> line 1179
+ *   +0x0100 -> line 1180
+ *   +0x0104 -> line 1181
+ *   +0x0108 -> line 1182
+ *   +0x010c -> line 1180
+ *   +0x0110 -> line 1181
+ *   +0x0114 -> line 1184
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vRestoreSinusContext(void)
 {
     int i;
@@ -776,6 +724,40 @@ void GLI_vRestoreSinusContext(void)
     g_cSinusEffectFlag = g_cSinusEffectFlagSaved;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\WatrPlan.c lines 118–152 */
+/* addr: 0x002ab670  size: 484 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 118
+ *   +0x0004 -> line 124
+ *   +0x0008 -> line 118
+ *   +0x001c -> line 124
+ *   +0x0028 -> line 125
+ *   +0x0030 -> line 126
+ *   +0x0038 -> line 129
+ *   +0x0048 -> line 130
+ *   +0x0054 -> line 131
+ *   +0x005c -> line 134
+ *   +0x0064 -> line 135
+ *   +0x0068 -> line 137
+ *   +0x0074 -> line 138
+ *   +0x007c -> line 140
+ *   +0x0080 -> line 142
+ *   +0x0098 -> line 144
+ *   +0x009c -> line 145
+ *   +0x00ac -> line 144
+ *   +0x00b4 -> line 145
+ *   +0x0178 -> line 142
+ *   +0x0180 -> line 145
+ *   +0x0184 -> line 146
+ *   +0x0190 -> line 145
+ *   +0x01a8 -> line 146
+ *   +0x01c0 -> line 148
+ *   +0x01c4 -> line 149
+ *   +0x01c8 -> line 151
+ *   +0x01cc -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 GEO_tdstVisualSet_* GLI_p_stCreateTMPVisualSet(int lNbLOD)
 {
     GEO_tdstGeometricObject_** ppGeo;

@@ -1239,21 +1239,6 @@ float myColorRange2[4];
 extern DelayedFrees_ GLI_g_DelayedFrees[2000];
 extern int DelayedFreesInit;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 92–98 */
-/* addr: 0x002cc110  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 92
- *   +0x0004 -> line 93
- *   +0x0008 -> line 92
- *   +0x0010 -> line 95
- *   +0x001c -> line 96
- *   +0x0020 -> line 95
- *   +0x0024 -> line 96
- *   +0x006c -> line 98
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void GLI_vInitDelayedFrees(void);
@@ -1263,222 +1248,59 @@ void GLI_vDesinitBigBossLifeBars(void);
 void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha);
 void GLI_vDesinitLifeBars(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 3068–3328 */
-/* addr: 0x002cc190  size: 2648 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2676–2676 */
+/* addr: 0x002cdc00  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3068
- *   +0x0044 -> line 3083
- *   +0x0050 -> line 3085
- *   +0x0054 -> line 3110
- *   +0x005c -> line 3113
- *   +0x006c -> line 3116
- *   +0x0088 -> line 3117
- *   +0x0090 -> line 3116
- *   +0x009c -> line 3117
- *   +0x00a0 -> line 3116
- *   +0x00b0 -> line 3117
- *   +0x00b4 -> line 3116
- *   +0x00b8 -> line 3117
- *   +0x00bc -> line 3116
- *   +0x00c0 -> line 3117
- *   +0x00d0 -> line 3118
- *   +0x00d8 -> line 3116
- *   +0x00f0 -> line 3117
- *   +0x0110 -> line 3118
- *   +0x0114 -> line 3117
- *   +0x0120 -> line 3118
- *   +0x0128 -> line 3124
- *   +0x0138 -> line 3125
- *   +0x0140 -> line 3124
- *   +0x0144 -> line 3131
- *   +0x0148 -> line 3124
- *   +0x014c -> line 3131
- *   +0x0150 -> line 3124
- *   +0x0168 -> line 3128
- *   +0x016c -> line 3124
- *   +0x0178 -> line 3125
- *   +0x017c -> line 3128
- *   +0x0180 -> line 3126
- *   +0x0184 -> line 3131
- *   +0x0188 -> line 3125
- *   +0x018c -> line 3131
- *   +0x0190 -> line 3125
- *   +0x0194 -> line 3126
- *   +0x0198 -> line 3131
- *   +0x01d0 -> line 3133
- *   +0x01d4 -> line 3136
- *   +0x01d8 -> line 3133
- *   +0x01dc -> line 3166
- *   +0x01e0 -> line 3136
- *   +0x01e4 -> line 3151
- *   +0x01ec -> line 3133
- *   +0x01f4 -> line 3151
- *   +0x01f8 -> line 3135
- *   +0x0200 -> line 3133
- *   +0x0208 -> line 3138
- *   +0x0210 -> line 3133
- *   +0x0214 -> line 3136
- *   +0x0218 -> line 3138
- *   +0x0220 -> line 3143
- *   +0x0228 -> line 3144
- *   +0x0230 -> line 3145
- *   +0x0238 -> line 3146
- *   +0x0240 -> line 3151
- *   +0x0250 -> line 3152
- *   +0x0260 -> line 3157
- *   +0x0268 -> line 3152
- *   +0x026c -> line 3143
- *   +0x0270 -> line 3159
- *   +0x0278 -> line 3143
- *   +0x027c -> line 3159
- *   +0x0284 -> line 3143
- *   +0x0288 -> line 3151
- *   +0x028c -> line 3159
- *   +0x0290 -> line 3138
- *   +0x0298 -> line 3144
- *   +0x02a4 -> line 3145
- *   +0x02a8 -> line 3146
- *   +0x02ac -> line 3151
- *   +0x02bc -> line 3146
- *   +0x02c0 -> line 3138
- *   +0x02c4 -> line 3146
- *   +0x02c8 -> line 3157
- *   +0x02cc -> line 3145
- *   +0x02d0 -> line 3152
- *   +0x02dc -> line 3157
- *   +0x02e8 -> line 3159
- *   +0x02ec -> line 3145
- *   +0x02f0 -> line 3159
- *   +0x02f8 -> line 3166
- *   +0x0300 -> line 3170
- *   +0x0320 -> line 3172
- *   +0x0334 -> line 3173
- *   +0x034c -> line 3174
- *   +0x0360 -> line 3175
- *   +0x0378 -> line 3176
- *   +0x038c -> line 3177
- *   +0x03a4 -> line 3178
- *   +0x03b8 -> line 3179
- *   +0x03d0 -> line 3183
- *   +0x03e0 -> line 3187
- *   +0x03e4 -> line 3183
- *   +0x03f0 -> line 3187
- *   +0x03f4 -> line 3183
- *   +0x0414 -> line 3189
- *   +0x0418 -> line 3183
- *   +0x0424 -> line 3189
- *   +0x0430 -> line 3190
- *   +0x0448 -> line 3191
- *   +0x045c -> line 3192
- *   +0x0474 -> line 3193
- *   +0x0488 -> line 3194
- *   +0x04a0 -> line 3195
- *   +0x04b4 -> line 3196
- *   +0x04cc -> line 3205
- *   +0x0504 -> line 3207
- *   +0x0508 -> line 3205
- *   +0x0514 -> line 3207
- *   +0x0520 -> line 3208
- *   +0x0538 -> line 3209
- *   +0x054c -> line 3210
- *   +0x0564 -> line 3211
- *   +0x0578 -> line 3212
- *   +0x0590 -> line 3213
- *   +0x05a4 -> line 3214
- *   +0x05bc -> line 3218
- *   +0x05c4 -> line 3222
- *   +0x05c8 -> line 3229
- *   +0x05cc -> line 3222
- *   +0x05d0 -> line 3229
- *   +0x05e8 -> line 3222
- *   +0x05ec -> line 3229
- *   +0x05f0 -> line 3222
- *   +0x05f4 -> line 3229
- *   +0x05fc -> line 3223
- *   +0x0604 -> line 3222
- *   +0x060c -> line 3224
- *   +0x0614 -> line 3223
- *   +0x061c -> line 3224
- *   +0x0624 -> line 3222
- *   +0x0628 -> line 3223
- *   +0x062c -> line 3225
- *   +0x0634 -> line 3224
- *   +0x063c -> line 3225
- *   +0x0644 -> line 3224
- *   +0x0648 -> line 3229
- *   +0x0650 -> line 3230
- *   +0x0668 -> line 3231
- *   +0x0680 -> line 3232
- *   +0x0698 -> line 3233
- *   +0x06b0 -> line 3234
- *   +0x06c8 -> line 3235
- *   +0x06d4 -> line 3236
- *   +0x06ec -> line 3250
- *   +0x0700 -> line 3254
- *   +0x0704 -> line 3250
- *   +0x0708 -> line 3254
- *   +0x0710 -> line 3259
- *   +0x0714 -> line 3257
- *   +0x0718 -> line 3259
- *   +0x071c -> line 3257
- *   +0x0720 -> line 3259
- *   +0x0730 -> line 3258
- *   +0x0734 -> line 3259
- *   +0x0748 -> line 3261
- *   +0x0758 -> line 3264
- *   +0x075c -> line 3267
- *   +0x0760 -> line 3264
- *   +0x0764 -> line 3268
- *   +0x0768 -> line 3265
- *   +0x076c -> line 3268
- *   +0x0774 -> line 3267
- *   +0x0778 -> line 3268
- *   +0x0784 -> line 3266
- *   +0x0788 -> line 3268
- *   +0x079c -> line 3270
- *   +0x07ac -> line 3277
- *   +0x07b0 -> line 3273
- *   +0x07b4 -> line 3276
- *   +0x07b8 -> line 3273
- *   +0x07bc -> line 3274
- *   +0x07c0 -> line 3275
- *   +0x07c4 -> line 3277
- *   +0x07c8 -> line 3276
- *   +0x07cc -> line 3277
- *   +0x07d4 -> line 3276
- *   +0x07d8 -> line 3277
- *   +0x07f8 -> line 3280
- *   +0x0804 -> line 3283
- *   +0x0810 -> line 3284
- *   +0x0828 -> line 3286
- *   +0x0838 -> line 3287
- *   +0x0850 -> line 3289
- *   +0x0864 -> line 3290
- *   +0x087c -> line 3292
- *   +0x0890 -> line 3293
- *   +0x08a8 -> line 3296
- *   +0x08b4 -> line 3298
- *   +0x08c0 -> line 3299
- *   +0x08d8 -> line 3301
- *   +0x08e8 -> line 3302
- *   +0x0900 -> line 3304
- *   +0x0914 -> line 3305
- *   +0x092c -> line 3307
- *   +0x0940 -> line 3308
- *   +0x0958 -> line 3311
- *   +0x0964 -> line 3313
- *   +0x0970 -> line 3314
- *   +0x0988 -> line 3316
- *   +0x0998 -> line 3317
- *   +0x09b0 -> line 3319
- *   +0x09c4 -> line 3320
- *   +0x09dc -> line 3322
- *   +0x09f0 -> line 3323
- *   +0x0a08 -> line 3326
- *   +0x0a10 -> line 3328
+ *   +0x0000 -> line 2676
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void GLI_vDesinitLifeBars(void)
+{
+    GLI_g_LifeBarIsInit = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2699–2707 */
+/* addr: 0x002cdbb0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2699
+ *   +0x0004 -> line 2706
+ *   +0x0008 -> line 2699
+ *   +0x000c -> line 2706
+ *   +0x0010 -> line 2700
+ *   +0x0018 -> line 2701
+ *   +0x0020 -> line 2702
+ *   +0x0028 -> line 2703
+ *   +0x0030 -> line 2704
+ *   +0x0038 -> line 2705
+ *   +0x003c -> line 2707
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
+{
+    GLI_g_BigBossLifeBar.PosRightX = PosRightX;
+    GLI_g_BigBossLifeBarIsInit = 1;
+    GLI_g_BigBossLifeBar.PosBottomY = PosBottomY;
+    GLI_g_BigBossLifeBar.CurrentLife = CurrentLife;
+    GLI_g_BigBossLifeBar.MaxLife = MaxLife;
+    GLI_g_BigBossLifeBar.CenterIcon = CenterIcon;
+    GLI_g_BigBossLifeBar.pMat = pMat;
+    GLI_g_BigBossLifeBar.fAlpha = fAlpha;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2712–2712 */
+/* addr: 0x002cdba0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2712
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDesinitBigBossLifeBars(void)
+{
+    GLI_g_BigBossLifeBarIsInit = 0;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2767–3065 */
 /* addr: 0x002ccbf0  size: 4004 bytes */
@@ -1792,63 +1614,6 @@ void GLI_vDesinitLifeBars(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2712–2712 */
-/* addr: 0x002cdba0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2712
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2699–2707 */
-/* addr: 0x002cdbb0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2699
- *   +0x0004 -> line 2706
- *   +0x0008 -> line 2699
- *   +0x000c -> line 2706
- *   +0x0010 -> line 2700
- *   +0x0018 -> line 2701
- *   +0x0020 -> line 2702
- *   +0x0028 -> line 2703
- *   +0x0030 -> line 2704
- *   +0x0038 -> line 2705
- *   +0x003c -> line 2707
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 2676–2676 */
-/* addr: 0x002cdc00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2676
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void GLI_vDesinitLifeBars(void)
-{
-    GLI_g_LifeBarIsInit = 0;
-}
-
-void GLI_vAddBigBossLifeBars(float PosRightX, float PosBottomY, float CurrentLife, float MaxLife, float CenterIcon, GLI_tdstMaterial_* pMat, float fAlpha)
-{
-    GLI_g_BigBossLifeBar.PosRightX = PosRightX;
-    GLI_g_BigBossLifeBarIsInit = 1;
-    GLI_g_BigBossLifeBar.PosBottomY = PosBottomY;
-    GLI_g_BigBossLifeBar.CurrentLife = CurrentLife;
-    GLI_g_BigBossLifeBar.MaxLife = MaxLife;
-    GLI_g_BigBossLifeBar.CenterIcon = CenterIcon;
-    GLI_g_BigBossLifeBar.pMat = pMat;
-    GLI_g_BigBossLifeBar.fAlpha = fAlpha;
-}
-
-void GLI_vDesinitBigBossLifeBars(void)
-{
-    GLI_g_BigBossLifeBarIsInit = 0;
-}
-
 void GLI_vDisplayLifeBars(void)
 {
     float CurrentLife;
@@ -1890,6 +1655,222 @@ void GLI_vDisplayLifeBars(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 3068–3328 */
+/* addr: 0x002cc190  size: 2648 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3068
+ *   +0x0044 -> line 3083
+ *   +0x0050 -> line 3085
+ *   +0x0054 -> line 3110
+ *   +0x005c -> line 3113
+ *   +0x006c -> line 3116
+ *   +0x0088 -> line 3117
+ *   +0x0090 -> line 3116
+ *   +0x009c -> line 3117
+ *   +0x00a0 -> line 3116
+ *   +0x00b0 -> line 3117
+ *   +0x00b4 -> line 3116
+ *   +0x00b8 -> line 3117
+ *   +0x00bc -> line 3116
+ *   +0x00c0 -> line 3117
+ *   +0x00d0 -> line 3118
+ *   +0x00d8 -> line 3116
+ *   +0x00f0 -> line 3117
+ *   +0x0110 -> line 3118
+ *   +0x0114 -> line 3117
+ *   +0x0120 -> line 3118
+ *   +0x0128 -> line 3124
+ *   +0x0138 -> line 3125
+ *   +0x0140 -> line 3124
+ *   +0x0144 -> line 3131
+ *   +0x0148 -> line 3124
+ *   +0x014c -> line 3131
+ *   +0x0150 -> line 3124
+ *   +0x0168 -> line 3128
+ *   +0x016c -> line 3124
+ *   +0x0178 -> line 3125
+ *   +0x017c -> line 3128
+ *   +0x0180 -> line 3126
+ *   +0x0184 -> line 3131
+ *   +0x0188 -> line 3125
+ *   +0x018c -> line 3131
+ *   +0x0190 -> line 3125
+ *   +0x0194 -> line 3126
+ *   +0x0198 -> line 3131
+ *   +0x01d0 -> line 3133
+ *   +0x01d4 -> line 3136
+ *   +0x01d8 -> line 3133
+ *   +0x01dc -> line 3166
+ *   +0x01e0 -> line 3136
+ *   +0x01e4 -> line 3151
+ *   +0x01ec -> line 3133
+ *   +0x01f4 -> line 3151
+ *   +0x01f8 -> line 3135
+ *   +0x0200 -> line 3133
+ *   +0x0208 -> line 3138
+ *   +0x0210 -> line 3133
+ *   +0x0214 -> line 3136
+ *   +0x0218 -> line 3138
+ *   +0x0220 -> line 3143
+ *   +0x0228 -> line 3144
+ *   +0x0230 -> line 3145
+ *   +0x0238 -> line 3146
+ *   +0x0240 -> line 3151
+ *   +0x0250 -> line 3152
+ *   +0x0260 -> line 3157
+ *   +0x0268 -> line 3152
+ *   +0x026c -> line 3143
+ *   +0x0270 -> line 3159
+ *   +0x0278 -> line 3143
+ *   +0x027c -> line 3159
+ *   +0x0284 -> line 3143
+ *   +0x0288 -> line 3151
+ *   +0x028c -> line 3159
+ *   +0x0290 -> line 3138
+ *   +0x0298 -> line 3144
+ *   +0x02a4 -> line 3145
+ *   +0x02a8 -> line 3146
+ *   +0x02ac -> line 3151
+ *   +0x02bc -> line 3146
+ *   +0x02c0 -> line 3138
+ *   +0x02c4 -> line 3146
+ *   +0x02c8 -> line 3157
+ *   +0x02cc -> line 3145
+ *   +0x02d0 -> line 3152
+ *   +0x02dc -> line 3157
+ *   +0x02e8 -> line 3159
+ *   +0x02ec -> line 3145
+ *   +0x02f0 -> line 3159
+ *   +0x02f8 -> line 3166
+ *   +0x0300 -> line 3170
+ *   +0x0320 -> line 3172
+ *   +0x0334 -> line 3173
+ *   +0x034c -> line 3174
+ *   +0x0360 -> line 3175
+ *   +0x0378 -> line 3176
+ *   +0x038c -> line 3177
+ *   +0x03a4 -> line 3178
+ *   +0x03b8 -> line 3179
+ *   +0x03d0 -> line 3183
+ *   +0x03e0 -> line 3187
+ *   +0x03e4 -> line 3183
+ *   +0x03f0 -> line 3187
+ *   +0x03f4 -> line 3183
+ *   +0x0414 -> line 3189
+ *   +0x0418 -> line 3183
+ *   +0x0424 -> line 3189
+ *   +0x0430 -> line 3190
+ *   +0x0448 -> line 3191
+ *   +0x045c -> line 3192
+ *   +0x0474 -> line 3193
+ *   +0x0488 -> line 3194
+ *   +0x04a0 -> line 3195
+ *   +0x04b4 -> line 3196
+ *   +0x04cc -> line 3205
+ *   +0x0504 -> line 3207
+ *   +0x0508 -> line 3205
+ *   +0x0514 -> line 3207
+ *   +0x0520 -> line 3208
+ *   +0x0538 -> line 3209
+ *   +0x054c -> line 3210
+ *   +0x0564 -> line 3211
+ *   +0x0578 -> line 3212
+ *   +0x0590 -> line 3213
+ *   +0x05a4 -> line 3214
+ *   +0x05bc -> line 3218
+ *   +0x05c4 -> line 3222
+ *   +0x05c8 -> line 3229
+ *   +0x05cc -> line 3222
+ *   +0x05d0 -> line 3229
+ *   +0x05e8 -> line 3222
+ *   +0x05ec -> line 3229
+ *   +0x05f0 -> line 3222
+ *   +0x05f4 -> line 3229
+ *   +0x05fc -> line 3223
+ *   +0x0604 -> line 3222
+ *   +0x060c -> line 3224
+ *   +0x0614 -> line 3223
+ *   +0x061c -> line 3224
+ *   +0x0624 -> line 3222
+ *   +0x0628 -> line 3223
+ *   +0x062c -> line 3225
+ *   +0x0634 -> line 3224
+ *   +0x063c -> line 3225
+ *   +0x0644 -> line 3224
+ *   +0x0648 -> line 3229
+ *   +0x0650 -> line 3230
+ *   +0x0668 -> line 3231
+ *   +0x0680 -> line 3232
+ *   +0x0698 -> line 3233
+ *   +0x06b0 -> line 3234
+ *   +0x06c8 -> line 3235
+ *   +0x06d4 -> line 3236
+ *   +0x06ec -> line 3250
+ *   +0x0700 -> line 3254
+ *   +0x0704 -> line 3250
+ *   +0x0708 -> line 3254
+ *   +0x0710 -> line 3259
+ *   +0x0714 -> line 3257
+ *   +0x0718 -> line 3259
+ *   +0x071c -> line 3257
+ *   +0x0720 -> line 3259
+ *   +0x0730 -> line 3258
+ *   +0x0734 -> line 3259
+ *   +0x0748 -> line 3261
+ *   +0x0758 -> line 3264
+ *   +0x075c -> line 3267
+ *   +0x0760 -> line 3264
+ *   +0x0764 -> line 3268
+ *   +0x0768 -> line 3265
+ *   +0x076c -> line 3268
+ *   +0x0774 -> line 3267
+ *   +0x0778 -> line 3268
+ *   +0x0784 -> line 3266
+ *   +0x0788 -> line 3268
+ *   +0x079c -> line 3270
+ *   +0x07ac -> line 3277
+ *   +0x07b0 -> line 3273
+ *   +0x07b4 -> line 3276
+ *   +0x07b8 -> line 3273
+ *   +0x07bc -> line 3274
+ *   +0x07c0 -> line 3275
+ *   +0x07c4 -> line 3277
+ *   +0x07c8 -> line 3276
+ *   +0x07cc -> line 3277
+ *   +0x07d4 -> line 3276
+ *   +0x07d8 -> line 3277
+ *   +0x07f8 -> line 3280
+ *   +0x0804 -> line 3283
+ *   +0x0810 -> line 3284
+ *   +0x0828 -> line 3286
+ *   +0x0838 -> line 3287
+ *   +0x0850 -> line 3289
+ *   +0x0864 -> line 3290
+ *   +0x087c -> line 3292
+ *   +0x0890 -> line 3293
+ *   +0x08a8 -> line 3296
+ *   +0x08b4 -> line 3298
+ *   +0x08c0 -> line 3299
+ *   +0x08d8 -> line 3301
+ *   +0x08e8 -> line 3302
+ *   +0x0900 -> line 3304
+ *   +0x0914 -> line 3305
+ *   +0x092c -> line 3307
+ *   +0x0940 -> line 3308
+ *   +0x0958 -> line 3311
+ *   +0x0964 -> line 3313
+ *   +0x0970 -> line 3314
+ *   +0x0988 -> line 3316
+ *   +0x0998 -> line 3317
+ *   +0x09b0 -> line 3319
+ *   +0x09c4 -> line 3320
+ *   +0x09dc -> line 3322
+ *   +0x09f0 -> line 3323
+ *   +0x0a08 -> line 3326
+ *   +0x0a10 -> line 3328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vDisplayBigBossLifeBars(void)
 {
     int a_bLifeBar[3];
@@ -1920,6 +1901,20 @@ void GLI_vDisplayBigBossLifeBars(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_NewSprites.c lines 92–98 */
+/* addr: 0x002cc110  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 92
+ *   +0x0004 -> line 93
+ *   +0x0008 -> line 92
+ *   +0x0010 -> line 95
+ *   +0x001c -> line 96
+ *   +0x0020 -> line 95
+ *   +0x0024 -> line 96
+ *   +0x006c -> line 98
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vInitDelayedFrees(void)
 {
     unsigned int i;

@@ -156,57 +156,6 @@ int g_hBGMaterialForMenu2D;
  * its debug record, but it belongs to salloc.c: it is linked between
  * salloc.c's functions and this file's, fn_vInitAllocator inlines it, and its
  * format string sits with salloc.c's.  It is reconstructed there. */
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 345–426 */
-/* addr: 0x0029f670  size: 488 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 345
- *   +0x0004 -> line 356
- *   +0x0008 -> line 345
- *   +0x0018 -> line 355
- *   +0x001c -> line 356
- *   +0x0028 -> line 358
- *   +0x0030 -> line 360
- *   +0x0034 -> line 361
- *   +0x0038 -> line 360
- *   +0x003c -> line 362
- *   +0x0058 -> line 361
- *   +0x005c -> line 362
- *   +0x0064 -> line 369
- *   +0x0070 -> line 372
- *   +0x0074 -> line 374
- *   +0x0078 -> line 372
- *   +0x007c -> line 380
- *   +0x0080 -> line 374
- *   +0x0084 -> line 380
- *   +0x0088 -> line 374
- *   +0x008c -> line 380
- *   +0x00a0 -> line 382
- *   +0x00b4 -> line 388
- *   +0x00bc -> line 391
- *   +0x00c0 -> line 394
- *   +0x00c4 -> line 391
- *   +0x00c8 -> line 394
- *   +0x00d8 -> line 396
- *   +0x00e0 -> line 397
- *   +0x00f4 -> line 398
- *   +0x0100 -> line 402
- *   +0x0124 -> line 404
- *   +0x012c -> line 405
- *   +0x0148 -> line 406
- *   +0x0154 -> line 411
- *   +0x015c -> line 414
- *   +0x0160 -> line 411
- *   +0x0164 -> line 414
- *   +0x018c -> line 416
- *   +0x019c -> line 418
- *   +0x01a4 -> line 419
- *   +0x01b4 -> line 422
- *   +0x01bc -> line 423
- *   +0x01c4 -> line 425
- *   +0x01d0 -> line 426
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void ClearScreenAndWait2Frames(void);
 void GLI_vProcessRegisteredTextures(void);
 void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize);
@@ -224,55 +173,135 @@ void M2D_StartFixLoading(void);
 void M2D_StartBGLoading(void);
 void FreeMenu2DTextures(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 299–340 */
-/* addr: 0x0029f860  size: 380 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 299
- *   +0x0004 -> line 300
- *   +0x0008 -> line 303
- *   +0x0010 -> line 305
- *   +0x0040 -> line 307
- *   +0x004c -> line 311
- *   +0x0068 -> line 312
- *   +0x0074 -> line 316
- *   +0x007c -> line 317
- *   +0x00a8 -> line 319
- *   +0x00b4 -> line 321
- *   +0x00b8 -> line 322
- *   +0x00c0 -> line 325
- *   +0x00f8 -> line 326
- *   +0x00fc -> line 327
- *   +0x0108 -> line 332
- *   +0x0114 -> line 333
- *   +0x0118 -> line 332
- *   +0x0120 -> line 334
- *   +0x0124 -> line 332
- *   +0x012c -> line 334
- *   +0x0134 -> line 333
- *   +0x013c -> line 334
- *   +0x0140 -> line 333
- *   +0x0144 -> line 334
- *   +0x0154 -> line 333
- *   +0x0158 -> line 334
- *   +0x016c -> line 339
- *   +0x0170 -> line 340
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad, int TextureName, unsigned int MaxSize);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 289–295 */
-/* addr: 0x0029f9e0  size: 108 bytes */
+void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb);
+int GLI_iGetOneMenuTextureNames(void);
+
+int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName, int TextureSpace, int MaxSize);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 130–142 */
+/* addr: 0x0029fcb0  size: 156 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 289
- *   +0x0008 -> line 291
- *   +0x0014 -> line 292
- *   +0x0018 -> line 291
- *   +0x001c -> line 292
- *   +0x0064 -> line 295
+ *   +0x0000 -> line 130
+ *   +0x0004 -> line 135
+ *   +0x0008 -> line 130
+ *   +0x0010 -> line 133
+ *   +0x0020 -> line 136
+ *   +0x0060 -> line 135
+ *   +0x0064 -> line 136
+ *   +0x0068 -> line 135
+ *   +0x0074 -> line 136
+ *   +0x0094 -> line 142
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void FreeMenu2DTextures(void)
+{
+    int i;
+
+    g_stTPBackground.hUsedBy = NULL;
+    for (i = 0; i < sizeof(g_ax_stTPFix) / sizeof(g_ax_stTPFix[0]); i++)
+        g_ax_stTPFix[i].hUsedBy = NULL;
+    for (i = 0; i < sizeof(g_ax_stTPTitles) / sizeof(g_ax_stTPTitles[0]); i++)
+        g_ax_stTPTitles[i].hUsedBy = NULL;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 152–152 */
+/* addr: 0x0029fca0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void M2D_StartBGLoading(void)
+{
+    gs_eTextureType = eM2D_BG;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 156–158 */
+/* addr: 0x0029fc90  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 156
+ *   +0x0004 -> line 157
+ *   +0x0008 -> line 158
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void M2D_StartFixLoading(void)
+{
+    gs_iNbFixTextures = 0;
+    gs_eTextureType = eM2D_FIX;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 162–164 */
+/* addr: 0x0029fc80  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 162
+ *   +0x0004 -> line 163
+ *   +0x0008 -> line 164
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void M2D_StartTitlesLoading(void)
+{
+    gs_iNbTitleTextures = 0;
+    gs_eTextureType = eM2D_TITLE;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 169–204 */
+/* addr: 0x0029fb80  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 169
+ *   +0x0004 -> line 176
+ *   +0x0008 -> line 169
+ *   +0x0010 -> line 173
+ *   +0x0014 -> line 176
+ *   +0x0018 -> line 173
+ *   +0x001c -> line 176
+ *   +0x0040 -> line 180
+ *   +0x0050 -> line 181
+ *   +0x0058 -> line 186
+ *   +0x008c -> line 187
+ *   +0x0094 -> line 188
+ *   +0x009c -> line 191
+ *   +0x00a0 -> line 192
+ *   +0x00d0 -> line 193
+ *   +0x00d4 -> line 194
+ *   +0x00e0 -> line 195
+ *   +0x00e4 -> line 196
+ *   +0x00e8 -> line 204
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void M2D_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
+{
+    int i;
+
+    gs_iNbTexturesMenu++;
+
+    switch (gs_eTextureType)
+    {
+    case eM2D_BG:
+        GLI_iLoadMenuTexture(pp_stTexture, TxrName, g_stTPBackground.TextureSpace, g_stTPBackground.MaxSize);
+        break;
+
+    case eM2D_FIX:
+        GLI_iLoadMenuTexture(pp_stTexture, TxrName, g_ax_stTPFix[gs_iNbFixTextures].TextureSpace, g_ax_stTPFix[gs_iNbFixTextures].MaxSize);
+        gs_iNbFixTextures++;
+        break;
+
+    case eM2D_TITLE:
+        i = gs_iNbTitleTextures;
+        GLI_iLoadMenuTexture(pp_stTexture, TxrName, g_ax_stTPTitles[i].TextureSpace, g_ax_stTPTitles[i].MaxSize);
+        i++;
+        if (i >= sizeof(g_ax_stTPTitles) / sizeof(g_ax_stTPTitles[0]))
+            i = 0;
+        gs_iNbTitleTextures = i;
+        break;
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 241–281 */
 /* addr: 0x0029fa50  size: 300 bytes */
@@ -324,137 +353,6 @@ void GLI_vReloadMenuTextureData(GLI_tdstMaterial_* pMaterial, void* pWhereToLoad
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void* PS2GL_fn_pvEndOfDMABuffer(int BufferNb);
-int GLI_iGetOneMenuTextureNames(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 169–204 */
-/* addr: 0x0029fb80  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- *   +0x0004 -> line 176
- *   +0x0008 -> line 169
- *   +0x0010 -> line 173
- *   +0x0014 -> line 176
- *   +0x0018 -> line 173
- *   +0x001c -> line 176
- *   +0x0040 -> line 180
- *   +0x0050 -> line 181
- *   +0x0058 -> line 186
- *   +0x008c -> line 187
- *   +0x0094 -> line 188
- *   +0x009c -> line 191
- *   +0x00a0 -> line 192
- *   +0x00d0 -> line 193
- *   +0x00d4 -> line 194
- *   +0x00e0 -> line 195
- *   +0x00e4 -> line 196
- *   +0x00e8 -> line 204
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int GLI_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName, int TextureSpace, int MaxSize);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 162–164 */
-/* addr: 0x0029fc80  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 162
- *   +0x0004 -> line 163
- *   +0x0008 -> line 164
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 156–158 */
-/* addr: 0x0029fc90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 156
- *   +0x0004 -> line 157
- *   +0x0008 -> line 158
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 152–152 */
-/* addr: 0x0029fca0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 130–142 */
-/* addr: 0x0029fcb0  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 130
- *   +0x0004 -> line 135
- *   +0x0008 -> line 130
- *   +0x0010 -> line 133
- *   +0x0020 -> line 136
- *   +0x0060 -> line 135
- *   +0x0064 -> line 136
- *   +0x0068 -> line 135
- *   +0x0074 -> line 136
- *   +0x0094 -> line 142
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void FreeMenu2DTextures(void)
-{
-    int i;
-
-    g_stTPBackground.hUsedBy = NULL;
-    for (i = 0; i < sizeof(g_ax_stTPFix) / sizeof(g_ax_stTPFix[0]); i++)
-        g_ax_stTPFix[i].hUsedBy = NULL;
-    for (i = 0; i < sizeof(g_ax_stTPTitles) / sizeof(g_ax_stTPTitles[0]); i++)
-        g_ax_stTPTitles[i].hUsedBy = NULL;
-}
-
-void M2D_StartBGLoading(void)
-{
-    gs_eTextureType = eM2D_BG;
-}
-
-void M2D_StartFixLoading(void)
-{
-    gs_iNbFixTextures = 0;
-    gs_eTextureType = eM2D_FIX;
-}
-
-void M2D_StartTitlesLoading(void)
-{
-    gs_iNbTitleTextures = 0;
-    gs_eTextureType = eM2D_TITLE;
-}
-
-void M2D_iLoadMenuTexture(GLI_tdstTexture_** pp_stTexture, char* TxrName)
-{
-    int i;
-
-    gs_iNbTexturesMenu++;
-
-    switch (gs_eTextureType)
-    {
-    case eM2D_BG:
-        GLI_iLoadMenuTexture(pp_stTexture, TxrName, g_stTPBackground.TextureSpace, g_stTPBackground.MaxSize);
-        break;
-
-    case eM2D_FIX:
-        GLI_iLoadMenuTexture(pp_stTexture, TxrName, g_ax_stTPFix[gs_iNbFixTextures].TextureSpace, g_ax_stTPFix[gs_iNbFixTextures].MaxSize);
-        gs_iNbFixTextures++;
-        break;
-
-    case eM2D_TITLE:
-        i = gs_iNbTitleTextures;
-        GLI_iLoadMenuTexture(pp_stTexture, TxrName, g_ax_stTPTitles[i].TextureSpace, g_ax_stTPTitles[i].MaxSize);
-        i++;
-        if (i >= sizeof(g_ax_stTPTitles) / sizeof(g_ax_stTPTitles[0]))
-            i = 0;
-        gs_iNbTitleTextures = i;
-        break;
-    }
-}
-
 void InitPS2Menu2DTextures(void)
 {
     char* EndOfDMAList2;
@@ -496,6 +394,18 @@ void InitPS2Menu2DTextures(void)
     gs_M2DInitDone = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 289–295 */
+/* addr: 0x0029f9e0  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 289
+ *   +0x0008 -> line 291
+ *   +0x0014 -> line 292
+ *   +0x0018 -> line 291
+ *   +0x001c -> line 292
+ *   +0x0064 -> line 295
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2M2D_vReinitMenuTextures(void)
 {
     unsigned int i;
@@ -508,6 +418,41 @@ void PS2M2D_vReinitMenuTextures(void)
     gs_ulTextureCacheFrameNumber = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 299–340 */
+/* addr: 0x0029f860  size: 380 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 299
+ *   +0x0004 -> line 300
+ *   +0x0008 -> line 303
+ *   +0x0010 -> line 305
+ *   +0x0040 -> line 307
+ *   +0x004c -> line 311
+ *   +0x0068 -> line 312
+ *   +0x0074 -> line 316
+ *   +0x007c -> line 317
+ *   +0x00a8 -> line 319
+ *   +0x00b4 -> line 321
+ *   +0x00b8 -> line 322
+ *   +0x00c0 -> line 325
+ *   +0x00f8 -> line 326
+ *   +0x00fc -> line 327
+ *   +0x0108 -> line 332
+ *   +0x0114 -> line 333
+ *   +0x0118 -> line 332
+ *   +0x0120 -> line 334
+ *   +0x0124 -> line 332
+ *   +0x012c -> line 334
+ *   +0x0134 -> line 333
+ *   +0x013c -> line 334
+ *   +0x0140 -> line 333
+ *   +0x0144 -> line 334
+ *   +0x0154 -> line 333
+ *   +0x0158 -> line 334
+ *   +0x016c -> line 339
+ *   +0x0170 -> line 340
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PS2M2D_vCheckMaterialInCache(GLI_tdstMaterial_* pMaterial)
 {
     unsigned int i;
@@ -542,6 +487,57 @@ int PS2M2D_vCheckMaterialInCache(GLI_tdstMaterial_* pMaterial)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\PS2Menu2D.c lines 345–426 */
+/* addr: 0x0029f670  size: 488 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 345
+ *   +0x0004 -> line 356
+ *   +0x0008 -> line 345
+ *   +0x0018 -> line 355
+ *   +0x001c -> line 356
+ *   +0x0028 -> line 358
+ *   +0x0030 -> line 360
+ *   +0x0034 -> line 361
+ *   +0x0038 -> line 360
+ *   +0x003c -> line 362
+ *   +0x0058 -> line 361
+ *   +0x005c -> line 362
+ *   +0x0064 -> line 369
+ *   +0x0070 -> line 372
+ *   +0x0074 -> line 374
+ *   +0x0078 -> line 372
+ *   +0x007c -> line 380
+ *   +0x0080 -> line 374
+ *   +0x0084 -> line 380
+ *   +0x0088 -> line 374
+ *   +0x008c -> line 380
+ *   +0x00a0 -> line 382
+ *   +0x00b4 -> line 388
+ *   +0x00bc -> line 391
+ *   +0x00c0 -> line 394
+ *   +0x00c4 -> line 391
+ *   +0x00c8 -> line 394
+ *   +0x00d8 -> line 396
+ *   +0x00e0 -> line 397
+ *   +0x00f4 -> line 398
+ *   +0x0100 -> line 402
+ *   +0x0124 -> line 404
+ *   +0x012c -> line 405
+ *   +0x0148 -> line 406
+ *   +0x0154 -> line 411
+ *   +0x015c -> line 414
+ *   +0x0160 -> line 411
+ *   +0x0164 -> line 414
+ *   +0x018c -> line 416
+ *   +0x019c -> line 418
+ *   +0x01a4 -> line 419
+ *   +0x01b4 -> line 422
+ *   +0x01bc -> line 423
+ *   +0x01c4 -> line 425
+ *   +0x01d0 -> line 426
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void CheckMenu2DTextures(void)
 {
     char* EndOfDMAList1;

@@ -946,6 +946,156 @@ struct tdstPLA_DeformationLink_ {
 
 DNM_stMecReport g_stReport;
 
+extern void MAT_fn_vInvert(MAT_tdstTransformation_*, MAT_tdstTransformation_*);
+extern void MAT_fn_vRotateVector(MTH3D_tdstVector_*, MAT_tdstTransformation_*, MTH3D_tdstVector_*);
+extern void MEC_fn_vRoundVector(MTH3D_tdstVector_*, float);
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertiaX, float xInertiaY, float xInertiaZ, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
+void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix);
+void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj);
+void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj);
+void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj);
+
+void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* hSupObj);
+
+void MEC_fn_vSetPlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 129–133 */
+/* addr: 0x00310d30  size: 364 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 129
+ *   +0x001c -> line 130
+ *   +0x0020 -> line 131
+ *   +0x00a4 -> line 132
+ *   +0x0164 -> line 133
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
+{
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = hFatherSupObj;
+        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL;
+        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = hFatherSupObj->hLastElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hFirstElementDyn == NULL) hFatherSupObj->hFirstElementDyn = hSupObj; else hFatherSupObj->hLastElementDyn->hNextBrotherDyn = hSupObj; hFatherSupObj->hLastElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 143–146 */
+/* addr: 0x00310cf0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 143
+ *   +0x000c -> line 144
+ *   +0x0014 -> line 145
+ *   +0x0028 -> line 146
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
+{
+    unsigned int ulFlags;
+
+    MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hFatherSupObj);
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
+    ulFlags |= 0x40000000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 149–152 */
+/* addr: 0x00310c90  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 149
+ *   +0x0004 -> line 150
+ *   +0x0008 -> line 149
+ *   +0x000c -> line 150
+ *   +0x0014 -> line 151
+ *   +0x001c -> line 150
+ *   +0x0028 -> line 151
+ *   +0x0048 -> line 152
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj)
+{
+    unsigned int ulFlags;
+
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
+    ulFlags &= ~0x40000000;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
+    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
+    {
+        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = 0;
+        fn_vReputCharacterSuperObjectAtTheWorld(hSupObj);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 168–228 */
+/* addr: 0x00310870  size: 1048 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 168
+ *   +0x0028 -> line 181
+ *   +0x002c -> line 168
+ *   +0x0040 -> line 181
+ *   +0x0048 -> line 176
+ *   +0x004c -> line 181
+ *   +0x0054 -> line 185
+ *   +0x0058 -> line 186
+ *   +0x0060 -> line 191
+ *   +0x006c -> line 185
+ *   +0x0074 -> line 186
+ *   +0x0078 -> line 185
+ *   +0x0084 -> line 186
+ *   +0x00b0 -> line 187
+ *   +0x00b4 -> line 191
+ *   +0x00bc -> line 192
+ *   +0x00cc -> line 195
+ *   +0x00f4 -> line 197
+ *   +0x0104 -> line 198
+ *   +0x0108 -> line 199
+ *   +0x010c -> line 198
+ *   +0x0114 -> line 199
+ *   +0x0170 -> line 200
+ *   +0x018c -> line 201
+ *   +0x019c -> line 200
+ *   +0x01a0 -> line 201
+ *   +0x01d4 -> line 202
+ *   +0x0230 -> line 203
+ *   +0x0248 -> line 208
+ *   +0x0254 -> line 211
+ *   +0x0268 -> line 212
+ *   +0x0270 -> line 213
+ *   +0x02cc -> line 214
+ *   +0x02e8 -> line 215
+ *   +0x0328 -> line 216
+ *   +0x0384 -> line 217
+ *   +0x03a0 -> line 222
+ *   +0x03ac -> line 226
+ *   +0x03b0 -> line 227
+ *   +0x03b4 -> line 226
+ *   +0x03e0 -> line 227
+ *   +0x03e8 -> line 228
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix)
+{
+    float xNorm;
+    MTH3D_tdstVector_* p_stContact;
+    MTH3D_tdstVector_ stK;
+    MTH3D_tdstVector_ stJ;
+    MTH3D_tdstVector_ stI;
+    MTH3D_tdstVector_ stVector;
+    MAT_tdstTransformation_* hCurrentDynamicMatrix;
+    MAT_tdstTransformation_* hPreviousDynamicMatrix;
+    MAT_tdstTransformation_ stMatrix;
+    /* TODO: decompile from asm/... */
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 41–84 */
 /* addr: 0x003105a0  size: 716 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -998,157 +1148,6 @@ DNM_stMecReport g_stReport;
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern void MAT_fn_vInvert(MAT_tdstTransformation_*, MAT_tdstTransformation_*);
-extern void MAT_fn_vRotateVector(MTH3D_tdstVector_*, MAT_tdstTransformation_*, MTH3D_tdstVector_*);
-extern void MEC_fn_vRoundVector(MTH3D_tdstVector_*, float);
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertiaX, float xInertiaY, float xInertiaZ, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix);
-void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix);
-void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj);
-void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj);
-void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 168–228 */
-/* addr: 0x00310870  size: 1048 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 168
- *   +0x0028 -> line 181
- *   +0x002c -> line 168
- *   +0x0040 -> line 181
- *   +0x0048 -> line 176
- *   +0x004c -> line 181
- *   +0x0054 -> line 185
- *   +0x0058 -> line 186
- *   +0x0060 -> line 191
- *   +0x006c -> line 185
- *   +0x0074 -> line 186
- *   +0x0078 -> line 185
- *   +0x0084 -> line 186
- *   +0x00b0 -> line 187
- *   +0x00b4 -> line 191
- *   +0x00bc -> line 192
- *   +0x00cc -> line 195
- *   +0x00f4 -> line 197
- *   +0x0104 -> line 198
- *   +0x0108 -> line 199
- *   +0x010c -> line 198
- *   +0x0114 -> line 199
- *   +0x0170 -> line 200
- *   +0x018c -> line 201
- *   +0x019c -> line 200
- *   +0x01a0 -> line 201
- *   +0x01d4 -> line 202
- *   +0x0230 -> line 203
- *   +0x0248 -> line 208
- *   +0x0254 -> line 211
- *   +0x0268 -> line 212
- *   +0x0270 -> line 213
- *   +0x02cc -> line 214
- *   +0x02e8 -> line 215
- *   +0x0328 -> line 216
- *   +0x0384 -> line 217
- *   +0x03a0 -> line 222
- *   +0x03ac -> line 226
- *   +0x03b0 -> line 227
- *   +0x03b4 -> line 226
- *   +0x03e0 -> line 227
- *   +0x03e8 -> line 228
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 149–152 */
-/* addr: 0x00310c90  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0004 -> line 150
- *   +0x0008 -> line 149
- *   +0x000c -> line 150
- *   +0x0014 -> line 151
- *   +0x001c -> line 150
- *   +0x0028 -> line 151
- *   +0x0048 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void fn_vReputCharacterSuperObjectAtTheWorld(HIE_tdstSuperObject_* hSupObj);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 143–146 */
-/* addr: 0x00310cf0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 143
- *   +0x000c -> line 144
- *   +0x0014 -> line 145
- *   +0x0028 -> line 146
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void MEC_fn_vSetPlatformLink(DNM_stDynamics*, HIE_tdstSuperObject_*, HIE_tdstSuperObject_*);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECPfm.c lines 129–133 */
-/* addr: 0x00310d30  size: 364 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 129
- *   +0x001c -> line 130
- *   +0x0020 -> line 131
- *   +0x00a4 -> line 132
- *   +0x0164 -> line 133
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void MEC_fn_vSetPlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
-{
-    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
-    {
-        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = hFatherSupObj;
-        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL;
-        if (hSupObj->hNextBrotherDyn) hSupObj->hNextBrotherDyn->hPrevBrotherDyn = hSupObj->hPrevBrotherDyn; if (hSupObj->hPrevBrotherDyn) hSupObj->hPrevBrotherDyn->hNextBrotherDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn) { hSupObj->hFatherDyn->lNumberOfElementsDyn--; if (hSupObj->hFatherDyn->hFirstElementDyn == hSupObj) hSupObj->hFatherDyn->hFirstElementDyn = hSupObj->hNextBrotherDyn; if (hSupObj->hFatherDyn->hLastElementDyn == hSupObj) hSupObj->hFatherDyn->hLastElementDyn = hSupObj->hPrevBrotherDyn; } hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = NULL; hSupObj->hFatherDyn = NULL; hSupObj->hNextBrotherDyn = NULL; hSupObj->hPrevBrotherDyn = hFatherSupObj->hLastElementDyn; hSupObj->hFatherDyn = hFatherSupObj; if (hFatherSupObj->hFirstElementDyn == NULL) hFatherSupObj->hFirstElementDyn = hSupObj; else hFatherSupObj->hLastElementDyn->hNextBrotherDyn = hSupObj; hFatherSupObj->hLastElementDyn = hSupObj; hFatherSupObj->lNumberOfElementsDyn++;
-    }
-}
-
-void MEC_fn_vForcePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, HIE_tdstSuperObject_* hFatherSupObj)
-{
-    unsigned int ulFlags;
-
-    MEC_fn_vSetPlatformLink(p_stDynamic, hSupObj, hFatherSupObj);
-    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
-    ulFlags |= 0x40000000;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
-}
-
-void MEC_fn_vFreePlatformLink(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj)
-{
-    unsigned int ulFlags;
-
-    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags;
-    ulFlags &= ~0x40000000;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags = ulFlags;
-    if (!((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 0x40000000) ? 1 : 0))
-    {
-        p_stDynamic->m_tdstDynamicsComplexBlock.m_hPlatform = 0;
-        fn_vReputCharacterSuperObjectAtTheWorld(hSupObj);
-    }
-}
-
-void MEC_fn_vDynamicComputeAbsoluteMatrix(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, MAT_tdstTransformation_* hPreviousMatrix, MAT_tdstTransformation_* hInvPreviousMatrix, MAT_tdstTransformation_* hCurrentMatrix)
-{
-    float xNorm;
-    MTH3D_tdstVector_* p_stContact;
-    MTH3D_tdstVector_ stK;
-    MTH3D_tdstVector_ stJ;
-    MTH3D_tdstVector_ stI;
-    MTH3D_tdstVector_ stVector;
-    MAT_tdstTransformation_* hCurrentDynamicMatrix;
-    MAT_tdstTransformation_* hPreviousDynamicMatrix;
-    MAT_tdstTransformation_ stMatrix;
-    /* TODO: decompile from asm/... */
-}
-
 void MEC_fn_vInertiaCoeff(DNM_stDynamics* p_stDynamic, float xDT, float xInertiaX, float xInertiaY, float xInertiaZ, MAT_tdstTransformation_* hMatrix, MAT_tdstTransformation_* hInvMatrix)
 {
     MTH3D_tdstVector_ stMove;

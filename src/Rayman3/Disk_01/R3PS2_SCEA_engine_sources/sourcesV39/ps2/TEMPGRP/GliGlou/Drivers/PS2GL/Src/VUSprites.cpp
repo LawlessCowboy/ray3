@@ -650,6 +650,64 @@ union QWORD {
     double dData[2]; /* +0x0 */
 };
 
+struct GS_tdstModFlgs {
+    unsigned char PRIM_Modified : 1; /* bit 0, byte +0x0 */
+    unsigned char RGBAQ_Modified : 1; /* bit 1, byte +0x0 */
+    unsigned char ST_Modified : 1; /* bit 2, byte +0x0 */
+    unsigned char UV_Modified : 1; /* bit 3, byte +0x0 */
+    unsigned char XYZF2_Modified : 1; /* bit 4, byte +0x0 */
+    unsigned char XYZ2_Modified : 1; /* bit 5, byte +0x0 */
+    unsigned char TEX0_1_Modified : 1; /* bit 6, byte +0x0 */
+    unsigned char TEX0_2_Modified : 1; /* bit 7, byte +0x0 */
+    unsigned char CLAMP_1_Modified : 1; /* bit 8, byte +0x0 */
+    unsigned char CLAMP_2_Modified : 1; /* bit 9, byte +0x0 */
+    unsigned char FOG_Modified : 1; /* bit 10, byte +0x0 */
+    unsigned char XYZF3_Modified : 1; /* bit 11, byte +0x0 */
+    unsigned char XYZ3_Modified : 1; /* bit 12, byte +0x0 */
+    unsigned char TEX1_1_Modified : 1; /* bit 13, byte +0x0 */
+    unsigned char TEX1_2_Modified : 1; /* bit 14, byte +0x0 */
+    unsigned char TEX2_1_Modified : 1; /* bit 15, byte +0x0 */
+    unsigned char TEX2_2_Modified : 1; /* bit 16, byte +0x0 */
+    unsigned char XYOFFSET_1_Modified : 1; /* bit 17, byte +0x0 */
+    unsigned char XYOFFSET_2_Modified : 1; /* bit 18, byte +0x0 */
+    unsigned char PRMODECONT_Modified : 1; /* bit 19, byte +0x0 */
+    unsigned char PRMODE_Modified : 1; /* bit 20, byte +0x0 */
+    unsigned char TEXCLUT_Modified : 1; /* bit 21, byte +0x0 */
+    unsigned char SCANMSK_Modified : 1; /* bit 22, byte +0x0 */
+    unsigned char MIPTBP1_1_Modified : 1; /* bit 23, byte +0x0 */
+    unsigned char MIPTBP1_2_Modified : 1; /* bit 24, byte +0x0 */
+    unsigned char MIPTBP2_1_Modified : 1; /* bit 25, byte +0x0 */
+    unsigned char MIPTBP2_2_Modified : 1; /* bit 26, byte +0x0 */
+    unsigned char TEXA_Modified : 1; /* bit 27, byte +0x0 */
+    unsigned char FOGCOL_Modified : 1; /* bit 28, byte +0x0 */
+    unsigned char TEXFLUSH_Modified : 1; /* bit 29, byte +0x0 */
+    unsigned char SCISSOR_1_Modified : 1; /* bit 30, byte +0x0 */
+    unsigned char SCISSOR_2_Modified : 1; /* bit 31, byte +0x0 */
+    unsigned char ALPHA_1_Modified : 1; /* bit 32, byte +0x0 */
+    unsigned char ALPHA_2_Modified : 1; /* bit 33, byte +0x0 */
+    unsigned char DIMX_Modified : 1; /* bit 34, byte +0x0 */
+    unsigned char DTHE_Modified : 1; /* bit 35, byte +0x0 */
+    unsigned char COLCLAMP_Modified : 1; /* bit 36, byte +0x0 */
+    unsigned char TEST_1_Modified : 1; /* bit 37, byte +0x0 */
+    unsigned char TEST_2_Modified : 1; /* bit 38, byte +0x0 */
+    unsigned char PABE_Modified : 1; /* bit 39, byte +0x0 */
+    unsigned char FBA_1_Modified : 1; /* bit 40, byte +0x0 */
+    unsigned char FBA_2_Modified : 1; /* bit 41, byte +0x0 */
+    unsigned char FRAME_1_Modified : 1; /* bit 42, byte +0x0 */
+    unsigned char FRAME_2_Modified : 1; /* bit 43, byte +0x0 */
+    unsigned char ZBUF_1_Modified : 1; /* bit 44, byte +0x0 */
+    unsigned char ZBUF_2_Modified : 1; /* bit 45, byte +0x0 */
+    unsigned char BITBLTBUF_Modified : 1; /* bit 46, byte +0x0 */
+    unsigned char TRXPOS_Modified : 1; /* bit 47, byte +0x0 */
+    unsigned char TRXREG_Modified : 1; /* bit 48, byte +0x0 */
+    unsigned char TRXDIR_Modified : 1; /* bit 49, byte +0x0 */
+    unsigned char HWREG_Modified : 1; /* bit 50, byte +0x0 */
+    unsigned char SIGNAL_Modified : 1; /* bit 51, byte +0x0 */
+    unsigned char FINISH_Modified : 1; /* bit 52, byte +0x0 */
+    unsigned char LABEL_Modified : 1; /* bit 53, byte +0x6 */
+    unsigned char _extractor_padding_00[1];
+};
+
 struct tagGScontext {
     sceGsPrim PRIM; /* +0x0 */
     sceGsRgbaq RGBAQ; /* +0x8 */
@@ -705,14 +763,7 @@ struct tagGScontext {
     sceGsSignal SIGNAL; /* +0x198 */
     tagsceGsReg FINISH; /* +0x1a0 */
     sceGsLabel LABEL; /* +0x1a8 */
-    /* aggregate */ int ModFlgs; /* +0x1b0 */
-    /* The retail updates bit 5 of this byte with a read-modify-write that keeps
-     * the other bits, so the extractor padding is a bitfield container. */
-    struct {
-        unsigned char bUnused0 : 5;
-        unsigned char bModified : 1;
-        unsigned char bUnused1[3];
-    } _extractor_padding_00; /* +0x1b4..0x1b7 */
+    GS_tdstModFlgs ModFlgs; /* +0x1b0 */
     /* aggregate */ int GlobalModFlgs; /* +0x1b8 */
     unsigned char _extractor_padding_01[4]; /* implicitly added by extractor; +0x1bc..0x1bf */
     QWORD PackageBuffer[518]; /* +0x1c0 */
@@ -3398,12 +3449,12 @@ int CSpriteController::StartSpriteList(GLI_tdstMaterial_* pMaterial, unsigned in
     }
     if (m_NbVertices >= m_MaxNbSpritesVertices) { return 0; }
     m_CurrentSpriteListIndex = (m_NbVertices + 3) & ~3;
-    m_CurrentVP = (float (*)[4])((int*)m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 4);
-    m_CurrentVC = *(int*)((char*)m_SpBufferVC + m_CurrentFrame * 4) + m_CurrentSpriteListIndex;
-    m_CurrentVT = *(int*)((char*)m_SpBufferVT + m_CurrentFrame * 4) + m_CurrentSpriteListIndex;
+    m_CurrentVP = (float (*)[4])(m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16);
+    m_CurrentVC = m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4;
+    m_CurrentVT = m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4;
+    m_pCurrentMaterial = pMaterial;
     if (pMaterial)
     {
-        m_pCurrentMaterial = pMaterial;
         if (pAnimatedTexture) pMaterial->p_stTexture = pAnimatedTexture;
         m_pCurrentTexture = pMaterial->p_stTexture;
     }
@@ -3448,28 +3499,20 @@ void CSpriteController::Draw(void)
 void CSpriteController::EndDraw(void)
 {
     unsigned char zTst;
-    /* TODO: the retail switch is a jump table (jtbl_0035B780) whose eight
-     * entries map 0->zTst 0, 1->zTst 3, 3->zTst 2 and 7->an empty block,
-     * with 2/4/5/6 falling into the default.  MWCC only emits a jump table
-     * for this switch with eight case labels, and then it lays the case
-     * blocks out in the wrong order, so the body still misses 20 bytes. */
     g_PS2glContext.nEnableBits |= 0x800;
     g_gsContext.TEST_1.ZTE = 1;
-    g_gsContext._extractor_padding_00.bModified = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
     zTst = 1;
     switch (g_PS2glContext.eDepthFunc)
     {
         case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
         case 0x203: zTst = 2; break;
         case 0x201: zTst = 3; break;
-        case 0x202: break;
-        case 0x204: break;
-        case 0x205: break;
-        case 0x206: break;
-        case 0x207: break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
     }
     g_gsContext.TEST_1.ZTST = zTst;
-    g_gsContext._extractor_padding_00.bModified = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
     g_PS2glContext.nLightBits &= 0xFFFFFBFF;
     if (g_PS2glContext.uiDmaOmitDataBits & 0x600)
     {
@@ -3485,54 +3528,445 @@ void CSpriteController::EndDraw(void)
     g_PS2glContext.uiBoundingSphereBits = 0;
 }
 
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* hMaterial);
+extern "C" void GLI_vClearSendMatStates(void);
+
 void CSpriteController::SendMaterial(void)
 {
     float SavedGlobalAlpha;
     void* pSavedTexture;
-    /* TODO: decompile from asm/... */
+
+    SavedGlobalAlpha = GLI_BIG_GLOBALS_xGlobalAlpha;
+    GLI_vClearSendMatStates();
+    if (m_ForceAlphaTest)
+    {
+        GLI_BIG_GLOBALS_lCurrentDrawMask |= 8;
+        SavedGlobalAlpha = GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+        g_bTakeCareOfAnimationCoordination = 1;
+        g_BaseTimeForParticleAnimation = 0.0f;
+        g_bHasTextureAnimationFinished = 0;
+        GLI_g_DontRefreshAnimated = 1;
+    }
+
+    pSavedTexture = (void*)GLI_g_AnimatedTextureToUse;
+    GLI_g_AnimatedTextureToUse = (int)m_pCurrentAnimTexture;
+    GLI_g_CurrentStage = 0;
+    GLI_DRV_SendMaterialToViewport(m_pCurrentMaterial);
+    GLI_g_AnimatedTextureToUse = (int)pSavedTexture;
+    GLI_g_DontRefreshAnimated = 0;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+
+    g_PS2glContext.nLightBits &= ~0x400;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200)
+    {
+        *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
+        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+    }
+    g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.eClippingFunction = 3;
+    g_PS2glContext.uiFastPathBits = 1;
+    g_PS2glContext.usDontUpdateBits = 0;
+    g_PS2glContext.bPointLighting = 0;
+    g_PS2glContext.uiBoundingSphereBits = 0;
+
+    GLI_BIG_GLOBALS_lCurrentDrawMask &= ~8;
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+    g_bTakeCareOfAnimationCoordination = 0;
+    g_BaseTimeForParticleAnimation = 0.0f;
+    g_bHasTextureAnimationFinished = 0;
+    GLI_g_DontRefreshAnimated = 0;
+
+    m_ForceAlphaTest = 0;
+
+    GLI_BIG_GLOBALS_xGlobalAlpha = SavedGlobalAlpha;
 }
+
+/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);
+   the VU0 instructions have no C form. */
+inline void PS2_M_vMulMatrixColumnsByVector(MTH4D_tdstMatrix_* _src, float* _vec, float (*_dst)[4])
+{
+    asm {
+        lqc2 vf5, 0x0(_vec)
+        lqc2 vf1, 0x0(_src)
+        lqc2 vf2, 0x10(_src)
+        lqc2 vf3, 0x20(_src)
+        lqc2 vf4, 0x30(_src)
+        vmul.xyzw vf1, vf1, vf5
+        vmul.xyzw vf2, vf2, vf5
+        vmul.xyzw vf3, vf3, vf5
+        vmul.xyzw vf4, vf4, vf5
+        sqc2 vf1, 0x0(_dst)
+        sqc2 vf2, 0x10(_dst)
+        sqc2 vf3, 0x20(_dst)
+        sqc2 vf4, 0x30(_dst)
+    }
+}
+
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+extern "C" void PS2glHint(unsigned int target, unsigned int mode);
 
 void CSpriteController::InitSpritesForViewport(GLD_tdstViewportAttributes_* _p_stViewport)
 {
     unsigned char zTst;
     GLI_tdstCamera_* p_stCam;
     MTH4D_tdstMatrix_* p_stWorldMatrix;
-    /* TODO: decompile from asm/... */
+    float xPercent;
+
+    if (_p_stViewport->p_vSpecificToXD)
+    {
+        p_stCam = *(GLI_tdstCamera_**)_p_stViewport->p_vSpecificToXD;
+        if (p_stCam)
+        {
+            p_stWorldMatrix = &p_stCam->stMatrix.stTransformMatrix;
+            if (p_stWorldMatrix)
+            {
+                PS2_M_vMulMatrixColumnsByVector(p_stWorldMatrix, GLI_g_NegVect, m_CurrentCameraMatrix);
+                m_CurrentCameraMatrix[3][3] = 1.0f;
+            }
+        }
+    }
+
+    GLI_g_ProjectionMode = 2;
+    GLI_vInitGLProjectionMatrix();
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glHint(0xF40, (unsigned int)myColorRange);
+    PS2glHint(0xF41, (unsigned int)myColorRange);
+
+    /* Permuter-found: loading 100.0f through a temporary makes MWCC load the
+     * constant before the unsigned-to-float conversion, as retail does. */
+    m_Sprite_2D_DX = (xPercent = 100.0f) / (float)_p_stViewport->dwWidth;
+    m_Sprite_2D_DY = 100.0f / (float)_p_stViewport->dwHeight;
+    m_Sprite_2D_OFFSX = 0.0f;
+    m_Sprite_2D_OFFSY = 0.0f;
+    m_Sprite_2D_DX_CORRECT = 0.0015625f * (float)_p_stViewport->dwWidth;
+    m_Sprite_2D_DY_CORRECT = 0.0020833334f * (float)_p_stViewport->dwHeight;
 }
+
+extern "C" int printf(const char* format, ...);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(float* m);
+extern "C" void GLI_AddNormalInterpolation(void* pMatrix);
+extern "C" void PS2glNormalPointer(unsigned int type, int stride, void* pointer);
+extern "C" void PS2glColorPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glTexCoordPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, unsigned int count);
 
 void CSpriteController::Draw_Simple(void)
 {
     unsigned char zTst;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+
+    NbVertices = m_NbVertices - m_CurrentSpriteListIndex;
+    if (NbVertices == 0)
+        return;
+
+    GLI_vInitGLProjectionMatrix();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf((float*)m_CurrentCameraMatrix);
+    GLI_AddNormalInterpolation(0);
+
+    SendMaterial();
+
+    if (NbVertices == 0 || (NbVertices & 3)
+        || ((m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16) & 3))
+    {
+        printf("***** OUCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return;
+    }
+
+    g_PS2glContext.eClippingFunction = 3;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200)
+    {
+        *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
+        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+    }
+    g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.uiFastPathBits = 1;
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+
+    PS2glNormalPointer(0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glColorPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glTexCoordPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glVertexPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16));
+
+    if (m_DepthTestWasDisabled)
+    {
+        g_PS2glContext.nEnableBits &= ~0x800;
+        g_gsContext.TEST_1.ZTE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_gsContext.TEST_1.ZTST = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
+    PS2glDrawArrays(0x1005, 0, NbVertices);
+    m_DepthTestWasDisabled = 0;
+
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
 
 void CSpriteController::Draw_Simple_Oriented(void)
 {
     unsigned char zTst;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+
+    GLI_vInitGLProjectionMatrix();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf((float*)m_CurrentCameraMatrix);
+    GLI_AddNormalInterpolation(0);
+
+    SendMaterial();
+
+    NbVertices = m_NbVertices - m_CurrentSpriteListIndex;
+    if (NbVertices == 0 || (NbVertices & 3)
+        || ((m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16) & 3))
+    {
+        printf("***** OUCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return;
+    }
+
+    g_PS2glContext.eClippingFunction = 3;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200)
+    {
+        *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
+        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+    }
+    g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.uiFastPathBits = 1;
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+
+    PS2glNormalPointer(0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glColorPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glTexCoordPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glVertexPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16));
+
+    if (m_DepthTestWasDisabled)
+    {
+        g_PS2glContext.nEnableBits &= ~0x800;
+        g_gsContext.TEST_1.ZTE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_gsContext.TEST_1.ZTST = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
+    PS2glDrawArrays(0x2005, 0, NbVertices);
+    m_DepthTestWasDisabled = 0;
+
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
 
 void CSpriteController::Draw_SemiLookat(void)
 {
     unsigned char zTst;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+
+    GLI_vInitGLProjectionMatrix();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf((float*)m_CurrentCameraMatrix);
+    GLI_AddNormalInterpolation(0);
+
+    SendMaterial();
+
+    NbVertices = m_NbVertices - m_CurrentSpriteListIndex;
+    if (NbVertices == 0 || (NbVertices & 3)
+        || ((m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16) & 3))
+    {
+        printf("***** OUCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return;
+    }
+
+    g_PS2glContext.eClippingFunction = 3;
+    if ((g_PS2glContext.uiDmaOmitDataBits & 0x600) != 0x200)
+    {
+        *(int*)g_PS2glContext.pnColorMatMasks |= 0x200;
+        *(int*)g_PS2glContext.pnColorMatMasks &= ~0x100;
+    }
+    g_PS2glContext.uiDmaOmitDataBits = 0x341;
+    g_PS2glContext.uiFastPathBits = 1;
+    g_PS2glContext.nEnableBits |= 0x100;
+    g_gsContext.PRMODE.ABE = 1;
+    g_gsContext.ModFlgs.PRMODE_Modified = 1;
+
+    PS2glNormalPointer(0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glColorPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glTexCoordPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glVertexPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16));
+
+    if (m_DepthTestWasDisabled)
+    {
+        g_PS2glContext.nEnableBits &= ~0x800;
+        g_gsContext.TEST_1.ZTE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_gsContext.TEST_1.ZTST = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
+    PS2glDrawArrays(0x3005, 0, NbVertices);
+    m_DepthTestWasDisabled = 0;
+
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
 
 void CSpriteController::Draw_3D(void)
 {
     unsigned char zTst;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+
+    GLI_vInitGLProjectionMatrix();
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf((float*)m_CurrentCameraMatrix);
+    GLI_AddNormalInterpolation(0);
+
+    SendMaterial();
+
+    NbVertices = m_NbVertices - m_CurrentSpriteListIndex;
+    if (NbVertices == 0 || (NbVertices & 3)
+        || ((m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16) & 3))
+    {
+        printf("***** OUCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return;
+    }
+
+    PS2glColorPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glTexCoordPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glVertexPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16));
+
+    if (m_DepthTestWasDisabled)
+    {
+        g_PS2glContext.nEnableBits &= ~0x800;
+        g_gsContext.TEST_1.ZTE = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+        g_gsContext.TEST_1.ZTST = 1;
+        g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    }
+    PS2glDrawArrays(5, 0, NbVertices);
+    m_DepthTestWasDisabled = 0;
+
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
+
+extern "C" void GLI_vSetFullScreenOrthoProjection(void);
 
 void CSpriteController::Draw_2D(void)
 {
     unsigned char zTst;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+
+    GLI_vSetFullScreenOrthoProjection();
+
+    SendMaterial();
+
+    NbVertices = m_NbVertices - m_CurrentSpriteListIndex;
+    if (NbVertices == 0 || (NbVertices & 3)
+        || ((m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4) & 3)
+        || ((m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16) & 3))
+    {
+        printf("***** OUCH !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+        return;
+    }
+
+    g_PS2glContext.eClippingFunction = 0;
+    PS2glColorPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVC[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glTexCoordPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVT[m_CurrentFrame] + m_CurrentSpriteListIndex * 4));
+    PS2glVertexPointer(NbVertices, 0x1406, -2, (void*)(m_SpBufferVP[m_CurrentFrame] + m_CurrentSpriteListIndex * 16));
+
+    g_PS2glContext.nEnableBits &= ~0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    g_gsContext.TEST_1.ZTST = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    PS2glDrawArrays(5, 0, NbVertices);
+    m_DepthTestWasDisabled = 0;
+
+    g_PS2glContext.nEnableBits |= 0x800;
+    g_gsContext.TEST_1.ZTE = 1;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
+    zTst = 1;
+    switch (g_PS2glContext.eDepthFunc)
+    {
+        case 0x200: zTst = 0; break;
+        case 0x207: zTst = 1; break;
+        case 0x203: zTst = 2; break;
+        case 0x201: zTst = 3; break;
+        case 0x202: case 0x204: case 0x205: case 0x206: break;
+    }
+    g_gsContext.TEST_1.ZTST = zTst;
+    g_gsContext.ModFlgs.TEST_1_Modified = 1;
 }
 
 int CSpriteController::SimpleSprite(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY)
@@ -3571,20 +4005,72 @@ int CSpriteController::SimpleSprite(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVect
 
 void CSpriteController::DrawFireSpriteGroup(GLI_tdstMaterial_* pMaterial, float (*pData)[4], unsigned int NbParticles)
 {
-    unsigned int NbVertices;
-    float (*pV)[4];
-    unsigned int* pT;
-    unsigned int* pC;
-    float (*pVect)[4];
     unsigned int i;
-    /* TODO: decompile from asm/... */
+    float (*pVect)[4];
+    unsigned int* pC;
+    unsigned int* pT;
+    float (*pV)[4];
+    unsigned int NbVertices;
+
+    pVect = pData;
+    NbVertices = NbParticles * 4;
+    if (!StartSpriteList(pMaterial, 1, NbVertices)) return;
+    pC = (unsigned int*)m_CurrentVC;
+    pT = (unsigned int*)m_CurrentVT;
+    pV = m_CurrentVP;
+    for (i = NbParticles; i != 0; i--)
+    {
+        pC[0] = pC[1] = pC[2] = pC[3] = ((unsigned int)pVect[2][0] << 24) | 0x808080;
+        pC += 4;
+        pT[0] = 0;
+        pT[1] = 0x1000;
+        pT[2] = 0x10000000;
+        pT[3] = 0x10001000;
+        pT += 4;
+        /* 128-bit VU0 copy of the particle position: lqc2/sqc2 have no C form. */
+        asm
+        {
+            lqc2 vf1, 0x0(pVect)
+            sqc2 vf1, 0x0(pV)
+        }
+        pV[1][0] = pVect[2][2];
+        pV[1][1] = 1.3f * pVect[2][2];
+        pVect += 3;
+        pV += 4;
+    }
+    m_CurrentVP += NbVertices;
+    m_CurrentVT += NbVertices * 4;
+    m_CurrentVC += NbVertices * 4;
+    m_NbVertices += NbVertices;
 }
 
 int CSpriteController::SimpleSpriteColor(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, unsigned int ulColor)
 {
     float (*pV)[4];
     unsigned int* pC;
-    /* TODO: decompile from asm/... */
+
+    if (!StartSpriteList(pMaterial, 1, 4)) return 1;
+    pC = (unsigned int*)m_CurrentVC;
+    pC[0] = pC[1] = pC[2] = pC[3] = (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24)
+                                  | (((ulColor & 0xFF) >> 1) << 16)
+                                  | (((ulColor & 0xFF00) >> 9) << 8)
+                                  | ((ulColor & 0xFF0000) >> 17);
+    m_CurrentVC += 16;
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0;
+    pC[1] = 0x1000;
+    pC[2] = 0x10000000;
+    pC[3] = 0x10001000;
+    m_CurrentVT += 16;
+    pV = m_CurrentVP;
+    pV[0][0] = pPosition->xX;
+    pV[0][1] = pPosition->xY;
+    pV[0][2] = pPosition->xZ;
+    pV[1][0] = SizeX;
+    pV[1][1] = SizeY;
+    m_CurrentVP += 4;
+    m_NbVertices += 4;
+    return 0;
 }
 
 int CSpriteController::SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_tdstVector_* pPosition, float SizeX, float SizeY, float AnimTime)
@@ -3606,14 +4092,66 @@ int CSpriteController::SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_t
 
 void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, float fSizeX, int bFade, float Alpha1, float Alpha2)
 {
-    float Position2[4];
     float Position1[4];
+    float Position2[4];
     int Alpha;
     float (*pV)[4];
     unsigned int* pC;
     unsigned int ColorCenter;
     unsigned int ColorOut;
-    /* TODO: decompile from asm/... */
+    float fHalf;
+    float* p1;
+    float* p2;
+
+    if (!StartSpriteList(pMaterial, 4, 8)) return;
+    pC = (unsigned int*)m_CurrentVC;
+    Alpha = (int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha);
+    ColorOut = Alpha << 24;
+    ColorCenter = ColorOut | 0x808080;
+    pC[0] = pC[1] = ColorOut;
+    pC[6] = pC[7] = ColorOut;
+    pC[2] = pC[3] = ColorCenter;
+    pC[4] = pC[5] = ColorCenter;
+    m_CurrentVC += 32;
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0;
+    pC[1] = 0x1000;
+    pC[2] = 0x8000000;
+    pC[3] = 0x8001000;
+    pC[4] = 0x8000000;
+    pC[5] = 0x8001000;
+    pC[6] = 0x10000000;
+    pC[7] = 0x10001000;
+    m_CurrentVT += 32;
+    Position1[0] = a3_fPosition->xX;
+    Position1[1] = a3_fPosition->xY;
+    Position1[2] = a3_fPosition->xZ;
+    Position2[0] = a3_fPosition2->xX;
+    Position2[1] = a3_fPosition2->xY;
+    Position2[2] = a3_fPosition2->xZ;
+    pV = m_CurrentVP;
+    p1 = Position1;
+    p2 = Position2;
+    fHalf = 0.5f;
+    asm
+    {
+        mfc1 v0, fHalf
+        qmtc2 v0, vf4
+        lqc2 vf1, 0x0(p1)
+        lqc2 vf2, 0x0(p2)
+        vadd.xyzw vf3, vf1, vf2
+        vmulx.xyz vf3, vf3, vf4x
+        sqc2 vf1, 0x0(pV)
+        sqc2 vf3, 0x10(pV)
+        sqc2 vf3, 0x40(pV)
+        sqc2 vf2, 0x50(pV)
+        addiu pV, pV, 0x20
+        swc1 fSizeX, 0x0(pV)
+        addiu pV, pV, 0x40
+        swc1 fSizeX, 0x0(pV)
+    }
+    m_CurrentVP += 8;
+    m_NbVertices += 8;
 }
 
 int CSpriteController::WorldOrthoPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2)
@@ -3651,7 +4189,7 @@ void CSpriteController::WorldOrthoPlanarOriented(MTH3D_tdstVector_* pPosition, G
     /* TODO: decompile from asm/... */
 }
 
-int CSpriteController::WorldPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float fSizeX, float fSizeY)
+int CSpriteController::WorldPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float fSizeX, float fSizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime)
 {
     float fADC;
     float Pos[4];
@@ -3752,7 +4290,83 @@ void CSpriteController::WorldQuadWithUVAndFade(GLD_tdstViewportAttributes_* p_st
     float (*pV)[4];
     unsigned int* pC;
     unsigned int Color;
-    /* TODO: decompile from asm/... */
+
+    *(int*)&fADC = 0x8000;
+    if (!StartSpriteList(pMaterial, 3, 8)) return;
+
+    pC = (unsigned int*)m_CurrentVC;
+    Alpha = (int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha);
+    Color = (Alpha << 24) | 0x808080;
+    pC[5] = pC[4] = pC[3] = pC[2] = Color;
+    pC[0] = pC[1] = pC[6] = pC[7] = 0x808080;
+    m_CurrentVC += 32;
+
+    UMin = (int)(4096.0f * u1);
+    UMax = (int)(4096.0f * u2);
+    VMin = ((int)(4096.0f - 4096.0f * v1)) << 16;
+    VMax = ((int)(4096.0f - 4096.0f * v2)) << 16;
+    vTmp = (v2 - v1) * fPercentage;
+    v3 = ((int)(4096.0f - 4096.0f * (v1 + vTmp))) << 16;
+    v5 = ((int)(4096.0f - 4096.0f * (v2 - vTmp))) << 16;
+
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = VMin | UMin;
+    pC[1] = VMin | UMax;
+    pC[2] = v3 | UMin;
+    pC[3] = v3 | UMax;
+    pC[4] = v5 | UMin;
+    pC[5] = v5 | UMax;
+    pC[6] = VMax | UMin;
+    pC[7] = VMax | UMax;
+    m_CurrentVT += 32;
+
+    pV = m_CurrentVP;
+    pV[0][0] = x1[0];
+    pV[0][1] = x1[1];
+    pV[0][2] = x1[2];
+    pV[0][3] = 1.0f;
+    pV[1][0] = x2[0];
+    pV[1][1] = x2[1];
+    pV[1][2] = x2[2];
+    pV[1][3] = 1.0f;
+    pV[6][0] = x4[0];
+    pV[6][1] = x4[1];
+    pV[6][2] = x4[2];
+    pV[6][3] = 1.0f;
+    pV[7][0] = x3[0];
+    pV[7][1] = x3[1];
+    pV[7][2] = x3[2];
+    pV[7][3] = 1.0f;
+
+    /* Interpolate the two inner vertex pairs on VU0 (I = fPercentage);
+       the VU0 instructions have no C form. */
+    asm
+    {
+        lqc2 vf1, 0x0(pV)
+        lqc2 vf2, 0x10(pV)
+        lqc2 vf4, 0x60(pV)
+        lqc2 vf3, 0x70(pV)
+        mfc1 a0, fPercentage
+        ctc2 a0, vi21
+        vsub.xyzw vf5, vf4, vf1
+        vsub.xyzw vf6, vf3, vf2
+        vmuli.xyzw vf5, vf5, I
+        vmuli.xyzw vf6, vf6, I
+        vadd.xyzw vf7, vf1, vf5
+        vadd.xyzw vf8, vf2, vf6
+        vsub.xyzw vf9, vf4, vf5
+        vsub.xyzw vf10, vf3, vf6
+        sqc2 vf7, 0x20(pV)
+        sqc2 vf8, 0x30(pV)
+        sqc2 vf9, 0x40(pV)
+        sqc2 vf10, 0x50(pV)
+    }
+
+    pV[0][3] = fADC;
+    pV[1][3] = fADC;
+    m_CurrentVP += 8;
+
+    m_NbVertices += 8;
 }
 
 void CSpriteController::DrawWorldQuadWithUVsAndAlpha(GLD_tdstViewportAttributes_* p_stViewport, float* x1, float* x2, float* x3, float* x4, float u1, float v1, float u2, float v2, float fAlpha1, float fAlpha2, float fAlpha3, float fAlpha4, GLI_tdstMaterial_* pMaterial)
@@ -3760,11 +4374,53 @@ void CSpriteController::DrawWorldQuadWithUVsAndAlpha(GLD_tdstViewportAttributes_
     float fADC;
     int VMax;
     int VMin;
-    int UMax;
     int UMin;
+    int UMax;
     float (*pV)[4];
     unsigned int* pC;
-    /* TODO: decompile from asm/... */
+
+    *(int*)&fADC = 0x8000;
+    if (!StartSpriteList(pMaterial, 3, 4)) return;
+
+    pC = (unsigned int*)m_CurrentVC;
+    pC[0] = ((unsigned int)(128.0f * fAlpha1) << 24) | 0x808080;
+    pC[1] = ((unsigned int)(128.0f * fAlpha2) << 24) | 0x808080;
+    pC[2] = ((unsigned int)(128.0f * fAlpha4) << 24) | 0x808080;
+    pC[3] = ((unsigned int)(128.0f * fAlpha3) << 24) | 0x808080;
+    m_CurrentVC += 16;
+
+    UMin = (int)(4096.0f * u1);
+    UMax = (int)(4096.0f * u2);
+    VMin = ((int)(4096.0f - 4096.0f * v1)) << 16;
+    VMax = ((int)(4096.0f - 4096.0f * v2)) << 16;
+
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = VMin | UMin;
+    pC[1] = VMin | UMax;
+    pC[2] = VMax | UMin;
+    pC[3] = VMax | UMax;
+    m_CurrentVT += 16;
+
+    pV = m_CurrentVP;
+    pV[0][0] = x1[0];
+    pV[0][1] = x1[1];
+    pV[0][2] = x1[2];
+    pV[0][3] = fADC;
+    pV[1][0] = x2[0];
+    pV[1][1] = x2[1];
+    pV[1][2] = x2[2];
+    pV[1][3] = fADC;
+    pV[2][0] = x4[0];
+    pV[2][1] = x4[1];
+    pV[2][2] = x4[2];
+    pV[2][3] = 1.0f;
+    pV[3][0] = x3[0];
+    pV[3][1] = x3[1];
+    pV[3][2] = x3[2];
+    pV[3][3] = 1.0f;
+    m_CurrentVP += 4;
+
+    m_NbVertices += 4;
 }
 
 void CSpriteController::Sprite2DWithUV(GLD_tdstViewportAttributes_* _p_stViewport, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial)
@@ -3862,19 +4518,22 @@ void CSpriteController::Icon2D_Percent(float xXMin, float xYMin, float xXMax, fl
 
 void CSpriteController::Draw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float xYMax, GLI_tdstMaterial_* hMaterial, unsigned int ulColor)
 {
+    int iBlue;
     union { int i; float f; } uW;
     uW.i = 0x8000;
     if (!StartSpriteList(hMaterial, 5, 4)) return;
-    float fHalfW = (float)(g_p_stVpt->dwWidth / 2);
+    float fHalfW = (float)g_p_stVpt->dwWidth;
     float fScaleX = 100.0f / fHalfW;
     xXMin = xXMin * fScaleX;
     xXMax = xXMax * fScaleX;
-    float fHalfH = (float)(g_p_stVpt->dwHeight / 2);
+    float fHalfH = (float)g_p_stVpt->dwHeight;
     float fScaleY = 100.0f / fHalfH;
     xYMin = xYMin * fScaleY;
     xYMax = xYMax * fScaleY;
     unsigned int* pC = (unsigned int*)m_CurrentVC;
-    unsigned int ulCol = ((ulColor & 0xFF0000) >> 17) | ((((ulColor & 0xFF00) >> 9) << 8) | ((((ulColor & 0xFF) >> 1) << 16) | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24)));
+    /* Permuter-found: the blue term through a temporary gives retail's
+     * 'or alpha, blue' operand order. */
+    unsigned int ulCol = (iBlue = ((ulColor & 0xFF) >> 1) << 16) | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24) | (((ulColor & 0xFF00) >> 9) << 8) | ((ulColor & 0xFF0000) >> 17);
     pC[0] = pC[1] = pC[2] = pC[3] = ulCol;
     m_CurrentVC += 16;
     pC = (unsigned int*)m_CurrentVT;

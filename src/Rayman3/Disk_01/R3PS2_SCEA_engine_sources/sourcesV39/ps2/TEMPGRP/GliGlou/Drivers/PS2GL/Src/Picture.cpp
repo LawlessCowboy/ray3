@@ -1107,18 +1107,6 @@ int YRES;
 int XRES;
 tagGLcontext g_PS2glContext;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 33–37 */
-/* addr: 0x002ece60  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 33
- *   +0x0008 -> line 34
- *   +0x0010 -> line 35
- *   +0x0018 -> line 36
- *   +0x001c -> line 37
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 extern "C" void GLI_vSavePicture(char* Name);
@@ -1126,23 +1114,6 @@ extern "C" void GLI_vTakePicture(void);
 extern "C" void GLI_vAskToTakePicture(void);
 extern "C" void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned char* pCompressed);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 555–555 */
-/* addr: 0x002ece90  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 555
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 549–551 */
-/* addr: 0x002ecea0  size: 172 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 549
- *   +0x0008 -> line 550
- *   +0x009c -> line 551
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void GLI_vReduceBackBufferTo256x256(void);
 extern "C" int sceGsSyncPath(int mode, unsigned short timeout);
 extern "C" void PS2auxSwapBuffers(void);
@@ -1150,98 +1121,6 @@ extern "C" int AE_GetZBufferBase(void);
 extern "C" unsigned short* PS2MC_GetScreenShotPreviewData(void);
 void GLI_vGsStoreFrameBufferIntoCompressed256x256(unsigned char* _pDestinationBuffer, short _ScreenRam, int _WIDTH, int _HEIGHT, short _CurrentPSM);
 void GLI_vGsStoreFrameBufferInto128x128x16(unsigned short* _pDestinationBuffer, short _ScreenRam, int _WIDTH, int _HEIGHT, short _CurrentPSM);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 542–543 */
-/* addr: 0x002ecf50  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 542
- *   +0x0004 -> line 543
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 398–482 */
-/* addr: 0x002ecf60  size: 580 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 398
- *   +0x0004 -> line 409
- *   +0x000c -> line 410
- *   +0x0010 -> line 409
- *   +0x0014 -> line 411
- *   +0x0018 -> line 412
- *   +0x001c -> line 409
- *   +0x0020 -> line 412
- *   +0x0024 -> line 409
- *   +0x0028 -> line 412
- *   +0x002c -> line 404
- *   +0x0030 -> line 412
- *   +0x0034 -> line 410
- *   +0x0038 -> line 412
- *   +0x003c -> line 410
- *   +0x0040 -> line 412
- *   +0x0044 -> line 416
- *   +0x0048 -> line 413
- *   +0x004c -> line 410
- *   +0x0050 -> line 413
- *   +0x0054 -> line 410
- *   +0x0058 -> line 413
- *   +0x0064 -> line 411
- *   +0x0068 -> line 413
- *   +0x006c -> line 416
- *   +0x0070 -> line 414
- *   +0x0074 -> line 411
- *   +0x0078 -> line 414
- *   +0x007c -> line 411
- *   +0x0080 -> line 414
- *   +0x0084 -> line 416
- *   +0x0088 -> line 414
- *   +0x008c -> line 416
- *   +0x0090 -> line 414
- *   +0x0098 -> line 416
- *   +0x009c -> line 418
- *   +0x00a0 -> line 419
- *   +0x00a4 -> line 420
- *   +0x00a8 -> line 421
- *   +0x00ac -> line 422
- *   +0x00b0 -> line 426
- *   +0x00b4 -> line 455
- *   +0x00b8 -> line 440
- *   +0x00bc -> line 455
- *   +0x00c0 -> line 440
- *   +0x00c4 -> line 455
- *   +0x00c8 -> line 428
- *   +0x00d4 -> line 431
- *   +0x00d8 -> line 428
- *   +0x00e0 -> line 433
- *   +0x0114 -> line 435
- *   +0x0118 -> line 434
- *   +0x011c -> line 433
- *   +0x0120 -> line 435
- *   +0x0124 -> line 437
- *   +0x012c -> line 438
- *   +0x0130 -> line 437
- *   +0x0134 -> line 438
- *   +0x0138 -> line 437
- *   +0x013c -> line 438
- *   +0x0140 -> line 437
- *   +0x0144 -> line 438
- *   +0x0148 -> line 441
- *   +0x014c -> line 442
- *   +0x0150 -> line 444
- *   +0x0154 -> line 445
- *   +0x0158 -> line 446
- *   +0x015c -> line 448
- *   +0x0160 -> line 449
- *   +0x0164 -> line 451
- *   +0x0168 -> line 455
- *   +0x01a4 -> line 456
- *   +0x01e0 -> line 457
- *   +0x021c -> line 478
- *   +0x022c -> line 479
- *   +0x023c -> line 482
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 291–394 */
 /* addr: 0x002ed1b0  size: 940 bytes */
@@ -1353,6 +1232,88 @@ void GLI_vGsStoreFrameBufferIntoCompressed256x256__FPUcsiis(unsigned char* _pDes
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 398–482 */
+/* addr: 0x002ecf60  size: 580 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 398
+ *   +0x0004 -> line 409
+ *   +0x000c -> line 410
+ *   +0x0010 -> line 409
+ *   +0x0014 -> line 411
+ *   +0x0018 -> line 412
+ *   +0x001c -> line 409
+ *   +0x0020 -> line 412
+ *   +0x0024 -> line 409
+ *   +0x0028 -> line 412
+ *   +0x002c -> line 404
+ *   +0x0030 -> line 412
+ *   +0x0034 -> line 410
+ *   +0x0038 -> line 412
+ *   +0x003c -> line 410
+ *   +0x0040 -> line 412
+ *   +0x0044 -> line 416
+ *   +0x0048 -> line 413
+ *   +0x004c -> line 410
+ *   +0x0050 -> line 413
+ *   +0x0054 -> line 410
+ *   +0x0058 -> line 413
+ *   +0x0064 -> line 411
+ *   +0x0068 -> line 413
+ *   +0x006c -> line 416
+ *   +0x0070 -> line 414
+ *   +0x0074 -> line 411
+ *   +0x0078 -> line 414
+ *   +0x007c -> line 411
+ *   +0x0080 -> line 414
+ *   +0x0084 -> line 416
+ *   +0x0088 -> line 414
+ *   +0x008c -> line 416
+ *   +0x0090 -> line 414
+ *   +0x0098 -> line 416
+ *   +0x009c -> line 418
+ *   +0x00a0 -> line 419
+ *   +0x00a4 -> line 420
+ *   +0x00a8 -> line 421
+ *   +0x00ac -> line 422
+ *   +0x00b0 -> line 426
+ *   +0x00b4 -> line 455
+ *   +0x00b8 -> line 440
+ *   +0x00bc -> line 455
+ *   +0x00c0 -> line 440
+ *   +0x00c4 -> line 455
+ *   +0x00c8 -> line 428
+ *   +0x00d4 -> line 431
+ *   +0x00d8 -> line 428
+ *   +0x00e0 -> line 433
+ *   +0x0114 -> line 435
+ *   +0x0118 -> line 434
+ *   +0x011c -> line 433
+ *   +0x0120 -> line 435
+ *   +0x0124 -> line 437
+ *   +0x012c -> line 438
+ *   +0x0130 -> line 437
+ *   +0x0134 -> line 438
+ *   +0x0138 -> line 437
+ *   +0x013c -> line 438
+ *   +0x0140 -> line 437
+ *   +0x0144 -> line 438
+ *   +0x0148 -> line 441
+ *   +0x014c -> line 442
+ *   +0x0150 -> line 444
+ *   +0x0154 -> line 445
+ *   +0x0158 -> line 446
+ *   +0x015c -> line 448
+ *   +0x0160 -> line 449
+ *   +0x0164 -> line 451
+ *   +0x0168 -> line 455
+ *   +0x01a4 -> line 456
+ *   +0x01e0 -> line 457
+ *   +0x021c -> line 478
+ *   +0x022c -> line 479
+ *   +0x023c -> line 482
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned char* pCompressed)
 {
     float VRGB[4];
@@ -1371,11 +1332,28 @@ void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned c
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 542–543 */
+/* addr: 0x002ecf50  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 542
+ *   +0x0004 -> line 543
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vAskToTakePicture(void)
 {
     GLI_g_bAskedToTakeAPicture = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 549–551 */
+/* addr: 0x002ecea0  size: 172 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 549
+ *   +0x0008 -> line 550
+ *   +0x009c -> line 551
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vTakePicture(void)
 {
     GLI_vReduceBackBufferTo256x256();
@@ -1386,11 +1364,29 @@ void GLI_vTakePicture(void)
     GLI_vGsStoreFrameBufferInto128x128x16(PS2MC_GetScreenShotPreviewData(), AE_GetZBufferBase() * 32, XRES, YRES, g_gsContext.FRAME_1.PSM);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 555–555 */
+/* addr: 0x002ece90  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 555
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSavePicture(char* Name)
 {
     PS2MC_fn_vSaveScreenShot((char*)GLI_g_aPictureData, Name);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 33–37 */
+/* addr: 0x002ece60  size: 36 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 33
+ *   +0x0008 -> line 34
+ *   +0x0010 -> line 35
+ *   +0x0018 -> line 36
+ *   +0x001c -> line 37
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_BaseFx::SetCurrentFog(void)
 {
     m_FogColor = GLI_g_CurrentSDLFogColor;

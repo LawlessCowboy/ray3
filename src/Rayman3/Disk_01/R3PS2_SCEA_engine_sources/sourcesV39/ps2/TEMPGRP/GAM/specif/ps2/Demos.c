@@ -1801,35 +1801,6 @@ void fn_vDisplayFix(unsigned char _ucVPIndex)
     /* TODO: decompile from asm/... */
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7511–7551 */
-/* addr: 0x00282da0  size: 356 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7511
- *   +0x0004 -> line 7521
- *   +0x0008 -> line 7511
- *   +0x000c -> line 7521
- *   +0x0010 -> line 7511
- *   +0x0024 -> line 7521
- *   +0x0038 -> line 7523
- *   +0x0040 -> line 7529
- *   +0x0054 -> line 7530
- *   +0x0068 -> line 7532
- *   +0x0078 -> line 7533
- *   +0x008c -> line 7534
- *   +0x0098 -> line 7536
- *   +0x00c0 -> line 7539
- *   +0x00d8 -> line 7540
- *   +0x00e4 -> line 7541
- *   +0x00ec -> line 7543
- *   +0x00f0 -> line 7540
- *   +0x00f4 -> line 7543
- *   +0x00fc -> line 7546
- *   +0x0100 -> line 7547
- *   +0x0138 -> line 7549
- *   +0x0140 -> line 7551
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int CD_OpenFile(char* szName);
 int CD_Read(int FileHandle, char* Buffer, int Size);
 void CD_Close(int fh);
@@ -1864,59 +1835,6 @@ void DEMO_fn_vAllocateMemory(void);
 void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform);
 float fn_fUncompressNumber(short n);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7476–7476 */
-/* addr: 0x00282f10  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7476
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7175–7410 */
-/* addr: 0x00282f20  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7175
- *   +0x0010 -> line 7193
- *   +0x001c -> line 7195
- *   +0x0030 -> line 7196
- *   +0x0038 -> line 7228
- *   +0x0080 -> line 7250
- *   +0x00a0 -> line 7252
- *   +0x00b0 -> line 7253
- *   +0x00b8 -> line 7255
- *   +0x00bc -> line 7259
- *   +0x00cc -> line 7261
- *   +0x00d8 -> line 7262
- *   +0x00dc -> line 7263
- *   +0x00e4 -> line 7272
- *   +0x00ec -> line 7274
- *   +0x00f4 -> line 7277
- *   +0x00fc -> line 7285
- *   +0x0108 -> line 7303
- *   +0x010c -> line 7285
- *   +0x0110 -> line 7308
- *   +0x0114 -> line 7315
- *   +0x0118 -> line 7308
- *   +0x0120 -> line 7315
- *   +0x013c -> line 7319
- *   +0x0144 -> line 7321
- *   +0x014c -> line 7325
- *   +0x0154 -> line 7326
- *   +0x015c -> line 7334
- *   +0x0170 -> line 7335
- *   +0x017c -> line 7349
- *   +0x0184 -> line 7351
- *   +0x018c -> line 7353
- *   +0x0190 -> line 7366
- *   +0x01e4 -> line 7370
- *   +0x01ec -> line 7374
- *   +0x0200 -> line 7381
- *   +0x0208 -> line 7388
- *   +0x0210 -> line 7409
- *   +0x0214 -> line 7410
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* memcpy(void* dst, const void* src, size_t n);
 void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* p_stCompressedTransform);
 float fn_fUncompressNumber(short n);
@@ -1941,62 +1859,6 @@ void SND_fn_vSynchroSound(void);
 void TMR_fn_wWait(unsigned int ulTimeToWait);
 int printf(const char* fmt, ...);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7035–7169 */
-/* addr: 0x00283150  size: 592 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 7035
- *   +0x0004 -> line 7054
- *   +0x0008 -> line 7035
- *   +0x000c -> line 7054
- *   +0x0010 -> line 7035
- *   +0x0014 -> line 7054
- *   +0x0018 -> line 7035
- *   +0x0024 -> line 7054
- *   +0x002c -> line 7056
- *   +0x0030 -> line 7058
- *   +0x003c -> line 7060
- *   +0x0040 -> line 7062
- *   +0x0044 -> line 7060
- *   +0x0054 -> line 7062
- *   +0x0064 -> line 7066
- *   +0x0068 -> line 7063
- *   +0x006c -> line 7066
- *   +0x0070 -> line 7062
- *   +0x0078 -> line 7063
- *   +0x007c -> line 7066
- *   +0x008c -> line 7067
- *   +0x0090 -> line 7066
- *   +0x0098 -> line 7067
- *   +0x00a8 -> line 7075
- *   +0x00b0 -> line 7067
- *   +0x00b4 -> line 7075
- *   +0x00bc -> line 7077
- *   +0x00d4 -> line 7078
- *   +0x00e0 -> line 7079
- *   +0x00ec -> line 7082
- *   +0x00f4 -> line 7088
- *   +0x00f8 -> line 7091
- *   +0x0114 -> line 7093
- *   +0x0124 -> line 7094
- *   +0x012c -> line 7096
- *   +0x0160 -> line 7097
- *   +0x0168 -> line 7114
- *   +0x0178 -> line 7118
- *   +0x0184 -> line 7124
- *   +0x018c -> line 7126
- *   +0x0198 -> line 7131
- *   +0x01d0 -> line 7145
- *   +0x01d8 -> line 7151
- *   +0x01e8 -> line 7153
- *   +0x01f0 -> line 7154
- *   +0x0208 -> line 7155
- *   +0x0214 -> line 7160
- *   +0x0228 -> line 7162
- *   +0x022c -> line 7164
- *   +0x0230 -> line 7169
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Word view of a vector: retail copies the components with lw/sw. */
 typedef union { MTH3D_tdstVector_ v; int i[3]; } tduDemoV;
 inline void DEMO_vSetTranslation(MAT_tdstTransformation_* _hMatrix, tduDemoV* _p_stVector)
@@ -2024,191 +1886,12 @@ void HIE_fn_vInvalidateOneGlobalMatrix(HIE_tdstSuperObject_* hSO);
 void HIE_fn_vInvalidateHierarchy(HIE_tdstSuperObject_* hSO);
 void HIE_fn_vRefreshHierarchy(HIE_tdstSuperObject_* hSO);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 6822–7029 */
-/* addr: 0x002833a0  size: 760 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6822
- *   +0x000c -> line 6826
- *   +0x0010 -> line 6856
- *   +0x0020 -> line 6889
- *   +0x0040 -> line 6891
- *   +0x0048 -> line 6892
- *   +0x0050 -> line 6893
- *   +0x0074 -> line 6894
- *   +0x00e4 -> line 6895
- *   +0x00f0 -> line 6898
- *   +0x010c -> line 6904
- *   +0x0120 -> line 6906
- *   +0x0124 -> line 6907
- *   +0x0130 -> line 6913
- *   +0x0144 -> line 6915
- *   +0x0148 -> line 6918
- *   +0x0158 -> line 6921
- *   +0x0160 -> line 6925
- *   +0x0168 -> line 6924
- *   +0x016c -> line 6926
- *   +0x0170 -> line 6928
- *   +0x0188 -> line 6930
- *   +0x0190 -> line 6931
- *   +0x0198 -> line 6933
- *   +0x0200 -> line 6940
- *   +0x021c -> line 6941
- *   +0x0224 -> line 6942
- *   +0x0230 -> line 6953
- *   +0x0238 -> line 6956
- *   +0x0240 -> line 6959
- *   +0x0254 -> line 6961
- *   +0x0258 -> line 6985
- *   +0x025c -> line 6984
- *   +0x026c -> line 6985
- *   +0x027c -> line 6986
- *   +0x0284 -> line 6990
- *   +0x0288 -> line 7021
- *   +0x02e0 -> line 7028
- *   +0x02e8 -> line 7029
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag);
 void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO);
 void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO);
 void HIE_fn_SO_vSetSuperimposedFlag(HIE_tdstSuperObject_* hSO);
 void fn_vTreatCharactersInSector(HIE_tdstSuperObject_* hCharacter);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 6043–6440 */
-/* addr: 0x002836a0  size: 2360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 6043
- *   +0x0004 -> line 6073
- *   +0x0008 -> line 6043
- *   +0x0028 -> line 6045
- *   +0x0030 -> line 6073
- *   +0x0034 -> line 6063
- *   +0x0038 -> line 6064
- *   +0x003c -> line 6073
- *   +0x0058 -> line 6076
- *   +0x00a4 -> line 6091
- *   +0x00ac -> line 6077
- *   +0x00b0 -> line 6091
- *   +0x00bc -> line 6093
- *   +0x00c0 -> line 6091
- *   +0x00c4 -> line 6093
- *   +0x00cc -> line 6095
- *   +0x00d0 -> line 6093
- *   +0x00d4 -> line 6095
- *   +0x00f8 -> line 6098
- *   +0x010c -> line 6099
- *   +0x0110 -> line 6098
- *   +0x0118 -> line 6100
- *   +0x0120 -> line 6103
- *   +0x013c -> line 6106
- *   +0x0164 -> line 6111
- *   +0x0178 -> line 6118
- *   +0x017c -> line 6111
- *   +0x0184 -> line 6118
- *   +0x01b8 -> line 6121
- *   +0x01e0 -> line 6130
- *   +0x01f0 -> line 6140
- *   +0x01fc -> line 6130
- *   +0x0200 -> line 6142
- *   +0x0204 -> line 6140
- *   +0x0208 -> line 6130
- *   +0x020c -> line 6140
- *   +0x0210 -> line 6130
- *   +0x0214 -> line 6140
- *   +0x0264 -> line 6142
- *   +0x0298 -> line 6188
- *   +0x02c0 -> line 6192
- *   +0x02d4 -> line 6196
- *   +0x02d8 -> line 6192
- *   +0x02dc -> line 6196
- *   +0x02e4 -> line 6209
- *   +0x0314 -> line 6212
- *   +0x033c -> line 6216
- *   +0x0344 -> line 6235
- *   +0x0350 -> line 6237
- *   +0x0360 -> line 6240
- *   +0x0388 -> line 6242
- *   +0x0398 -> line 6244
- *   +0x039c -> line 6242
- *   +0x03a4 -> line 6244
- *   +0x03a8 -> line 6242
- *   +0x03ac -> line 6244
- *   +0x03d4 -> line 6264
- *   +0x03d8 -> line 6267
- *   +0x03dc -> line 6264
- *   +0x03e0 -> line 6267
- *   +0x03e4 -> line 6264
- *   +0x0410 -> line 6267
- *   +0x0428 -> line 6272
- *   +0x043c -> line 6278
- *   +0x0444 -> line 6280
- *   +0x057c -> line 6283
- *   +0x05a4 -> line 6285
- *   +0x05b8 -> line 6289
- *   +0x05bc -> line 6285
- *   +0x05c4 -> line 6290
- *   +0x05cc -> line 6293
- *   +0x05d4 -> line 6296
- *   +0x05fc -> line 6298
- *   +0x0610 -> line 6303
- *   +0x0620 -> line 6298
- *   +0x0624 -> line 6303
- *   +0x062c -> line 6310
- *   +0x0630 -> line 6312
- *   +0x0638 -> line 6315
- *   +0x0640 -> line 6319
- *   +0x0670 -> line 6326
- *   +0x0674 -> line 6319
- *   +0x0678 -> line 6321
- *   +0x067c -> line 6319
- *   +0x0680 -> line 6321
- *   +0x06b4 -> line 6326
- *   +0x06fc -> line 6336
- *   +0x070c -> line 6340
- *   +0x071c -> line 6343
- *   +0x0730 -> line 6344
- *   +0x0738 -> line 6346
- *   +0x073c -> line 6347
- *   +0x0740 -> line 6346
- *   +0x0744 -> line 6347
- *   +0x0748 -> line 6346
- *   +0x074c -> line 6347
- *   +0x075c -> line 6348
- *   +0x0764 -> line 6350
- *   +0x0770 -> line 6351
- *   +0x0778 -> line 6369
- *   +0x0790 -> line 6377
- *   +0x07b0 -> line 6379
- *   +0x07c0 -> line 6381
- *   +0x07d0 -> line 6384
- *   +0x07d8 -> line 6390
- *   +0x07dc -> line 6391
- *   +0x0828 -> line 6395
- *   +0x082c -> line 6398
- *   +0x0830 -> line 6395
- *   +0x0834 -> line 6403
- *   +0x0838 -> line 6409
- *   +0x083c -> line 6403
- *   +0x0840 -> line 6409
- *   +0x0848 -> line 6403
- *   +0x084c -> line 6404
- *   +0x0850 -> line 6403
- *   +0x0854 -> line 6409
- *   +0x085c -> line 6410
- *   +0x0860 -> line 6415
- *   +0x0888 -> line 6417
- *   +0x08a4 -> line 6418
- *   +0x08dc -> line 6420
- *   +0x08ec -> line 6421
- *   +0x08fc -> line 6423
- *   +0x0904 -> line 6424
- *   +0x0908 -> line 6423
- *   +0x090c -> line 6424
- *   +0x0914 -> line 6440
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline float fn_fUncompressNumberInline(short n)
 {
     unsigned int sign_bit;
@@ -2262,84 +1945,665 @@ inline tdstDemoSOList_* DEMO_p_stFindSO(HIE_tdstSuperObject_* hSO)
     return NULL;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5927–6018 */
-/* addr: 0x00284020  size: 392 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5927
- *   +0x0010 -> line 5928
- *   +0x0014 -> line 5936
- *   +0x0020 -> line 5938
- *   +0x0030 -> line 5948
- *   +0x0040 -> line 5949
- *   +0x0044 -> line 5948
- *   +0x004c -> line 5949
- *   +0x005c -> line 5950
- *   +0x0060 -> line 5949
- *   +0x0068 -> line 5950
- *   +0x0078 -> line 5952
- *   +0x0080 -> line 5950
- *   +0x0084 -> line 5952
- *   +0x00a4 -> line 5954
- *   +0x00b8 -> line 5955
- *   +0x00bc -> line 5954
- *   +0x00c4 -> line 5955
- *   +0x00d4 -> line 5967
- *   +0x00dc -> line 5955
- *   +0x00e0 -> line 5967
- *   +0x0110 -> line 5970
- *   +0x013c -> line 5974
- *   +0x0150 -> line 5978
- *   +0x0170 -> line 6015
- *   +0x0178 -> line 6018
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void MAT_fn_vSetIdentity(MAT_tdstTransformation_* hMatrix);
 int MC_fn_hGetFirstMainCharNode(void);
 HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(int hNode);
 HIE_tdstSuperObject_* fn_p_stDemoAllocateAlways(int otObjectModelType, int hFather, HIE_tdstSuperObject_* hGenerator, int lParam, MAT_tdstTransformation_* hMatrix, short wAlwaysNumber);
 void fn_vKillEngineObjectOrAlwaysByPointer(tdstEngineObject_* p_stObject);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5753–5843 */
-/* addr: 0x002841b0  size: 528 bytes */
+void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
+
+void DEMO_fn_vLoadFromFile(char* szDemoName);
+
+char* DEMO_fn_pcBuildDemoPath(char* szFilename);
+unsigned char DEMO_bInitEventFlow(char* szFileName);
+char* DEMO_pcGetNextFlowSegment(void);
+void* memcpy(void* dst, const void* src, size_t n);
+int printf(const char* fmt, ...);
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+int fn_lGetSubMapNumber(void);
+char* fn_p_szGetLevelName(void);
+char* FMN_SCE_ConvertPath2DVD(char* buffer);
+char* FMN_SCE_AddBaseDirectory(char* buffer);
+char* strstr(const char* s1, const char* s2);
+unsigned int strlen(const char* s);
+
+void AGO_vInit(void);
+void CreateType28AGO(MTH3D_tdstVector_* p_stPos, MTH3D_tdstVector_* p_stDir, int lParam, float fParam);
+
+inline short fn_sCompressNumber(float xValue)
+{
+    char szBuffer[80];
+    unsigned int ulValue;
+    unsigned int sign_bit;
+    unsigned int expf;
+    unsigned int mantissa;
+    union {
+        float f;
+        unsigned int ul;
+    } value;
+
+    value.f = xValue;
+    ulValue = value.ul;
+    expf = (ulValue & 0x7F800000) >> 23;
+    mantissa = ulValue & 0x7FFFFF;
+    sign_bit = ulValue & 0x80000000;
+    if (expf != 0)
+    {
+        expf -= 0x7F;
+        if ((int)expf < -15)
+        {
+            sprintf(szBuffer, "float abs val too small to be compressed %f -> 0\n", (double)xValue);
+            expf = -15;
+            mantissa = 1;
+        }
+        if ((int)expf > 16)
+        {
+            expf = 16;
+            mantissa = 0x3FF;
+        }
+        expf += 15;
+        expf <<= 10;
+    }
+    return (short)((mantissa >> 13) | ((sign_bit >> 16) | expf));
+}
+
+#define DEMO_M_COMPRESS_VECTOR(a_sDst, p_stV) \
+    (a_sDst)[0] = fn_sCompressNumber((p_stV)->xX); \
+    (a_sDst)[1] = fn_sCompressNumber((p_stV)->xY); \
+    (a_sDst)[2] = fn_sCompressNumber((p_stV)->xZ); \
+    (a_sDst)[3] = fn_sCompressNumber((p_stV)->xW);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 440–482 */
+/* addr: 0x002876f0  size: 72 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5753
- *   +0x0004 -> line 5761
- *   +0x0008 -> line 5753
- *   +0x0018 -> line 5761
- *   +0x001c -> line 5754
- *   +0x0020 -> line 5761
- *   +0x0028 -> line 5766
- *   +0x0038 -> line 5767
- *   +0x003c -> line 5766
- *   +0x0044 -> line 5767
- *   +0x0054 -> line 5771
- *   +0x005c -> line 5767
- *   +0x0064 -> line 5771
- *   +0x0084 -> line 5785
- *   +0x0088 -> line 5787
- *   +0x0094 -> line 5785
- *   +0x009c -> line 5787
- *   +0x00a4 -> line 5792
- *   +0x00c4 -> line 5814
- *   +0x00c8 -> line 5815
- *   +0x00d0 -> line 5814
- *   +0x00d8 -> line 5815
- *   +0x00e0 -> line 5819
- *   +0x0100 -> line 5821
- *   +0x011c -> line 5822
- *   +0x0158 -> line 5823
- *   +0x0160 -> line 5827
- *   +0x0170 -> line 5831
- *   +0x0190 -> line 5833
- *   +0x01ac -> line 5834
- *   +0x01e8 -> line 5835
- *   +0x01f0 -> line 5839
- *   +0x01fc -> line 5843
+ *   +0x0000 -> line 457
+ *   +0x0004 -> line 440
+ *   +0x0008 -> line 457
+ *   +0x000c -> line 460
+ *   +0x0010 -> line 457
+ *   +0x0014 -> line 460
+ *   +0x0018 -> line 466
+ *   +0x0020 -> line 470
+ *   +0x0024 -> line 471
+ *   +0x0028 -> line 477
+ *   +0x003c -> line 479
+ *   +0x0040 -> line 482
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, tdstEngineObject_* p_stObject);
+
+float fn_fUncompressNumber(short n)
+{
+    unsigned int sign_bit;
+    unsigned int expf;
+    unsigned int mantissa;
+    unsigned int ulValue;
+    union {
+        unsigned int ul;
+        float f;
+    } value;
+
+    sign_bit = n & 0x8000;
+    expf = (n & 0x7c00) >> 10;
+    mantissa = n & 0x3ff;
+    if (expf != 0)
+    {
+        expf += 0x70;
+        expf <<= 23;
+    }
+    ulValue = (mantissa << 13) | ((sign_bit << 16) | expf);
+    value.ul = ulValue;
+    return value.f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 887–1066 */
+/* addr: 0x002864f0  size: 4600 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 887
+ *   +0x0004 -> line 892
+ *   +0x0008 -> line 887
+ *   +0x000c -> line 892
+ *   +0x0010 -> line 887
+ *   +0x0034 -> line 892
+ *   +0x003c -> line 896
+ *   +0x005c -> line 901
+ *   +0x0084 -> line 906
+ *   +0x00a4 -> line 909
+ *   +0x00ac -> line 911
+ *   +0x00b0 -> line 914
+ *   +0x00b4 -> line 911
+ *   +0x00d4 -> line 914
+ *   +0x00e8 -> line 915
+ *   +0x00f0 -> line 918
+ *   +0x0104 -> line 919
+ *   +0x0108 -> line 921
+ *   +0x010c -> line 918
+ *   +0x0114 -> line 919
+ *   +0x0118 -> line 921
+ *   +0x0130 -> line 923
+ *   +0x014c -> line 924
+ *   +0x0154 -> line 927
+ *   +0x0168 -> line 928
+ *   +0x016c -> line 930
+ *   +0x0170 -> line 927
+ *   +0x0178 -> line 928
+ *   +0x017c -> line 930
+ *   +0x0194 -> line 932
+ *   +0x019c -> line 933
+ *   +0x01a4 -> line 934
+ *   +0x01a8 -> line 935
+ *   +0x01b0 -> line 943
+ *   +0x01c4 -> line 944
+ *   +0x01c8 -> line 946
+ *   +0x01cc -> line 943
+ *   +0x01d4 -> line 944
+ *   +0x01d8 -> line 946
+ *   +0x01f0 -> line 948
+ *   +0x021c -> line 951
+ *   +0x0234 -> line 956
+ *   +0x0474 -> line 958
+ *   +0x0478 -> line 956
+ *   +0x0480 -> line 959
+ *   +0x06b8 -> line 961
+ *   +0x06bc -> line 959
+ *   +0x06c4 -> line 962
+ *   +0x0900 -> line 966
+ *   +0x0904 -> line 962
+ *   +0x0908 -> line 966
+ *   +0x0914 -> line 969
+ *   +0x091c -> line 978
+ *   +0x0930 -> line 979
+ *   +0x0934 -> line 981
+ *   +0x0938 -> line 978
+ *   +0x0940 -> line 979
+ *   +0x0944 -> line 981
+ *   +0x0954 -> line 985
+ *   +0x0958 -> line 981
+ *   +0x0960 -> line 985
+ *   +0x0978 -> line 987
+ *   +0x09a4 -> line 990
+ *   +0x09bc -> line 992
+ *   +0x09e0 -> line 1020
+ *   +0x09e4 -> line 992
+ *   +0x09e8 -> line 1021
+ *   +0x09ec -> line 992
+ *   +0x09f0 -> line 1020
+ *   +0x09f4 -> line 992
+ *   +0x09f8 -> line 1020
+ *   +0x09fc -> line 992
+ *   +0x0a00 -> line 1020
+ *   +0x0a04 -> line 992
+ *   +0x0a08 -> line 1031
+ *   +0x0a10 -> line 1020
+ *   +0x0a14 -> line 1021
+ *   +0x0a20 -> line 1022
+ *   +0x0a30 -> line 1031
+ *   +0x0a34 -> line 1020
+ *   +0x0a38 -> line 1031
+ *   +0x0a3c -> line 1027
+ *   +0x0a40 -> line 1029
+ *   +0x0a44 -> line 1020
+ *   +0x0a64 -> line 1021
+ *   +0x0a8c -> line 1022
+ *   +0x0ab4 -> line 1023
+ *   +0x0ac0 -> line 1031
+ *   +0x0cf0 -> line 1035
+ *   +0x0cf4 -> line 1031
+ *   +0x0cf8 -> line 1035
+ *   +0x0f30 -> line 1038
+ *   +0x0f34 -> line 1035
+ *   +0x0f38 -> line 1038
+ *   +0x1170 -> line 1043
+ *   +0x1174 -> line 1038
+ *   +0x1178 -> line 1042
+ *   +0x1184 -> line 1045
+ *   +0x118c -> line 1047
+ *   +0x11a4 -> line 1048
+ *   +0x11ac -> line 1050
+ *   +0x11c8 -> line 1066
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform)
+{
+    MTH4D_tdstMatrix_ stMatrix;
+    MTH4D_tdstMatrix_ stMatrix2;
+    short* p_coef;
+    MTH4D_tdstVector_* p_stVector;
+    short* p_coefScaled;
+    MTH4D_tdstVector_* p_stScaled;
+    float xScale;
+    float xX;
+    float xY;
+    float xZ;
+    float* p0Y; float* p0Z; float* p0W; float* p1X; float* p1Y; float* p1Z; float* p1W; float* p2X; float* p2Y; float* p2Z; float* p2W;
+
+    memset(_p_stCompressedTransform, 0, 42);
+    p_coef = _p_stCompressedTransform->a_sCoef;
+    memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 2);
+    gp_DEMO_CurrentPosInMemory += 2;
+    switch (_p_stCompressedTransform->uwType)
+    {
+    case 1:
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        p_coef[16] = 0x3C00;
+        p_coef[15] = 0x3C00;
+        p_coef[10] = 0x3C00;
+        p_coef[5] = 0x3C00;
+        p_coef[0] = 0x3C00;
+        break;
+    case 2:
+        p_coef[19] = 0x3C00;
+        p_coef[18] = 0x3C00;
+        p_coef[17] = 0x3C00;
+        p_coef[16] = 0x3C00;
+        p_coef[15] = 0x3C00;
+        p_coef[10] = 0x3C00;
+        p_coef[5] = 0x3C00;
+        p_coef[0] = 0x3C00;
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        break;
+    case 3:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        p_coef[5] = p_coef[10] = p_coef[15] = p_coef[16] = p_coef[17] = p_coef[18] = p_coef[19] = p_coef[0];
+        break;
+    case 4:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(&p_coef[16], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        p_coef[0] = p_coef[16];
+        p_coef[5] = p_coef[17];
+        p_coef[10] = p_coef[18];
+        break;
+    case 5:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
+        gp_DEMO_CurrentPosInMemory += 8;
+        xZ = fn_fUncompressNumber(p_coef[3]);
+        xY = fn_fUncompressNumber(p_coef[2]);
+        xX = fn_fUncompressNumber(p_coef[1]);
+        MAT_fn_vQuatToMatrix(&stMatrix, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
+        p_stVector = &stMatrix.stCol_0;
+        DEMO_M_COMPRESS_VECTOR(&p_coef[0], p_stVector)
+        p_stVector = &stMatrix.stCol_1;
+        DEMO_M_COMPRESS_VECTOR(&p_coef[4], p_stVector)
+        p_stVector = &stMatrix.stCol_2;
+        DEMO_M_COMPRESS_VECTOR(&p_coef[8], p_stVector)
+        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[18] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[17] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[16] = 0x3C00;
+        break;
+    case 6:
+        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
+        gp_DEMO_CurrentPosInMemory += 6;
+        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
+        memcpy(&_p_stCompressedTransform->a_sCoef[16], (void*)gp_DEMO_CurrentPosInMemory, 2);
+        gp_DEMO_CurrentPosInMemory += 2;
+        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
+        gp_DEMO_CurrentPosInMemory += 8;
+        xZ = fn_fUncompressNumber(p_coef[3]);
+        xY = fn_fUncompressNumber(p_coef[2]);
+        xX = fn_fUncompressNumber(p_coef[1]);
+        MAT_fn_vQuatToMatrix(&stMatrix2, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
+        xScale = fn_fUncompressNumberInline(_p_stCompressedTransform->a_sCoef[16]);
+        p0W = &stMatrix2.stCol_0.xW;
+        p1X = &stMatrix2.stCol_1.xX;
+        p0Z = &stMatrix2.stCol_0.xZ;
+        p0Y = &stMatrix2.stCol_0.xY;
+        p1Y = &stMatrix2.stCol_1.xY;
+        p1Z = &stMatrix2.stCol_1.xZ;
+        p1W = &stMatrix2.stCol_1.xW;
+        p2X = &stMatrix2.stCol_2.xX;
+        p2Y = &stMatrix2.stCol_2.xY;
+        p2Z = &stMatrix2.stCol_2.xZ;
+        p2W = &stMatrix2.stCol_2.xW;
+        stMatrix2.stCol_0.xX *= xScale;
+        *p0Y *= xScale;
+        *p0Z *= xScale;
+        *p0W = 1.0f;
+        *p1X *= xScale;
+        *p1Y *= xScale;
+        *p1Z *= xScale;
+        *p1W = 1.0f;
+        *p2X *= xScale;
+        *p2Y *= xScale;
+        *p2Z *= xScale;
+        *p2W = 1.0f;
+        *p2W = 0.0f;
+        *p1W = 0.0f;
+        *p0W = 0.0f;
+        p_coefScaled = _p_stCompressedTransform->a_sCoef;
+        p_stScaled = &stMatrix2.stCol_0;
+        DEMO_M_COMPRESS_VECTOR(p_coefScaled, p_stScaled)
+        p_stScaled = &stMatrix2.stCol_1;
+        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[4], p_stScaled)
+        p_stScaled = &stMatrix2.stCol_2;
+        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[8], p_stScaled)
+        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
+        _p_stCompressedTransform->a_sCoef[18] = _p_stCompressedTransform->a_sCoef[17] = _p_stCompressedTransform->a_sCoef[16];
+        break;
+    case 7:
+        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
+        gp_DEMO_CurrentPosInMemory += 42;
+        break;
+    case 8:
+        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
+        gp_DEMO_CurrentPosInMemory += 42;
+        break;
+    case 0:
+    case 9:
+        break;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1266–1295 */
+/* addr: 0x002864e0  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1284
+ *   +0x0004 -> line 1266
+ *   +0x0008 -> line 1295
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vAllocateMemory(void)
+{
+    gp_DEMO_AllocatedMemory = 0;
+    g_szMapNameToLoadWhenDemoFinished[0] = '\0';
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1320–1364 */
+/* addr: 0x00286410  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1320
+ *   +0x0004 -> line 1324
+ *   +0x0008 -> line 1320
+ *   +0x000c -> line 1324
+ *   +0x0018 -> line 1325
+ *   +0x0020 -> line 1339
+ *   +0x0024 -> line 1348
+ *   +0x0028 -> line 1339
+ *   +0x002c -> line 1338
+ *   +0x0030 -> line 1340
+ *   +0x0034 -> line 1348
+ *   +0x0038 -> line 1340
+ *   +0x003c -> line 1348
+ *   +0x0048 -> line 1338
+ *   +0x004c -> line 1349
+ *   +0x0058 -> line 1327
+ *   +0x005c -> line 1351
+ *   +0x0064 -> line 1353
+ *   +0x0078 -> line 1357
+ *   +0x00c0 -> line 1364
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vPrepareForReadNow(void)
+{
+    MTH3D_tdstVector_ stPos;
+    MTH3D_tdstVector_ stDir;
+    int i;
+
+    if (g_DEMO_u32PlayMode == 1)
+        gp_DEMO_CurrentPosInMemory = gp_DEMO_AllocatedMemory;
+    g_ulDEMO_ElapsedDemoTimerCount = 1;
+    g_ulDEMO_DeltaTimerCount = 32;
+    g_ulDEMO_StartDEMO_EngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    gl_DEMO_CurrentFrame = 0;
+    stPos.xX = 1.0f;
+    stPos.xY = 1.0f;
+    stPos.xZ = 1000.0f;
+    stDir.xX = 1.0f;
+    stDir.xY = 1.0f;
+    stDir.xZ = 1.0f;
+    AGO_vInit();
+    CreateType28AGO(&stPos, &stDir, 0, 0.0f);
+    for (i = 0; i < 32; i++)
+        g_as32DemoAGOTable[i] = -1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1367–1373 */
+/* addr: 0x002863d0  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1367
+ *   +0x0004 -> line 1368
+ *   +0x0008 -> line 1367
+ *   +0x000c -> line 1369
+ *   +0x0024 -> line 1370
+ *   +0x0028 -> line 1372
+ *   +0x0030 -> line 1373
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
+{
+    g_DEMO_KeybTest = 2;
+    if (!_iNbFramesToWait) DEMO_fn_vPrepareForReadNow();
+    else g_iNbFramesToWaitBeforePlaying = _iNbFramesToWait;
+    g_DEMO_AutoPlay = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1448–1448 */
+/* addr: 0x002863c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1448
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vCloseFirstInit(void)
+{
+    g_DEMO_FirstInitFlag = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1735–1780 */
+/* addr: 0x00286290  size: 296 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1735
+ *   +0x0010 -> line 1741
+ *   +0x0024 -> line 1743
+ *   +0x002c -> line 1745
+ *   +0x0048 -> line 1746
+ *   +0x0050 -> line 1749
+ *   +0x0070 -> line 1757
+ *   +0x0090 -> line 1760
+ *   +0x00a0 -> line 1761
+ *   +0x00ac -> line 1762
+ *   +0x00d0 -> line 1764
+ *   +0x00d8 -> line 1768
+ *   +0x00ec -> line 1769
+ *   +0x0104 -> line 1771
+ *   +0x0108 -> line 1777
+ *   +0x0114 -> line 1780
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* DEMO_fn_pcBuildDemoPath(char* szFilename)
+{
+    char ax_cName[256];
+    char* p_cFilename;
+    int lSubMapNumber;
+
+    lSubMapNumber = ((unsigned int)fn_lGetSubMapNumber() & 0xFFFF0000) >> 16;
+
+    if (lSubMapNumber == 0)
+    {
+        sprintf(szFilename, "\\Demos\\%s\\", fn_p_szGetLevelName());
+    }
+    else
+    {
+        sprintf(szFilename, "\\Demos\\%s\\%02d\\", fn_p_szGetLevelName(), lSubMapNumber);
+    }
+
+    strcpy(ax_cName, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(szFilename)));
+
+    if (strstr(ax_cName, "cdrom0:") == ax_cName)
+        /* Not original source, needs cleaning up: int-cast keeps the unfolded sp+0x30 addressing. */
+        strcpy(szFilename, (char*)((int)ax_cName + strlen("cdrom0:")));
+    else
+        strcpy(szFilename, ax_cName);
+
+    p_cFilename = strstr(szFilename, ";1");
+    if (p_cFilename == szFilename + strlen(szFilename) - 2)
+        *p_cFilename = 0;
+
+    return szFilename + strlen(szFilename);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1794–1795 */
+/* addr: 0x00286270  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1794
+ *   +0x000c -> line 1795
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
+{
+    return gp_DEMO_CurrentPosInMemory - gp_DEMO_AllocatedMemory + 8;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1800–1801 */
+/* addr: 0x00286260  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1800
+ *   +0x0008 -> line 1801
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
+{
+    return (char*)gp_DEMO_AllocatedMemory + u32Offset - 8;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1808–1921 */
+/* addr: 0x002861b0  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1808
+ *   +0x0010 -> line 1878
+ *   +0x0018 -> line 1879
+ *   +0x0024 -> line 1884
+ *   +0x0028 -> line 1886
+ *   +0x003c -> line 1891
+ *   +0x0048 -> line 1895
+ *   +0x005c -> line 1896
+ *   +0x0060 -> line 1895
+ *   +0x0068 -> line 1896
+ *   +0x007c -> line 1898
+ *   +0x0084 -> line 1899
+ *   +0x0090 -> line 1900
+ *   +0x0098 -> line 1921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+void DEMO_fn_vLoadFromFile(char* szDemoName)
+{
+    unsigned int Length;
+    char* p_cFilename;
+    char szFilename[256];
+
+    p_cFilename = DEMO_fn_pcBuildDemoPath(szFilename);
+    strcpy(p_cFilename, szDemoName);
+    g_DEMO_u32PlayMode = 2;
+    if (DEMO_bInitEventFlow(szFilename))
+    {
+        gp_DEMO_CurrentPosInMemory = (int)DEMO_pcGetNextFlowSegment();
+        memcpy(&gl_DEMO_NumberOfFrames, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+        memcpy(&Length, (void*)gp_DEMO_CurrentPosInMemory, 4);
+        gp_DEMO_CurrentPosInMemory += 4;
+    }
+    else
+    {
+        printf("DEMO_fn_vLoadFromFile(%s): open failed\n", szFilename);
+        gl_DEMO_NumberOfFrames = -1;
+    }
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1956–1959 */
+/* addr: 0x00286180  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 1956
+ *   +0x0008 -> line 1957
+ *   +0x000c -> line 1956
+ *   +0x0010 -> line 1957
+ *   +0x0018 -> line 1958
+ *   +0x0020 -> line 1959
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vAskToLoadDemo(char* pcDemoName)
+{
+    strcpy(g_szDemoToLoad, pcDemoName);
+    g_DEMO_LoadDemo = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1963–1968 */
+/* addr: 0x002860d0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1963
+ *   +0x0008 -> line 1964
+ *   +0x0014 -> line 1965
+ *   +0x00a0 -> line 1966
+ *   +0x00a4 -> line 1968
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vLoadDemoIfNeeded(void)
+{
+    if (g_DEMO_LoadDemo)
+    {
+        DEMO_fn_vLoadFromFile(g_szDemoToLoad);
+        g_DEMO_LoadDemo = 0;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2023–2023 */
+/* addr: 0x002860c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2023
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput)
+{
+    g_bTestInputDuringDemo = _bTestInput;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2026–2029 */
+/* addr: 0x00286090  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 2026
+ *   +0x0008 -> line 2027
+ *   +0x000c -> line 2026
+ *   +0x0010 -> line 2027
+ *   +0x001c -> line 2028
+ *   +0x0024 -> line 2029
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName)
+{
+    strncpy(g_szMapNameToLoadWhenDemoFinished, _szMapName, 20);
+    g_szMapNameToLoadWhenDemoFinished[19] = 0;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 4624–5742 */
 /* addr: 0x002843c0  size: 7368 bytes */
@@ -2949,667 +3213,6 @@ void PLA_fn_vDesInitAllChildOfCharacter(HIE_tdstSuperObject_* p_stSuperObject, t
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2026–2029 */
-/* addr: 0x00286090  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 2026
- *   +0x0008 -> line 2027
- *   +0x000c -> line 2026
- *   +0x0010 -> line 2027
- *   +0x001c -> line 2028
- *   +0x0024 -> line 2029
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 2023–2023 */
-/* addr: 0x002860c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2023
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1963–1968 */
-/* addr: 0x002860d0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1963
- *   +0x0008 -> line 1964
- *   +0x0014 -> line 1965
- *   +0x00a0 -> line 1966
- *   +0x00a4 -> line 1968
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void DEMO_fn_vLoadFromFile(char* szDemoName);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1956–1959 */
-/* addr: 0x00286180  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 1956
- *   +0x0008 -> line 1957
- *   +0x000c -> line 1956
- *   +0x0010 -> line 1957
- *   +0x0018 -> line 1958
- *   +0x0020 -> line 1959
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1808–1921 */
-/* addr: 0x002861b0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1808
- *   +0x0010 -> line 1878
- *   +0x0018 -> line 1879
- *   +0x0024 -> line 1884
- *   +0x0028 -> line 1886
- *   +0x003c -> line 1891
- *   +0x0048 -> line 1895
- *   +0x005c -> line 1896
- *   +0x0060 -> line 1895
- *   +0x0068 -> line 1896
- *   +0x007c -> line 1898
- *   +0x0084 -> line 1899
- *   +0x0090 -> line 1900
- *   +0x0098 -> line 1921
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-char* DEMO_fn_pcBuildDemoPath(char* szFilename);
-unsigned char DEMO_bInitEventFlow(char* szFileName);
-char* DEMO_pcGetNextFlowSegment(void);
-void* memcpy(void* dst, const void* src, size_t n);
-int printf(const char* fmt, ...);
-
-#pragma auto_inline on
-
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1800–1801 */
-/* addr: 0x00286260  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1800
- *   +0x0008 -> line 1801
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1794–1795 */
-/* addr: 0x00286270  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1794
- *   +0x000c -> line 1795
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1735–1780 */
-/* addr: 0x00286290  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1735
- *   +0x0010 -> line 1741
- *   +0x0024 -> line 1743
- *   +0x002c -> line 1745
- *   +0x0048 -> line 1746
- *   +0x0050 -> line 1749
- *   +0x0070 -> line 1757
- *   +0x0090 -> line 1760
- *   +0x00a0 -> line 1761
- *   +0x00ac -> line 1762
- *   +0x00d0 -> line 1764
- *   +0x00d8 -> line 1768
- *   +0x00ec -> line 1769
- *   +0x0104 -> line 1771
- *   +0x0108 -> line 1777
- *   +0x0114 -> line 1780
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_lGetSubMapNumber(void);
-char* fn_p_szGetLevelName(void);
-char* FMN_SCE_ConvertPath2DVD(char* buffer);
-char* FMN_SCE_AddBaseDirectory(char* buffer);
-char* strstr(const char* s1, const char* s2);
-unsigned int strlen(const char* s);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1448–1448 */
-/* addr: 0x002863c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1448
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1367–1373 */
-/* addr: 0x002863d0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1367
- *   +0x0004 -> line 1368
- *   +0x0008 -> line 1367
- *   +0x000c -> line 1369
- *   +0x0024 -> line 1370
- *   +0x0028 -> line 1372
- *   +0x0030 -> line 1373
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1320–1364 */
-/* addr: 0x00286410  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1320
- *   +0x0004 -> line 1324
- *   +0x0008 -> line 1320
- *   +0x000c -> line 1324
- *   +0x0018 -> line 1325
- *   +0x0020 -> line 1339
- *   +0x0024 -> line 1348
- *   +0x0028 -> line 1339
- *   +0x002c -> line 1338
- *   +0x0030 -> line 1340
- *   +0x0034 -> line 1348
- *   +0x0038 -> line 1340
- *   +0x003c -> line 1348
- *   +0x0048 -> line 1338
- *   +0x004c -> line 1349
- *   +0x0058 -> line 1327
- *   +0x005c -> line 1351
- *   +0x0064 -> line 1353
- *   +0x0078 -> line 1357
- *   +0x00c0 -> line 1364
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void AGO_vInit(void);
-void CreateType28AGO(MTH3D_tdstVector_* p_stPos, MTH3D_tdstVector_* p_stDir, int lParam, float fParam);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 1266–1295 */
-/* addr: 0x002864e0  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1284
- *   +0x0004 -> line 1266
- *   +0x0008 -> line 1295
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 887–1066 */
-/* addr: 0x002864f0  size: 4600 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 887
- *   +0x0004 -> line 892
- *   +0x0008 -> line 887
- *   +0x000c -> line 892
- *   +0x0010 -> line 887
- *   +0x0034 -> line 892
- *   +0x003c -> line 896
- *   +0x005c -> line 901
- *   +0x0084 -> line 906
- *   +0x00a4 -> line 909
- *   +0x00ac -> line 911
- *   +0x00b0 -> line 914
- *   +0x00b4 -> line 911
- *   +0x00d4 -> line 914
- *   +0x00e8 -> line 915
- *   +0x00f0 -> line 918
- *   +0x0104 -> line 919
- *   +0x0108 -> line 921
- *   +0x010c -> line 918
- *   +0x0114 -> line 919
- *   +0x0118 -> line 921
- *   +0x0130 -> line 923
- *   +0x014c -> line 924
- *   +0x0154 -> line 927
- *   +0x0168 -> line 928
- *   +0x016c -> line 930
- *   +0x0170 -> line 927
- *   +0x0178 -> line 928
- *   +0x017c -> line 930
- *   +0x0194 -> line 932
- *   +0x019c -> line 933
- *   +0x01a4 -> line 934
- *   +0x01a8 -> line 935
- *   +0x01b0 -> line 943
- *   +0x01c4 -> line 944
- *   +0x01c8 -> line 946
- *   +0x01cc -> line 943
- *   +0x01d4 -> line 944
- *   +0x01d8 -> line 946
- *   +0x01f0 -> line 948
- *   +0x021c -> line 951
- *   +0x0234 -> line 956
- *   +0x0474 -> line 958
- *   +0x0478 -> line 956
- *   +0x0480 -> line 959
- *   +0x06b8 -> line 961
- *   +0x06bc -> line 959
- *   +0x06c4 -> line 962
- *   +0x0900 -> line 966
- *   +0x0904 -> line 962
- *   +0x0908 -> line 966
- *   +0x0914 -> line 969
- *   +0x091c -> line 978
- *   +0x0930 -> line 979
- *   +0x0934 -> line 981
- *   +0x0938 -> line 978
- *   +0x0940 -> line 979
- *   +0x0944 -> line 981
- *   +0x0954 -> line 985
- *   +0x0958 -> line 981
- *   +0x0960 -> line 985
- *   +0x0978 -> line 987
- *   +0x09a4 -> line 990
- *   +0x09bc -> line 992
- *   +0x09e0 -> line 1020
- *   +0x09e4 -> line 992
- *   +0x09e8 -> line 1021
- *   +0x09ec -> line 992
- *   +0x09f0 -> line 1020
- *   +0x09f4 -> line 992
- *   +0x09f8 -> line 1020
- *   +0x09fc -> line 992
- *   +0x0a00 -> line 1020
- *   +0x0a04 -> line 992
- *   +0x0a08 -> line 1031
- *   +0x0a10 -> line 1020
- *   +0x0a14 -> line 1021
- *   +0x0a20 -> line 1022
- *   +0x0a30 -> line 1031
- *   +0x0a34 -> line 1020
- *   +0x0a38 -> line 1031
- *   +0x0a3c -> line 1027
- *   +0x0a40 -> line 1029
- *   +0x0a44 -> line 1020
- *   +0x0a64 -> line 1021
- *   +0x0a8c -> line 1022
- *   +0x0ab4 -> line 1023
- *   +0x0ac0 -> line 1031
- *   +0x0cf0 -> line 1035
- *   +0x0cf4 -> line 1031
- *   +0x0cf8 -> line 1035
- *   +0x0f30 -> line 1038
- *   +0x0f34 -> line 1035
- *   +0x0f38 -> line 1038
- *   +0x1170 -> line 1043
- *   +0x1174 -> line 1038
- *   +0x1178 -> line 1042
- *   +0x1184 -> line 1045
- *   +0x118c -> line 1047
- *   +0x11a4 -> line 1048
- *   +0x11ac -> line 1050
- *   +0x11c8 -> line 1066
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-inline short fn_sCompressNumber(float xValue)
-{
-    char szBuffer[80];
-    unsigned int ulValue;
-    unsigned int sign_bit;
-    unsigned int expf;
-    unsigned int mantissa;
-    union {
-        float f;
-        unsigned int ul;
-    } value;
-
-    value.f = xValue;
-    ulValue = value.ul;
-    expf = (ulValue & 0x7F800000) >> 23;
-    mantissa = ulValue & 0x7FFFFF;
-    sign_bit = ulValue & 0x80000000;
-    if (expf != 0)
-    {
-        expf -= 0x7F;
-        if ((int)expf < -15)
-        {
-            sprintf(szBuffer, "float abs val too small to be compressed %f -> 0\n", (double)xValue);
-            expf = -15;
-            mantissa = 1;
-        }
-        if ((int)expf > 16)
-        {
-            expf = 16;
-            mantissa = 0x3FF;
-        }
-        expf += 15;
-        expf <<= 10;
-    }
-    return (short)((mantissa >> 13) | ((sign_bit >> 16) | expf));
-}
-
-#define DEMO_M_COMPRESS_VECTOR(a_sDst, p_stV) \
-    (a_sDst)[0] = fn_sCompressNumber((p_stV)->xX); \
-    (a_sDst)[1] = fn_sCompressNumber((p_stV)->xY); \
-    (a_sDst)[2] = fn_sCompressNumber((p_stV)->xZ); \
-    (a_sDst)[3] = fn_sCompressNumber((p_stV)->xW);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 440–482 */
-/* addr: 0x002876f0  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 457
- *   +0x0004 -> line 440
- *   +0x0008 -> line 457
- *   +0x000c -> line 460
- *   +0x0010 -> line 457
- *   +0x0014 -> line 460
- *   +0x0018 -> line 466
- *   +0x0020 -> line 470
- *   +0x0024 -> line 471
- *   +0x0028 -> line 477
- *   +0x003c -> line 479
- *   +0x0040 -> line 482
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-float fn_fUncompressNumber(short n)
-{
-    unsigned int sign_bit;
-    unsigned int expf;
-    unsigned int mantissa;
-    unsigned int ulValue;
-    union {
-        unsigned int ul;
-        float f;
-    } value;
-
-    sign_bit = n & 0x8000;
-    expf = (n & 0x7c00) >> 10;
-    mantissa = n & 0x3ff;
-    if (expf != 0)
-    {
-        expf += 0x70;
-        expf <<= 23;
-    }
-    ulValue = (mantissa << 13) | ((sign_bit << 16) | expf);
-    value.ul = ulValue;
-    return value.f;
-}
-
-void fn_vDemoReadCompressedTransform(tdstDemoCompressedTransform_* _p_stCompressedTransform)
-{
-    MTH4D_tdstMatrix_ stMatrix;
-    MTH4D_tdstMatrix_ stMatrix2;
-    short* p_coef;
-    MTH4D_tdstVector_* p_stVector;
-    short* p_coefScaled;
-    MTH4D_tdstVector_* p_stScaled;
-    float xScale;
-    float xX;
-    float xY;
-    float xZ;
-    float* p0Y; float* p0Z; float* p0W; float* p1X; float* p1Y; float* p1Z; float* p1W; float* p2X; float* p2Y; float* p2Z; float* p2W;
-
-    memset(_p_stCompressedTransform, 0, 42);
-    p_coef = _p_stCompressedTransform->a_sCoef;
-    memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 2);
-    gp_DEMO_CurrentPosInMemory += 2;
-    switch (_p_stCompressedTransform->uwType)
-    {
-    case 1:
-        p_coef[19] = 0x3C00;
-        p_coef[18] = 0x3C00;
-        p_coef[17] = 0x3C00;
-        p_coef[16] = 0x3C00;
-        p_coef[15] = 0x3C00;
-        p_coef[10] = 0x3C00;
-        p_coef[5] = 0x3C00;
-        p_coef[0] = 0x3C00;
-        break;
-    case 2:
-        p_coef[19] = 0x3C00;
-        p_coef[18] = 0x3C00;
-        p_coef[17] = 0x3C00;
-        p_coef[16] = 0x3C00;
-        p_coef[15] = 0x3C00;
-        p_coef[10] = 0x3C00;
-        p_coef[5] = 0x3C00;
-        p_coef[0] = 0x3C00;
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        break;
-    case 3:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        p_coef[5] = p_coef[10] = p_coef[15] = p_coef[16] = p_coef[17] = p_coef[18] = p_coef[19] = p_coef[0];
-        break;
-    case 4:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(&p_coef[16], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        p_coef[0] = p_coef[16];
-        p_coef[5] = p_coef[17];
-        p_coef[10] = p_coef[18];
-        break;
-    case 5:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
-        gp_DEMO_CurrentPosInMemory += 8;
-        xZ = fn_fUncompressNumber(p_coef[3]);
-        xY = fn_fUncompressNumber(p_coef[2]);
-        xX = fn_fUncompressNumber(p_coef[1]);
-        MAT_fn_vQuatToMatrix(&stMatrix, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
-        p_stVector = &stMatrix.stCol_0;
-        DEMO_M_COMPRESS_VECTOR(&p_coef[0], p_stVector)
-        p_stVector = &stMatrix.stCol_1;
-        DEMO_M_COMPRESS_VECTOR(&p_coef[4], p_stVector)
-        p_stVector = &stMatrix.stCol_2;
-        DEMO_M_COMPRESS_VECTOR(&p_coef[8], p_stVector)
-        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[18] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[17] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[16] = 0x3C00;
-        break;
-    case 6:
-        memcpy(&_p_stCompressedTransform->a_sCoef[12], (void*)gp_DEMO_CurrentPosInMemory, 6);
-        gp_DEMO_CurrentPosInMemory += 6;
-        _p_stCompressedTransform->a_sCoef[15] = 0x3C00;
-        memcpy(&_p_stCompressedTransform->a_sCoef[16], (void*)gp_DEMO_CurrentPosInMemory, 2);
-        gp_DEMO_CurrentPosInMemory += 2;
-        memcpy(p_coef, (void*)gp_DEMO_CurrentPosInMemory, 8);
-        gp_DEMO_CurrentPosInMemory += 8;
-        xZ = fn_fUncompressNumber(p_coef[3]);
-        xY = fn_fUncompressNumber(p_coef[2]);
-        xX = fn_fUncompressNumber(p_coef[1]);
-        MAT_fn_vQuatToMatrix(&stMatrix2, fn_fUncompressNumber(p_coef[0]), xX, xY, xZ);
-        xScale = fn_fUncompressNumberInline(_p_stCompressedTransform->a_sCoef[16]);
-        p0W = &stMatrix2.stCol_0.xW;
-        p1X = &stMatrix2.stCol_1.xX;
-        p0Z = &stMatrix2.stCol_0.xZ;
-        p0Y = &stMatrix2.stCol_0.xY;
-        p1Y = &stMatrix2.stCol_1.xY;
-        p1Z = &stMatrix2.stCol_1.xZ;
-        p1W = &stMatrix2.stCol_1.xW;
-        p2X = &stMatrix2.stCol_2.xX;
-        p2Y = &stMatrix2.stCol_2.xY;
-        p2Z = &stMatrix2.stCol_2.xZ;
-        p2W = &stMatrix2.stCol_2.xW;
-        stMatrix2.stCol_0.xX *= xScale;
-        *p0Y *= xScale;
-        *p0Z *= xScale;
-        *p0W = 1.0f;
-        *p1X *= xScale;
-        *p1Y *= xScale;
-        *p1Z *= xScale;
-        *p1W = 1.0f;
-        *p2X *= xScale;
-        *p2Y *= xScale;
-        *p2Z *= xScale;
-        *p2W = 1.0f;
-        *p2W = 0.0f;
-        *p1W = 0.0f;
-        *p0W = 0.0f;
-        p_coefScaled = _p_stCompressedTransform->a_sCoef;
-        p_stScaled = &stMatrix2.stCol_0;
-        DEMO_M_COMPRESS_VECTOR(p_coefScaled, p_stScaled)
-        p_stScaled = &stMatrix2.stCol_1;
-        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[4], p_stScaled)
-        p_stScaled = &stMatrix2.stCol_2;
-        DEMO_M_COMPRESS_VECTOR(&p_coefScaled[8], p_stScaled)
-        _p_stCompressedTransform->a_sCoef[19] = 0x3C00;
-        _p_stCompressedTransform->a_sCoef[18] = _p_stCompressedTransform->a_sCoef[17] = _p_stCompressedTransform->a_sCoef[16];
-        break;
-    case 7:
-        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
-        gp_DEMO_CurrentPosInMemory += 42;
-        break;
-    case 8:
-        memcpy(_p_stCompressedTransform, (void*)gp_DEMO_CurrentPosInMemory, 42);
-        gp_DEMO_CurrentPosInMemory += 42;
-        break;
-    case 0:
-    case 9:
-        break;
-    }
-}
-
-void DEMO_fn_vAllocateMemory(void)
-{
-    gp_DEMO_AllocatedMemory = 0;
-    g_szMapNameToLoadWhenDemoFinished[0] = '\0';
-}
-
-void DEMO_fn_vPrepareForReadNow(void)
-{
-    MTH3D_tdstVector_ stPos;
-    MTH3D_tdstVector_ stDir;
-    int i;
-
-    if (g_DEMO_u32PlayMode == 1)
-        gp_DEMO_CurrentPosInMemory = gp_DEMO_AllocatedMemory;
-    g_ulDEMO_ElapsedDemoTimerCount = 1;
-    g_ulDEMO_DeltaTimerCount = 32;
-    g_ulDEMO_StartDEMO_EngineTimerCount = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    gl_DEMO_CurrentFrame = 0;
-    stPos.xX = 1.0f;
-    stPos.xY = 1.0f;
-    stPos.xZ = 1000.0f;
-    stDir.xX = 1.0f;
-    stDir.xY = 1.0f;
-    stDir.xZ = 1.0f;
-    AGO_vInit();
-    CreateType28AGO(&stPos, &stDir, 0, 0.0f);
-    for (i = 0; i < 32; i++)
-        g_as32DemoAGOTable[i] = -1;
-}
-
-void DEMO_fn_vPrepareForRead(int _iNbFramesToWait)
-{
-    g_DEMO_KeybTest = 2;
-    if (!_iNbFramesToWait) DEMO_fn_vPrepareForReadNow();
-    else g_iNbFramesToWaitBeforePlaying = _iNbFramesToWait;
-    g_DEMO_AutoPlay = 1;
-}
-
-void DEMO_fn_vCloseFirstInit(void)
-{
-    g_DEMO_FirstInitFlag = 0;
-}
-
-char* DEMO_fn_pcBuildDemoPath(char* szFilename)
-{
-    char ax_cName[256];
-    char* p_cFilename;
-    int lSubMapNumber;
-
-    lSubMapNumber = ((unsigned int)fn_lGetSubMapNumber() & 0xFFFF0000) >> 16;
-
-    if (lSubMapNumber == 0)
-    {
-        sprintf(szFilename, "\\Demos\\%s\\", fn_p_szGetLevelName());
-    }
-    else
-    {
-        sprintf(szFilename, "\\Demos\\%s\\%02d\\", fn_p_szGetLevelName(), lSubMapNumber);
-    }
-
-    strcpy(ax_cName, FMN_SCE_AddBaseDirectory(FMN_SCE_ConvertPath2DVD(szFilename)));
-
-    if (strstr(ax_cName, "cdrom0:") == ax_cName)
-        /* Not original source, needs cleaning up: int-cast keeps the unfolded sp+0x30 addressing. */
-        strcpy(szFilename, (char*)((int)ax_cName + strlen("cdrom0:")));
-    else
-        strcpy(szFilename, ax_cName);
-
-    p_cFilename = strstr(szFilename, ";1");
-    if (p_cFilename == szFilename + strlen(szFilename) - 2)
-        *p_cFilename = 0;
-
-    return szFilename + strlen(szFilename);
-}
-
-unsigned int DEMO_fn_u32GetCurrentEventOffset(void)
-{
-    return gp_DEMO_CurrentPosInMemory - gp_DEMO_AllocatedMemory + 8;
-}
-
-char* DEMO_fn_pcGetAddressForEventOffset(unsigned int u32Offset)
-{
-    return (char*)gp_DEMO_AllocatedMemory + u32Offset - 8;
-}
-
-#pragma auto_inline on
-void DEMO_fn_vLoadFromFile(char* szDemoName)
-{
-    unsigned int Length;
-    char* p_cFilename;
-    char szFilename[256];
-
-    p_cFilename = DEMO_fn_pcBuildDemoPath(szFilename);
-    strcpy(p_cFilename, szDemoName);
-    g_DEMO_u32PlayMode = 2;
-    if (DEMO_bInitEventFlow(szFilename))
-    {
-        gp_DEMO_CurrentPosInMemory = (int)DEMO_pcGetNextFlowSegment();
-        memcpy(&gl_DEMO_NumberOfFrames, (void*)gp_DEMO_CurrentPosInMemory, 4);
-        gp_DEMO_CurrentPosInMemory += 4;
-        memcpy(&Length, (void*)gp_DEMO_CurrentPosInMemory, 4);
-        gp_DEMO_CurrentPosInMemory += 4;
-    }
-    else
-    {
-        printf("DEMO_fn_vLoadFromFile(%s): open failed\n", szFilename);
-        gl_DEMO_NumberOfFrames = -1;
-    }
-}
-#pragma auto_inline reset
-
-void DEMO_fn_vAskToLoadDemo(char* pcDemoName)
-{
-    strcpy(g_szDemoToLoad, pcDemoName);
-    g_DEMO_LoadDemo = 1;
-}
-
-void DEMO_fn_vLoadDemoIfNeeded(void)
-{
-    if (g_DEMO_LoadDemo)
-    {
-        DEMO_fn_vLoadFromFile(g_szDemoToLoad);
-        g_DEMO_LoadDemo = 0;
-    }
-}
-
-void DEMO_fn_vSetTestInputDuringDemo(int _bTestInput)
-{
-    g_bTestInputDuringDemo = _bTestInput;
-}
-
-void DEMO_fn_vSetMapToLoadWhenDemoFinished(char* _szMapName)
-{
-    strncpy(g_szMapNameToLoadWhenDemoFinished, _szMapName, 20);
-    g_szMapNameToLoadWhenDemoFinished[19] = 0;
-}
-
 void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
 {
     CINE_tdstCine_* hCine;
@@ -3835,6 +3438,45 @@ void DEMO_fn_vReadAndTreatAllExtendedFlag(unsigned short Demo_Flag)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5753–5843 */
+/* addr: 0x002841b0  size: 528 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5753
+ *   +0x0004 -> line 5761
+ *   +0x0008 -> line 5753
+ *   +0x0018 -> line 5761
+ *   +0x001c -> line 5754
+ *   +0x0020 -> line 5761
+ *   +0x0028 -> line 5766
+ *   +0x0038 -> line 5767
+ *   +0x003c -> line 5766
+ *   +0x0044 -> line 5767
+ *   +0x0054 -> line 5771
+ *   +0x005c -> line 5767
+ *   +0x0064 -> line 5771
+ *   +0x0084 -> line 5785
+ *   +0x0088 -> line 5787
+ *   +0x0094 -> line 5785
+ *   +0x009c -> line 5787
+ *   +0x00a4 -> line 5792
+ *   +0x00c4 -> line 5814
+ *   +0x00c8 -> line 5815
+ *   +0x00d0 -> line 5814
+ *   +0x00d8 -> line 5815
+ *   +0x00e0 -> line 5819
+ *   +0x0100 -> line 5821
+ *   +0x011c -> line 5822
+ *   +0x0158 -> line 5823
+ *   +0x0160 -> line 5827
+ *   +0x0170 -> line 5831
+ *   +0x0190 -> line 5833
+ *   +0x01ac -> line 5834
+ *   +0x01e8 -> line 5835
+ *   +0x01f0 -> line 5839
+ *   +0x01fc -> line 5843
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO)
 {
     unsigned short wSO_Number;
@@ -3885,6 +3527,38 @@ void DEMO_fn_vReadAndChangeActivationDesactivation(HIE_tdstSuperObject_* hSO)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 5927–6018 */
+/* addr: 0x00284020  size: 392 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5927
+ *   +0x0010 -> line 5928
+ *   +0x0014 -> line 5936
+ *   +0x0020 -> line 5938
+ *   +0x0030 -> line 5948
+ *   +0x0040 -> line 5949
+ *   +0x0044 -> line 5948
+ *   +0x004c -> line 5949
+ *   +0x005c -> line 5950
+ *   +0x0060 -> line 5949
+ *   +0x0068 -> line 5950
+ *   +0x0078 -> line 5952
+ *   +0x0080 -> line 5950
+ *   +0x0084 -> line 5952
+ *   +0x00a4 -> line 5954
+ *   +0x00b8 -> line 5955
+ *   +0x00bc -> line 5954
+ *   +0x00c4 -> line 5955
+ *   +0x00d4 -> line 5967
+ *   +0x00dc -> line 5955
+ *   +0x00e0 -> line 5967
+ *   +0x0110 -> line 5970
+ *   +0x013c -> line 5974
+ *   +0x0150 -> line 5978
+ *   +0x0170 -> line 6015
+ *   +0x0178 -> line 6018
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO)
 {
     unsigned short wSO_Number;
@@ -3922,6 +3596,140 @@ void DEMO_fn_vReadAlwaysActivationDesactivation(HIE_tdstSuperObject_* hSO)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 6043–6440 */
+/* addr: 0x002836a0  size: 2360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6043
+ *   +0x0004 -> line 6073
+ *   +0x0008 -> line 6043
+ *   +0x0028 -> line 6045
+ *   +0x0030 -> line 6073
+ *   +0x0034 -> line 6063
+ *   +0x0038 -> line 6064
+ *   +0x003c -> line 6073
+ *   +0x0058 -> line 6076
+ *   +0x00a4 -> line 6091
+ *   +0x00ac -> line 6077
+ *   +0x00b0 -> line 6091
+ *   +0x00bc -> line 6093
+ *   +0x00c0 -> line 6091
+ *   +0x00c4 -> line 6093
+ *   +0x00cc -> line 6095
+ *   +0x00d0 -> line 6093
+ *   +0x00d4 -> line 6095
+ *   +0x00f8 -> line 6098
+ *   +0x010c -> line 6099
+ *   +0x0110 -> line 6098
+ *   +0x0118 -> line 6100
+ *   +0x0120 -> line 6103
+ *   +0x013c -> line 6106
+ *   +0x0164 -> line 6111
+ *   +0x0178 -> line 6118
+ *   +0x017c -> line 6111
+ *   +0x0184 -> line 6118
+ *   +0x01b8 -> line 6121
+ *   +0x01e0 -> line 6130
+ *   +0x01f0 -> line 6140
+ *   +0x01fc -> line 6130
+ *   +0x0200 -> line 6142
+ *   +0x0204 -> line 6140
+ *   +0x0208 -> line 6130
+ *   +0x020c -> line 6140
+ *   +0x0210 -> line 6130
+ *   +0x0214 -> line 6140
+ *   +0x0264 -> line 6142
+ *   +0x0298 -> line 6188
+ *   +0x02c0 -> line 6192
+ *   +0x02d4 -> line 6196
+ *   +0x02d8 -> line 6192
+ *   +0x02dc -> line 6196
+ *   +0x02e4 -> line 6209
+ *   +0x0314 -> line 6212
+ *   +0x033c -> line 6216
+ *   +0x0344 -> line 6235
+ *   +0x0350 -> line 6237
+ *   +0x0360 -> line 6240
+ *   +0x0388 -> line 6242
+ *   +0x0398 -> line 6244
+ *   +0x039c -> line 6242
+ *   +0x03a4 -> line 6244
+ *   +0x03a8 -> line 6242
+ *   +0x03ac -> line 6244
+ *   +0x03d4 -> line 6264
+ *   +0x03d8 -> line 6267
+ *   +0x03dc -> line 6264
+ *   +0x03e0 -> line 6267
+ *   +0x03e4 -> line 6264
+ *   +0x0410 -> line 6267
+ *   +0x0428 -> line 6272
+ *   +0x043c -> line 6278
+ *   +0x0444 -> line 6280
+ *   +0x057c -> line 6283
+ *   +0x05a4 -> line 6285
+ *   +0x05b8 -> line 6289
+ *   +0x05bc -> line 6285
+ *   +0x05c4 -> line 6290
+ *   +0x05cc -> line 6293
+ *   +0x05d4 -> line 6296
+ *   +0x05fc -> line 6298
+ *   +0x0610 -> line 6303
+ *   +0x0620 -> line 6298
+ *   +0x0624 -> line 6303
+ *   +0x062c -> line 6310
+ *   +0x0630 -> line 6312
+ *   +0x0638 -> line 6315
+ *   +0x0640 -> line 6319
+ *   +0x0670 -> line 6326
+ *   +0x0674 -> line 6319
+ *   +0x0678 -> line 6321
+ *   +0x067c -> line 6319
+ *   +0x0680 -> line 6321
+ *   +0x06b4 -> line 6326
+ *   +0x06fc -> line 6336
+ *   +0x070c -> line 6340
+ *   +0x071c -> line 6343
+ *   +0x0730 -> line 6344
+ *   +0x0738 -> line 6346
+ *   +0x073c -> line 6347
+ *   +0x0740 -> line 6346
+ *   +0x0744 -> line 6347
+ *   +0x0748 -> line 6346
+ *   +0x074c -> line 6347
+ *   +0x075c -> line 6348
+ *   +0x0764 -> line 6350
+ *   +0x0770 -> line 6351
+ *   +0x0778 -> line 6369
+ *   +0x0790 -> line 6377
+ *   +0x07b0 -> line 6379
+ *   +0x07c0 -> line 6381
+ *   +0x07d0 -> line 6384
+ *   +0x07d8 -> line 6390
+ *   +0x07dc -> line 6391
+ *   +0x0828 -> line 6395
+ *   +0x082c -> line 6398
+ *   +0x0830 -> line 6395
+ *   +0x0834 -> line 6403
+ *   +0x0838 -> line 6409
+ *   +0x083c -> line 6403
+ *   +0x0840 -> line 6409
+ *   +0x0848 -> line 6403
+ *   +0x084c -> line 6404
+ *   +0x0850 -> line 6403
+ *   +0x0854 -> line 6409
+ *   +0x085c -> line 6410
+ *   +0x0860 -> line 6415
+ *   +0x0888 -> line 6417
+ *   +0x08a4 -> line 6418
+ *   +0x08dc -> line 6420
+ *   +0x08ec -> line 6421
+ *   +0x08fc -> line 6423
+ *   +0x0904 -> line 6424
+ *   +0x0908 -> line 6423
+ *   +0x090c -> line 6424
+ *   +0x0914 -> line 6440
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO)
 {
     tdstDemoCompressedTransform_ stCompressedTransform;
@@ -4133,6 +3941,51 @@ void DEMO_fn_vGetACompleteCharacterPosition(HIE_tdstSuperObject_* hSO)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 6822–7029 */
+/* addr: 0x002833a0  size: 760 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 6822
+ *   +0x000c -> line 6826
+ *   +0x0010 -> line 6856
+ *   +0x0020 -> line 6889
+ *   +0x0040 -> line 6891
+ *   +0x0048 -> line 6892
+ *   +0x0050 -> line 6893
+ *   +0x0074 -> line 6894
+ *   +0x00e4 -> line 6895
+ *   +0x00f0 -> line 6898
+ *   +0x010c -> line 6904
+ *   +0x0120 -> line 6906
+ *   +0x0124 -> line 6907
+ *   +0x0130 -> line 6913
+ *   +0x0144 -> line 6915
+ *   +0x0148 -> line 6918
+ *   +0x0158 -> line 6921
+ *   +0x0160 -> line 6925
+ *   +0x0168 -> line 6924
+ *   +0x016c -> line 6926
+ *   +0x0170 -> line 6928
+ *   +0x0188 -> line 6930
+ *   +0x0190 -> line 6931
+ *   +0x0198 -> line 6933
+ *   +0x0200 -> line 6940
+ *   +0x021c -> line 6941
+ *   +0x0224 -> line 6942
+ *   +0x0230 -> line 6953
+ *   +0x0238 -> line 6956
+ *   +0x0240 -> line 6959
+ *   +0x0254 -> line 6961
+ *   +0x0258 -> line 6985
+ *   +0x025c -> line 6984
+ *   +0x026c -> line 6985
+ *   +0x027c -> line 6986
+ *   +0x0284 -> line 6990
+ *   +0x0288 -> line 7021
+ *   +0x02e0 -> line 7028
+ *   +0x02e8 -> line 7029
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vReadOneCompleteStateUpdate(void)
 {
     int lFrame;
@@ -4218,6 +4071,62 @@ void DEMO_fn_vReadOneCompleteStateUpdate(void)
     } while (!bEnd);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7035–7169 */
+/* addr: 0x00283150  size: 592 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7035
+ *   +0x0004 -> line 7054
+ *   +0x0008 -> line 7035
+ *   +0x000c -> line 7054
+ *   +0x0010 -> line 7035
+ *   +0x0014 -> line 7054
+ *   +0x0018 -> line 7035
+ *   +0x0024 -> line 7054
+ *   +0x002c -> line 7056
+ *   +0x0030 -> line 7058
+ *   +0x003c -> line 7060
+ *   +0x0040 -> line 7062
+ *   +0x0044 -> line 7060
+ *   +0x0054 -> line 7062
+ *   +0x0064 -> line 7066
+ *   +0x0068 -> line 7063
+ *   +0x006c -> line 7066
+ *   +0x0070 -> line 7062
+ *   +0x0078 -> line 7063
+ *   +0x007c -> line 7066
+ *   +0x008c -> line 7067
+ *   +0x0090 -> line 7066
+ *   +0x0098 -> line 7067
+ *   +0x00a8 -> line 7075
+ *   +0x00b0 -> line 7067
+ *   +0x00b4 -> line 7075
+ *   +0x00bc -> line 7077
+ *   +0x00d4 -> line 7078
+ *   +0x00e0 -> line 7079
+ *   +0x00ec -> line 7082
+ *   +0x00f4 -> line 7088
+ *   +0x00f8 -> line 7091
+ *   +0x0114 -> line 7093
+ *   +0x0124 -> line 7094
+ *   +0x012c -> line 7096
+ *   +0x0160 -> line 7097
+ *   +0x0168 -> line 7114
+ *   +0x0178 -> line 7118
+ *   +0x0184 -> line 7124
+ *   +0x018c -> line 7126
+ *   +0x0198 -> line 7131
+ *   +0x01d0 -> line 7145
+ *   +0x01d8 -> line 7151
+ *   +0x01e8 -> line 7153
+ *   +0x01f0 -> line 7154
+ *   +0x0208 -> line 7155
+ *   +0x0214 -> line 7160
+ *   +0x0228 -> line 7162
+ *   +0x022c -> line 7164
+ *   +0x0230 -> line 7169
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vMoveModuleDelayedHandling(void)
 {
     unsigned short Demo_Flag;
@@ -4283,6 +4192,51 @@ void DEMO_fn_vMoveModuleDelayedHandling(void)
     g_iNbMoveModule = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7175–7410 */
+/* addr: 0x00282f20  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7175
+ *   +0x0010 -> line 7193
+ *   +0x001c -> line 7195
+ *   +0x0030 -> line 7196
+ *   +0x0038 -> line 7228
+ *   +0x0080 -> line 7250
+ *   +0x00a0 -> line 7252
+ *   +0x00b0 -> line 7253
+ *   +0x00b8 -> line 7255
+ *   +0x00bc -> line 7259
+ *   +0x00cc -> line 7261
+ *   +0x00d8 -> line 7262
+ *   +0x00dc -> line 7263
+ *   +0x00e4 -> line 7272
+ *   +0x00ec -> line 7274
+ *   +0x00f4 -> line 7277
+ *   +0x00fc -> line 7285
+ *   +0x0108 -> line 7303
+ *   +0x010c -> line 7285
+ *   +0x0110 -> line 7308
+ *   +0x0114 -> line 7315
+ *   +0x0118 -> line 7308
+ *   +0x0120 -> line 7315
+ *   +0x013c -> line 7319
+ *   +0x0144 -> line 7321
+ *   +0x014c -> line 7325
+ *   +0x0154 -> line 7326
+ *   +0x015c -> line 7334
+ *   +0x0170 -> line 7335
+ *   +0x017c -> line 7349
+ *   +0x0184 -> line 7351
+ *   +0x018c -> line 7353
+ *   +0x0190 -> line 7366
+ *   +0x01e4 -> line 7370
+ *   +0x01ec -> line 7374
+ *   +0x0200 -> line 7381
+ *   +0x0208 -> line 7388
+ *   +0x0210 -> line 7409
+ *   +0x0214 -> line 7410
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char DEMO_fn_bUpdateDynamicHierarchy(void)
 {
     unsigned int ulDEMO_ElapsedEngineTimerCount;
@@ -4347,11 +4301,47 @@ unsigned char DEMO_fn_bUpdateDynamicHierarchy(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7476–7476 */
+/* addr: 0x00282f10  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7476
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vDesInitGame(void)
 {
     g_hDemoSOList = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\Demos.c lines 7511–7551 */
+/* addr: 0x00282da0  size: 356 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 7511
+ *   +0x0004 -> line 7521
+ *   +0x0008 -> line 7511
+ *   +0x000c -> line 7521
+ *   +0x0010 -> line 7511
+ *   +0x0024 -> line 7521
+ *   +0x0038 -> line 7523
+ *   +0x0040 -> line 7529
+ *   +0x0054 -> line 7530
+ *   +0x0068 -> line 7532
+ *   +0x0078 -> line 7533
+ *   +0x008c -> line 7534
+ *   +0x0098 -> line 7536
+ *   +0x00c0 -> line 7539
+ *   +0x00d8 -> line 7540
+ *   +0x00e4 -> line 7541
+ *   +0x00ec -> line 7543
+ *   +0x00f0 -> line 7540
+ *   +0x00f4 -> line 7543
+ *   +0x00fc -> line 7546
+ *   +0x0100 -> line 7547
+ *   +0x0138 -> line 7549
+ *   +0x0140 -> line 7551
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DEMO_fn_vReadDemoTableFile(void)
 {
     char buffer[1024];

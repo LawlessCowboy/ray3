@@ -1390,55 +1390,6 @@ float GLI_g_NegVect[4];
 int g_p_stCurrentViewport;
 extern void (*PS2glLiberator)(void* ptr);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 38–65 */
-/* addr: 0x002dc1b0  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 48
- *   +0x0004 -> line 38
- *   +0x0008 -> line 48
- *   +0x000c -> line 47
- *   +0x0010 -> line 48
- *   +0x0014 -> line 38
- *   +0x0018 -> line 47
- *   +0x001c -> line 57
- *   +0x0020 -> line 48
- *   +0x0024 -> line 49
- *   +0x0028 -> line 47
- *   +0x002c -> line 52
- *   +0x0030 -> line 48
- *   +0x0034 -> line 57
- *   +0x0038 -> line 52
- *   +0x003c -> line 57
- *   +0x0040 -> line 49
- *   +0x0044 -> line 55
- *   +0x0048 -> line 47
- *   +0x004c -> line 52
- *   +0x0050 -> line 49
- *   +0x0054 -> line 55
- *   +0x0058 -> line 47
- *   +0x005c -> line 57
- *   +0x0060 -> line 49
- *   +0x0064 -> line 53
- *   +0x0068 -> line 54
- *   +0x006c -> line 57
- *   +0x0074 -> line 58
- *   +0x0084 -> line 59
- *   +0x0098 -> line 60
- *   +0x00a8 -> line 61
- *   +0x00b8 -> line 63
- *   +0x00bc -> line 64
- *   +0x00c0 -> line 63
- *   +0x00cc -> line 64
- *   +0x00d0 -> line 63
- *   +0x00d4 -> line 64
- *   +0x00d8 -> line 63
- *   +0x00dc -> line 64
- *   +0x00e0 -> line 63
- *   +0x00e4 -> line 64
- *   +0x00ec -> line 65
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern float light_ambient0[4];
 extern float light_specular0[4];
 extern float ambientMaterial[4];
@@ -1454,59 +1405,11 @@ extern "C" void GrassFx_vProcessAndDisplay(void);
 extern "C" void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT);
 extern "C" void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 562–562 */
-/* addr: 0x002dc2c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 562
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 542–556 */
-/* addr: 0x002dc2d0  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 542
- *   +0x000c -> line 544
- *   +0x0010 -> line 545
- *   +0x0018 -> line 547
- *   +0x0020 -> line 551
- *   +0x0028 -> line 552
- *   +0x0030 -> line 553
- *   +0x0040 -> line 555
- *   +0x0048 -> line 556
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 
 #pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 532–539 */
-/* addr: 0x002dc330  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 532
- *   +0x000c -> line 534
- *   +0x0018 -> line 535
- *   +0x0020 -> line 537
- *   +0x0028 -> line 539
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 518–529 */
-/* addr: 0x002dc370  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 518
- *   +0x0018 -> line 522
- *   +0x002c -> line 524
- *   +0x0070 -> line 526
- *   +0x00e8 -> line 528
- *   +0x00f4 -> line 529
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 inline void C_GrassFx::Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_VertexArrays_* pSDC)
 {
@@ -1525,6 +1428,126 @@ inline void C_GrassFx::Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_Verte
     GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pNormals);
     m_pVNew = (float (*)[4])PS2glAllocator64(m_NbVertices * 16);
     memcpy(m_pVNew, pVOrg, m_NbVertices * 16);
+}
+
+extern "C" void sceVu0UnitMatrix(float m0[4][4]);
+extern "C" void sceVu0MulMatrix(float m0[4][4], float* m1, float m2[4][4]);
+extern "C" void PS2glMatrixMode(unsigned int mode);
+extern "C" void PS2glLoadMatrixf(float* m);
+extern "C" void GLI_AddNormalInterpolation(float m[4][4], SDC_VertexArrays_* pSDC);
+extern "C" void PS2glDepthMask(unsigned char flag);
+extern "C" void PS2glHint(unsigned int target, unsigned int mode);
+extern "C" void impPS2glHint(unsigned int target, unsigned int mode);
+extern "C" void PS2glNormalPointer(unsigned int type, int stride, void* ptr);
+extern "C" void PS2glTexCoordPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern "C" void impPS2glColorPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern "C" void PS2glVertexPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern "C" void PS2glDrawArrays(unsigned int mode, int first, unsigned int count);
+
+inline void GrassFx_vClearCop0Register24(void)
+{
+    asm { mtbpc zero }
+}
+
+extern "C" void PS2glColorMask(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+extern "C" void PS2glSetGsRegister(unsigned int reg, unsigned long value, unsigned int context);
+extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* hMaterial);
+extern "C" void GLI_vClearSendMatStates(void);
+extern "C" void GLI_vInitGLProjectionMatrix(void);
+
+#define PS2_M_vMulMatrixColumnsByVector(_dst, _vec, _src) \
+    asm { lqc2 vf5, 0x0(_vec); lqc2 vf1, 0x0(_src); lqc2 vf2, 0x10(_src); lqc2 vf3, 0x20(_src); lqc2 vf4, 0x30(_src); vmul.xyzw vf1, vf1, vf5; vmul.xyzw vf2, vf2, vf5; vmul.xyzw vf3, vf3, vf5; vmul.xyzw vf4, vf4, vf5; sqc2 vf1, 0x0(_dst); sqc2 vf2, 0x10(_dst); sqc2 vf3, 0x20(_dst); sqc2 vf4, 0x30(_dst); }
+
+inline void GrassFx_vMulMatrixByVector(float (*_pDst)[4], float* _pVec, float (*_pSrc)[4])
+{
+    PS2_M_vMulMatrixColumnsByVector(_pDst, _pVec, _pSrc);
+}
+
+#pragma opt_loop_invariants off
+#pragma opt_strength_reduction off
+
+#pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+
+/* addr: 0x002dcfb0  size: 156 bytes */
+C_GrassFx::~C_GrassFx()
+{
+    if (m_pVNew)
+        PS2glLiberator(m_pVNew);
+    m_pVNew = 0;
+    m_p_stEIT = 0;
+    m_pSDC = 0;
+    m_hGrassVisualMaterial = 0;
+    m_hFootVisualMaterial = 0;
+    m_NbVertices = 0;
+    m_pVNew = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 147–205 */
+/* addr: 0x002dce40  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 147
+ *   +0x0020 -> line 155
+ *   +0x0024 -> line 147
+ *   +0x0030 -> line 155
+ *   +0x0038 -> line 159
+ *   +0x0044 -> line 156
+ *   +0x0048 -> line 157
+ *   +0x004c -> line 159
+ *   +0x0054 -> line 160
+ *   +0x005c -> line 161
+ *   +0x0064 -> line 167
+ *   +0x0088 -> line 170
+ *   +0x0098 -> line 180
+ *   +0x00a0 -> line 184
+ *   +0x00c0 -> line 194
+ *   +0x00c8 -> line 195
+ *   +0x00d0 -> line 196
+ *   +0x00dc -> line 197
+ *   +0x00ec -> line 198
+ *   +0x0100 -> line 199
+ *   +0x0114 -> line 200
+ *   +0x0128 -> line 201
+ *   +0x0138 -> line 202
+ *   +0x0144 -> line 203
+ *   +0x0150 -> line 205
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix, int iPass)
+{
+    float ZOffsetMatrix[4][4];
+    float NewMatrix[4][4];
+    float (*pVOrg)[4] __attribute__((aligned(16)));
+    float (*pUV1)[4] __attribute__((aligned(16)));
+    float (*pUV2)[4] __attribute__((aligned(16)));
+    float (*pUVChrome)[4] __attribute__((aligned(16)));
+    float (*pColors)[4] __attribute__((aligned(16)));
+    unsigned int NbVertices;
+
+    sceVu0UnitMatrix(ZOffsetMatrix);
+    ZOffsetMatrix[3][0] = X;
+    ZOffsetMatrix[3][1] = Y;
+    ZOffsetMatrix[3][2] = Z;
+    sceVu0MulMatrix(NewMatrix, a16_fWorldMatrix, ZOffsetMatrix);
+    PS2glMatrixMode(0x1700);
+    PS2glLoadMatrixf(&NewMatrix[0][0]);
+    if (((*(unsigned int*)m_pSDC & 0xF) == 4) || ((*(unsigned int*)m_pSDC & 0xF) == 5))
+    {
+        NbVertices = *(unsigned int*)m_pSDC->pArrayOfVertexArrays[0][0];
+        GLI_AddNormalInterpolation(ZOffsetMatrix, m_pSDC);
+        GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pColors);
+        PS2glDepthMask(1);
+        PS2glDepthMask(1);
+        PS2glHint(0xF10, 0x341);
+        PS2glNormalPointer(0x1406, -2, pVOrg);
+        PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUV1);
+        impPS2glColorPointer(NbVertices, 0x1406, -2, pColors);
+        PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
+        PS2glDrawArrays(5, 0, NbVertices);
+        impPS2glHint(0xF10, 0);
+        PS2glHint(0xF10, 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 209–503 */
@@ -1688,127 +1711,6 @@ inline void C_GrassFx::Init(GEO_tdstElementIndexedTriangles_* p_stEIT, SDC_Verte
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-extern "C" void sceVu0UnitMatrix(float m0[4][4]);
-extern "C" void sceVu0MulMatrix(float m0[4][4], float* m1, float m2[4][4]);
-extern "C" void PS2glMatrixMode(unsigned int mode);
-extern "C" void PS2glLoadMatrixf(float* m);
-extern "C" void GLI_AddNormalInterpolation(float m[4][4], SDC_VertexArrays_* pSDC);
-extern "C" void PS2glDepthMask(unsigned char flag);
-extern "C" void PS2glHint(unsigned int target, unsigned int mode);
-extern "C" void impPS2glHint(unsigned int target, unsigned int mode);
-extern "C" void PS2glNormalPointer(unsigned int type, int stride, void* ptr);
-extern "C" void PS2glTexCoordPointer(unsigned int size, unsigned int type, int stride, void* ptr);
-extern "C" void impPS2glColorPointer(unsigned int size, unsigned int type, int stride, void* ptr);
-extern "C" void PS2glVertexPointer(unsigned int size, unsigned int type, int stride, void* ptr);
-extern "C" void PS2glDrawArrays(unsigned int mode, int first, unsigned int count);
-
-inline void GrassFx_vClearCop0Register24(void)
-{
-    asm { mtbpc zero }
-}
-
-extern "C" void PS2glColorMask(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
-extern "C" void PS2glSetGsRegister(unsigned int reg, unsigned long value, unsigned int context);
-extern "C" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* hMaterial);
-extern "C" void GLI_vClearSendMatStates(void);
-extern "C" void GLI_vInitGLProjectionMatrix(void);
-
-#define PS2_M_vMulMatrixColumnsByVector(_dst, _vec, _src) \
-    asm { lqc2 vf5, 0x0(_vec); lqc2 vf1, 0x0(_src); lqc2 vf2, 0x10(_src); lqc2 vf3, 0x20(_src); lqc2 vf4, 0x30(_src); vmul.xyzw vf1, vf1, vf5; vmul.xyzw vf2, vf2, vf5; vmul.xyzw vf3, vf3, vf5; vmul.xyzw vf4, vf4, vf5; sqc2 vf1, 0x0(_dst); sqc2 vf2, 0x10(_dst); sqc2 vf3, 0x20(_dst); sqc2 vf4, 0x30(_dst); }
-
-inline void GrassFx_vMulMatrixByVector(float (*_pDst)[4], float* _pVec, float (*_pSrc)[4])
-{
-    PS2_M_vMulMatrixColumnsByVector(_pDst, _pVec, _pSrc);
-}
-
-#pragma opt_loop_invariants off
-#pragma opt_strength_reduction off
-
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 147–205 */
-/* addr: 0x002dce40  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 147
- *   +0x0020 -> line 155
- *   +0x0024 -> line 147
- *   +0x0030 -> line 155
- *   +0x0038 -> line 159
- *   +0x0044 -> line 156
- *   +0x0048 -> line 157
- *   +0x004c -> line 159
- *   +0x0054 -> line 160
- *   +0x005c -> line 161
- *   +0x0064 -> line 167
- *   +0x0088 -> line 170
- *   +0x0098 -> line 180
- *   +0x00a0 -> line 184
- *   +0x00c0 -> line 194
- *   +0x00c8 -> line 195
- *   +0x00d0 -> line 196
- *   +0x00dc -> line 197
- *   +0x00ec -> line 198
- *   +0x0100 -> line 199
- *   +0x0114 -> line 200
- *   +0x0128 -> line 201
- *   +0x0138 -> line 202
- *   +0x0144 -> line 203
- *   +0x0150 -> line 205
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* addr: 0x002dcfb0  size: 156 bytes */
-C_GrassFx::~C_GrassFx()
-{
-    if (m_pVNew)
-        PS2glLiberator(m_pVNew);
-    m_pVNew = 0;
-    m_p_stEIT = 0;
-    m_pSDC = 0;
-    m_hGrassVisualMaterial = 0;
-    m_hFootVisualMaterial = 0;
-    m_NbVertices = 0;
-    m_pVNew = 0;
-}
-
-void C_GrassFx::DisplayGrassLayer(float X, float Y, float Z, float* a16_fWorldMatrix, int iPass)
-{
-    float ZOffsetMatrix[4][4];
-    float NewMatrix[4][4];
-    float (*pVOrg)[4] __attribute__((aligned(16)));
-    float (*pUV1)[4] __attribute__((aligned(16)));
-    float (*pUV2)[4] __attribute__((aligned(16)));
-    float (*pUVChrome)[4] __attribute__((aligned(16)));
-    float (*pColors)[4] __attribute__((aligned(16)));
-    unsigned int NbVertices;
-
-    sceVu0UnitMatrix(ZOffsetMatrix);
-    ZOffsetMatrix[3][0] = X;
-    ZOffsetMatrix[3][1] = Y;
-    ZOffsetMatrix[3][2] = Z;
-    sceVu0MulMatrix(NewMatrix, a16_fWorldMatrix, ZOffsetMatrix);
-    PS2glMatrixMode(0x1700);
-    PS2glLoadMatrixf(&NewMatrix[0][0]);
-    if (((*(unsigned int*)m_pSDC & 0xF) == 4) || ((*(unsigned int*)m_pSDC & 0xF) == 5))
-    {
-        NbVertices = *(unsigned int*)m_pSDC->pArrayOfVertexArrays[0][0];
-        GLI_AddNormalInterpolation(ZOffsetMatrix, m_pSDC);
-        GLI_vGetVertexPointersFromSDCStructure(m_pSDC, 0, &pVOrg, &pUV1, &pUV2, &pUVChrome, &pColors);
-        PS2glDepthMask(1);
-        PS2glDepthMask(1);
-        PS2glHint(0xF10, 0x341);
-        PS2glNormalPointer(0x1406, -2, pVOrg);
-        PS2glTexCoordPointer(NbVertices, 0x1406, -2, pUV1);
-        impPS2glColorPointer(NbVertices, 0x1406, -2, pColors);
-        PS2glVertexPointer(NbVertices, 0x1406, -2, pVOrg);
-        PS2glDrawArrays(5, 0, NbVertices);
-        impPS2glHint(0xF10, 0);
-        PS2glHint(0xF10, 0);
-    }
-}
-
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 void C_GrassFx::Display(void)
@@ -1971,6 +1873,18 @@ void C_GrassFx::Display(void)
 #pragma opt_strength_reduction reset
 #pragma opt_loop_invariants reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 518–529 */
+/* addr: 0x002dc370  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 518
+ *   +0x0018 -> line 522
+ *   +0x002c -> line 524
+ *   +0x0070 -> line 526
+ *   +0x00e8 -> line 528
+ *   +0x00f4 -> line 529
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_GrassFx* p;
@@ -1985,6 +1899,17 @@ void GrassFx_vCreateEffectFromObjectAndEIT(GEO_tdstGeometricObject_* pObj, GEO_t
     GrassFx_g_List.vAddElement(p);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 532–539 */
+/* addr: 0x002dc330  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 532
+ *   +0x000c -> line 534
+ *   +0x0018 -> line 535
+ *   +0x0020 -> line 537
+ *   +0x0028 -> line 539
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
 {
     C_GrassFx* p;
@@ -1994,6 +1919,21 @@ void GrassFx_vAddEITToDisplay(GEO_tdstElementIndexedTriangles_* p_stEIT)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 542–556 */
+/* addr: 0x002dc2d0  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 542
+ *   +0x000c -> line 544
+ *   +0x0010 -> line 545
+ *   +0x0018 -> line 547
+ *   +0x0020 -> line 551
+ *   +0x0028 -> line 552
+ *   +0x0030 -> line 553
+ *   +0x0040 -> line 555
+ *   +0x0048 -> line 556
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 void GrassFx_vProcessAndDisplay(void)
@@ -2016,11 +1956,67 @@ void GrassFx_vProcessAndDisplay(void)
 #pragma opt_strength_reduction reset
 #pragma opt_loop_invariants reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 562–562 */
+/* addr: 0x002dc2c0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 562
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GrassFx_vDesinit(void)
 {
     GrassFx_g_List.DeleteAll();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\GrassFx.cpp lines 38–65 */
+/* addr: 0x002dc1b0  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 48
+ *   +0x0004 -> line 38
+ *   +0x0008 -> line 48
+ *   +0x000c -> line 47
+ *   +0x0010 -> line 48
+ *   +0x0014 -> line 38
+ *   +0x0018 -> line 47
+ *   +0x001c -> line 57
+ *   +0x0020 -> line 48
+ *   +0x0024 -> line 49
+ *   +0x0028 -> line 47
+ *   +0x002c -> line 52
+ *   +0x0030 -> line 48
+ *   +0x0034 -> line 57
+ *   +0x0038 -> line 52
+ *   +0x003c -> line 57
+ *   +0x0040 -> line 49
+ *   +0x0044 -> line 55
+ *   +0x0048 -> line 47
+ *   +0x004c -> line 52
+ *   +0x0050 -> line 49
+ *   +0x0054 -> line 55
+ *   +0x0058 -> line 47
+ *   +0x005c -> line 57
+ *   +0x0060 -> line 49
+ *   +0x0064 -> line 53
+ *   +0x0068 -> line 54
+ *   +0x006c -> line 57
+ *   +0x0074 -> line 58
+ *   +0x0084 -> line 59
+ *   +0x0098 -> line 60
+ *   +0x00a8 -> line 61
+ *   +0x00b8 -> line 63
+ *   +0x00bc -> line 64
+ *   +0x00c0 -> line 63
+ *   +0x00cc -> line 64
+ *   +0x00d0 -> line 63
+ *   +0x00d4 -> line 64
+ *   +0x00d8 -> line 63
+ *   +0x00dc -> line 64
+ *   +0x00e0 -> line 63
+ *   +0x00e4 -> line 64
+ *   +0x00ec -> line 65
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vSetDummyLighting(void)
 {
     float light_diffuse[4];

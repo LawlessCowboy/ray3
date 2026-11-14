@@ -656,6 +656,11 @@ struct CTextFileSrc : CTextFile {
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 
+/* Reconstruction in progress: 380/468 bytes, 18/18 relocations match.  The
+   remaining differences are the callee-saved register assignment, the extra
+   local the retail passes to insert(), and the shape of the map lookup; see
+   the recorded attempt in config/matches.json. */
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 63–68 */
 /* addr: 0x0018cad0  size: 468 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -667,11 +672,6 @@ struct CTextFileSrc : CTextFile {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Reconstruction in progress: 380/468 bytes, 18/18 relocations match.  The
-   remaining differences are the callee-saved register assignment, the extra
-   local the retail passes to insert(), and the shape of the map lookup; see
-   the recorded attempt in config/matches.json. */
-
 CBankDesc* CBankDescCont::mfn_poAddBankDesc(const char* pch_FileName)
 {
     char* pch_Copy;

@@ -1325,14 +1325,6 @@ void GsSendData(int, void*);
 void internalFullScreenQuad(unsigned int mask, float R, float G, float B, float A, float u1, float v1, float u2, float v2, unsigned char bBlend);
 void impPS2glFinish(void);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1570–1570 */
-/* addr: 0x00140560  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1570
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void PS2glSwapBufferNotifyFunc(void (*Func)(void));
@@ -1348,746 +1340,93 @@ unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo);
 void PS2glClearBuffers(void);
 void PS2GL_SetProgressiveScanMode(int bOnOff);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1492–1548 */
-/* addr: 0x00140570  size: 452 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1492
- *   +0x0004 -> line 1493
- *   +0x0008 -> line 1492
- *   +0x000c -> line 1493
- *   +0x0018 -> line 1498
- *   +0x0020 -> line 1500
- *   +0x0038 -> line 1502
- *   +0x003c -> line 1505
- *   +0x0048 -> line 1508
- *   +0x0058 -> line 1510
- *   +0x0070 -> line 1511
- *   +0x0074 -> line 1510
- *   +0x0078 -> line 1511
- *   +0x007c -> line 1510
- *   +0x0080 -> line 1511
- *   +0x008c -> line 1510
- *   +0x0090 -> line 1511
- *   +0x0094 -> line 1510
- *   +0x0098 -> line 1511
- *   +0x00a0 -> line 1512
- *   +0x00a8 -> line 1515
- *   +0x00bc -> line 1516
- *   +0x00c0 -> line 1515
- *   +0x00c4 -> line 1516
- *   +0x00c8 -> line 1515
- *   +0x00cc -> line 1516
- *   +0x00d8 -> line 1515
- *   +0x00dc -> line 1516
- *   +0x00e0 -> line 1515
- *   +0x00e4 -> line 1516
- *   +0x00ec -> line 1526
- *   +0x00f4 -> line 1530
- *   +0x0104 -> line 1531
- *   +0x011c -> line 1532
- *   +0x0120 -> line 1531
- *   +0x0124 -> line 1532
- *   +0x0128 -> line 1531
- *   +0x012c -> line 1532
- *   +0x0138 -> line 1531
- *   +0x013c -> line 1532
- *   +0x0140 -> line 1531
- *   +0x0144 -> line 1532
- *   +0x014c -> line 1533
- *   +0x0154 -> line 1534
- *   +0x0168 -> line 1535
- *   +0x016c -> line 1534
- *   +0x0170 -> line 1535
- *   +0x0174 -> line 1534
- *   +0x0178 -> line 1535
- *   +0x0184 -> line 1534
- *   +0x0188 -> line 1535
- *   +0x018c -> line 1534
- *   +0x0190 -> line 1535
- *   +0x019c -> line 1544
- *   +0x01a8 -> line 1545
- *   +0x01b0 -> line 1547
- *   +0x01b8 -> line 1548
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1401–1487 */
-/* addr: 0x00140740  size: 632 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1401
- *   +0x0008 -> line 1404
- *   +0x0014 -> line 1407
- *   +0x0018 -> line 1406
- *   +0x001c -> line 1407
- *   +0x0024 -> line 1409
- *   +0x0038 -> line 1412
- *   +0x0048 -> line 1415
- *   +0x0058 -> line 1417
- *   +0x0070 -> line 1418
- *   +0x0074 -> line 1417
- *   +0x0078 -> line 1418
- *   +0x007c -> line 1417
- *   +0x0080 -> line 1418
- *   +0x008c -> line 1417
- *   +0x0090 -> line 1418
- *   +0x0094 -> line 1417
- *   +0x0098 -> line 1418
- *   +0x00a0 -> line 1419
- *   +0x00a8 -> line 1422
- *   +0x00bc -> line 1423
- *   +0x00c0 -> line 1422
- *   +0x00c4 -> line 1423
- *   +0x00c8 -> line 1422
- *   +0x00cc -> line 1423
- *   +0x00d8 -> line 1422
- *   +0x00dc -> line 1423
- *   +0x00e0 -> line 1422
- *   +0x00e4 -> line 1423
- *   +0x00ec -> line 1433
- *   +0x00f4 -> line 1437
- *   +0x0104 -> line 1438
- *   +0x011c -> line 1439
- *   +0x0120 -> line 1438
- *   +0x0124 -> line 1439
- *   +0x0128 -> line 1438
- *   +0x012c -> line 1439
- *   +0x0138 -> line 1438
- *   +0x013c -> line 1439
- *   +0x0140 -> line 1438
- *   +0x0144 -> line 1439
- *   +0x014c -> line 1440
- *   +0x0154 -> line 1441
- *   +0x0168 -> line 1442
- *   +0x016c -> line 1441
- *   +0x0170 -> line 1442
- *   +0x0174 -> line 1441
- *   +0x0178 -> line 1442
- *   +0x0184 -> line 1441
- *   +0x0188 -> line 1442
- *   +0x018c -> line 1441
- *   +0x0190 -> line 1442
- *   +0x019c -> line 1451
- *   +0x01a8 -> line 1454
- *   +0x01b4 -> line 1455
- *   +0x01bc -> line 1456
- *   +0x01c8 -> line 1459
- *   +0x01f8 -> line 1460
- *   +0x0228 -> line 1467
- *   +0x0238 -> line 1480
- *   +0x0240 -> line 1481
- *   +0x0248 -> line 1482
- *   +0x0250 -> line 1483
- *   +0x0258 -> line 1485
- *   +0x0264 -> line 1486
- *   +0x026c -> line 1487
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1384–1392 */
-/* addr: 0x001409c0  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1384
- *   +0x0004 -> line 1385
- *   +0x0008 -> line 1384
- *   +0x000c -> line 1385
- *   +0x0018 -> line 1387
- *   +0x0038 -> line 1390
- *   +0x0040 -> line 1392
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glExecSwapBuffers(void);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1115–1381 */
-/* addr: 0x00140a10  size: 2952 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 49–49 */
+/* addr: 0x001439b0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1115
- *   +0x0004 -> line 1123
- *   +0x0008 -> line 1115
- *   +0x000c -> line 1125
- *   +0x0010 -> line 1123
- *   +0x0014 -> line 1125
- *   +0x0020 -> line 1126
- *   +0x0028 -> line 1128
- *   +0x0038 -> line 1130
- *   +0x0048 -> line 1135
- *   +0x004c -> line 1146
- *   +0x0050 -> line 1135
- *   +0x0054 -> line 1146
- *   +0x0058 -> line 1135
- *   +0x005c -> line 1136
- *   +0x0060 -> line 1137
- *   +0x0064 -> line 1144
- *   +0x0068 -> line 1135
- *   +0x0074 -> line 1136
- *   +0x0078 -> line 1135
- *   +0x007c -> line 1136
- *   +0x0080 -> line 1135
- *   +0x0084 -> line 1136
- *   +0x0090 -> line 1137
- *   +0x0094 -> line 1136
- *   +0x0098 -> line 1137
- *   +0x009c -> line 1136
- *   +0x00a0 -> line 1137
- *   +0x00ac -> line 1139
- *   +0x00b0 -> line 1137
- *   +0x00b4 -> line 1139
- *   +0x00b8 -> line 1137
- *   +0x00bc -> line 1139
- *   +0x00c8 -> line 1135
- *   +0x00cc -> line 1139
- *   +0x00d0 -> line 1135
- *   +0x00d4 -> line 1139
- *   +0x00d8 -> line 1136
- *   +0x00e0 -> line 1137
- *   +0x00e8 -> line 1140
- *   +0x00f0 -> line 1139
- *   +0x00f4 -> line 1140
- *   +0x00f8 -> line 1139
- *   +0x00fc -> line 1140
- *   +0x0100 -> line 1146
- *   +0x0104 -> line 1140
- *   +0x0108 -> line 1146
- *   +0x0118 -> line 1141
- *   +0x011c -> line 1140
- *   +0x0120 -> line 1141
- *   +0x0124 -> line 1140
- *   +0x0128 -> line 1141
- *   +0x0134 -> line 1143
- *   +0x0138 -> line 1141
- *   +0x013c -> line 1143
- *   +0x0140 -> line 1141
- *   +0x0144 -> line 1143
- *   +0x0150 -> line 1144
- *   +0x0164 -> line 1140
- *   +0x016c -> line 1141
- *   +0x0174 -> line 1143
- *   +0x0184 -> line 1144
- *   +0x0188 -> line 1145
- *   +0x0190 -> line 1144
- *   +0x0198 -> line 1145
- *   +0x019c -> line 1144
- *   +0x01a0 -> line 1145
- *   +0x01a8 -> line 1146
- *   +0x01ac -> line 1145
- *   +0x01b0 -> line 1146
- *   +0x01b4 -> line 1145
- *   +0x01b8 -> line 1148
- *   +0x01bc -> line 1146
- *   +0x01c0 -> line 1148
- *   +0x01d0 -> line 1149
- *   +0x01d4 -> line 1148
- *   +0x01d8 -> line 1149
- *   +0x01dc -> line 1148
- *   +0x01e0 -> line 1149
- *   +0x01ec -> line 1150
- *   +0x01f0 -> line 1149
- *   +0x01f4 -> line 1150
- *   +0x01f8 -> line 1149
- *   +0x01fc -> line 1145
- *   +0x0200 -> line 1150
- *   +0x0204 -> line 1145
- *   +0x0208 -> line 1146
- *   +0x0210 -> line 1148
- *   +0x0214 -> line 1146
- *   +0x0218 -> line 1148
- *   +0x021c -> line 1146
- *   +0x0220 -> line 1149
- *   +0x0224 -> line 1146
- *   +0x0228 -> line 1149
- *   +0x022c -> line 1146
- *   +0x0230 -> line 1150
- *   +0x0234 -> line 1146
- *   +0x0238 -> line 1150
- *   +0x023c -> line 1151
- *   +0x0240 -> line 1150
- *   +0x0244 -> line 1151
- *   +0x0248 -> line 1150
- *   +0x024c -> line 1146
- *   +0x0250 -> line 1151
- *   +0x0254 -> line 1146
- *   +0x0258 -> line 1150
- *   +0x0260 -> line 1151
- *   +0x0280 -> line 1163
- *   +0x0288 -> line 1179
- *   +0x028c -> line 1168
- *   +0x0290 -> line 1179
- *   +0x0294 -> line 1168
- *   +0x0298 -> line 1169
- *   +0x029c -> line 1170
- *   +0x02a0 -> line 1177
- *   +0x02a4 -> line 1168
- *   +0x02b0 -> line 1169
- *   +0x02b4 -> line 1168
- *   +0x02b8 -> line 1169
- *   +0x02bc -> line 1168
- *   +0x02c0 -> line 1169
- *   +0x02cc -> line 1170
- *   +0x02d0 -> line 1169
- *   +0x02d4 -> line 1170
- *   +0x02d8 -> line 1169
- *   +0x02dc -> line 1170
- *   +0x02e8 -> line 1172
- *   +0x02ec -> line 1170
- *   +0x02f0 -> line 1172
- *   +0x02f4 -> line 1170
- *   +0x02f8 -> line 1172
- *   +0x0304 -> line 1168
- *   +0x0308 -> line 1172
- *   +0x030c -> line 1168
- *   +0x0310 -> line 1172
- *   +0x0314 -> line 1169
- *   +0x031c -> line 1170
- *   +0x0324 -> line 1173
- *   +0x032c -> line 1172
- *   +0x0330 -> line 1173
- *   +0x0334 -> line 1172
- *   +0x0338 -> line 1173
- *   +0x033c -> line 1179
- *   +0x0340 -> line 1173
- *   +0x0344 -> line 1179
- *   +0x0354 -> line 1174
- *   +0x0358 -> line 1173
- *   +0x035c -> line 1174
- *   +0x0360 -> line 1173
- *   +0x0364 -> line 1174
- *   +0x0370 -> line 1176
- *   +0x0374 -> line 1174
- *   +0x0378 -> line 1176
- *   +0x037c -> line 1174
- *   +0x0380 -> line 1176
- *   +0x038c -> line 1177
- *   +0x03a0 -> line 1173
- *   +0x03a8 -> line 1174
- *   +0x03b0 -> line 1176
- *   +0x03c0 -> line 1177
- *   +0x03c4 -> line 1178
- *   +0x03cc -> line 1177
- *   +0x03d4 -> line 1178
- *   +0x03d8 -> line 1177
- *   +0x03dc -> line 1178
- *   +0x03e4 -> line 1179
- *   +0x03e8 -> line 1178
- *   +0x03ec -> line 1179
- *   +0x03f0 -> line 1178
- *   +0x03f4 -> line 1181
- *   +0x03f8 -> line 1179
- *   +0x03fc -> line 1181
- *   +0x040c -> line 1182
- *   +0x0410 -> line 1181
- *   +0x0414 -> line 1182
- *   +0x0418 -> line 1181
- *   +0x041c -> line 1182
- *   +0x0428 -> line 1183
- *   +0x042c -> line 1182
- *   +0x0430 -> line 1183
- *   +0x0434 -> line 1182
- *   +0x0438 -> line 1178
- *   +0x043c -> line 1183
- *   +0x0440 -> line 1178
- *   +0x0444 -> line 1179
- *   +0x044c -> line 1181
- *   +0x0450 -> line 1179
- *   +0x0454 -> line 1181
- *   +0x0458 -> line 1179
- *   +0x045c -> line 1182
- *   +0x0460 -> line 1179
- *   +0x0464 -> line 1182
- *   +0x0468 -> line 1179
- *   +0x046c -> line 1183
- *   +0x0470 -> line 1179
- *   +0x0474 -> line 1183
- *   +0x0478 -> line 1184
- *   +0x047c -> line 1183
- *   +0x0480 -> line 1184
- *   +0x0484 -> line 1183
- *   +0x0488 -> line 1179
- *   +0x048c -> line 1184
- *   +0x0490 -> line 1179
- *   +0x0494 -> line 1183
- *   +0x049c -> line 1184
- *   +0x04bc -> line 1197
- *   +0x04c4 -> line 1200
- *   +0x04d4 -> line 1205
- *   +0x04d8 -> line 1216
- *   +0x04dc -> line 1205
- *   +0x04e0 -> line 1216
- *   +0x04e4 -> line 1205
- *   +0x04e8 -> line 1206
- *   +0x04ec -> line 1207
- *   +0x04f0 -> line 1214
- *   +0x04f4 -> line 1205
- *   +0x0500 -> line 1206
- *   +0x0504 -> line 1205
- *   +0x0508 -> line 1206
- *   +0x050c -> line 1205
- *   +0x0510 -> line 1206
- *   +0x051c -> line 1207
- *   +0x0520 -> line 1206
- *   +0x0524 -> line 1207
- *   +0x0528 -> line 1206
- *   +0x052c -> line 1207
- *   +0x0538 -> line 1209
- *   +0x053c -> line 1207
- *   +0x0540 -> line 1209
- *   +0x0544 -> line 1207
- *   +0x0548 -> line 1209
- *   +0x0554 -> line 1205
- *   +0x0558 -> line 1209
- *   +0x055c -> line 1205
- *   +0x0560 -> line 1209
- *   +0x0564 -> line 1206
- *   +0x056c -> line 1207
- *   +0x0574 -> line 1210
- *   +0x057c -> line 1209
- *   +0x0580 -> line 1210
- *   +0x0584 -> line 1209
- *   +0x0588 -> line 1210
- *   +0x058c -> line 1216
- *   +0x0590 -> line 1210
- *   +0x0594 -> line 1216
- *   +0x05a4 -> line 1211
- *   +0x05a8 -> line 1210
- *   +0x05ac -> line 1211
- *   +0x05b0 -> line 1210
- *   +0x05b4 -> line 1211
- *   +0x05c0 -> line 1213
- *   +0x05c4 -> line 1211
- *   +0x05c8 -> line 1213
- *   +0x05cc -> line 1211
- *   +0x05d0 -> line 1213
- *   +0x05dc -> line 1214
- *   +0x05f0 -> line 1210
- *   +0x05f8 -> line 1211
- *   +0x0600 -> line 1213
- *   +0x0610 -> line 1214
- *   +0x0614 -> line 1215
- *   +0x061c -> line 1214
- *   +0x0624 -> line 1215
- *   +0x0628 -> line 1214
- *   +0x062c -> line 1215
- *   +0x0634 -> line 1216
- *   +0x0638 -> line 1215
- *   +0x063c -> line 1216
- *   +0x0640 -> line 1215
- *   +0x0644 -> line 1218
- *   +0x0648 -> line 1216
- *   +0x064c -> line 1218
- *   +0x065c -> line 1219
- *   +0x0660 -> line 1218
- *   +0x0664 -> line 1219
- *   +0x0668 -> line 1218
- *   +0x066c -> line 1219
- *   +0x0678 -> line 1220
- *   +0x067c -> line 1219
- *   +0x0680 -> line 1220
- *   +0x0684 -> line 1219
- *   +0x0688 -> line 1215
- *   +0x068c -> line 1220
- *   +0x0690 -> line 1215
- *   +0x0694 -> line 1216
- *   +0x069c -> line 1218
- *   +0x06a0 -> line 1216
- *   +0x06a4 -> line 1218
- *   +0x06a8 -> line 1216
- *   +0x06ac -> line 1219
- *   +0x06b0 -> line 1216
- *   +0x06b4 -> line 1219
- *   +0x06b8 -> line 1216
- *   +0x06bc -> line 1220
- *   +0x06c0 -> line 1216
- *   +0x06c4 -> line 1220
- *   +0x06c8 -> line 1221
- *   +0x06cc -> line 1220
- *   +0x06d0 -> line 1221
- *   +0x06d4 -> line 1220
- *   +0x06d8 -> line 1216
- *   +0x06dc -> line 1221
- *   +0x06e0 -> line 1216
- *   +0x06e4 -> line 1220
- *   +0x06ec -> line 1221
- *   +0x070c -> line 1233
- *   +0x0714 -> line 1249
- *   +0x0718 -> line 1238
- *   +0x071c -> line 1249
- *   +0x0720 -> line 1238
- *   +0x0724 -> line 1239
- *   +0x0728 -> line 1240
- *   +0x072c -> line 1247
- *   +0x0730 -> line 1238
- *   +0x073c -> line 1239
- *   +0x0740 -> line 1238
- *   +0x0744 -> line 1239
- *   +0x0748 -> line 1238
- *   +0x074c -> line 1239
- *   +0x0758 -> line 1240
- *   +0x075c -> line 1239
- *   +0x0760 -> line 1240
- *   +0x0764 -> line 1239
- *   +0x0768 -> line 1240
- *   +0x0774 -> line 1242
- *   +0x0778 -> line 1240
- *   +0x077c -> line 1242
- *   +0x0780 -> line 1240
- *   +0x0784 -> line 1242
- *   +0x0790 -> line 1238
- *   +0x0794 -> line 1242
- *   +0x0798 -> line 1238
- *   +0x079c -> line 1242
- *   +0x07a0 -> line 1239
- *   +0x07a8 -> line 1240
- *   +0x07b0 -> line 1243
- *   +0x07b8 -> line 1242
- *   +0x07bc -> line 1243
- *   +0x07c0 -> line 1242
- *   +0x07c4 -> line 1243
- *   +0x07c8 -> line 1249
- *   +0x07cc -> line 1243
- *   +0x07d0 -> line 1249
- *   +0x07e0 -> line 1244
- *   +0x07e4 -> line 1243
- *   +0x07e8 -> line 1244
- *   +0x07ec -> line 1243
- *   +0x07f0 -> line 1246
- *   +0x07f4 -> line 1244
- *   +0x07f8 -> line 1246
- *   +0x07fc -> line 1244
- *   +0x0800 -> line 1246
- *   +0x080c -> line 1247
- *   +0x0820 -> line 1248
- *   +0x0828 -> line 1243
- *   +0x082c -> line 1248
- *   +0x0830 -> line 1243
- *   +0x0834 -> line 1244
- *   +0x083c -> line 1246
- *   +0x0848 -> line 1247
- *   +0x084c -> line 1246
- *   +0x0850 -> line 1247
- *   +0x085c -> line 1248
- *   +0x0864 -> line 1249
- *   +0x0868 -> line 1248
- *   +0x086c -> line 1249
- *   +0x0870 -> line 1248
- *   +0x0874 -> line 1251
- *   +0x0878 -> line 1249
- *   +0x087c -> line 1251
- *   +0x088c -> line 1252
- *   +0x0890 -> line 1251
- *   +0x0894 -> line 1252
- *   +0x0898 -> line 1251
- *   +0x089c -> line 1252
- *   +0x08a8 -> line 1253
- *   +0x08ac -> line 1252
- *   +0x08b0 -> line 1253
- *   +0x08b4 -> line 1252
- *   +0x08b8 -> line 1248
- *   +0x08bc -> line 1253
- *   +0x08c0 -> line 1248
- *   +0x08c4 -> line 1249
- *   +0x08cc -> line 1251
- *   +0x08d4 -> line 1252
- *   +0x08d8 -> line 1249
- *   +0x08dc -> line 1252
- *   +0x08e0 -> line 1249
- *   +0x08e4 -> line 1253
- *   +0x08e8 -> line 1249
- *   +0x08ec -> line 1253
- *   +0x08f0 -> line 1249
- *   +0x08f8 -> line 1254
- *   +0x08fc -> line 1253
- *   +0x0900 -> line 1254
- *   +0x0904 -> line 1253
- *   +0x0908 -> line 1249
- *   +0x090c -> line 1254
- *   +0x0910 -> line 1249
- *   +0x0914 -> line 1253
- *   +0x091c -> line 1254
- *   +0x0940 -> line 1271
- *   +0x094c -> line 1272
- *   +0x0950 -> line 1271
- *   +0x0958 -> line 1272
- *   +0x0960 -> line 1271
- *   +0x0964 -> line 1272
- *   +0x096c -> line 1275
- *   +0x0974 -> line 1277
- *   +0x0988 -> line 1279
- *   +0x0998 -> line 1280
- *   +0x09a0 -> line 1287
- *   +0x09ac -> line 1288
- *   +0x09bc -> line 1293
- *   +0x09c4 -> line 1294
- *   +0x09d8 -> line 1299
- *   +0x09e0 -> line 1302
- *   +0x09f0 -> line 1306
- *   +0x09f8 -> line 1309
- *   +0x0a08 -> line 1310
- *   +0x0a14 -> line 1312
- *   +0x0a20 -> line 1315
- *   +0x0a30 -> line 1320
- *   +0x0a38 -> line 1323
- *   +0x0a4c -> line 1325
- *   +0x0a5c -> line 1326
- *   +0x0a64 -> line 1333
- *   +0x0a70 -> line 1334
- *   +0x0a80 -> line 1339
- *   +0x0a88 -> line 1340
- *   +0x0a9c -> line 1346
- *   +0x0acc -> line 1347
- *   +0x0afc -> line 1352
- *   +0x0b04 -> line 1354
- *   +0x0b14 -> line 1359
- *   +0x0b1c -> line 1362
- *   +0x0b2c -> line 1363
- *   +0x0b38 -> line 1365
- *   +0x0b44 -> line 1367
- *   +0x0b54 -> line 1373
- *   +0x0b60 -> line 1374
- *   +0x0b64 -> line 1375
- *   +0x0b68 -> line 1374
- *   +0x0b6c -> line 1375
- *   +0x0b74 -> line 1376
- *   +0x0b7c -> line 1381
+ *   +0x0000 -> line 49
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1088–1110 */
-/* addr: 0x001415a0  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1088
- *   +0x0038 -> line 1091
- *   +0x003c -> line 1092
- *   +0x0044 -> line 1094
- *   +0x004c -> line 1095
- *   +0x0054 -> line 1097
- *   +0x0058 -> line 1098
- *   +0x0060 -> line 1100
- *   +0x006c -> line 1101
- *   +0x0080 -> line 1103
- *   +0x0090 -> line 1110
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void PS2GL_SetProgressiveScanMode(int bOnOff)
+{
+    PS2GL_g_bProgressiveScan = bOnOff;
+}
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1050–1082 */
-/* addr: 0x00141640  size: 720 bytes */
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 114–167 */
+/* addr: 0x00143620  size: 908 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1050
- *   +0x0038 -> line 1053
- *   +0x00a4 -> line 1057
- *   +0x00ac -> line 1059
- *   +0x0144 -> line 1063
- *   +0x014c -> line 1065
- *   +0x01b8 -> line 1069
- *   +0x01c0 -> line 1071
- *   +0x01fc -> line 1075
- *   +0x0200 -> line 1071
- *   +0x0204 -> line 1075
- *   +0x0208 -> line 1071
- *   +0x0260 -> line 1075
- *   +0x0280 -> line 1077
- *   +0x0284 -> line 1078
- *   +0x0288 -> line 1077
- *   +0x0290 -> line 1078
- *   +0x0294 -> line 1077
- *   +0x029c -> line 1078
- *   +0x02a0 -> line 1077
- *   +0x02a4 -> line 1078
- *   +0x02a8 -> line 1077
- *   +0x02ac -> line 1078
- *   +0x02c8 -> line 1082
+ *   +0x0000 -> line 114
+ *   +0x0008 -> line 116
+ *   +0x0010 -> line 121
+ *   +0x0030 -> line 123
+ *   +0x0038 -> line 121
+ *   +0x0058 -> line 124
+ *   +0x0070 -> line 125
+ *   +0x0088 -> line 126
+ *   +0x00a0 -> line 127
+ *   +0x00cc -> line 128
+ *   +0x00d4 -> line 129
+ *   +0x0148 -> line 131
+ *   +0x0158 -> line 132
+ *   +0x015c -> line 131
+ *   +0x0160 -> line 132
+ *   +0x0164 -> line 131
+ *   +0x0168 -> line 132
+ *   +0x016c -> line 131
+ *   +0x0170 -> line 132
+ *   +0x0178 -> line 137
+ *   +0x017c -> line 132
+ *   +0x0180 -> line 137
+ *   +0x0184 -> line 141
+ *   +0x0198 -> line 143
+ *   +0x01a8 -> line 144
+ *   +0x01b0 -> line 149
+ *   +0x01bc -> line 150
+ *   +0x01c4 -> line 151
+ *   +0x01cc -> line 152
+ *   +0x01d4 -> line 154
+ *   +0x01dc -> line 157
+ *   +0x01ec -> line 158
+ *   +0x01f8 -> line 162
+ *   +0x01fc -> line 163
+ *   +0x0200 -> line 162
+ *   +0x0208 -> line 163
+ *   +0x020c -> line 162
+ *   +0x0210 -> line 163
+ *   +0x0218 -> line 162
+ *   +0x0240 -> line 163
+ *   +0x0244 -> line 162
+ *   +0x0248 -> line 163
+ *   +0x024c -> line 162
+ *   +0x025c -> line 163
+ *   +0x0264 -> line 162
+ *   +0x0270 -> line 163
+ *   +0x0274 -> line 162
+ *   +0x0278 -> line 163
+ *   +0x027c -> line 162
+ *   +0x0280 -> line 163
+ *   +0x0284 -> line 162
+ *   +0x028c -> line 163
+ *   +0x0290 -> line 162
+ *   +0x0294 -> line 163
+ *   +0x0298 -> line 162
+ *   +0x029c -> line 163
+ *   +0x02a0 -> line 162
+ *   +0x02a4 -> line 163
+ *   +0x0378 -> line 165
+ *   +0x0380 -> line 167
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1016–1046 */
-/* addr: 0x00141910  size: 700 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1016
- *   +0x0004 -> line 1019
- *   +0x0008 -> line 1016
- *   +0x000c -> line 1020
- *   +0x0010 -> line 1016
- *   +0x0014 -> line 1019
- *   +0x0024 -> line 1020
- *   +0x0030 -> line 1021
- *   +0x0038 -> line 1022
- *   +0x0040 -> line 1023
- *   +0x0048 -> line 1025
- *   +0x004c -> line 1026
- *   +0x0050 -> line 1019
- *   +0x0054 -> line 1020
- *   +0x0058 -> line 1019
- *   +0x005c -> line 1026
- *   +0x0060 -> line 1020
- *   +0x0064 -> line 1026
- *   +0x0068 -> line 1025
- *   +0x006c -> line 1026
- *   +0x0070 -> line 1020
- *   +0x0098 -> line 1021
- *   +0x00c8 -> line 1022
- *   +0x00f8 -> line 1023
- *   +0x0128 -> line 1026
- *   +0x0130 -> line 1029
- *   +0x0164 -> line 1032
- *   +0x0168 -> line 1029
- *   +0x0170 -> line 1032
- *   +0x0178 -> line 1029
- *   +0x0198 -> line 1032
- *   +0x01a0 -> line 1033
- *   +0x01bc -> line 1034
- *   +0x01dc -> line 1033
- *   +0x01e4 -> line 1034
- *   +0x01e8 -> line 1033
- *   +0x01ec -> line 1034
- *   +0x0278 -> line 1036
- *   +0x028c -> line 1037
- *   +0x0298 -> line 1039
- *   +0x02a0 -> line 1040
- *   +0x02a4 -> line 1045
- *   +0x02ac -> line 1046
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 949–990 */
-/* addr: 0x00141bd0  size: 516 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 949
- *   +0x0004 -> line 952
- *   +0x0010 -> line 954
- *   +0x0028 -> line 957
- *   +0x003c -> line 958
- *   +0x0044 -> line 962
- *   +0x005c -> line 964
- *   +0x0070 -> line 965
- *   +0x0078 -> line 964
- *   +0x00a0 -> line 965
- *   +0x00a4 -> line 964
- *   +0x00a8 -> line 965
- *   +0x00d8 -> line 968
- *   +0x00dc -> line 966
- *   +0x00ec -> line 967
- *   +0x00f8 -> line 968
- *   +0x0100 -> line 970
- *   +0x0108 -> line 973
- *   +0x0120 -> line 976
- *   +0x0134 -> line 977
- *   +0x013c -> line 981
- *   +0x0154 -> line 983
- *   +0x0178 -> line 984
- *   +0x017c -> line 983
- *   +0x0198 -> line 984
- *   +0x01d0 -> line 987
- *   +0x01d4 -> line 985
- *   +0x01e4 -> line 986
- *   +0x01f0 -> line 987
- *   +0x01f8 -> line 990
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void PS2glClearBuffers(void)
+{
+    tagGLtexblock theDefaultTexBlock;
+    int i;
+    /* TODO: decompile from asm/... */
+}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 194–878 */
 /* addr: 0x00141de0  size: 6208 bytes */
@@ -2798,94 +2137,6 @@ void PS2glExecSwapBuffers(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 114–167 */
-/* addr: 0x00143620  size: 908 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0008 -> line 116
- *   +0x0010 -> line 121
- *   +0x0030 -> line 123
- *   +0x0038 -> line 121
- *   +0x0058 -> line 124
- *   +0x0070 -> line 125
- *   +0x0088 -> line 126
- *   +0x00a0 -> line 127
- *   +0x00cc -> line 128
- *   +0x00d4 -> line 129
- *   +0x0148 -> line 131
- *   +0x0158 -> line 132
- *   +0x015c -> line 131
- *   +0x0160 -> line 132
- *   +0x0164 -> line 131
- *   +0x0168 -> line 132
- *   +0x016c -> line 131
- *   +0x0170 -> line 132
- *   +0x0178 -> line 137
- *   +0x017c -> line 132
- *   +0x0180 -> line 137
- *   +0x0184 -> line 141
- *   +0x0198 -> line 143
- *   +0x01a8 -> line 144
- *   +0x01b0 -> line 149
- *   +0x01bc -> line 150
- *   +0x01c4 -> line 151
- *   +0x01cc -> line 152
- *   +0x01d4 -> line 154
- *   +0x01dc -> line 157
- *   +0x01ec -> line 158
- *   +0x01f8 -> line 162
- *   +0x01fc -> line 163
- *   +0x0200 -> line 162
- *   +0x0208 -> line 163
- *   +0x020c -> line 162
- *   +0x0210 -> line 163
- *   +0x0218 -> line 162
- *   +0x0240 -> line 163
- *   +0x0244 -> line 162
- *   +0x0248 -> line 163
- *   +0x024c -> line 162
- *   +0x025c -> line 163
- *   +0x0264 -> line 162
- *   +0x0270 -> line 163
- *   +0x0274 -> line 162
- *   +0x0278 -> line 163
- *   +0x027c -> line 162
- *   +0x0280 -> line 163
- *   +0x0284 -> line 162
- *   +0x028c -> line 163
- *   +0x0290 -> line 162
- *   +0x0294 -> line 163
- *   +0x0298 -> line 162
- *   +0x029c -> line 163
- *   +0x02a0 -> line 162
- *   +0x02a4 -> line 163
- *   +0x0378 -> line 165
- *   +0x0380 -> line 167
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 49–49 */
-/* addr: 0x001439b0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void PS2GL_SetProgressiveScanMode(int bOnOff)
-{
-    PS2GL_g_bProgressiveScan = bOnOff;
-}
-
-void PS2glClearBuffers(void)
-{
-    tagGLtexblock theDefaultTexBlock;
-    int i;
-    /* TODO: decompile from asm/... */
-}
-
 unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo)
 {
     unsigned int uiOldMontionBlurIntensity;
@@ -2904,6 +2155,42 @@ unsigned int PS2glInitBuffers(_GL_BUFFERINFO* pBufferInfo)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 949–990 */
+/* addr: 0x00141bd0  size: 516 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 949
+ *   +0x0004 -> line 952
+ *   +0x0010 -> line 954
+ *   +0x0028 -> line 957
+ *   +0x003c -> line 958
+ *   +0x0044 -> line 962
+ *   +0x005c -> line 964
+ *   +0x0070 -> line 965
+ *   +0x0078 -> line 964
+ *   +0x00a0 -> line 965
+ *   +0x00a4 -> line 964
+ *   +0x00a8 -> line 965
+ *   +0x00d8 -> line 968
+ *   +0x00dc -> line 966
+ *   +0x00ec -> line 967
+ *   +0x00f8 -> line 968
+ *   +0x0100 -> line 970
+ *   +0x0108 -> line 973
+ *   +0x0120 -> line 976
+ *   +0x0134 -> line 977
+ *   +0x013c -> line 981
+ *   +0x0154 -> line 983
+ *   +0x0178 -> line 984
+ *   +0x017c -> line 983
+ *   +0x0198 -> line 984
+ *   +0x01d0 -> line 987
+ *   +0x01d4 -> line 985
+ *   +0x01e4 -> line 986
+ *   +0x01f0 -> line 987
+ *   +0x01f8 -> line 990
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MySwapBuff3Dc(anon_33* db, int bufferNum)
 {
     if (bufferNum & 1)
@@ -2960,6 +2247,55 @@ void MySwapBuff3Dc(anon_33* db, int bufferNum)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1016–1046 */
+/* addr: 0x00141910  size: 700 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1016
+ *   +0x0004 -> line 1019
+ *   +0x0008 -> line 1016
+ *   +0x000c -> line 1020
+ *   +0x0010 -> line 1016
+ *   +0x0014 -> line 1019
+ *   +0x0024 -> line 1020
+ *   +0x0030 -> line 1021
+ *   +0x0038 -> line 1022
+ *   +0x0040 -> line 1023
+ *   +0x0048 -> line 1025
+ *   +0x004c -> line 1026
+ *   +0x0050 -> line 1019
+ *   +0x0054 -> line 1020
+ *   +0x0058 -> line 1019
+ *   +0x005c -> line 1026
+ *   +0x0060 -> line 1020
+ *   +0x0064 -> line 1026
+ *   +0x0068 -> line 1025
+ *   +0x006c -> line 1026
+ *   +0x0070 -> line 1020
+ *   +0x0098 -> line 1021
+ *   +0x00c8 -> line 1022
+ *   +0x00f8 -> line 1023
+ *   +0x0128 -> line 1026
+ *   +0x0130 -> line 1029
+ *   +0x0164 -> line 1032
+ *   +0x0168 -> line 1029
+ *   +0x0170 -> line 1032
+ *   +0x0178 -> line 1029
+ *   +0x0198 -> line 1032
+ *   +0x01a0 -> line 1033
+ *   +0x01bc -> line 1034
+ *   +0x01dc -> line 1033
+ *   +0x01e4 -> line 1034
+ *   +0x01e8 -> line 1033
+ *   +0x01ec -> line 1034
+ *   +0x0278 -> line 1036
+ *   +0x028c -> line 1037
+ *   +0x0298 -> line 1039
+ *   +0x02a0 -> line 1040
+ *   +0x02a4 -> line 1045
+ *   +0x02ac -> line 1046
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glMotionBlur(void)
 {
     anon_47 qword;
@@ -3008,6 +2344,36 @@ void PS2glMotionBlur(void)
     impPS2glFinish();
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1050–1082 */
+/* addr: 0x00141640  size: 720 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1050
+ *   +0x0038 -> line 1053
+ *   +0x00a4 -> line 1057
+ *   +0x00ac -> line 1059
+ *   +0x0144 -> line 1063
+ *   +0x014c -> line 1065
+ *   +0x01b8 -> line 1069
+ *   +0x01c0 -> line 1071
+ *   +0x01fc -> line 1075
+ *   +0x0200 -> line 1071
+ *   +0x0204 -> line 1075
+ *   +0x0208 -> line 1071
+ *   +0x0260 -> line 1075
+ *   +0x0280 -> line 1077
+ *   +0x0284 -> line 1078
+ *   +0x0288 -> line 1077
+ *   +0x0290 -> line 1078
+ *   +0x0294 -> line 1077
+ *   +0x029c -> line 1078
+ *   +0x02a0 -> line 1077
+ *   +0x02a4 -> line 1078
+ *   +0x02a8 -> line 1077
+ *   +0x02ac -> line 1078
+ *   +0x02c8 -> line 1082
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue)
 {
     switch (target)
@@ -3035,6 +2401,23 @@ void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewVa
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1088–1110 */
+/* addr: 0x001415a0  size: 152 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1088
+ *   +0x0038 -> line 1091
+ *   +0x003c -> line 1092
+ *   +0x0044 -> line 1094
+ *   +0x004c -> line 1095
+ *   +0x0054 -> line 1097
+ *   +0x0058 -> line 1098
+ *   +0x0060 -> line 1100
+ *   +0x006c -> line 1101
+ *   +0x0080 -> line 1103
+ *   +0x0090 -> line 1110
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
 {
     unsigned int uiReturn;
@@ -3064,12 +2447,477 @@ unsigned int PS2glInternalGetScreenCalebration(unsigned int target)
     return uiReturn;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1115–1381 */
+/* addr: 0x00140a10  size: 2952 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1115
+ *   +0x0004 -> line 1123
+ *   +0x0008 -> line 1115
+ *   +0x000c -> line 1125
+ *   +0x0010 -> line 1123
+ *   +0x0014 -> line 1125
+ *   +0x0020 -> line 1126
+ *   +0x0028 -> line 1128
+ *   +0x0038 -> line 1130
+ *   +0x0048 -> line 1135
+ *   +0x004c -> line 1146
+ *   +0x0050 -> line 1135
+ *   +0x0054 -> line 1146
+ *   +0x0058 -> line 1135
+ *   +0x005c -> line 1136
+ *   +0x0060 -> line 1137
+ *   +0x0064 -> line 1144
+ *   +0x0068 -> line 1135
+ *   +0x0074 -> line 1136
+ *   +0x0078 -> line 1135
+ *   +0x007c -> line 1136
+ *   +0x0080 -> line 1135
+ *   +0x0084 -> line 1136
+ *   +0x0090 -> line 1137
+ *   +0x0094 -> line 1136
+ *   +0x0098 -> line 1137
+ *   +0x009c -> line 1136
+ *   +0x00a0 -> line 1137
+ *   +0x00ac -> line 1139
+ *   +0x00b0 -> line 1137
+ *   +0x00b4 -> line 1139
+ *   +0x00b8 -> line 1137
+ *   +0x00bc -> line 1139
+ *   +0x00c8 -> line 1135
+ *   +0x00cc -> line 1139
+ *   +0x00d0 -> line 1135
+ *   +0x00d4 -> line 1139
+ *   +0x00d8 -> line 1136
+ *   +0x00e0 -> line 1137
+ *   +0x00e8 -> line 1140
+ *   +0x00f0 -> line 1139
+ *   +0x00f4 -> line 1140
+ *   +0x00f8 -> line 1139
+ *   +0x00fc -> line 1140
+ *   +0x0100 -> line 1146
+ *   +0x0104 -> line 1140
+ *   +0x0108 -> line 1146
+ *   +0x0118 -> line 1141
+ *   +0x011c -> line 1140
+ *   +0x0120 -> line 1141
+ *   +0x0124 -> line 1140
+ *   +0x0128 -> line 1141
+ *   +0x0134 -> line 1143
+ *   +0x0138 -> line 1141
+ *   +0x013c -> line 1143
+ *   +0x0140 -> line 1141
+ *   +0x0144 -> line 1143
+ *   +0x0150 -> line 1144
+ *   +0x0164 -> line 1140
+ *   +0x016c -> line 1141
+ *   +0x0174 -> line 1143
+ *   +0x0184 -> line 1144
+ *   +0x0188 -> line 1145
+ *   +0x0190 -> line 1144
+ *   +0x0198 -> line 1145
+ *   +0x019c -> line 1144
+ *   +0x01a0 -> line 1145
+ *   +0x01a8 -> line 1146
+ *   +0x01ac -> line 1145
+ *   +0x01b0 -> line 1146
+ *   +0x01b4 -> line 1145
+ *   +0x01b8 -> line 1148
+ *   +0x01bc -> line 1146
+ *   +0x01c0 -> line 1148
+ *   +0x01d0 -> line 1149
+ *   +0x01d4 -> line 1148
+ *   +0x01d8 -> line 1149
+ *   +0x01dc -> line 1148
+ *   +0x01e0 -> line 1149
+ *   +0x01ec -> line 1150
+ *   +0x01f0 -> line 1149
+ *   +0x01f4 -> line 1150
+ *   +0x01f8 -> line 1149
+ *   +0x01fc -> line 1145
+ *   +0x0200 -> line 1150
+ *   +0x0204 -> line 1145
+ *   +0x0208 -> line 1146
+ *   +0x0210 -> line 1148
+ *   +0x0214 -> line 1146
+ *   +0x0218 -> line 1148
+ *   +0x021c -> line 1146
+ *   +0x0220 -> line 1149
+ *   +0x0224 -> line 1146
+ *   +0x0228 -> line 1149
+ *   +0x022c -> line 1146
+ *   +0x0230 -> line 1150
+ *   +0x0234 -> line 1146
+ *   +0x0238 -> line 1150
+ *   +0x023c -> line 1151
+ *   +0x0240 -> line 1150
+ *   +0x0244 -> line 1151
+ *   +0x0248 -> line 1150
+ *   +0x024c -> line 1146
+ *   +0x0250 -> line 1151
+ *   +0x0254 -> line 1146
+ *   +0x0258 -> line 1150
+ *   +0x0260 -> line 1151
+ *   +0x0280 -> line 1163
+ *   +0x0288 -> line 1179
+ *   +0x028c -> line 1168
+ *   +0x0290 -> line 1179
+ *   +0x0294 -> line 1168
+ *   +0x0298 -> line 1169
+ *   +0x029c -> line 1170
+ *   +0x02a0 -> line 1177
+ *   +0x02a4 -> line 1168
+ *   +0x02b0 -> line 1169
+ *   +0x02b4 -> line 1168
+ *   +0x02b8 -> line 1169
+ *   +0x02bc -> line 1168
+ *   +0x02c0 -> line 1169
+ *   +0x02cc -> line 1170
+ *   +0x02d0 -> line 1169
+ *   +0x02d4 -> line 1170
+ *   +0x02d8 -> line 1169
+ *   +0x02dc -> line 1170
+ *   +0x02e8 -> line 1172
+ *   +0x02ec -> line 1170
+ *   +0x02f0 -> line 1172
+ *   +0x02f4 -> line 1170
+ *   +0x02f8 -> line 1172
+ *   +0x0304 -> line 1168
+ *   +0x0308 -> line 1172
+ *   +0x030c -> line 1168
+ *   +0x0310 -> line 1172
+ *   +0x0314 -> line 1169
+ *   +0x031c -> line 1170
+ *   +0x0324 -> line 1173
+ *   +0x032c -> line 1172
+ *   +0x0330 -> line 1173
+ *   +0x0334 -> line 1172
+ *   +0x0338 -> line 1173
+ *   +0x033c -> line 1179
+ *   +0x0340 -> line 1173
+ *   +0x0344 -> line 1179
+ *   +0x0354 -> line 1174
+ *   +0x0358 -> line 1173
+ *   +0x035c -> line 1174
+ *   +0x0360 -> line 1173
+ *   +0x0364 -> line 1174
+ *   +0x0370 -> line 1176
+ *   +0x0374 -> line 1174
+ *   +0x0378 -> line 1176
+ *   +0x037c -> line 1174
+ *   +0x0380 -> line 1176
+ *   +0x038c -> line 1177
+ *   +0x03a0 -> line 1173
+ *   +0x03a8 -> line 1174
+ *   +0x03b0 -> line 1176
+ *   +0x03c0 -> line 1177
+ *   +0x03c4 -> line 1178
+ *   +0x03cc -> line 1177
+ *   +0x03d4 -> line 1178
+ *   +0x03d8 -> line 1177
+ *   +0x03dc -> line 1178
+ *   +0x03e4 -> line 1179
+ *   +0x03e8 -> line 1178
+ *   +0x03ec -> line 1179
+ *   +0x03f0 -> line 1178
+ *   +0x03f4 -> line 1181
+ *   +0x03f8 -> line 1179
+ *   +0x03fc -> line 1181
+ *   +0x040c -> line 1182
+ *   +0x0410 -> line 1181
+ *   +0x0414 -> line 1182
+ *   +0x0418 -> line 1181
+ *   +0x041c -> line 1182
+ *   +0x0428 -> line 1183
+ *   +0x042c -> line 1182
+ *   +0x0430 -> line 1183
+ *   +0x0434 -> line 1182
+ *   +0x0438 -> line 1178
+ *   +0x043c -> line 1183
+ *   +0x0440 -> line 1178
+ *   +0x0444 -> line 1179
+ *   +0x044c -> line 1181
+ *   +0x0450 -> line 1179
+ *   +0x0454 -> line 1181
+ *   +0x0458 -> line 1179
+ *   +0x045c -> line 1182
+ *   +0x0460 -> line 1179
+ *   +0x0464 -> line 1182
+ *   +0x0468 -> line 1179
+ *   +0x046c -> line 1183
+ *   +0x0470 -> line 1179
+ *   +0x0474 -> line 1183
+ *   +0x0478 -> line 1184
+ *   +0x047c -> line 1183
+ *   +0x0480 -> line 1184
+ *   +0x0484 -> line 1183
+ *   +0x0488 -> line 1179
+ *   +0x048c -> line 1184
+ *   +0x0490 -> line 1179
+ *   +0x0494 -> line 1183
+ *   +0x049c -> line 1184
+ *   +0x04bc -> line 1197
+ *   +0x04c4 -> line 1200
+ *   +0x04d4 -> line 1205
+ *   +0x04d8 -> line 1216
+ *   +0x04dc -> line 1205
+ *   +0x04e0 -> line 1216
+ *   +0x04e4 -> line 1205
+ *   +0x04e8 -> line 1206
+ *   +0x04ec -> line 1207
+ *   +0x04f0 -> line 1214
+ *   +0x04f4 -> line 1205
+ *   +0x0500 -> line 1206
+ *   +0x0504 -> line 1205
+ *   +0x0508 -> line 1206
+ *   +0x050c -> line 1205
+ *   +0x0510 -> line 1206
+ *   +0x051c -> line 1207
+ *   +0x0520 -> line 1206
+ *   +0x0524 -> line 1207
+ *   +0x0528 -> line 1206
+ *   +0x052c -> line 1207
+ *   +0x0538 -> line 1209
+ *   +0x053c -> line 1207
+ *   +0x0540 -> line 1209
+ *   +0x0544 -> line 1207
+ *   +0x0548 -> line 1209
+ *   +0x0554 -> line 1205
+ *   +0x0558 -> line 1209
+ *   +0x055c -> line 1205
+ *   +0x0560 -> line 1209
+ *   +0x0564 -> line 1206
+ *   +0x056c -> line 1207
+ *   +0x0574 -> line 1210
+ *   +0x057c -> line 1209
+ *   +0x0580 -> line 1210
+ *   +0x0584 -> line 1209
+ *   +0x0588 -> line 1210
+ *   +0x058c -> line 1216
+ *   +0x0590 -> line 1210
+ *   +0x0594 -> line 1216
+ *   +0x05a4 -> line 1211
+ *   +0x05a8 -> line 1210
+ *   +0x05ac -> line 1211
+ *   +0x05b0 -> line 1210
+ *   +0x05b4 -> line 1211
+ *   +0x05c0 -> line 1213
+ *   +0x05c4 -> line 1211
+ *   +0x05c8 -> line 1213
+ *   +0x05cc -> line 1211
+ *   +0x05d0 -> line 1213
+ *   +0x05dc -> line 1214
+ *   +0x05f0 -> line 1210
+ *   +0x05f8 -> line 1211
+ *   +0x0600 -> line 1213
+ *   +0x0610 -> line 1214
+ *   +0x0614 -> line 1215
+ *   +0x061c -> line 1214
+ *   +0x0624 -> line 1215
+ *   +0x0628 -> line 1214
+ *   +0x062c -> line 1215
+ *   +0x0634 -> line 1216
+ *   +0x0638 -> line 1215
+ *   +0x063c -> line 1216
+ *   +0x0640 -> line 1215
+ *   +0x0644 -> line 1218
+ *   +0x0648 -> line 1216
+ *   +0x064c -> line 1218
+ *   +0x065c -> line 1219
+ *   +0x0660 -> line 1218
+ *   +0x0664 -> line 1219
+ *   +0x0668 -> line 1218
+ *   +0x066c -> line 1219
+ *   +0x0678 -> line 1220
+ *   +0x067c -> line 1219
+ *   +0x0680 -> line 1220
+ *   +0x0684 -> line 1219
+ *   +0x0688 -> line 1215
+ *   +0x068c -> line 1220
+ *   +0x0690 -> line 1215
+ *   +0x0694 -> line 1216
+ *   +0x069c -> line 1218
+ *   +0x06a0 -> line 1216
+ *   +0x06a4 -> line 1218
+ *   +0x06a8 -> line 1216
+ *   +0x06ac -> line 1219
+ *   +0x06b0 -> line 1216
+ *   +0x06b4 -> line 1219
+ *   +0x06b8 -> line 1216
+ *   +0x06bc -> line 1220
+ *   +0x06c0 -> line 1216
+ *   +0x06c4 -> line 1220
+ *   +0x06c8 -> line 1221
+ *   +0x06cc -> line 1220
+ *   +0x06d0 -> line 1221
+ *   +0x06d4 -> line 1220
+ *   +0x06d8 -> line 1216
+ *   +0x06dc -> line 1221
+ *   +0x06e0 -> line 1216
+ *   +0x06e4 -> line 1220
+ *   +0x06ec -> line 1221
+ *   +0x070c -> line 1233
+ *   +0x0714 -> line 1249
+ *   +0x0718 -> line 1238
+ *   +0x071c -> line 1249
+ *   +0x0720 -> line 1238
+ *   +0x0724 -> line 1239
+ *   +0x0728 -> line 1240
+ *   +0x072c -> line 1247
+ *   +0x0730 -> line 1238
+ *   +0x073c -> line 1239
+ *   +0x0740 -> line 1238
+ *   +0x0744 -> line 1239
+ *   +0x0748 -> line 1238
+ *   +0x074c -> line 1239
+ *   +0x0758 -> line 1240
+ *   +0x075c -> line 1239
+ *   +0x0760 -> line 1240
+ *   +0x0764 -> line 1239
+ *   +0x0768 -> line 1240
+ *   +0x0774 -> line 1242
+ *   +0x0778 -> line 1240
+ *   +0x077c -> line 1242
+ *   +0x0780 -> line 1240
+ *   +0x0784 -> line 1242
+ *   +0x0790 -> line 1238
+ *   +0x0794 -> line 1242
+ *   +0x0798 -> line 1238
+ *   +0x079c -> line 1242
+ *   +0x07a0 -> line 1239
+ *   +0x07a8 -> line 1240
+ *   +0x07b0 -> line 1243
+ *   +0x07b8 -> line 1242
+ *   +0x07bc -> line 1243
+ *   +0x07c0 -> line 1242
+ *   +0x07c4 -> line 1243
+ *   +0x07c8 -> line 1249
+ *   +0x07cc -> line 1243
+ *   +0x07d0 -> line 1249
+ *   +0x07e0 -> line 1244
+ *   +0x07e4 -> line 1243
+ *   +0x07e8 -> line 1244
+ *   +0x07ec -> line 1243
+ *   +0x07f0 -> line 1246
+ *   +0x07f4 -> line 1244
+ *   +0x07f8 -> line 1246
+ *   +0x07fc -> line 1244
+ *   +0x0800 -> line 1246
+ *   +0x080c -> line 1247
+ *   +0x0820 -> line 1248
+ *   +0x0828 -> line 1243
+ *   +0x082c -> line 1248
+ *   +0x0830 -> line 1243
+ *   +0x0834 -> line 1244
+ *   +0x083c -> line 1246
+ *   +0x0848 -> line 1247
+ *   +0x084c -> line 1246
+ *   +0x0850 -> line 1247
+ *   +0x085c -> line 1248
+ *   +0x0864 -> line 1249
+ *   +0x0868 -> line 1248
+ *   +0x086c -> line 1249
+ *   +0x0870 -> line 1248
+ *   +0x0874 -> line 1251
+ *   +0x0878 -> line 1249
+ *   +0x087c -> line 1251
+ *   +0x088c -> line 1252
+ *   +0x0890 -> line 1251
+ *   +0x0894 -> line 1252
+ *   +0x0898 -> line 1251
+ *   +0x089c -> line 1252
+ *   +0x08a8 -> line 1253
+ *   +0x08ac -> line 1252
+ *   +0x08b0 -> line 1253
+ *   +0x08b4 -> line 1252
+ *   +0x08b8 -> line 1248
+ *   +0x08bc -> line 1253
+ *   +0x08c0 -> line 1248
+ *   +0x08c4 -> line 1249
+ *   +0x08cc -> line 1251
+ *   +0x08d4 -> line 1252
+ *   +0x08d8 -> line 1249
+ *   +0x08dc -> line 1252
+ *   +0x08e0 -> line 1249
+ *   +0x08e4 -> line 1253
+ *   +0x08e8 -> line 1249
+ *   +0x08ec -> line 1253
+ *   +0x08f0 -> line 1249
+ *   +0x08f8 -> line 1254
+ *   +0x08fc -> line 1253
+ *   +0x0900 -> line 1254
+ *   +0x0904 -> line 1253
+ *   +0x0908 -> line 1249
+ *   +0x090c -> line 1254
+ *   +0x0910 -> line 1249
+ *   +0x0914 -> line 1253
+ *   +0x091c -> line 1254
+ *   +0x0940 -> line 1271
+ *   +0x094c -> line 1272
+ *   +0x0950 -> line 1271
+ *   +0x0958 -> line 1272
+ *   +0x0960 -> line 1271
+ *   +0x0964 -> line 1272
+ *   +0x096c -> line 1275
+ *   +0x0974 -> line 1277
+ *   +0x0988 -> line 1279
+ *   +0x0998 -> line 1280
+ *   +0x09a0 -> line 1287
+ *   +0x09ac -> line 1288
+ *   +0x09bc -> line 1293
+ *   +0x09c4 -> line 1294
+ *   +0x09d8 -> line 1299
+ *   +0x09e0 -> line 1302
+ *   +0x09f0 -> line 1306
+ *   +0x09f8 -> line 1309
+ *   +0x0a08 -> line 1310
+ *   +0x0a14 -> line 1312
+ *   +0x0a20 -> line 1315
+ *   +0x0a30 -> line 1320
+ *   +0x0a38 -> line 1323
+ *   +0x0a4c -> line 1325
+ *   +0x0a5c -> line 1326
+ *   +0x0a64 -> line 1333
+ *   +0x0a70 -> line 1334
+ *   +0x0a80 -> line 1339
+ *   +0x0a88 -> line 1340
+ *   +0x0a9c -> line 1346
+ *   +0x0acc -> line 1347
+ *   +0x0afc -> line 1352
+ *   +0x0b04 -> line 1354
+ *   +0x0b14 -> line 1359
+ *   +0x0b1c -> line 1362
+ *   +0x0b2c -> line 1363
+ *   +0x0b38 -> line 1365
+ *   +0x0b44 -> line 1367
+ *   +0x0b54 -> line 1373
+ *   +0x0b60 -> line 1374
+ *   +0x0b64 -> line 1375
+ *   +0x0b68 -> line 1374
+ *   +0x0b6c -> line 1375
+ *   +0x0b74 -> line 1376
+ *   +0x0b7c -> line 1381
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glExecSwapBuffers(void)
 {
     short odev;
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1384–1392 */
+/* addr: 0x001409c0  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1384
+ *   +0x0004 -> line 1385
+ *   +0x0008 -> line 1384
+ *   +0x000c -> line 1385
+ *   +0x0018 -> line 1387
+ *   +0x0038 -> line 1390
+ *   +0x0040 -> line 1392
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glFlushNotify(void)
 {
     if (g_stBufferInfo.bDoubleBufferMode)
@@ -3082,6 +2930,78 @@ void PS2glFlushNotify(void)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1401–1487 */
+/* addr: 0x00140740  size: 632 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1401
+ *   +0x0008 -> line 1404
+ *   +0x0014 -> line 1407
+ *   +0x0018 -> line 1406
+ *   +0x001c -> line 1407
+ *   +0x0024 -> line 1409
+ *   +0x0038 -> line 1412
+ *   +0x0048 -> line 1415
+ *   +0x0058 -> line 1417
+ *   +0x0070 -> line 1418
+ *   +0x0074 -> line 1417
+ *   +0x0078 -> line 1418
+ *   +0x007c -> line 1417
+ *   +0x0080 -> line 1418
+ *   +0x008c -> line 1417
+ *   +0x0090 -> line 1418
+ *   +0x0094 -> line 1417
+ *   +0x0098 -> line 1418
+ *   +0x00a0 -> line 1419
+ *   +0x00a8 -> line 1422
+ *   +0x00bc -> line 1423
+ *   +0x00c0 -> line 1422
+ *   +0x00c4 -> line 1423
+ *   +0x00c8 -> line 1422
+ *   +0x00cc -> line 1423
+ *   +0x00d8 -> line 1422
+ *   +0x00dc -> line 1423
+ *   +0x00e0 -> line 1422
+ *   +0x00e4 -> line 1423
+ *   +0x00ec -> line 1433
+ *   +0x00f4 -> line 1437
+ *   +0x0104 -> line 1438
+ *   +0x011c -> line 1439
+ *   +0x0120 -> line 1438
+ *   +0x0124 -> line 1439
+ *   +0x0128 -> line 1438
+ *   +0x012c -> line 1439
+ *   +0x0138 -> line 1438
+ *   +0x013c -> line 1439
+ *   +0x0140 -> line 1438
+ *   +0x0144 -> line 1439
+ *   +0x014c -> line 1440
+ *   +0x0154 -> line 1441
+ *   +0x0168 -> line 1442
+ *   +0x016c -> line 1441
+ *   +0x0170 -> line 1442
+ *   +0x0174 -> line 1441
+ *   +0x0178 -> line 1442
+ *   +0x0184 -> line 1441
+ *   +0x0188 -> line 1442
+ *   +0x018c -> line 1441
+ *   +0x0190 -> line 1442
+ *   +0x019c -> line 1451
+ *   +0x01a8 -> line 1454
+ *   +0x01b4 -> line 1455
+ *   +0x01bc -> line 1456
+ *   +0x01c8 -> line 1459
+ *   +0x01f8 -> line 1460
+ *   +0x0228 -> line 1467
+ *   +0x0238 -> line 1480
+ *   +0x0240 -> line 1481
+ *   +0x0248 -> line 1482
+ *   +0x0250 -> line 1483
+ *   +0x0258 -> line 1485
+ *   +0x0264 -> line 1486
+ *   +0x026c -> line 1487
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glFakeSwapBuffers(void)
 {
     static short odev;
@@ -3161,6 +3081,69 @@ void PS2glFakeSwapBuffers(void)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1492–1548 */
+/* addr: 0x00140570  size: 452 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1492
+ *   +0x0004 -> line 1493
+ *   +0x0008 -> line 1492
+ *   +0x000c -> line 1493
+ *   +0x0018 -> line 1498
+ *   +0x0020 -> line 1500
+ *   +0x0038 -> line 1502
+ *   +0x003c -> line 1505
+ *   +0x0048 -> line 1508
+ *   +0x0058 -> line 1510
+ *   +0x0070 -> line 1511
+ *   +0x0074 -> line 1510
+ *   +0x0078 -> line 1511
+ *   +0x007c -> line 1510
+ *   +0x0080 -> line 1511
+ *   +0x008c -> line 1510
+ *   +0x0090 -> line 1511
+ *   +0x0094 -> line 1510
+ *   +0x0098 -> line 1511
+ *   +0x00a0 -> line 1512
+ *   +0x00a8 -> line 1515
+ *   +0x00bc -> line 1516
+ *   +0x00c0 -> line 1515
+ *   +0x00c4 -> line 1516
+ *   +0x00c8 -> line 1515
+ *   +0x00cc -> line 1516
+ *   +0x00d8 -> line 1515
+ *   +0x00dc -> line 1516
+ *   +0x00e0 -> line 1515
+ *   +0x00e4 -> line 1516
+ *   +0x00ec -> line 1526
+ *   +0x00f4 -> line 1530
+ *   +0x0104 -> line 1531
+ *   +0x011c -> line 1532
+ *   +0x0120 -> line 1531
+ *   +0x0124 -> line 1532
+ *   +0x0128 -> line 1531
+ *   +0x012c -> line 1532
+ *   +0x0138 -> line 1531
+ *   +0x013c -> line 1532
+ *   +0x0140 -> line 1531
+ *   +0x0144 -> line 1532
+ *   +0x014c -> line 1533
+ *   +0x0154 -> line 1534
+ *   +0x0168 -> line 1535
+ *   +0x016c -> line 1534
+ *   +0x0170 -> line 1535
+ *   +0x0174 -> line 1534
+ *   +0x0178 -> line 1535
+ *   +0x0184 -> line 1534
+ *   +0x0188 -> line 1535
+ *   +0x018c -> line 1534
+ *   +0x0190 -> line 1535
+ *   +0x019c -> line 1544
+ *   +0x01a8 -> line 1545
+ *   +0x01b0 -> line 1547
+ *   +0x01b8 -> line 1548
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glSwapBuffers(void)
 {
     if (g_stBufferInfo.bDoubleBufferMode)
@@ -3207,6 +3190,13 @@ void PS2glSwapBuffers(void)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1570–1570 */
+/* addr: 0x00140560  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1570
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glSwapBufferNotifyFunc(void (*Func)(void))
 {
     SwapBufferNotifyFunc = (int)Func;

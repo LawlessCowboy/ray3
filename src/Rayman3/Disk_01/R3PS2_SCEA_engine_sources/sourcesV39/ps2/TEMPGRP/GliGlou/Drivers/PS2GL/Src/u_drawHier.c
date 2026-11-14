@@ -1741,21 +1741,17 @@ float GLI_g_fCurrentCameraxAngle;
 float GLI_g_fCurrentCameraRatio;
 unsigned int GLI_g_MustBlocIn30FPS;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 169–169 */
-/* addr: 0x002b6d90  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void GLI_vDisplayLogo(void);
 void GLI_vDMABufferDrawEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, unsigned int Index);
 void GLI_vDMABufferDrawEITWithStrips(GEO_tdstGeometricObject_* pObj, unsigned int Index);
 int GLI_vDMAObjectIsCompliant(GEO_tdstGeometricObject_* pObj);
-void GLI_vDMAPreparePO(HIE_tdstSuperObject_* pSO, PO_tdstPhysicalObject_* PO);
+void GLI_vDMAPreparePO();
+int IPO_fn_hGetRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hInstanciatedPhysicalObject);
+void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO);
+ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
+int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
 void GLI_g_CheckForFire(GEO_tdstGeometricObject_* pObj);
 void GLI_vDMABufferParseTreeForThisSector(HIE_tdstSuperObject_* pSO);
 void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO);
@@ -1788,6 +1784,15 @@ void HIE_fn_vPushMatrix(HIE_tdstSuperObject_* pSO);
 void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject);
 void GLI_vDMABufferParseTreeForThisSector(HIE_tdstSuperObject_* pSO);
 void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO);
+void GLI_vFogOn(void);
+void GLI_vSetFog2(float xBlendStart, float xDepthStart, float xBlendEnd, float xDepthEnd, float xInfinite, GEO_tdstColor_* p_stFogColor);
+unsigned short GLI_lGetLightType(GLI_tdstLight_* p_stLight);
+void GLI_xGetLightColor(GLI_tdstLight_* p_stLight, GEO_tdstColor_* p_stColor);
+float GLI_fn_xFogGetBlendNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetNear(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetBlendFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetFar(GLI_tdstLight_* p_stLight);
+float GLI_fn_xFogGetInfinite(GLI_tdstLight_* p_stLight);
 unsigned int SDL_GetNew(void);
 void SDL_Start(unsigned int hSDL);
 void SDL_End(unsigned int hSDL);
@@ -1795,6 +1800,1489 @@ void SDL_SetNbFaces(unsigned int hSDL, unsigned int NbFaces);
 void SDL_Preprocess(unsigned int hSDL);
 void SDL_Destroy(unsigned int* phSDL);
 void PS2glDisable(unsigned int cap);
+
+void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
+void HIE_fn_vInitMatrixStack(void);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 190–223 */
+/* addr: 0x002b92e0  size: 200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 190
+ *   +0x0004 -> line 191
+ *   +0x0008 -> line 190
+ *   +0x000c -> line 191
+ *   +0x0010 -> line 193
+ *   +0x001c -> line 195
+ *   +0x002c -> line 196
+ *   +0x003c -> line 197
+ *   +0x004c -> line 198
+ *   +0x005c -> line 199
+ *   +0x0064 -> line 202
+ *   +0x0070 -> line 203
+ *   +0x0080 -> line 209
+ *   +0x008c -> line 213
+ *   +0x00b0 -> line 219
+ *   +0x00bc -> line 223
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void BuildAllSDLs(void)
+{
+    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+
+    if (GLI_g_ChristianSlaterMode)
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+    }
+    else
+    {
+        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+    }
+    g_PS2glContext.uiStaticDisplayListMaxSize = 30000;
+
+    GLI_g_StaticVertexArraySizePrevision = 0; HIE_fn_vInitMatrixStack(); GLI_g_DMA_PreparingOpaque = 1; GLI_vDMABufferParseTree((HIE_tdstSuperObject_*)gp_stActualWorld); GLI_g_DMA_PreparingOpaque = 0; GLI_vDMABufferParseTree((HIE_tdstSuperObject_*)gp_stActualWorld);
+
+    g_PS2glContext.uiStaticDisplayListMaxSize = 5000;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 237–278 */
+/* addr: 0x002b91f0  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 237
+ *   +0x0008 -> line 238
+ *   +0x000c -> line 239
+ *   +0x0014 -> line 241
+ *   +0x0018 -> line 243
+ *   +0x0020 -> line 245
+ *   +0x0024 -> line 247
+ *   +0x003c -> line 249
+ *   +0x0048 -> line 250
+ *   +0x0050 -> line 252
+ *   +0x0054 -> line 256
+ *   +0x0058 -> line 253
+ *   +0x0060 -> line 255
+ *   +0x0064 -> line 256
+ *   +0x0070 -> line 258
+ *   +0x0084 -> line 260
+ *   +0x0090 -> line 261
+ *   +0x0098 -> line 263
+ *   +0x009c -> line 274
+ *   +0x00a0 -> line 263
+ *   +0x00a8 -> line 275
+ *   +0x00c0 -> line 277
+ *   +0x00c8 -> line 275
+ *   +0x00cc -> line 277
+ *   +0x00e4 -> line 278
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_PS2GL_BuildSpecifForPO(PO_tdstPhysicalObject_* PO)
+{
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    int j;
+    GEO_tdstGeometricObject_* pObj;
+    short i;
+    short xNbLodDefinitions;
+    GEO_tdstVisualSet_* hVisualSet;
+    int iLodOffset;
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (PO != NULL) {
+        hVisualSet = PO->_hVisualSet;
+        if (hVisualSet != NULL) {
+            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
+            if (xNbLodDefinitions == 0) {
+                xNbLodDefinitions = 1;
+            }
+            for (i = 0, iLodOffset = 0;
+                 i < xNbLodDefinitions;
+                 i++, iLodOffset += 4) {
+                pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
+                if (pObj != NULL) {
+                    pObj->glDisplayList = 0;
+                    j = 0;
+                    pObj->bIsStatic = 0;
+                    iTypeOffset = 0;
+                    GLI_BIG_GLOBALS_p_stObj = (int)pObj;
+                    iElementOffset = 0;
+                    for (; j < pObj->xNbElements;
+                         iTypeOffset += 2, iElementOffset += 4, j++) {
+                        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
+                            continue;
+                        }
+                        p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+                        if (p_stEIT == NULL) {
+                            continue;
+                        }
+                        p_stEIT->glDisplayList = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 288–337 */
+/* addr: 0x002b90b0  size: 308 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 288
+ *   +0x0004 -> line 292
+ *   +0x0008 -> line 288
+ *   +0x000c -> line 294
+ *   +0x0010 -> line 288
+ *   +0x0018 -> line 294
+ *   +0x0028 -> line 297
+ *   +0x003c -> line 301
+ *   +0x0080 -> line 303
+ *   +0x0084 -> line 305
+ *   +0x0088 -> line 306
+ *   +0x0090 -> line 303
+ *   +0x0098 -> line 306
+ *   +0x00b4 -> line 308
+ *   +0x00bc -> line 310
+ *   +0x00c0 -> line 311
+ *   +0x00cc -> line 315
+ *   +0x00d0 -> line 318
+ *   +0x00d4 -> line 315
+ *   +0x00d8 -> line 318
+ *   +0x00e4 -> line 320
+ *   +0x0100 -> line 322
+ *   +0x0108 -> line 323
+ *   +0x010c -> line 331
+ *   +0x0114 -> line 333
+ *   +0x011c -> line 334
+ *   +0x0124 -> line 337
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* Retail inlines this helper (one line-map entry for the whole test); name not recovered. */
+inline int GLI_bIsShadowMaterial(GLI_tdstMaterial_* hMat)
+{
+    if (hMat != NULL && (hMat->lMaterialAdditionnalType & 8))
+        return 1;
+    return 0;
+}
+
+unsigned char MNC_fn_bGetPointerInfo(void* _pvAddress, int* _piAreaId, int* _piOffset);
+unsigned char GAM_fn_bIsEngineInFixMode(void);
+void GAM_fn_vSetEngineInFixMode(void);
+void GAM_fn_vSetEngineInLevelMode(void);
+void GLI_vComputeEdges(void);
+
+void GLI_vInspectObjectForShadow(GEO_tdstGeometricObject_* p_stObj)
+{
+    short xElementCounter;
+    unsigned int HasShadowLOD;
+    unsigned char bBTLevel;
+    int iAreaId;
+    int iOffset;
+
+    HasShadowLOD = 0;
+    for (xElementCounter = 0; xElementCounter < p_stObj->xNbElements; xElementCounter++) {
+        if (((short*)p_stObj->d_xListOfElementsTypes)[xElementCounter] == 1) {
+            GLI_tdstMaterial_* hMat = ((GEO_tdstElementIndexedTriangles_**)p_stObj->d_stListOfElements)[xElementCounter]->hVisualMaterial;
+            if (GLI_bIsShadowMaterial(hMat)) {
+                HasShadowLOD = 1;
+            }
+        }
+    }
+    if (HasShadowLOD) {
+        GLI_BIG_GLOBALS_p_stObj = (int)p_stObj;
+        if (p_stObj->d_stListOfEdgesDI == NULL) {
+            iAreaId = 1;
+            bBTLevel = 0;
+            MNC_fn_bGetPointerInfo(p_stObj, &iAreaId, &iOffset);
+            if (iAreaId == 0 && !GAM_fn_bIsEngineInFixMode()) {
+                GAM_fn_vSetEngineInFixMode();
+                bBTLevel = 1;
+            }
+            GLI_vComputeEdges();
+            if (bBTLevel) {
+                GAM_fn_vSetEngineInLevelMode();
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 363–463 */
+/* addr: 0x002b8eb0  size: 508 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 363
+ *   +0x0020 -> line 373
+ *   +0x0028 -> line 375
+ *   +0x0034 -> line 377
+ *   +0x003c -> line 378
+ *   +0x0058 -> line 382
+ *   +0x0068 -> line 385
+ *   +0x0088 -> line 387
+ *   +0x008c -> line 396
+ *   +0x0094 -> line 398
+ *   +0x00a0 -> line 399
+ *   +0x00a8 -> line 401
+ *   +0x00b0 -> line 403
+ *   +0x00bc -> line 406
+ *   +0x00c8 -> line 408
+ *   +0x00dc -> line 410
+ *   +0x00e8 -> line 412
+ *   +0x00f4 -> line 413
+ *   +0x0100 -> line 417
+ *   +0x0110 -> line 419
+ *   +0x0124 -> line 420
+ *   +0x0138 -> line 425
+ *   +0x0140 -> line 424
+ *   +0x0144 -> line 425
+ *   +0x0160 -> line 432
+ *   +0x0168 -> line 433
+ *   +0x0170 -> line 435
+ *   +0x0174 -> line 437
+ *   +0x017c -> line 439
+ *   +0x0180 -> line 442
+ *   +0x0188 -> line 443
+ *   +0x0194 -> line 445
+ *   +0x0198 -> line 446
+ *   +0x01a0 -> line 448
+ *   +0x01a4 -> line 449
+ *   +0x01ac -> line 451
+ *   +0x01b4 -> line 454
+ *   +0x01bc -> line 455
+ *   +0x01c4 -> line 457
+ *   +0x01c8 -> line 458
+ *   +0x01d0 -> line 460
+ *   +0x01d8 -> line 463
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_PS2GL_PrepareSpecificDataForSPO(HIE_tdstSuperObject_* _hSO)
+{
+    SECT_tdstSector_* hSectorObject;
+    int i;
+    GEO_tdstVisualSet_* hVisualSet;
+    tdstObjectsTablesList_* p_stObjectTable;
+    tdstObjectsTableElement_* p_ObjectsTableElement;
+    PO_tdstPhysicalObject_* PO;
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+    HIE_tdstSuperObject_* hChild;
+    tdstEngineObject_* p_stCharacter;
+    tdst3dData_* p_st3dData;
+    short iNbElement;
+    int iNbLod;
+    int iOffset;
+
+    if (_hSO != NULL) {
+        iNbElement = 0;
+        hChild = _hSO->hFirstElementDyn;
+        if (hChild != NULL) {
+            do {
+                GLI_PS2GL_PrepareSpecificDataForSPO(hChild);
+                hChild = hChild->hNextBrotherDyn;
+                iNbElement++;
+            } while (hChild != NULL);
+        }
+    }
+    if (_hSO->ulTypeOfLinkedObject == 2) {
+        if (_hSO != NULL) {
+            p_stCharacter = _hSO->hLinkedObject.p_stCharacter;
+            if (p_stCharacter != NULL) {
+                p_st3dData = p_stCharacter->h_3dData;
+                if (p_st3dData != NULL) {
+                    p_stObjectTable = p_st3dData->h_CurrentObjectsTable;
+                    if (p_stObjectTable != NULL) {
+                        iNbElement = 0;
+                        if (p_stObjectTable->wNumberOfElement != 0) {
+                            p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
+                            for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
+                                if (p_ObjectsTableElement->wTypeOfTarget == 0) {
+                                    hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
+                                    if (hVisualSet != NULL) {
+                                        if (hVisualSet->xType == 0) {
+                                            if (hVisualSet->xNbLodDefinitions == 0) {
+                                                GLI_vInspectObjectForShadow(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
+                                            } else {
+                                                for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
+                                                    GLI_vInspectObjectForShadow(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                p_ObjectsTableElement++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (_hSO->ulTypeOfLinkedObject == 4) {
+        hSectorObject = _hSO->hLinkedObject.p_stSector;
+        if (hSectorObject != NULL) {
+            hSectorObject->glOpaqueDisplayList = 0;
+            hSectorObject->glTransparentDisplayList = 0;
+        }
+    }
+    else if (_hSO->ulTypeOfLinkedObject == 32) {
+        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+        if (hIPO != NULL) {
+            PO = hIPO->_hPhysicalObject;
+            if (PO != NULL) {
+                GLI_PS2GL_BuildSpecifForPO(PO);
+            }
+        }
+    }
+    else if (_hSO->ulTypeOfLinkedObject == 8) {
+        PO = _hSO->hLinkedObject.p_stPhysicalObject;
+        if (PO != NULL) {
+            GLI_PS2GL_BuildSpecifForPO(PO);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 485–528 */
+/* addr: 0x002b8dd0  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 485
+ *   +0x001c -> line 489
+ *   +0x0024 -> line 491
+ *   +0x0030 -> line 493
+ *   +0x0038 -> line 494
+ *   +0x0040 -> line 497
+ *   +0x0054 -> line 508
+ *   +0x0064 -> line 510
+ *   +0x007c -> line 512
+ *   +0x0088 -> line 513
+ *   +0x0090 -> line 515
+ *   +0x0098 -> line 516
+ *   +0x009c -> line 525
+ *   +0x00a0 -> line 516
+ *   +0x00a8 -> line 526
+ *   +0x00c0 -> line 528
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vRemoveAllInstances(GEO_tdstGeometricObject_* pObj);
+void GLI_vRemoveInstanceIfExists(GEO_tdstGeometricObject_* pObj);
+
+void GLI_vCleanGeoObj(GEO_tdstGeometricObject_* pObj)
+{
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    unsigned int j;
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (pObj != NULL) {
+        if (GLI_g_ForceDestructAllSDLs) {
+            GLI_vRemoveAllInstances(pObj);
+        } else if (Global_CharacterModuleBeingDisplayed) {
+            GLI_vRemoveInstanceIfExists(pObj);
+        }
+        for (j = 0, iTypeOffset = 0, iElementOffset = 0;
+             j < pObj->xNbElements;
+             iTypeOffset += 2, iElementOffset += 4, j++) {
+            if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
+                continue;
+            }
+            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+            if (p_stEIT == NULL) {
+                continue;
+            }
+            GLI_vCleanSpecificStructure(p_stEIT->glDisplayList);
+            p_stEIT->glDisplayList = 0;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 534–534 */
+/* addr: 0x002b8dc0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 534
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_DRV_vFreeVertexBuffersForElementsInObject(GEO_tdstGeometricObject_* pObj)
+{
+    GLI_vCleanGeoObj(pObj);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 538–563 */
+/* addr: 0x002b8d00  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 538
+ *   +0x001c -> line 542
+ *   +0x0024 -> line 547
+ *   +0x0034 -> line 549
+ *   +0x004c -> line 551
+ *   +0x0058 -> line 552
+ *   +0x0060 -> line 554
+ *   +0x0068 -> line 555
+ *   +0x006c -> line 559
+ *   +0x0070 -> line 555
+ *   +0x0078 -> line 560
+ *   +0x0090 -> line 563
+ *   +0x0098 -> line 562
+ *   +0x009c -> line 563
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int GLI_fn_vInitGeometricObjectFromArray(GEO_tdstGeometricObject_* pObj)
+{
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    unsigned int j;
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (pObj != NULL) {
+        for (j = 0, iTypeOffset = 0, iElementOffset = 0;
+             j < pObj->xNbElements;
+             iTypeOffset += 2, iElementOffset += 4, j++) {
+            if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
+                continue;
+            }
+            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+            if (p_stEIT == NULL) {
+                continue;
+            }
+            GLI_vCleanSpecificStructure(p_stEIT->glDisplayList);
+            p_stEIT->glDisplayList = 0;
+        }
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 575–614 */
+/* addr: 0x002b8c10  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 575
+ *   +0x0004 -> line 584
+ *   +0x0008 -> line 575
+ *   +0x000c -> line 584
+ *   +0x0010 -> line 575
+ *   +0x001c -> line 584
+ *   +0x0024 -> line 585
+ *   +0x002c -> line 586
+ *   +0x0030 -> line 588
+ *   +0x003c -> line 589
+ *   +0x0044 -> line 591
+ *   +0x0050 -> line 593
+ *   +0x0054 -> line 595
+ *   +0x005c -> line 597
+ *   +0x0060 -> line 601
+ *   +0x0070 -> line 603
+ *   +0x0078 -> line 605
+ *   +0x0080 -> line 607
+ *   +0x008c -> line 608
+ *   +0x0094 -> line 610
+ *   +0x009c -> line 611
+ *   +0x00a0 -> line 612
+ *   +0x00a8 -> line 610
+ *   +0x00ac -> line 612
+ *   +0x00cc -> line 613
+ *   +0x00d0 -> line 614
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO)
+{
+    GEO_tdstGeometricObject_* pObj;
+    GEO_tdstVisualSet_* hVisualSet;
+    short xNbLodDefinitions;
+    short i;
+    int iLodOffset;
+
+    if (((unsigned int)PO & 0xffffff00) == 0) { return; }
+    if (PO == NULL) { return; }
+    hVisualSet = PO->_hVisualSet;
+    if (((unsigned int)hVisualSet & 0xffffff00) == 0) { return; }
+    if (hVisualSet == NULL) { return; }
+    if (hVisualSet->xType != 0) { return; }
+    xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
+    if (xNbLodDefinitions == 0) {
+        xNbLodDefinitions = 1;
+    }
+    if (hVisualSet->d_p_stLodDefinitions == (GEO_tduVSObject_*)-1) { return; }
+    if (hVisualSet->d_p_stLodDefinitions != NULL) {
+        for (i = 0, iLodOffset = 0; i < xNbLodDefinitions; i++, iLodOffset += 4) {
+            pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
+            if (pObj == NULL) {
+                continue;
+            }
+            GLI_vCleanGeoObj(pObj);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 618–721 */
+/* addr: 0x002b89e0  size: 556 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 618
+ *   +0x0004 -> line 631
+ *   +0x0008 -> line 618
+ *   +0x002c -> line 628
+ *   +0x0030 -> line 630
+ *   +0x0034 -> line 631
+ *   +0x003c -> line 633
+ *   +0x005c -> line 635
+ *   +0x0060 -> line 637
+ *   +0x0068 -> line 639
+ *   +0x0074 -> line 640
+ *   +0x007c -> line 642
+ *   +0x0084 -> line 644
+ *   +0x0090 -> line 647
+ *   +0x009c -> line 649
+ *   +0x00b0 -> line 651
+ *   +0x00bc -> line 653
+ *   +0x00c8 -> line 654
+ *   +0x00d0 -> line 658
+ *   +0x00e0 -> line 659
+ *   +0x0108 -> line 671
+ *   +0x0110 -> line 670
+ *   +0x0114 -> line 671
+ *   +0x0130 -> line 674
+ *   +0x0138 -> line 675
+ *   +0x0140 -> line 677
+ *   +0x0144 -> line 678
+ *   +0x014c -> line 680
+ *   +0x0150 -> line 681
+ *   +0x0158 -> line 683
+ *   +0x0160 -> line 686
+ *   +0x0168 -> line 687
+ *   +0x0174 -> line 689
+ *   +0x0178 -> line 690
+ *   +0x0180 -> line 692
+ *   +0x0188 -> line 694
+ *   +0x0190 -> line 695
+ *   +0x0198 -> line 697
+ *   +0x019c -> line 698
+ *   +0x01a4 -> line 702
+ *   +0x01b0 -> line 704
+ *   +0x01b8 -> line 706
+ *   +0x01bc -> line 708
+ *   +0x01c8 -> line 710
+ *   +0x01d0 -> line 712
+ *   +0x01d4 -> line 717
+ *   +0x01e0 -> line 718
+ *   +0x0200 -> line 720
+ *   +0x0204 -> line 721
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* _hSprObj)
+{
+    short iNbElement;
+    tdstObjectsTableElement_* p_ObjectsTableElement;
+    GEO_tdstVisualSet_* hVisualSet;
+    int iNbLod;
+    int iOffset;
+    tdstObjectsTablesList_* p_stObjectTable;
+    int i;
+    SECT_tdstSector_* hSectorObject;
+    PO_tdstPhysicalObject_* PO;
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+    HIE_tdstSuperObject_* hChild;
+    tdstEngineObject_* p_stCharacter;
+    tdst3dData_* p_st3dData;
+    int lType;
+
+    Global_CharacterModuleBeingDisplayed = _hSprObj;
+    lType = _hSprObj->ulTypeOfLinkedObject;
+    if (lType == 2) {
+        if (_hSprObj != NULL) {
+            p_stCharacter = _hSprObj->hLinkedObject.p_stCharacter;
+            if (p_stCharacter != NULL) {
+                p_st3dData = p_stCharacter->h_3dData;
+                if (p_st3dData != NULL) {
+                    p_stObjectTable = p_st3dData->h_CurrentObjectsTable;
+                    if (p_stObjectTable != NULL) {
+                        if (p_stObjectTable->wNumberOfElement != 0) {
+                            iNbElement = 0;
+                            p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
+                        }
+                        for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
+                            if (p_ObjectsTableElement->wTypeOfTarget == 0) {
+                                hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
+                                if (hVisualSet != NULL) {
+                                    if (hVisualSet->xType == 0) {
+                                        if (hVisualSet->xNbLodDefinitions == 0) {
+                                            GLI_vCleanGeoObj(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
+                                        } else {
+                                            for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
+                                                GLI_vCleanGeoObj(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            p_ObjectsTableElement++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (lType == 32) {
+        hIPO = _hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject;
+        if (hIPO != NULL) {
+            PO = hIPO->_hPhysicalObject;
+            if (PO != NULL) {
+                GLI_PS2GL_CleanSpecifForPO(PO);
+            }
+        }
+    }
+    else if (lType == 8) {
+        PO = _hSprObj->hLinkedObject.p_stPhysicalObject;
+        if (PO != NULL) {
+            GLI_PS2GL_CleanSpecifForPO(PO);
+        }
+    }
+    else if (lType == 4) {
+        hSectorObject = _hSprObj->hLinkedObject.p_stSector;
+        if (hSectorObject != NULL) {
+            if (hSectorObject->glOpaqueDisplayList != 0) {
+                SDL_Destroy(&hSectorObject->glOpaqueDisplayList);
+            }
+            hSectorObject->glOpaqueDisplayList = 0;
+            if (hSectorObject->glTransparentDisplayList != 0) {
+                SDL_Destroy(&hSectorObject->glTransparentDisplayList);
+            }
+            hSectorObject->glTransparentDisplayList = 0;
+        }
+    }
+    iNbElement = 0;
+    hChild = _hSprObj->hFirstElementDyn;
+    if (hChild != NULL) {
+        do {
+            GLI_vCleanDispTemporaryDataSPO(hChild);
+            hChild = hChild->hNextBrotherDyn;
+            iNbElement++;
+        } while (hChild != NULL);
+    }
+    Global_CharacterModuleBeingDisplayed = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 729–729 */
+/* addr: 0x002b89d0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 729
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_fnv_CleanAlwaysSO(HIE_tdstSuperObject_* h_SuperObject)
+{
+    GLI_vCleanDispTemporaryDataSPO(h_SuperObject);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 756–805 */
+/* addr: 0x002b8910  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 756
+ *   +0x0004 -> line 762
+ *   +0x0008 -> line 756
+ *   +0x000c -> line 762
+ *   +0x0014 -> line 765
+ *   +0x0018 -> line 770
+ *   +0x001c -> line 765
+ *   +0x0020 -> line 770
+ *   +0x0024 -> line 765
+ *   +0x0028 -> line 771
+ *   +0x002c -> line 766
+ *   +0x0030 -> line 771
+ *   +0x0034 -> line 766
+ *   +0x0038 -> line 772
+ *   +0x003c -> line 767
+ *   +0x0040 -> line 768
+ *   +0x0044 -> line 767
+ *   +0x0048 -> line 772
+ *   +0x004c -> line 775
+ *   +0x0054 -> line 777
+ *   +0x005c -> line 780
+ *   +0x0064 -> line 787
+ *   +0x006c -> line 789
+ *   +0x0074 -> line 792
+ *   +0x007c -> line 794
+ *   +0x0084 -> line 795
+ *   +0x008c -> line 796
+ *   +0x0094 -> line 798
+ *   +0x009c -> line 800
+ *   +0x00a4 -> line 802
+ *   +0x00ac -> line 805
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vCleanAllSpecificData(void)
+{
+    GLD_bSetBackgroundColorForDevice(0, 0);
+    g_fFogColor[0] = 0.0f;
+    g_fFogEnd = 3000.0f;
+    g_fFogColor[1] = 0.0f;
+    g_fFogStart = 2000.0f;
+    GLI_g_CurrentSDLFogColor = 0;
+    g_fFogColor[2] = 0.0f;
+    GLI_g_OOStartMinusEnd = -0.001f;
+    TXT_vInit();
+    MC_SetBackgroundMaterial(0);
+    GLI_vCleanInterpolData();
+    GLI_vCleanAllSDLs();
+    VAC_Destroy(GLI_g_hVAContainer);
+    GLI_g_hVAContainer = 0;
+    GLI_vDeleteSdlCache();
+    WaterFx_vDesinit();
+    GrassFx_vDesinit();
+    FireFx_vDesinit();
+    DestroyDummySDL();
+    GLI_vForceDeleteAllWaitingPointers();
+    GLI_vPrintSDLStatsAfter();
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 812–862 */
+/* addr: 0x002b8820  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 812
+ *   +0x0004 -> line 817
+ *   +0x0008 -> line 812
+ *   +0x0018 -> line 820
+ *   +0x0020 -> line 825
+ *   +0x0028 -> line 826
+ *   +0x0030 -> line 827
+ *   +0x0038 -> line 828
+ *   +0x0040 -> line 829
+ *   +0x0048 -> line 833
+ *   +0x0054 -> line 835
+ *   +0x0064 -> line 836
+ *   +0x006c -> line 838
+ *   +0x0070 -> line 841
+ *   +0x0074 -> line 842
+ *   +0x0078 -> line 843
+ *   +0x0088 -> line 846
+ *   +0x0090 -> line 848
+ *   +0x0098 -> line 850
+ *   +0x00a0 -> line 848
+ *   +0x00a4 -> line 850
+ *   +0x00ac -> line 852
+ *   +0x00b4 -> line 853
+ *   +0x00bc -> line 855
+ *   +0x00c4 -> line 857
+ *   +0x00cc -> line 859
+ *   +0x00d0 -> line 862
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vPrintSDLStatsBefore(void);
+void PLA_fn_vReleaseAllObjectsInHeap(void);
+void fn_vKillAllAlwaysSDLs(void);
+void GLI_vClearShadowVolumes(void);
+void GLI_vFreeAllSinusCopies(void);
+void HIE_fn_CleanAllListOfFakeInstanceToViewport(void);
+
+void GLI_vCleanAllSDLs(void)
+{
+    unsigned int i;
+    GEO_tdstGeometricObject_* pObj;
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+
+    GLI_g_ForceDestructAllSDLs = 1;
+    GLI_vPrintSDLStatsBefore();
+    PLA_fn_vReleaseAllObjectsInHeap();
+    GLI_vCleanDispTemporaryDataSPO((HIE_tdstSuperObject_*)gp_stActualWorld);
+    GLI_vCleanDispTemporaryDataSPO((HIE_tdstSuperObject_*)gp_stDynamicWorld);
+    GLI_vCleanDispTemporaryDataSPO((HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
+    fn_vKillAllAlwaysSDLs();
+    for (i = 0; i < 10; i++) {
+        p_stEIT = (GEO_tdstElementIndexedTriangles_*)g_p_hHandleOfElementForShadow[i];
+        if (p_stEIT != NULL) {
+            p_stEIT->glDisplayList = 0;
+            p_stEIT->d_stListOfFacesEdges = NULL;
+        }
+        pObj = (GEO_tdstGeometricObject_*)g_p_hHandleOfGeometricShadowObject[i];
+        Global_CharacterModuleBeingDisplayed = 0;
+        if (pObj != NULL) {
+            GLI_vCleanGeoObj(pObj);
+        }
+    }
+    GLI_vClearShadowVolumes();
+    GLI_vFreeAllSinusCopies();
+    GLI_vForceDeleteAllWaitingPointers();
+    HIE_fn_CleanAllListOfFakeInstanceToViewport();
+    GLI_g_ForceDestructAllSDLs = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 912–912 */
+/* addr: 0x002b8810  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 912
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vResetVertexColorsForIPO(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 929–929 */
+/* addr: 0x002b8800  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 929
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_xSetUpdateGeometricForMaterialCoefChange(void)
+{
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 951–981 */
+/* addr: 0x002b87e0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 951
+ *   +0x0004 -> line 953
+ *   +0x0010 -> line 957
+ *   +0x0018 -> line 981
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vSetObjectDeformed(GEO_tdstGeometricObject_* pObj)
+{
+    GLI_BIG_GLOBALS_p_stObj = (int)pObj;
+    if (pObj->pSDC_Data != 0) {
+        ((SDC_VertexArrays_*)pObj->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 987–988 */
+/* addr: 0x002b87c0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 987
+ *   +0x0018 -> line 988
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vApplyChangesToObjectVertices(GEO_tdstGeometricObject_* p_stObject)
+{
+    GLI_BIG_GLOBALS_p_stObj = (int)p_stObject;
+    if (p_stObject->pSDC_Data != 0) {
+        ((SDC_VertexArrays_*)p_stObject->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 993–994 */
+/* addr: 0x002b87a0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 993
+ *   +0x0018 -> line 994
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj)
+{
+    GLI_BIG_GLOBALS_p_stObj = (int)_p_stObj;
+    if (_p_stObj->pSDC_Data != 0) {
+        ((SDC_VertexArrays_*)_p_stObj->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1045–1090 */
+/* addr: 0x002b8660  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1045
+ *   +0x0028 -> line 1052
+ *   +0x0034 -> line 1054
+ *   +0x003c -> line 1055
+ *   +0x0044 -> line 1059
+ *   +0x004c -> line 1066
+ *   +0x0058 -> line 1068
+ *   +0x005c -> line 1069
+ *   +0x0074 -> line 1072
+ *   +0x0080 -> line 1073
+ *   +0x0084 -> line 1074
+ *   +0x00dc -> line 1083
+ *   +0x00e0 -> line 1084
+ *   +0x00e8 -> line 1086
+ *   +0x0110 -> line 1087
+ *   +0x0114 -> line 1090
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject)
+{
+    short xI;
+    SECT_tdstListOfStaticLights_* hStaticLightsElement;
+    GEO_tdstColor_ stColor;
+    GLI_tdstLight_* hStaticLight;
+
+    if (GLI_cGlobalFogIsOn)
+    {
+        GLI_vFogOn();
+        return;
+    }
+
+    if (hSectorObject)
+    {
+        for (xI = 0, hStaticLightsElement = hSectorObject->stListOfStaticLights.hFirstElementOpt; xI < hSectorObject->stListOfStaticLights.lNumberOfElementsOpt; xI++, hStaticLightsElement++)
+        {
+            hStaticLight = hStaticLightsElement->hStaticLights;
+            if (GLI_lGetLightType(hStaticLight) == 6)
+            {
+                GLI_xGetLightColor(hStaticLight, &stColor);
+                GLI_BIG_GLOBALS_xFogIsOn = 1;
+                GLI_vSetFog2(GLI_fn_xFogGetBlendNear(hStaticLight), GLI_fn_xFogGetNear(hStaticLight), GLI_fn_xFogGetBlendFar(hStaticLight), GLI_fn_xFogGetFar(hStaticLight), GLI_fn_xFogGetInfinite(hStaticLight), &stColor);
+                GLI_BIG_GLOBALS_xFogIsOn = 1;
+                return;
+            }
+        }
+        GLI_BIG_GLOBALS_xFogIsOn = 0;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1093–1218 */
+/* addr: 0x002b8440  size: 544 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1093
+ *   +0x0014 -> line 1106
+ *   +0x001c -> line 1110
+ *   +0x0024 -> line 1112
+ *   +0x0034 -> line 1114
+ *   +0x0038 -> line 1116
+ *   +0x0040 -> line 1121
+ *   +0x004c -> line 1123
+ *   +0x0050 -> line 1130
+ *   +0x0054 -> line 1135
+ *   +0x0060 -> line 1138
+ *   +0x0068 -> line 1140
+ *   +0x0070 -> line 1142
+ *   +0x0078 -> line 1148
+ *   +0x007c -> line 1144
+ *   +0x0080 -> line 1148
+ *   +0x0088 -> line 1151
+ *   +0x008c -> line 1150
+ *   +0x0090 -> line 1151
+ *   +0x0098 -> line 1153
+ *   +0x009c -> line 1154
+ *   +0x00a8 -> line 1156
+ *   +0x00b0 -> line 1157
+ *   +0x00c8 -> line 1158
+ *   +0x00d0 -> line 1159
+ *   +0x00dc -> line 1161
+ *   +0x00e4 -> line 1162
+ *   +0x0100 -> line 1164
+ *   +0x0108 -> line 1167
+ *   +0x0114 -> line 1169
+ *   +0x0120 -> line 1171
+ *   +0x0128 -> line 1172
+ *   +0x0140 -> line 1173
+ *   +0x0160 -> line 1175
+ *   +0x0164 -> line 1191
+ *   +0x016c -> line 1193
+ *   +0x0178 -> line 1195
+ *   +0x0184 -> line 1197
+ *   +0x018c -> line 1198
+ *   +0x0194 -> line 1201
+ *   +0x019c -> line 1203
+ *   +0x01a0 -> line 1208
+ *   +0x01a8 -> line 1211
+ *   +0x01b4 -> line 1213
+ *   +0x01bc -> line 1214
+ *   +0x01d4 -> line 1215
+ *   +0x01d8 -> line 1217
+ *   +0x0208 -> line 1218
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO)
+{
+    unsigned int* phSdl;
+    SECT_tdstSector_* hSectorObject;
+    HIE_tdstSuperObject_* hChild;
+
+    if (pSO != NULL) {
+        HIE_fn_vPushMatrix(pSO);
+        if (pSO->ulTypeOfLinkedObject == 4) {
+            hSectorObject = pSO->hLinkedObject.p_stSector;
+            if (hSectorObject != NULL) {
+                if (GLI_g_DMA_PreparingOpaque) {
+                    phSdl = &hSectorObject->glOpaqueDisplayList;
+                } else {
+                    phSdl = &hSectorObject->glTransparentDisplayList;
+                }
+                GLI_g_DMA_SomethingWasDrawn = 0;
+                GLI_NbSDLFaces = 0;
+                *phSdl = SDL_GetNew();
+                SDL_Start(*phSdl);
+                PS2glDisable(0xB60);
+                GLI_vUpdateFogFromSector(hSectorObject);
+                GLI_g_NumberInList = 0;
+                GLI_g_DrawingSPO = 0;
+                PS2glDisable(0xB50);
+                DoingMainSector = 1;
+                if (GLI_g_DMA_PreparingOpaque) {
+                    GLI_g_DMA_DrawingAllNZ = 0;
+                    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                        GLI_vDMABufferParseTreeForThisSector(hChild);
+                    }
+                    GLI_g_DMA_DrawingAllNZ = 1;
+                    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                        GLI_vDMABufferParseTreeForThisSector(hChild);
+                    }
+                    GLI_g_DMA_DrawingAllNZ = 0;
+                }
+                else {
+                    for (GLI_g_CurrentPriority = -10; GLI_g_CurrentPriority <= 10; GLI_g_CurrentPriority++) {
+                        for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                            GLI_vDMABufferParseTreeForThisSector(hChild);
+                        }
+                    }
+                }
+                DoingMainSector = 0;
+                SDL_End(*phSdl);
+                SDL_SetNbFaces(*phSdl, GLI_NbSDLFaces);
+                if (!GLI_g_DMA_SomethingWasDrawn) {
+                    SDL_Destroy(phSdl);
+                }
+                else {
+                    SDL_Preprocess(*phSdl);
+                    GLI_g_NumberInList = 0;
+                    GLI_g_DrawingSPO = 0;
+                }
+            }
+        }
+        else {
+            for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
+                GLI_vDMABufferParseTree(hChild);
+            }
+        }
+        if (HIE_g_lNbMatrixInStack != 0) {
+            HIE_g_lNbMatrixInStack--;
+            HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+            g_p_stCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1235–1289 */
+/* addr: 0x002b8300  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1235
+ *   +0x0018 -> line 1243
+ *   +0x0020 -> line 1246
+ *   +0x0028 -> line 1249
+ *   +0x0040 -> line 1252
+ *   +0x004c -> line 1254
+ *   +0x0054 -> line 1255
+ *   +0x0070 -> line 1259
+ *   +0x008c -> line 1265
+ *   +0x00b0 -> line 1267
+ *   +0x00b4 -> line 1268
+ *   +0x00bc -> line 1270
+ *   +0x00c0 -> line 1271
+ *   +0x00c8 -> line 1273
+ *   +0x00d0 -> line 1275
+ *   +0x00dc -> line 1277
+ *   +0x00e4 -> line 1279
+ *   +0x00ec -> line 1280
+ *   +0x00fc -> line 1282
+ *   +0x0104 -> line 1280
+ *   +0x0108 -> line 1282
+ *   +0x0110 -> line 1288
+ *   +0x0128 -> line 1289
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDMABufferParseTreeForThisSector(HIE_tdstSuperObject_* pSO)
+{
+    ISI_tdstColor_* pRLIs;
+    void* hISI;
+    PO_tdstPhysicalObject_* PO;
+    IPO_tdstInstanciatedPhysicalObject_* hIPO;
+    HIE_tdstSuperObject_* hChild;
+
+    if (pSO == NULL)
+    {
+        GLI_g_DMAObjectWasRejected = 1;
+        return;
+    }
+
+    if (pSO->bIsSPO)
+        GLI_g_DrawingSPO++;
+
+    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn)
+    {
+        GLI_vDMABufferParseTreeForThisSector(hChild);
+    }
+
+    if (!GLI_g_DMA_PreparingOpaque && pSO->lDisplayPrioriry != GLI_g_CurrentPriority)
+        return;
+
+    if (pSO->ulTypeOfLinkedObject == 0x20 && !(unsigned char)(pSO->ulFlags & 2))
+    {
+        hIPO = pSO->hLinkedObject.p_stInstanciatedPhysicalObject;
+        if (hIPO != NULL)
+        {
+            PO = hIPO->_hPhysicalObject;
+            if (PO != NULL)
+            {
+                hISI = (void*)IPO_fn_hGetRadiosity(hIPO);
+                IPO_fn_vComputeRadiosity(hIPO);
+                if (hISI != NULL)
+                {
+                    pRLIs = ISI_fn_dGetVertexRLILOD(hISI, 0);
+                    g_p_stLightMapUForNextObjectToDraw = ISI_fn_dGetVertexRLILODLightMapU(hISI, 0);
+                    GLI_vDMAPreparePO(pSO, PO, pRLIs);
+                }
+            }
+        }
+    }
+
+    if (pSO->bIsSPO)
+        GLI_g_DrawingSPO--;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1302–1369 */
+/* addr: 0x002b8080  size: 628 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1302
+ *   +0x0004 -> line 1307
+ *   +0x0008 -> line 1302
+ *   +0x0018 -> line 1307
+ *   +0x003c -> line 1312
+ *   +0x0044 -> line 1313
+ *   +0x004c -> line 1315
+ *   +0x0058 -> line 1323
+ *   +0x0074 -> line 1325
+ *   +0x007c -> line 1327
+ *   +0x0084 -> line 1328
+ *   +0x009c -> line 1333
+ *   +0x00a8 -> line 1335
+ *   +0x00ac -> line 1333
+ *   +0x00d0 -> line 1335
+ *   +0x00f8 -> line 1338
+ *   +0x01d8 -> line 1350
+ *   +0x01dc -> line 1338
+ *   +0x0208 -> line 1346
+ *   +0x0220 -> line 1347
+ *   +0x0234 -> line 1348
+ *   +0x0248 -> line 1350
+ *   +0x0254 -> line 1352
+ *   +0x025c -> line 1369
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_g_CheckForFire(GEO_tdstGeometricObject_* pObj)
+{
+    MTH3D_tdstVector_ Position;
+    GLI_tdstTexture_* p_stTexture;
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1373–1638 */
+/* addr: 0x002b7ca0  size: 988 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1373
+ *   +0x0028 -> line 1384
+ *   +0x0030 -> line 1386
+ *   +0x0034 -> line 1387
+ *   +0x003c -> line 1389
+ *   +0x0040 -> line 1390
+ *   +0x0048 -> line 1393
+ *   +0x0050 -> line 1396
+ *   +0x0054 -> line 1404
+ *   +0x005c -> line 1406
+ *   +0x0064 -> line 1404
+ *   +0x0068 -> line 1406
+ *   +0x0070 -> line 1408
+ *   +0x007c -> line 1409
+ *   +0x0084 -> line 1411
+ *   +0x0088 -> line 1424
+ *   +0x008c -> line 1413
+ *   +0x0090 -> line 1424
+ *   +0x00a0 -> line 1426
+ *   +0x00a8 -> line 1427
+ *   +0x00ac -> line 1428
+ *   +0x00b4 -> line 1431
+ *   +0x00c0 -> line 1435
+ *   +0x00e0 -> line 1447
+ *   +0x00f0 -> line 1449
+ *   +0x0108 -> line 1451
+ *   +0x0114 -> line 1452
+ *   +0x011c -> line 1454
+ *   +0x0128 -> line 1462
+ *   +0x0148 -> line 1464
+ *   +0x0150 -> line 1466
+ *   +0x0158 -> line 1467
+ *   +0x0170 -> line 1469
+ *   +0x0184 -> line 1470
+ *   +0x0190 -> line 1471
+ *   +0x0198 -> line 1473
+ *   +0x01ac -> line 1475
+ *   +0x01c0 -> line 1476
+ *   +0x01cc -> line 1477
+ *   +0x01d4 -> line 1479
+ *   +0x01e8 -> line 1481
+ *   +0x01f0 -> line 1483
+ *   +0x01f8 -> line 1481
+ *   +0x0204 -> line 1482
+ *   +0x0210 -> line 1483
+ *   +0x0218 -> line 1484
+ *   +0x0220 -> line 1486
+ *   +0x0234 -> line 1488
+ *   +0x023c -> line 1491
+ *   +0x0244 -> line 1488
+ *   +0x0250 -> line 1489
+ *   +0x025c -> line 1491
+ *   +0x0264 -> line 1493
+ *   +0x0274 -> line 1499
+ *   +0x0288 -> line 1560
+ *   +0x028c -> line 1505
+ *   +0x0290 -> line 1549
+ *   +0x0294 -> line 1560
+ *   +0x02a0 -> line 1562
+ *   +0x02e0 -> line 1566
+ *   +0x02f0 -> line 1568
+ *   +0x0314 -> line 1571
+ *   +0x0320 -> line 1573
+ *   +0x032c -> line 1575
+ *   +0x0338 -> line 1579
+ *   +0x0344 -> line 1581
+ *   +0x0350 -> line 1584
+ *   +0x0358 -> line 1587
+ *   +0x036c -> line 1591
+ *   +0x0380 -> line 1637
+ *   +0x0388 -> line 1591
+ *   +0x038c -> line 1637
+ *   +0x03ac -> line 1638
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDMAPreparePO(HIE_tdstSuperObject_* pSO, PO_tdstPhysicalObject_* PO)
+{
+    GLI_tdstTexture_* p_stTexture;
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    SDC_VertexArrays_* pSDC_VA;
+    int j;
+    GEO_tdstGeometricObject_* pObj;
+    short i;
+    short xNbLodDefinitions;
+    GEO_tdstVisualSet_* hVisualSet;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1641–1680 */
+/* addr: 0x002b7bd0  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1641
+ *   +0x000c -> line 1646
+ *   +0x0024 -> line 1648
+ *   +0x003c -> line 1651
+ *   +0x0050 -> line 1653
+ *   +0x005c -> line 1654
+ *   +0x0064 -> line 1657
+ *   +0x0090 -> line 1661
+ *   +0x0098 -> line 1675
+ *   +0x00a8 -> line 1677
+ *   +0x00bc -> line 1680
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int GLI_vDMAObjectIsCompliant(GEO_tdstGeometricObject_* pObj)
+{
+    GEO_tdstElementIndexedTriangles_* p_stEIT;
+    int j;
+    int iTypeOffset;
+    int iElementOffset;
+
+    if (GEO_bIsLookAt()) {
+        return 0;
+    }
+
+    for (j = 0, iTypeOffset = 0, iElementOffset = 0;
+         j < pObj->xNbElements;
+         iTypeOffset += 2, iElementOffset += 4, j++) {
+        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) == 1) {
+            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
+            if ((p_stEIT != NULL) && (p_stEIT->hVisualMaterial != NULL) &&
+                ((p_stEIT->hVisualMaterial->lNumberOfDisplayNode >= 2) ||
+                 (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 6))) {
+                    return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1747–2058 */
+/* addr: 0x002b7580  size: 1616 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1747
+ *   +0x0004 -> line 1778
+ *   +0x0008 -> line 1747
+ *   +0x0030 -> line 1765
+ *   +0x0038 -> line 1778
+ *   +0x003c -> line 1768
+ *   +0x0040 -> line 1769
+ *   +0x0044 -> line 1778
+ *   +0x0054 -> line 1780
+ *   +0x0058 -> line 1781
+ *   +0x0064 -> line 1782
+ *   +0x0084 -> line 1783
+ *   +0x008c -> line 1786
+ *   +0x0094 -> line 1787
+ *   +0x009c -> line 1791
+ *   +0x00b8 -> line 1793
+ *   +0x00d8 -> line 1795
+ *   +0x00ec -> line 1811
+ *   +0x00f0 -> line 1803
+ *   +0x00f4 -> line 1811
+ *   +0x00fc -> line 1803
+ *   +0x0108 -> line 1811
+ *   +0x010c -> line 1803
+ *   +0x0110 -> line 1811
+ *   +0x0118 -> line 1804
+ *   +0x011c -> line 1811
+ *   +0x0120 -> line 1806
+ *   +0x0128 -> line 1807
+ *   +0x012c -> line 1811
+ *   +0x0134 -> line 1814
+ *   +0x0140 -> line 1816
+ *   +0x0150 -> line 1818
+ *   +0x0180 -> line 1822
+ *   +0x0188 -> line 1825
+ *   +0x0190 -> line 1827
+ *   +0x0194 -> line 1829
+ *   +0x0198 -> line 1830
+ *   +0x01a8 -> line 1831
+ *   +0x01b0 -> line 1834
+ *   +0x01b4 -> line 1838
+ *   +0x01c0 -> line 1840
+ *   +0x01c4 -> line 1838
+ *   +0x01c8 -> line 1841
+ *   +0x01cc -> line 1844
+ *   +0x01f0 -> line 1845
+ *   +0x0214 -> line 1846
+ *   +0x0230 -> line 1849
+ *   +0x0258 -> line 1851
+ *   +0x025c -> line 1853
+ *   +0x0260 -> line 1851
+ *   +0x0264 -> line 1853
+ *   +0x0270 -> line 1856
+ *   +0x0274 -> line 1863
+ *   +0x0278 -> line 1861
+ *   +0x027c -> line 1863
+ *   +0x0280 -> line 1862
+ *   +0x0284 -> line 1856
+ *   +0x0288 -> line 1863
+ *   +0x028c -> line 1856
+ *   +0x0290 -> line 1863
+ *   +0x0294 -> line 1856
+ *   +0x029c -> line 1863
+ *   +0x02b4 -> line 1865
+ *   +0x02b8 -> line 1870
+ *   +0x02c0 -> line 1867
+ *   +0x02c4 -> line 1870
+ *   +0x02cc -> line 1871
+ *   +0x02d8 -> line 1873
+ *   +0x02e0 -> line 1874
+ *   +0x02ec -> line 1877
+ *   +0x02f4 -> line 1885
+ *   +0x0300 -> line 1887
+ *   +0x0330 -> line 1891
+ *   +0x0338 -> line 1894
+ *   +0x0340 -> line 1899
+ *   +0x0348 -> line 1902
+ *   +0x034c -> line 1903
+ *   +0x0350 -> line 1905
+ *   +0x0358 -> line 1908
+ *   +0x0388 -> line 1923
+ *   +0x0394 -> line 1925
+ *   +0x039c -> line 1926
+ *   +0x03a8 -> line 1927
+ *   +0x03b0 -> line 1930
+ *   +0x03bc -> line 1931
+ *   +0x03c8 -> line 1934
+ *   +0x03d4 -> line 1937
+ *   +0x03e0 -> line 1940
+ *   +0x03ec -> line 1944
+ *   +0x03f4 -> line 1945
+ *   +0x0400 -> line 1946
+ *   +0x0410 -> line 1948
+ *   +0x0420 -> line 1950
+ *   +0x0430 -> line 1951
+ *   +0x0440 -> line 1952
+ *   +0x0444 -> line 1954
+ *   +0x0450 -> line 1955
+ *   +0x045c -> line 1957
+ *   +0x0468 -> line 1958
+ *   +0x0474 -> line 1960
+ *   +0x047c -> line 1961
+ *   +0x0488 -> line 1962
+ *   +0x0498 -> line 1964
+ *   +0x04a8 -> line 1966
+ *   +0x04ac -> line 1967
+ *   +0x04b0 -> line 1970
+ *   +0x04bc -> line 1972
+ *   +0x04c8 -> line 1973
+ *   +0x04d4 -> line 1974
+ *   +0x04d8 -> line 1976
+ *   +0x04e0 -> line 1978
+ *   +0x04e4 -> line 1980
+ *   +0x04f0 -> line 1978
+ *   +0x04f4 -> line 1980
+ *   +0x04fc -> line 1981
+ *   +0x0510 -> line 1982
+ *   +0x0524 -> line 1983
+ *   +0x0538 -> line 1985
+ *   +0x0550 -> line 1986
+ *   +0x0568 -> line 1988
+ *   +0x0574 -> line 1990
+ *   +0x057c -> line 1991
+ *   +0x0588 -> line 1994
+ *   +0x0598 -> line 2031
+ *   +0x05a4 -> line 2036
+ *   +0x05b0 -> line 2037
+ *   +0x05bc -> line 2039
+ *   +0x05c4 -> line 2040
+ *   +0x05d0 -> line 2044
+ *   +0x05d4 -> line 2041
+ *   +0x05d8 -> line 2044
+ *   +0x05e0 -> line 2045
+ *   +0x05e8 -> line 2047
+ *   +0x05f4 -> line 2049
+ *   +0x05f8 -> line 2053
+ *   +0x0600 -> line 2055
+ *   +0x0608 -> line 2057
+ *   +0x060c -> line 2055
+ *   +0x0614 -> line 2057
+ *   +0x0620 -> line 2058
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void GLI_vDMABufferDrawEITWithStrips(GEO_tdstGeometricObject_* pObj, unsigned int Index)
+{
+    unsigned int hRef;
+    unsigned int NbRealStripVtx;
+    unsigned int NbVtxTotalForUVs;
+    unsigned int NbVtxTotal;
+    unsigned int* pTCh;
+    unsigned int* pT2;
+    unsigned int* pT1;
+    float (*DestpVA)[4];
+    float (*param0)[4];
+    unsigned int KeepNormals;
+    unsigned int bMultiTexture;
+    unsigned int LayerTypes;
+    GLI_tdstMaterial_* hVisualMaterial;
+    SDC_VertexArrays_* pSDC_VA;
+    float (*pVs)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float (*pN)[4];
+    unsigned int stage;
+    unsigned int NbStages;
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 2064–2411 */
 /* addr: 0x002b6da0  size: 2008 bytes */
@@ -1962,1357 +3450,6 @@ void PS2glDisable(unsigned int cap);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1747–2058 */
-/* addr: 0x002b7580  size: 1616 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1747
- *   +0x0004 -> line 1778
- *   +0x0008 -> line 1747
- *   +0x0030 -> line 1765
- *   +0x0038 -> line 1778
- *   +0x003c -> line 1768
- *   +0x0040 -> line 1769
- *   +0x0044 -> line 1778
- *   +0x0054 -> line 1780
- *   +0x0058 -> line 1781
- *   +0x0064 -> line 1782
- *   +0x0084 -> line 1783
- *   +0x008c -> line 1786
- *   +0x0094 -> line 1787
- *   +0x009c -> line 1791
- *   +0x00b8 -> line 1793
- *   +0x00d8 -> line 1795
- *   +0x00ec -> line 1811
- *   +0x00f0 -> line 1803
- *   +0x00f4 -> line 1811
- *   +0x00fc -> line 1803
- *   +0x0108 -> line 1811
- *   +0x010c -> line 1803
- *   +0x0110 -> line 1811
- *   +0x0118 -> line 1804
- *   +0x011c -> line 1811
- *   +0x0120 -> line 1806
- *   +0x0128 -> line 1807
- *   +0x012c -> line 1811
- *   +0x0134 -> line 1814
- *   +0x0140 -> line 1816
- *   +0x0150 -> line 1818
- *   +0x0180 -> line 1822
- *   +0x0188 -> line 1825
- *   +0x0190 -> line 1827
- *   +0x0194 -> line 1829
- *   +0x0198 -> line 1830
- *   +0x01a8 -> line 1831
- *   +0x01b0 -> line 1834
- *   +0x01b4 -> line 1838
- *   +0x01c0 -> line 1840
- *   +0x01c4 -> line 1838
- *   +0x01c8 -> line 1841
- *   +0x01cc -> line 1844
- *   +0x01f0 -> line 1845
- *   +0x0214 -> line 1846
- *   +0x0230 -> line 1849
- *   +0x0258 -> line 1851
- *   +0x025c -> line 1853
- *   +0x0260 -> line 1851
- *   +0x0264 -> line 1853
- *   +0x0270 -> line 1856
- *   +0x0274 -> line 1863
- *   +0x0278 -> line 1861
- *   +0x027c -> line 1863
- *   +0x0280 -> line 1862
- *   +0x0284 -> line 1856
- *   +0x0288 -> line 1863
- *   +0x028c -> line 1856
- *   +0x0290 -> line 1863
- *   +0x0294 -> line 1856
- *   +0x029c -> line 1863
- *   +0x02b4 -> line 1865
- *   +0x02b8 -> line 1870
- *   +0x02c0 -> line 1867
- *   +0x02c4 -> line 1870
- *   +0x02cc -> line 1871
- *   +0x02d8 -> line 1873
- *   +0x02e0 -> line 1874
- *   +0x02ec -> line 1877
- *   +0x02f4 -> line 1885
- *   +0x0300 -> line 1887
- *   +0x0330 -> line 1891
- *   +0x0338 -> line 1894
- *   +0x0340 -> line 1899
- *   +0x0348 -> line 1902
- *   +0x034c -> line 1903
- *   +0x0350 -> line 1905
- *   +0x0358 -> line 1908
- *   +0x0388 -> line 1923
- *   +0x0394 -> line 1925
- *   +0x039c -> line 1926
- *   +0x03a8 -> line 1927
- *   +0x03b0 -> line 1930
- *   +0x03bc -> line 1931
- *   +0x03c8 -> line 1934
- *   +0x03d4 -> line 1937
- *   +0x03e0 -> line 1940
- *   +0x03ec -> line 1944
- *   +0x03f4 -> line 1945
- *   +0x0400 -> line 1946
- *   +0x0410 -> line 1948
- *   +0x0420 -> line 1950
- *   +0x0430 -> line 1951
- *   +0x0440 -> line 1952
- *   +0x0444 -> line 1954
- *   +0x0450 -> line 1955
- *   +0x045c -> line 1957
- *   +0x0468 -> line 1958
- *   +0x0474 -> line 1960
- *   +0x047c -> line 1961
- *   +0x0488 -> line 1962
- *   +0x0498 -> line 1964
- *   +0x04a8 -> line 1966
- *   +0x04ac -> line 1967
- *   +0x04b0 -> line 1970
- *   +0x04bc -> line 1972
- *   +0x04c8 -> line 1973
- *   +0x04d4 -> line 1974
- *   +0x04d8 -> line 1976
- *   +0x04e0 -> line 1978
- *   +0x04e4 -> line 1980
- *   +0x04f0 -> line 1978
- *   +0x04f4 -> line 1980
- *   +0x04fc -> line 1981
- *   +0x0510 -> line 1982
- *   +0x0524 -> line 1983
- *   +0x0538 -> line 1985
- *   +0x0550 -> line 1986
- *   +0x0568 -> line 1988
- *   +0x0574 -> line 1990
- *   +0x057c -> line 1991
- *   +0x0588 -> line 1994
- *   +0x0598 -> line 2031
- *   +0x05a4 -> line 2036
- *   +0x05b0 -> line 2037
- *   +0x05bc -> line 2039
- *   +0x05c4 -> line 2040
- *   +0x05d0 -> line 2044
- *   +0x05d4 -> line 2041
- *   +0x05d8 -> line 2044
- *   +0x05e0 -> line 2045
- *   +0x05e8 -> line 2047
- *   +0x05f4 -> line 2049
- *   +0x05f8 -> line 2053
- *   +0x0600 -> line 2055
- *   +0x0608 -> line 2057
- *   +0x060c -> line 2055
- *   +0x0614 -> line 2057
- *   +0x0620 -> line 2058
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1641–1680 */
-/* addr: 0x002b7bd0  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1641
- *   +0x000c -> line 1646
- *   +0x0024 -> line 1648
- *   +0x003c -> line 1651
- *   +0x0050 -> line 1653
- *   +0x005c -> line 1654
- *   +0x0064 -> line 1657
- *   +0x0090 -> line 1661
- *   +0x0098 -> line 1675
- *   +0x00a8 -> line 1677
- *   +0x00bc -> line 1680
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1373–1638 */
-/* addr: 0x002b7ca0  size: 988 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1373
- *   +0x0028 -> line 1384
- *   +0x0030 -> line 1386
- *   +0x0034 -> line 1387
- *   +0x003c -> line 1389
- *   +0x0040 -> line 1390
- *   +0x0048 -> line 1393
- *   +0x0050 -> line 1396
- *   +0x0054 -> line 1404
- *   +0x005c -> line 1406
- *   +0x0064 -> line 1404
- *   +0x0068 -> line 1406
- *   +0x0070 -> line 1408
- *   +0x007c -> line 1409
- *   +0x0084 -> line 1411
- *   +0x0088 -> line 1424
- *   +0x008c -> line 1413
- *   +0x0090 -> line 1424
- *   +0x00a0 -> line 1426
- *   +0x00a8 -> line 1427
- *   +0x00ac -> line 1428
- *   +0x00b4 -> line 1431
- *   +0x00c0 -> line 1435
- *   +0x00e0 -> line 1447
- *   +0x00f0 -> line 1449
- *   +0x0108 -> line 1451
- *   +0x0114 -> line 1452
- *   +0x011c -> line 1454
- *   +0x0128 -> line 1462
- *   +0x0148 -> line 1464
- *   +0x0150 -> line 1466
- *   +0x0158 -> line 1467
- *   +0x0170 -> line 1469
- *   +0x0184 -> line 1470
- *   +0x0190 -> line 1471
- *   +0x0198 -> line 1473
- *   +0x01ac -> line 1475
- *   +0x01c0 -> line 1476
- *   +0x01cc -> line 1477
- *   +0x01d4 -> line 1479
- *   +0x01e8 -> line 1481
- *   +0x01f0 -> line 1483
- *   +0x01f8 -> line 1481
- *   +0x0204 -> line 1482
- *   +0x0210 -> line 1483
- *   +0x0218 -> line 1484
- *   +0x0220 -> line 1486
- *   +0x0234 -> line 1488
- *   +0x023c -> line 1491
- *   +0x0244 -> line 1488
- *   +0x0250 -> line 1489
- *   +0x025c -> line 1491
- *   +0x0264 -> line 1493
- *   +0x0274 -> line 1499
- *   +0x0288 -> line 1560
- *   +0x028c -> line 1505
- *   +0x0290 -> line 1549
- *   +0x0294 -> line 1560
- *   +0x02a0 -> line 1562
- *   +0x02e0 -> line 1566
- *   +0x02f0 -> line 1568
- *   +0x0314 -> line 1571
- *   +0x0320 -> line 1573
- *   +0x032c -> line 1575
- *   +0x0338 -> line 1579
- *   +0x0344 -> line 1581
- *   +0x0350 -> line 1584
- *   +0x0358 -> line 1587
- *   +0x036c -> line 1591
- *   +0x0380 -> line 1637
- *   +0x0388 -> line 1591
- *   +0x038c -> line 1637
- *   +0x03ac -> line 1638
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1302–1369 */
-/* addr: 0x002b8080  size: 628 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1302
- *   +0x0004 -> line 1307
- *   +0x0008 -> line 1302
- *   +0x0018 -> line 1307
- *   +0x003c -> line 1312
- *   +0x0044 -> line 1313
- *   +0x004c -> line 1315
- *   +0x0058 -> line 1323
- *   +0x0074 -> line 1325
- *   +0x007c -> line 1327
- *   +0x0084 -> line 1328
- *   +0x009c -> line 1333
- *   +0x00a8 -> line 1335
- *   +0x00ac -> line 1333
- *   +0x00d0 -> line 1335
- *   +0x00f8 -> line 1338
- *   +0x01d8 -> line 1350
- *   +0x01dc -> line 1338
- *   +0x0208 -> line 1346
- *   +0x0220 -> line 1347
- *   +0x0234 -> line 1348
- *   +0x0248 -> line 1350
- *   +0x0254 -> line 1352
- *   +0x025c -> line 1369
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1235–1289 */
-/* addr: 0x002b8300  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1235
- *   +0x0018 -> line 1243
- *   +0x0020 -> line 1246
- *   +0x0028 -> line 1249
- *   +0x0040 -> line 1252
- *   +0x004c -> line 1254
- *   +0x0054 -> line 1255
- *   +0x0070 -> line 1259
- *   +0x008c -> line 1265
- *   +0x00b0 -> line 1267
- *   +0x00b4 -> line 1268
- *   +0x00bc -> line 1270
- *   +0x00c0 -> line 1271
- *   +0x00c8 -> line 1273
- *   +0x00d0 -> line 1275
- *   +0x00dc -> line 1277
- *   +0x00e4 -> line 1279
- *   +0x00ec -> line 1280
- *   +0x00fc -> line 1282
- *   +0x0104 -> line 1280
- *   +0x0108 -> line 1282
- *   +0x0110 -> line 1288
- *   +0x0128 -> line 1289
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1093–1218 */
-/* addr: 0x002b8440  size: 544 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1093
- *   +0x0014 -> line 1106
- *   +0x001c -> line 1110
- *   +0x0024 -> line 1112
- *   +0x0034 -> line 1114
- *   +0x0038 -> line 1116
- *   +0x0040 -> line 1121
- *   +0x004c -> line 1123
- *   +0x0050 -> line 1130
- *   +0x0054 -> line 1135
- *   +0x0060 -> line 1138
- *   +0x0068 -> line 1140
- *   +0x0070 -> line 1142
- *   +0x0078 -> line 1148
- *   +0x007c -> line 1144
- *   +0x0080 -> line 1148
- *   +0x0088 -> line 1151
- *   +0x008c -> line 1150
- *   +0x0090 -> line 1151
- *   +0x0098 -> line 1153
- *   +0x009c -> line 1154
- *   +0x00a8 -> line 1156
- *   +0x00b0 -> line 1157
- *   +0x00c8 -> line 1158
- *   +0x00d0 -> line 1159
- *   +0x00dc -> line 1161
- *   +0x00e4 -> line 1162
- *   +0x0100 -> line 1164
- *   +0x0108 -> line 1167
- *   +0x0114 -> line 1169
- *   +0x0120 -> line 1171
- *   +0x0128 -> line 1172
- *   +0x0140 -> line 1173
- *   +0x0160 -> line 1175
- *   +0x0164 -> line 1191
- *   +0x016c -> line 1193
- *   +0x0178 -> line 1195
- *   +0x0184 -> line 1197
- *   +0x018c -> line 1198
- *   +0x0194 -> line 1201
- *   +0x019c -> line 1203
- *   +0x01a0 -> line 1208
- *   +0x01a8 -> line 1211
- *   +0x01b4 -> line 1213
- *   +0x01bc -> line 1214
- *   +0x01d4 -> line 1215
- *   +0x01d8 -> line 1217
- *   +0x0208 -> line 1218
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1045–1090 */
-/* addr: 0x002b8660  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1045
- *   +0x0028 -> line 1052
- *   +0x0034 -> line 1054
- *   +0x003c -> line 1055
- *   +0x0044 -> line 1059
- *   +0x004c -> line 1066
- *   +0x0058 -> line 1068
- *   +0x005c -> line 1069
- *   +0x0074 -> line 1072
- *   +0x0080 -> line 1073
- *   +0x0084 -> line 1074
- *   +0x00dc -> line 1083
- *   +0x00e0 -> line 1084
- *   +0x00e8 -> line 1086
- *   +0x0110 -> line 1087
- *   +0x0114 -> line 1090
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 993–994 */
-/* addr: 0x002b87a0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 993
- *   +0x0018 -> line 994
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 987–988 */
-/* addr: 0x002b87c0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 987
- *   +0x0018 -> line 988
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 951–981 */
-/* addr: 0x002b87e0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 951
- *   +0x0004 -> line 953
- *   +0x0010 -> line 957
- *   +0x0018 -> line 981
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 929–929 */
-/* addr: 0x002b8800  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 929
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 912–912 */
-/* addr: 0x002b8810  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 912
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 812–862 */
-/* addr: 0x002b8820  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 812
- *   +0x0004 -> line 817
- *   +0x0008 -> line 812
- *   +0x0018 -> line 820
- *   +0x0020 -> line 825
- *   +0x0028 -> line 826
- *   +0x0030 -> line 827
- *   +0x0038 -> line 828
- *   +0x0040 -> line 829
- *   +0x0048 -> line 833
- *   +0x0054 -> line 835
- *   +0x0064 -> line 836
- *   +0x006c -> line 838
- *   +0x0070 -> line 841
- *   +0x0074 -> line 842
- *   +0x0078 -> line 843
- *   +0x0088 -> line 846
- *   +0x0090 -> line 848
- *   +0x0098 -> line 850
- *   +0x00a0 -> line 848
- *   +0x00a4 -> line 850
- *   +0x00ac -> line 852
- *   +0x00b4 -> line 853
- *   +0x00bc -> line 855
- *   +0x00c4 -> line 857
- *   +0x00cc -> line 859
- *   +0x00d0 -> line 862
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 756–805 */
-/* addr: 0x002b8910  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 756
- *   +0x0004 -> line 762
- *   +0x0008 -> line 756
- *   +0x000c -> line 762
- *   +0x0014 -> line 765
- *   +0x0018 -> line 770
- *   +0x001c -> line 765
- *   +0x0020 -> line 770
- *   +0x0024 -> line 765
- *   +0x0028 -> line 771
- *   +0x002c -> line 766
- *   +0x0030 -> line 771
- *   +0x0034 -> line 766
- *   +0x0038 -> line 772
- *   +0x003c -> line 767
- *   +0x0040 -> line 768
- *   +0x0044 -> line 767
- *   +0x0048 -> line 772
- *   +0x004c -> line 775
- *   +0x0054 -> line 777
- *   +0x005c -> line 780
- *   +0x0064 -> line 787
- *   +0x006c -> line 789
- *   +0x0074 -> line 792
- *   +0x007c -> line 794
- *   +0x0084 -> line 795
- *   +0x008c -> line 796
- *   +0x0094 -> line 798
- *   +0x009c -> line 800
- *   +0x00a4 -> line 802
- *   +0x00ac -> line 805
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 729–729 */
-/* addr: 0x002b89d0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 729
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 618–721 */
-/* addr: 0x002b89e0  size: 556 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 618
- *   +0x0004 -> line 631
- *   +0x0008 -> line 618
- *   +0x002c -> line 628
- *   +0x0030 -> line 630
- *   +0x0034 -> line 631
- *   +0x003c -> line 633
- *   +0x005c -> line 635
- *   +0x0060 -> line 637
- *   +0x0068 -> line 639
- *   +0x0074 -> line 640
- *   +0x007c -> line 642
- *   +0x0084 -> line 644
- *   +0x0090 -> line 647
- *   +0x009c -> line 649
- *   +0x00b0 -> line 651
- *   +0x00bc -> line 653
- *   +0x00c8 -> line 654
- *   +0x00d0 -> line 658
- *   +0x00e0 -> line 659
- *   +0x0108 -> line 671
- *   +0x0110 -> line 670
- *   +0x0114 -> line 671
- *   +0x0130 -> line 674
- *   +0x0138 -> line 675
- *   +0x0140 -> line 677
- *   +0x0144 -> line 678
- *   +0x014c -> line 680
- *   +0x0150 -> line 681
- *   +0x0158 -> line 683
- *   +0x0160 -> line 686
- *   +0x0168 -> line 687
- *   +0x0174 -> line 689
- *   +0x0178 -> line 690
- *   +0x0180 -> line 692
- *   +0x0188 -> line 694
- *   +0x0190 -> line 695
- *   +0x0198 -> line 697
- *   +0x019c -> line 698
- *   +0x01a4 -> line 702
- *   +0x01b0 -> line 704
- *   +0x01b8 -> line 706
- *   +0x01bc -> line 708
- *   +0x01c8 -> line 710
- *   +0x01d0 -> line 712
- *   +0x01d4 -> line 717
- *   +0x01e0 -> line 718
- *   +0x0200 -> line 720
- *   +0x0204 -> line 721
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 575–614 */
-/* addr: 0x002b8c10  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 575
- *   +0x0004 -> line 584
- *   +0x0008 -> line 575
- *   +0x000c -> line 584
- *   +0x0010 -> line 575
- *   +0x001c -> line 584
- *   +0x0024 -> line 585
- *   +0x002c -> line 586
- *   +0x0030 -> line 588
- *   +0x003c -> line 589
- *   +0x0044 -> line 591
- *   +0x0050 -> line 593
- *   +0x0054 -> line 595
- *   +0x005c -> line 597
- *   +0x0060 -> line 601
- *   +0x0070 -> line 603
- *   +0x0078 -> line 605
- *   +0x0080 -> line 607
- *   +0x008c -> line 608
- *   +0x0094 -> line 610
- *   +0x009c -> line 611
- *   +0x00a0 -> line 612
- *   +0x00a8 -> line 610
- *   +0x00ac -> line 612
- *   +0x00cc -> line 613
- *   +0x00d0 -> line 614
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 538–563 */
-/* addr: 0x002b8d00  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 538
- *   +0x001c -> line 542
- *   +0x0024 -> line 547
- *   +0x0034 -> line 549
- *   +0x004c -> line 551
- *   +0x0058 -> line 552
- *   +0x0060 -> line 554
- *   +0x0068 -> line 555
- *   +0x006c -> line 559
- *   +0x0070 -> line 555
- *   +0x0078 -> line 560
- *   +0x0090 -> line 563
- *   +0x0098 -> line 562
- *   +0x009c -> line 563
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 534–534 */
-/* addr: 0x002b8dc0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 534
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 485–528 */
-/* addr: 0x002b8dd0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 485
- *   +0x001c -> line 489
- *   +0x0024 -> line 491
- *   +0x0030 -> line 493
- *   +0x0038 -> line 494
- *   +0x0040 -> line 497
- *   +0x0054 -> line 508
- *   +0x0064 -> line 510
- *   +0x007c -> line 512
- *   +0x0088 -> line 513
- *   +0x0090 -> line 515
- *   +0x0098 -> line 516
- *   +0x009c -> line 525
- *   +0x00a0 -> line 516
- *   +0x00a8 -> line 526
- *   +0x00c0 -> line 528
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 363–463 */
-/* addr: 0x002b8eb0  size: 508 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 363
- *   +0x0020 -> line 373
- *   +0x0028 -> line 375
- *   +0x0034 -> line 377
- *   +0x003c -> line 378
- *   +0x0058 -> line 382
- *   +0x0068 -> line 385
- *   +0x0088 -> line 387
- *   +0x008c -> line 396
- *   +0x0094 -> line 398
- *   +0x00a0 -> line 399
- *   +0x00a8 -> line 401
- *   +0x00b0 -> line 403
- *   +0x00bc -> line 406
- *   +0x00c8 -> line 408
- *   +0x00dc -> line 410
- *   +0x00e8 -> line 412
- *   +0x00f4 -> line 413
- *   +0x0100 -> line 417
- *   +0x0110 -> line 419
- *   +0x0124 -> line 420
- *   +0x0138 -> line 425
- *   +0x0140 -> line 424
- *   +0x0144 -> line 425
- *   +0x0160 -> line 432
- *   +0x0168 -> line 433
- *   +0x0170 -> line 435
- *   +0x0174 -> line 437
- *   +0x017c -> line 439
- *   +0x0180 -> line 442
- *   +0x0188 -> line 443
- *   +0x0194 -> line 445
- *   +0x0198 -> line 446
- *   +0x01a0 -> line 448
- *   +0x01a4 -> line 449
- *   +0x01ac -> line 451
- *   +0x01b4 -> line 454
- *   +0x01bc -> line 455
- *   +0x01c4 -> line 457
- *   +0x01c8 -> line 458
- *   +0x01d0 -> line 460
- *   +0x01d8 -> line 463
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 288–337 */
-/* addr: 0x002b90b0  size: 308 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 288
- *   +0x0004 -> line 292
- *   +0x0008 -> line 288
- *   +0x000c -> line 294
- *   +0x0010 -> line 288
- *   +0x0018 -> line 294
- *   +0x0028 -> line 297
- *   +0x003c -> line 301
- *   +0x0080 -> line 303
- *   +0x0084 -> line 305
- *   +0x0088 -> line 306
- *   +0x0090 -> line 303
- *   +0x0098 -> line 306
- *   +0x00b4 -> line 308
- *   +0x00bc -> line 310
- *   +0x00c0 -> line 311
- *   +0x00cc -> line 315
- *   +0x00d0 -> line 318
- *   +0x00d4 -> line 315
- *   +0x00d8 -> line 318
- *   +0x00e4 -> line 320
- *   +0x0100 -> line 322
- *   +0x0108 -> line 323
- *   +0x010c -> line 331
- *   +0x0114 -> line 333
- *   +0x011c -> line 334
- *   +0x0124 -> line 337
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 237–278 */
-/* addr: 0x002b91f0  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 237
- *   +0x0008 -> line 238
- *   +0x000c -> line 239
- *   +0x0014 -> line 241
- *   +0x0018 -> line 243
- *   +0x0020 -> line 245
- *   +0x0024 -> line 247
- *   +0x003c -> line 249
- *   +0x0048 -> line 250
- *   +0x0050 -> line 252
- *   +0x0054 -> line 256
- *   +0x0058 -> line 253
- *   +0x0060 -> line 255
- *   +0x0064 -> line 256
- *   +0x0070 -> line 258
- *   +0x0084 -> line 260
- *   +0x0090 -> line 261
- *   +0x0098 -> line 263
- *   +0x009c -> line 274
- *   +0x00a0 -> line 263
- *   +0x00a8 -> line 275
- *   +0x00c0 -> line 277
- *   +0x00c8 -> line 275
- *   +0x00cc -> line 277
- *   +0x00e4 -> line 278
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 190–223 */
-/* addr: 0x002b92e0  size: 200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 190
- *   +0x0004 -> line 191
- *   +0x0008 -> line 190
- *   +0x000c -> line 191
- *   +0x0010 -> line 193
- *   +0x001c -> line 195
- *   +0x002c -> line 196
- *   +0x003c -> line 197
- *   +0x004c -> line 198
- *   +0x005c -> line 199
- *   +0x0064 -> line 202
- *   +0x0070 -> line 203
- *   +0x0080 -> line 209
- *   +0x008c -> line 213
- *   +0x00b0 -> line 219
- *   +0x00bc -> line 223
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);
-void HIE_fn_vInitMatrixStack(void);
-
-void BuildAllSDLs(void)
-{
-    GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
-
-    if (GLI_g_ChristianSlaterMode)
-    {
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
-    }
-    else
-    {
-        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
-        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
-    }
-    g_PS2glContext.uiStaticDisplayListMaxSize = 30000;
-
-    GLI_g_StaticVertexArraySizePrevision = 0; HIE_fn_vInitMatrixStack(); GLI_g_DMA_PreparingOpaque = 1; GLI_vDMABufferParseTree((HIE_tdstSuperObject_*)gp_stActualWorld); GLI_g_DMA_PreparingOpaque = 0; GLI_vDMABufferParseTree((HIE_tdstSuperObject_*)gp_stActualWorld);
-
-    g_PS2glContext.uiStaticDisplayListMaxSize = 5000;
-}
-
-void GLI_PS2GL_BuildSpecifForPO(PO_tdstPhysicalObject_* PO)
-{
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    int j;
-    GEO_tdstGeometricObject_* pObj;
-    short i;
-    short xNbLodDefinitions;
-    GEO_tdstVisualSet_* hVisualSet;
-    int iLodOffset;
-    int iTypeOffset;
-    int iElementOffset;
-
-    if (PO != NULL) {
-        hVisualSet = PO->_hVisualSet;
-        if (hVisualSet != NULL) {
-            xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
-            if (xNbLodDefinitions == 0) {
-                xNbLodDefinitions = 1;
-            }
-            for (i = 0, iLodOffset = 0;
-                 i < xNbLodDefinitions;
-                 i++, iLodOffset += 4) {
-                pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
-                if (pObj != NULL) {
-                    pObj->glDisplayList = 0;
-                    j = 0;
-                    pObj->bIsStatic = 0;
-                    iTypeOffset = 0;
-                    GLI_BIG_GLOBALS_p_stObj = (int)pObj;
-                    iElementOffset = 0;
-                    for (; j < pObj->xNbElements;
-                         iTypeOffset += 2, iElementOffset += 4, j++) {
-                        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
-                            continue;
-                        }
-                        p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
-                        if (p_stEIT == NULL) {
-                            continue;
-                        }
-                        p_stEIT->glDisplayList = 0;
-                    }
-                }
-            }
-        }
-    }
-}
-
-void GLI_vInspectObjectForShadow(GEO_tdstGeometricObject_* p_stObj)
-{
-    int iOffset;
-    int iAreaId;
-    unsigned char bBTLevel;
-    unsigned int HasShadowLOD;
-    short xElementCounter;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_PS2GL_PrepareSpecificDataForSPO(HIE_tdstSuperObject_* _hSO)
-{
-    SECT_tdstSector_* hSectorObject;
-    int i;
-    GEO_tdstVisualSet_* hVisualSet;
-    tdstObjectsTablesList_* p_stObjectTable;
-    tdstObjectsTableElement_* p_ObjectsTableElement;
-    PO_tdstPhysicalObject_* PO;
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    HIE_tdstSuperObject_* hChild;
-    tdstEngineObject_* p_stCharacter;
-    tdst3dData_* p_st3dData;
-    short iNbElement;
-    int iNbLod;
-    int iOffset;
-
-    if (_hSO != NULL) {
-        iNbElement = 0;
-        hChild = _hSO->hFirstElementDyn;
-        if (hChild != NULL) {
-            do {
-                GLI_PS2GL_PrepareSpecificDataForSPO(hChild);
-                hChild = hChild->hNextBrotherDyn;
-                iNbElement++;
-            } while (hChild != NULL);
-        }
-    }
-    if (_hSO->ulTypeOfLinkedObject == 2) {
-        if (_hSO != NULL) {
-            p_stCharacter = _hSO->hLinkedObject.p_stCharacter;
-            if (p_stCharacter != NULL) {
-                p_st3dData = p_stCharacter->h_3dData;
-                if (p_st3dData != NULL) {
-                    p_stObjectTable = p_st3dData->h_CurrentObjectsTable;
-                    if (p_stObjectTable != NULL) {
-                        iNbElement = 0;
-                        if (p_stObjectTable->wNumberOfElement != 0) {
-                            p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
-                            for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
-                                if (p_ObjectsTableElement->wTypeOfTarget == 0) {
-                                    hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
-                                    if (hVisualSet != NULL) {
-                                        if (hVisualSet->xType == 0) {
-                                            if (hVisualSet->xNbLodDefinitions == 0) {
-                                                GLI_vInspectObjectForShadow(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
-                                            } else {
-                                                for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
-                                                    GLI_vInspectObjectForShadow(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                p_ObjectsTableElement++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else if (_hSO->ulTypeOfLinkedObject == 4) {
-        hSectorObject = _hSO->hLinkedObject.p_stSector;
-        if (hSectorObject != NULL) {
-            hSectorObject->glOpaqueDisplayList = 0;
-            hSectorObject->glTransparentDisplayList = 0;
-        }
-    }
-    else if (_hSO->ulTypeOfLinkedObject == 32) {
-        hIPO = _hSO->hLinkedObject.p_stInstanciatedPhysicalObject;
-        if (hIPO != NULL) {
-            PO = hIPO->_hPhysicalObject;
-            if (PO != NULL) {
-                GLI_PS2GL_BuildSpecifForPO(PO);
-            }
-        }
-    }
-    else if (_hSO->ulTypeOfLinkedObject == 8) {
-        PO = _hSO->hLinkedObject.p_stPhysicalObject;
-        if (PO != NULL) {
-            GLI_PS2GL_BuildSpecifForPO(PO);
-        }
-    }
-}
-
-void GLI_vCleanGeoObj(GEO_tdstGeometricObject_* pObj)
-{
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    unsigned int j;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_DRV_vFreeVertexBuffersForElementsInObject(GEO_tdstGeometricObject_* pObj)
-{
-    GLI_vCleanGeoObj(pObj);
-}
-
-int GLI_fn_vInitGeometricObjectFromArray(GEO_tdstGeometricObject_* pObj)
-{
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    unsigned int j;
-    int iTypeOffset;
-    int iElementOffset;
-
-    if (pObj != NULL) {
-        for (j = 0, iTypeOffset = 0, iElementOffset = 0;
-             j < pObj->xNbElements;
-             iTypeOffset += 2, iElementOffset += 4, j++) {
-            if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) != 1) {
-                continue;
-            }
-            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
-            if (p_stEIT == NULL) {
-                continue;
-            }
-            GLI_vCleanSpecificStructure(p_stEIT->glDisplayList);
-            p_stEIT->glDisplayList = 0;
-        }
-    }
-    return 1;
-}
-
-void GLI_PS2GL_CleanSpecifForPO(PO_tdstPhysicalObject_* PO)
-{
-    GEO_tdstGeometricObject_* pObj;
-    GEO_tdstVisualSet_* hVisualSet;
-    short xNbLodDefinitions;
-    short i;
-    int iLodOffset;
-
-    if (((unsigned int)PO & 0xffffff00) == 0) { return; }
-    if (PO == NULL) { return; }
-    hVisualSet = PO->_hVisualSet;
-    if (((unsigned int)hVisualSet & 0xffffff00) == 0) { return; }
-    if (hVisualSet == NULL) { return; }
-    if (hVisualSet->xType != 0) { return; }
-    xNbLodDefinitions = hVisualSet->xNbLodDefinitions;
-    if (xNbLodDefinitions == 0) {
-        xNbLodDefinitions = 1;
-    }
-    if (hVisualSet->d_p_stLodDefinitions == (GEO_tduVSObject_*)-1) { return; }
-    if (hVisualSet->d_p_stLodDefinitions != NULL) {
-        for (i = 0, iLodOffset = 0; i < xNbLodDefinitions; i++, iLodOffset += 4) {
-            pObj = *(GEO_tdstGeometricObject_**)((int)hVisualSet->d_p_stLodDefinitions + iLodOffset);
-            if (pObj == NULL) {
-                continue;
-            }
-            GLI_vCleanGeoObj(pObj);
-        }
-    }
-}
-
-void GLI_vCleanDispTemporaryDataSPO(HIE_tdstSuperObject_* _hSprObj)
-{
-    short iNbElement;
-    tdstObjectsTableElement_* p_ObjectsTableElement;
-    GEO_tdstVisualSet_* hVisualSet;
-    int iNbLod;
-    int iOffset;
-    tdstObjectsTablesList_* p_stObjectTable;
-    int i;
-    SECT_tdstSector_* hSectorObject;
-    PO_tdstPhysicalObject_* PO;
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    HIE_tdstSuperObject_* hChild;
-    tdstEngineObject_* p_stCharacter;
-    tdst3dData_* p_st3dData;
-    int lType;
-
-    Global_CharacterModuleBeingDisplayed = _hSprObj;
-    lType = _hSprObj->ulTypeOfLinkedObject;
-    if (lType == 2) {
-        if (_hSprObj != NULL) {
-            p_stCharacter = _hSprObj->hLinkedObject.p_stCharacter;
-            if (p_stCharacter != NULL) {
-                p_st3dData = p_stCharacter->h_3dData;
-                if (p_st3dData != NULL) {
-                    p_stObjectTable = p_st3dData->h_CurrentObjectsTable;
-                    if (p_stObjectTable != NULL) {
-                        if (p_stObjectTable->wNumberOfElement != 0) {
-                            iNbElement = 0;
-                            p_ObjectsTableElement = p_stObjectTable->d_stObjectsTable;
-                        }
-                        for (; iNbElement < p_stObjectTable->wNumberOfElement; iNbElement++) {
-                            if (p_ObjectsTableElement->wTypeOfTarget == 0) {
-                                hVisualSet = PO_fn_hGetVisualSet((PO_tdstPhysicalObject_*)p_ObjectsTableElement->h_Target);
-                                if (hVisualSet != NULL) {
-                                    if (hVisualSet->xType == 0) {
-                                        if (hVisualSet->xNbLodDefinitions == 0) {
-                                            GLI_vCleanGeoObj(hVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject);
-                                        } else {
-                                            for (iNbLod = 0, iOffset = 0; iNbLod < hVisualSet->xNbLodDefinitions; iNbLod++, iOffset += 4) {
-                                                GLI_vCleanGeoObj(((GEO_tduVSObject_*)((char*)hVisualSet->d_p_stLodDefinitions + iOffset))->p_stGeometricObject);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            p_ObjectsTableElement++;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else if (lType == 32) {
-        hIPO = _hSprObj->hLinkedObject.p_stInstanciatedPhysicalObject;
-        if (hIPO != NULL) {
-            PO = hIPO->_hPhysicalObject;
-            if (PO != NULL) {
-                GLI_PS2GL_CleanSpecifForPO(PO);
-            }
-        }
-    }
-    else if (lType == 8) {
-        PO = _hSprObj->hLinkedObject.p_stPhysicalObject;
-        if (PO != NULL) {
-            GLI_PS2GL_CleanSpecifForPO(PO);
-        }
-    }
-    else if (lType == 4) {
-        hSectorObject = _hSprObj->hLinkedObject.p_stSector;
-        if (hSectorObject != NULL) {
-            if (hSectorObject->glOpaqueDisplayList != 0) {
-                SDL_Destroy(&hSectorObject->glOpaqueDisplayList);
-            }
-            hSectorObject->glOpaqueDisplayList = 0;
-            if (hSectorObject->glTransparentDisplayList != 0) {
-                SDL_Destroy(&hSectorObject->glTransparentDisplayList);
-            }
-            hSectorObject->glTransparentDisplayList = 0;
-        }
-    }
-    iNbElement = 0;
-    hChild = _hSprObj->hFirstElementDyn;
-    if (hChild != NULL) {
-        do {
-            GLI_vCleanDispTemporaryDataSPO(hChild);
-            hChild = hChild->hNextBrotherDyn;
-            iNbElement++;
-        } while (hChild != NULL);
-    }
-    Global_CharacterModuleBeingDisplayed = 0;
-}
-
-void GLI_fnv_CleanAlwaysSO(HIE_tdstSuperObject_* h_SuperObject)
-{
-    GLI_vCleanDispTemporaryDataSPO(h_SuperObject);
-}
-
-void GLI_vCleanAllSpecificData(void)
-{
-    GLD_bSetBackgroundColorForDevice(0, 0);
-    g_fFogColor[0] = 0.0f;
-    g_fFogEnd = 3000.0f;
-    g_fFogColor[1] = 0.0f;
-    g_fFogStart = 2000.0f;
-    GLI_g_CurrentSDLFogColor = 0;
-    g_fFogColor[2] = 0.0f;
-    GLI_g_OOStartMinusEnd = -0.001f;
-    TXT_vInit();
-    MC_SetBackgroundMaterial(0);
-    GLI_vCleanInterpolData();
-    GLI_vCleanAllSDLs();
-    VAC_Destroy(GLI_g_hVAContainer);
-    GLI_g_hVAContainer = 0;
-    GLI_vDeleteSdlCache();
-    WaterFx_vDesinit();
-    GrassFx_vDesinit();
-    FireFx_vDesinit();
-    DestroyDummySDL();
-    GLI_vForceDeleteAllWaitingPointers();
-    GLI_vPrintSDLStatsAfter();
-}
-
-void GLI_vCleanAllSDLs(void)
-{
-    unsigned int i;
-    GEO_tdstGeometricObject_* pObj;
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vResetVertexColorsForIPO(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_xSetUpdateGeometricForMaterialCoefChange(void)
-{
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vSetObjectDeformed(GEO_tdstGeometricObject_* pObj)
-{
-    GLI_BIG_GLOBALS_p_stObj = (int)pObj;
-    if (pObj->pSDC_Data != 0) {
-        ((SDC_VertexArrays_*)pObj->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
-    }
-}
-
-void GLI_vApplyChangesToObjectVertices(GEO_tdstGeometricObject_* p_stObject)
-{
-    GLI_BIG_GLOBALS_p_stObj = (int)p_stObject;
-    if (p_stObject->pSDC_Data != 0) {
-        ((SDC_VertexArrays_*)p_stObject->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
-    }
-}
-
-void GLI_fn_vApplyChangesToObjectVerticesAndUvs(GEO_tdstGeometricObject_* _p_stObj)
-{
-    GLI_BIG_GLOBALS_p_stObj = (int)_p_stObj;
-    if (_p_stObj->pSDC_Data != 0) {
-        ((SDC_VertexArrays_*)_p_stObj->pSDC_Data)->FrameDeformed = GLI_g_FrameNumber;
-    }
-}
-
-void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject)
-{
-    GLI_tdstLight_* hStaticLight;
-    GEO_tdstColor_ stColor;
-    SECT_tdstListOfStaticLights_* hStaticLightsElement;
-    short xI;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO)
-{
-    unsigned int* phSdl;
-    SECT_tdstSector_* hSectorObject;
-    HIE_tdstSuperObject_* hChild;
-
-    if (pSO != NULL) {
-        HIE_fn_vPushMatrix(pSO);
-        if (pSO->ulTypeOfLinkedObject == 4) {
-            hSectorObject = pSO->hLinkedObject.p_stSector;
-            if (hSectorObject != NULL) {
-                if (GLI_g_DMA_PreparingOpaque) {
-                    phSdl = &hSectorObject->glOpaqueDisplayList;
-                } else {
-                    phSdl = &hSectorObject->glTransparentDisplayList;
-                }
-                GLI_g_DMA_SomethingWasDrawn = 0;
-                GLI_NbSDLFaces = 0;
-                *phSdl = SDL_GetNew();
-                SDL_Start(*phSdl);
-                PS2glDisable(0xB60);
-                GLI_vUpdateFogFromSector(hSectorObject);
-                GLI_g_NumberInList = 0;
-                GLI_g_DrawingSPO = 0;
-                PS2glDisable(0xB50);
-                DoingMainSector = 1;
-                if (GLI_g_DMA_PreparingOpaque) {
-                    GLI_g_DMA_DrawingAllNZ = 0;
-                    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
-                        GLI_vDMABufferParseTreeForThisSector(hChild);
-                    }
-                    GLI_g_DMA_DrawingAllNZ = 1;
-                    for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
-                        GLI_vDMABufferParseTreeForThisSector(hChild);
-                    }
-                    GLI_g_DMA_DrawingAllNZ = 0;
-                }
-                else {
-                    for (GLI_g_CurrentPriority = -10; GLI_g_CurrentPriority <= 10; GLI_g_CurrentPriority++) {
-                        for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
-                            GLI_vDMABufferParseTreeForThisSector(hChild);
-                        }
-                    }
-                }
-                DoingMainSector = 0;
-                SDL_End(*phSdl);
-                SDL_SetNbFaces(*phSdl, GLI_NbSDLFaces);
-                if (!GLI_g_DMA_SomethingWasDrawn) {
-                    SDL_Destroy(phSdl);
-                }
-                else {
-                    SDL_Preprocess(*phSdl);
-                    GLI_g_NumberInList = 0;
-                    GLI_g_DrawingSPO = 0;
-                }
-            }
-        }
-        else {
-            for (hChild = pSO->hFirstElementDyn; hChild != NULL; hChild = hChild->hNextBrotherDyn) {
-                GLI_vDMABufferParseTree(hChild);
-            }
-        }
-        if (HIE_g_lNbMatrixInStack != 0) {
-            HIE_g_lNbMatrixInStack--;
-            HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-            g_p_stCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1];
-        }
-    }
-}
-
-void GLI_vDMABufferParseTreeForThisSector(HIE_tdstSuperObject_* pSO)
-{
-    ISI_tdstColor_* pRLIs;
-    void* hISI;
-    PO_tdstPhysicalObject_* PO;
-    IPO_tdstInstanciatedPhysicalObject_* hIPO;
-    HIE_tdstSuperObject_* hChild;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_g_CheckForFire(GEO_tdstGeometricObject_* pObj)
-{
-    MTH3D_tdstVector_ Position;
-    GLI_tdstTexture_* p_stTexture;
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    /* TODO: decompile from asm/... */
-}
-
-void GLI_vDMAPreparePO(HIE_tdstSuperObject_* pSO, PO_tdstPhysicalObject_* PO)
-{
-    GLI_tdstTexture_* p_stTexture;
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    SDC_VertexArrays_* pSDC_VA;
-    int j;
-    GEO_tdstGeometricObject_* pObj;
-    short i;
-    short xNbLodDefinitions;
-    GEO_tdstVisualSet_* hVisualSet;
-    /* TODO: decompile from asm/... */
-}
-
-int GLI_vDMAObjectIsCompliant(GEO_tdstGeometricObject_* pObj)
-{
-    GEO_tdstElementIndexedTriangles_* p_stEIT;
-    int j;
-    int iTypeOffset;
-    int iElementOffset;
-
-    if (GEO_bIsLookAt()) {
-        return 0;
-    }
-
-    for (j = 0, iTypeOffset = 0, iElementOffset = 0;
-         j < pObj->xNbElements;
-         iTypeOffset += 2, iElementOffset += 4, j++) {
-        if (*(short*)(pObj->d_xListOfElementsTypes + iTypeOffset) == 1) {
-            p_stEIT = *(GEO_tdstElementIndexedTriangles_**)(pObj->d_stListOfElements + iElementOffset);
-            if ((p_stEIT != NULL) && (p_stEIT->hVisualMaterial != NULL) &&
-                ((p_stEIT->hVisualMaterial->lNumberOfDisplayNode >= 2) ||
-                 (p_stEIT->hVisualMaterial->lMaterialAdditionnalType & 6))) {
-                    return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-void GLI_vDMABufferDrawEITWithStrips(GEO_tdstGeometricObject_* pObj, unsigned int Index)
-{
-    unsigned int hRef;
-    unsigned int NbRealStripVtx;
-    unsigned int NbVtxTotalForUVs;
-    unsigned int NbVtxTotal;
-    unsigned int* pTCh;
-    unsigned int* pT2;
-    unsigned int* pT1;
-    float (*DestpVA)[4];
-    float (*param0)[4];
-    unsigned int KeepNormals;
-    unsigned int bMultiTexture;
-    unsigned int LayerTypes;
-    GLI_tdstMaterial_* hVisualMaterial;
-    SDC_VertexArrays_* pSDC_VA;
-    float (*pVs)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    float (*pN)[4];
-    unsigned int stage;
-    unsigned int NbStages;
-    /* TODO: decompile from asm/... */
-}
-
 void GLI_vDMABufferDrawEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexedTriangles_* p_stEIT, ISI_tdstColor_* pRLIs, unsigned int Index)
 {
     unsigned int hRef;
@@ -3337,6 +3474,13 @@ void GLI_vDMABufferDrawEIT(GEO_tdstGeometricObject_* pObj, GEO_tdstElementIndexe
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 169–169 */
+/* addr: 0x002b6d90  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 169
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GLI_vDisplayLogo(void)
 {
 }

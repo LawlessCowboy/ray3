@@ -17,15 +17,6 @@ float xEps;
 float ax_AcosTab[8192];
 short ax_SinTab[8192];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 39–40 */
-/* addr: 0x0027be80  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 39
- *   +0x0014 -> line 40
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL);
@@ -34,53 +25,26 @@ float fn_xRModulus(float xValue, float xModulus);
 void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat);
 void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 534–591 */
-/* addr: 0x0027bea0  size: 476 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 86–90 */
+/* addr: 0x0027c1f0  size: 112 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 534
- *   +0x0008 -> line 547
- *   +0x000c -> line 534
- *   +0x0034 -> line 542
- *   +0x0068 -> line 547
- *   +0x0078 -> line 550
- *   +0x0080 -> line 555
- *   +0x0088 -> line 558
- *   +0x0090 -> line 561
- *   +0x00b0 -> line 564
- *   +0x00f0 -> line 565
- *   +0x00f8 -> line 566
- *   +0x0110 -> line 569
- *   +0x0114 -> line 568
- *   +0x011c -> line 570
- *   +0x0120 -> line 568
- *   +0x012c -> line 570
- *   +0x0134 -> line 571
- *   +0x0140 -> line 572
- *   +0x0148 -> line 574
- *   +0x014c -> line 577
- *   +0x0154 -> line 581
- *   +0x0160 -> line 587
- *   +0x0168 -> line 585
- *   +0x016c -> line 587
- *   +0x0178 -> line 588
- *   +0x018c -> line 589
- *   +0x01a0 -> line 590
- *   +0x01b4 -> line 591
+ *   +0x0000 -> line 86
+ *   +0x0024 -> line 87
+ *   +0x003c -> line 88
+ *   +0x0054 -> line 89
+ *   +0x0068 -> line 90
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 519–525 */
-/* addr: 0x0027c080  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 519
- *   +0x0010 -> line 521
- *   +0x0014 -> line 522
- *   +0x0030 -> line 524
- *   +0x0034 -> line 525
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS)
+{
+    float xCoef = 1.0f / 32767.0f;
+    _a4_xQuatD[0] = _a4_xQuatS[0] * xCoef;
+    _a4_xQuatD[1] = _a4_xQuatS[1] * xCoef;
+    _a4_xQuatD[2] = _a4_xQuatS[2] * xCoef;
+    _a4_xQuatD[3] = _a4_xQuatS[3] * xCoef;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 398–418 */
 /* addr: 0x0027c0c0  size: 300 bytes */
@@ -113,28 +77,6 @@ void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 86–90 */
-/* addr: 0x0027c1f0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 86
- *   +0x0024 -> line 87
- *   +0x003c -> line 88
- *   +0x0054 -> line 89
- *   +0x0068 -> line 90
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void fn_v_ExpandQuat(float* _a4_xQuatD, short* _a4_xQuatS)
-{
-    float xCoef = 1.0f / 32767.0f;
-    _a4_xQuatD[0] = _a4_xQuatS[0] * xCoef;
-    _a4_xQuatD[1] = _a4_xQuatS[1] * xCoef;
-    _a4_xQuatD[2] = _a4_xQuatS[2] * xCoef;
-    _a4_xQuatD[3] = _a4_xQuatS[3] * xCoef;
-}
-
 void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
 {
     float xXS;
@@ -174,6 +116,17 @@ void fn_v_QuatToMatrix(float (*_a3a3_xMtx)[3], float* _a4_xQuat)
     _a3a3_xMtx[2][2] = 1.0f - (xXX + xYY);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 519–525 */
+/* addr: 0x0027c080  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 519
+ *   +0x0010 -> line 521
+ *   +0x0014 -> line 522
+ *   +0x0030 -> line 524
+ *   +0x0034 -> line 525
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 float fn_xRModulus(float xValue, float xModulus)
 {
     register float xTempo;
@@ -189,6 +142,41 @@ float fn_xRModulus(float xValue, float xModulus)
     return xValue - (xTempo - xModulus);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 534–591 */
+/* addr: 0x0027bea0  size: 476 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 534
+ *   +0x0008 -> line 547
+ *   +0x000c -> line 534
+ *   +0x0034 -> line 542
+ *   +0x0068 -> line 547
+ *   +0x0078 -> line 550
+ *   +0x0080 -> line 555
+ *   +0x0088 -> line 558
+ *   +0x0090 -> line 561
+ *   +0x00b0 -> line 564
+ *   +0x00f0 -> line 565
+ *   +0x00f8 -> line 566
+ *   +0x0110 -> line 569
+ *   +0x0114 -> line 568
+ *   +0x011c -> line 570
+ *   +0x0120 -> line 568
+ *   +0x012c -> line 570
+ *   +0x0134 -> line 571
+ *   +0x0140 -> line 572
+ *   +0x0148 -> line 574
+ *   +0x014c -> line 577
+ *   +0x0154 -> line 581
+ *   +0x0160 -> line 587
+ *   +0x0168 -> line 585
+ *   +0x016c -> line 587
+ *   +0x0178 -> line 588
+ *   +0x018c -> line 589
+ *   +0x01a0 -> line 590
+ *   +0x01b4 -> line 591
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT)
 {
     float xCoef3;
@@ -200,6 +188,14 @@ void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, f
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 39–40 */
+/* addr: 0x0027be80  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 39
+ *   +0x0014 -> line 40
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstA3dGENERAL_* fn_p_GetA3dGENERAL(unsigned short _uwNumOfA3dGENERAL)
 {
     return gp_stA3dGENERAL + _uwNumOfA3dGENERAL;

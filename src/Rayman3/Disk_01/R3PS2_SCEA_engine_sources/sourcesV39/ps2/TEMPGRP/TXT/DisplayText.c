@@ -3796,22 +3796,6 @@ void GLI_vSetGlobalAlpha(float fAlpha);
 void GLI_vEnd2DSpritesWithUVs(void);
 unsigned char fn_bIsEngineInPause(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 81–86 */
-/* addr: 0x003236a0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 84
- *   +0x0004 -> line 81
- *   +0x0008 -> line 84
- *   +0x000c -> line 81
- *   +0x0010 -> line 82
- *   +0x0014 -> line 84
- *   +0x0018 -> line 83
- *   +0x001c -> line 84
- *   +0x0024 -> line 85
- *   +0x002c -> line 86
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern unsigned char g_NbFont;
 extern unsigned char g_ucNbFontBitmap;
 void TXT_ChangeDefaultColor(float xR, float xG, float xB);
@@ -3849,156 +3833,6 @@ void MJ_JFFTXT_vAddText3D(int ViewportNumber, int StringNumber, MTH3D_tdstVector
 void MJ_JFFTXT_vAddText(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter);
 void TXT_PauseInvIWantToDrawThisStringNumber(int _iStringNumber);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1955–2043 */
-/* addr: 0x003236e0  size: 1068 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1955
- *   +0x0004 -> line 1959
- *   +0x0008 -> line 1955
- *   +0x0018 -> line 1957
- *   +0x001c -> line 1959
- *   +0x0020 -> line 1956
- *   +0x0024 -> line 1960
- *   +0x0028 -> line 1962
- *   +0x002c -> line 1963
- *   +0x0030 -> line 1965
- *   +0x0038 -> line 1968
- *   +0x0080 -> line 1969
- *   +0x0088 -> line 1971
- *   +0x008c -> line 1977
- *   +0x0090 -> line 1971
- *   +0x0094 -> line 1972
- *   +0x009c -> line 1973
- *   +0x00a4 -> line 1975
- *   +0x00ac -> line 1977
- *   +0x00b0 -> line 1978
- *   +0x00b4 -> line 1979
- *   +0x00b8 -> line 1980
- *   +0x00bc -> line 1991
- *   +0x00c0 -> line 1993
- *   +0x00d0 -> line 1996
- *   +0x00d8 -> line 1999
- *   +0x00dc -> line 2002
- *   +0x00f8 -> line 2004
- *   +0x0144 -> line 2005
- *   +0x0188 -> line 2007
- *   +0x018c -> line 2011
- *   +0x0194 -> line 2010
- *   +0x0198 -> line 2005
- *   +0x01a4 -> line 2007
- *   +0x01b4 -> line 2008
- *   +0x01c0 -> line 2010
- *   +0x01c4 -> line 2008
- *   +0x01c8 -> line 2011
- *   +0x01d0 -> line 2014
- *   +0x01d4 -> line 2016
- *   +0x01d8 -> line 2014
- *   +0x01dc -> line 2016
- *   +0x01e4 -> line 2014
- *   +0x01e8 -> line 2016
- *   +0x01ec -> line 2012
- *   +0x01f0 -> line 2014
- *   +0x0200 -> line 2016
- *   +0x0254 -> line 2017
- *   +0x02b0 -> line 2018
- *   +0x030c -> line 2019
- *   +0x0368 -> line 2021
- *   +0x03b8 -> line 2026
- *   +0x03c0 -> line 2027
- *   +0x03c4 -> line 2032
- *   +0x03fc -> line 2034
- *   +0x0408 -> line 2038
- *   +0x0410 -> line 2042
- *   +0x0414 -> line 2043
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1872–1950 */
-/* addr: 0x00323b10  size: 972 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1872
- *   +0x0004 -> line 1875
- *   +0x0008 -> line 1872
- *   +0x000c -> line 1875
- *   +0x0010 -> line 1872
- *   +0x0014 -> line 1875
- *   +0x0018 -> line 1872
- *   +0x001c -> line 1875
- *   +0x0020 -> line 1872
- *   +0x0024 -> line 1875
- *   +0x002c -> line 1880
- *   +0x0030 -> line 1877
- *   +0x0034 -> line 1881
- *   +0x0038 -> line 1877
- *   +0x003c -> line 1878
- *   +0x0040 -> line 1886
- *   +0x0044 -> line 1878
- *   +0x0048 -> line 1883
- *   +0x004c -> line 1897
- *   +0x0050 -> line 1883
- *   +0x0054 -> line 1884
- *   +0x0058 -> line 1885
- *   +0x005c -> line 1899
- *   +0x006c -> line 1902
- *   +0x0074 -> line 1905
- *   +0x007c -> line 1908
- *   +0x0098 -> line 1910
- *   +0x00e4 -> line 1911
- *   +0x0128 -> line 1913
- *   +0x012c -> line 1917
- *   +0x0134 -> line 1916
- *   +0x0138 -> line 1911
- *   +0x0144 -> line 1913
- *   +0x0154 -> line 1914
- *   +0x0160 -> line 1916
- *   +0x0164 -> line 1914
- *   +0x0168 -> line 1917
- *   +0x0170 -> line 1920
- *   +0x0174 -> line 1922
- *   +0x0178 -> line 1920
- *   +0x017c -> line 1922
- *   +0x0184 -> line 1920
- *   +0x0188 -> line 1922
- *   +0x018c -> line 1918
- *   +0x0190 -> line 1920
- *   +0x01a0 -> line 1922
- *   +0x01f4 -> line 1923
- *   +0x0250 -> line 1924
- *   +0x02ac -> line 1925
- *   +0x0308 -> line 1927
- *   +0x0358 -> line 1932
- *   +0x0360 -> line 1933
- *   +0x0364 -> line 1938
- *   +0x039c -> line 1940
- *   +0x03a8 -> line 1944
- *   +0x03b0 -> line 1948
- *   +0x03b4 -> line 1950
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1827–1851 */
-/* addr: 0x00324000  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1827
- *   +0x0008 -> line 1830
- *   +0x0010 -> line 1832
- *   +0x0014 -> line 1833
- *   +0x001c -> line 1846
- *   +0x0020 -> line 1835
- *   +0x0024 -> line 1836
- *   +0x0028 -> line 1837
- *   +0x002c -> line 1839
- *   +0x0034 -> line 1840
- *   +0x0038 -> line 1843
- *   +0x003c -> line 1846
- *   +0x0044 -> line 1849
- *   +0x004c -> line 1851
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* Statement-macro form of the TXT_vAfficheSimple drawing body: the retail
  * TXT_vAfficheSimpleWithColor variant expands the whole body on one source
  * line, while TXT_vAfficheSimpleWithShadow calls the real function. */
@@ -4022,257 +3856,6 @@ void TXT_PauseInvIWantToDrawThisStringNumber(int _iStringNumber);
         }                                                    \
     }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1854–1861 */
-/* addr: 0x00323f90  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1854
- *   +0x0008 -> line 1859
- *   +0x000c -> line 1854
- *   +0x0010 -> line 1856
- *   +0x0014 -> line 1859
- *   +0x0058 -> line 1860
- *   +0x005c -> line 1861
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1864–1869 */
-/* addr: 0x00323ee0  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1864
- *   +0x0004 -> line 1866
- *   +0x0008 -> line 1864
- *   +0x000c -> line 1866
- *   +0x0010 -> line 1864
- *   +0x0014 -> line 1866
- *   +0x0018 -> line 1864
- *   +0x001c -> line 1866
- *   +0x0020 -> line 1864
- *   +0x0040 -> line 1866
- *   +0x0060 -> line 1868
- *   +0x0080 -> line 1869
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1736–1824 */
-/* addr: 0x00324060  size: 1008 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1736
- *   +0x0004 -> line 1740
- *   +0x0008 -> line 1736
- *   +0x0018 -> line 1738
- *   +0x001c -> line 1740
- *   +0x0020 -> line 1737
- *   +0x0024 -> line 1741
- *   +0x0028 -> line 1743
- *   +0x002c -> line 1744
- *   +0x0030 -> line 1746
- *   +0x0038 -> line 1748
- *   +0x003c -> line 1749
- *   +0x0044 -> line 1750
- *   +0x004c -> line 1752
- *   +0x0050 -> line 1758
- *   +0x0054 -> line 1752
- *   +0x0058 -> line 1753
- *   +0x0060 -> line 1754
- *   +0x0068 -> line 1756
- *   +0x0070 -> line 1758
- *   +0x0074 -> line 1759
- *   +0x0078 -> line 1760
- *   +0x007c -> line 1761
- *   +0x0080 -> line 1772
- *   +0x0084 -> line 1774
- *   +0x0094 -> line 1777
- *   +0x009c -> line 1780
- *   +0x00a0 -> line 1783
- *   +0x00bc -> line 1785
- *   +0x0108 -> line 1786
- *   +0x014c -> line 1788
- *   +0x0150 -> line 1792
- *   +0x0158 -> line 1791
- *   +0x015c -> line 1786
- *   +0x0168 -> line 1788
- *   +0x0178 -> line 1789
- *   +0x0184 -> line 1791
- *   +0x0188 -> line 1789
- *   +0x018c -> line 1792
- *   +0x0194 -> line 1795
- *   +0x0198 -> line 1797
- *   +0x019c -> line 1795
- *   +0x01a0 -> line 1797
- *   +0x01a8 -> line 1795
- *   +0x01ac -> line 1797
- *   +0x01b0 -> line 1793
- *   +0x01b4 -> line 1795
- *   +0x01c4 -> line 1797
- *   +0x0218 -> line 1798
- *   +0x0274 -> line 1799
- *   +0x02d0 -> line 1800
- *   +0x032c -> line 1802
- *   +0x037c -> line 1807
- *   +0x0384 -> line 1808
- *   +0x0388 -> line 1813
- *   +0x03c0 -> line 1815
- *   +0x03cc -> line 1819
- *   +0x03d4 -> line 1823
- *   +0x03d8 -> line 1824
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1728–1733 */
-/* addr: 0x00324450  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1729
- *   +0x0004 -> line 1728
- *   +0x0008 -> line 1732
- *   +0x000c -> line 1728
- *   +0x0010 -> line 1729
- *   +0x0014 -> line 1730
- *   +0x0018 -> line 1733
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1632–1691 */
-/* addr: 0x00324530  size: 852 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1632
- *   +0x0044 -> line 1633
- *   +0x004c -> line 1640
- *   +0x0050 -> line 1642
- *   +0x0054 -> line 1640
- *   +0x0058 -> line 1641
- *   +0x005c -> line 1643
- *   +0x00c8 -> line 1644
- *   +0x00e4 -> line 1647
- *   +0x00f8 -> line 1648
- *   +0x0100 -> line 1651
- *   +0x0110 -> line 1654
- *   +0x0120 -> line 1658
- *   +0x0134 -> line 1659
- *   +0x0138 -> line 1661
- *   +0x0148 -> line 1663
- *   +0x0160 -> line 1668
- *   +0x018c -> line 1672
- *   +0x01e8 -> line 1673
- *   +0x01f0 -> line 1677
- *   +0x01f8 -> line 1680
- *   +0x025c -> line 1687
- *   +0x0260 -> line 1688
- *   +0x02c8 -> line 1689
- *   +0x0328 -> line 1691
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1694–1709 */
-/* addr: 0x00324470  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1697
- *   +0x0004 -> line 1694
- *   +0x0008 -> line 1697
- *   +0x001c -> line 1694
- *   +0x0024 -> line 1697
- *   +0x0028 -> line 1699
- *   +0x0038 -> line 1702
- *   +0x0048 -> line 1703
- *   +0x006c -> line 1705
- *   +0x0070 -> line 1707
- *   +0x00a8 -> line 1709
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1477–1624 */
-/* addr: 0x00324890  size: 1528 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1477
- *   +0x0004 -> line 1484
- *   +0x0008 -> line 1477
- *   +0x000c -> line 1484
- *   +0x0010 -> line 1477
- *   +0x0014 -> line 1484
- *   +0x0018 -> line 1477
- *   +0x0028 -> line 1488
- *   +0x002c -> line 1477
- *   +0x003c -> line 1484
- *   +0x0040 -> line 1487
- *   +0x0044 -> line 1486
- *   +0x0048 -> line 1488
- *   +0x004c -> line 1489
- *   +0x0050 -> line 1490
- *   +0x0054 -> line 1494
- *   +0x0058 -> line 1484
- *   +0x005c -> line 1495
- *   +0x0060 -> line 1484
- *   +0x0064 -> line 1496
- *   +0x00d4 -> line 1497
- *   +0x00f0 -> line 1500
- *   +0x0104 -> line 1501
- *   +0x010c -> line 1503
- *   +0x011c -> line 1506
- *   +0x012c -> line 1509
- *   +0x0180 -> line 1510
- *   +0x01d4 -> line 1511
- *   +0x0204 -> line 1512
- *   +0x0210 -> line 1511
- *   +0x0218 -> line 1514
- *   +0x021c -> line 1511
- *   +0x0220 -> line 1514
- *   +0x0224 -> line 1511
- *   +0x0228 -> line 1514
- *   +0x022c -> line 1511
- *   +0x0230 -> line 1514
- *   +0x0238 -> line 1515
- *   +0x0270 -> line 1517
- *   +0x0274 -> line 1518
- *   +0x027c -> line 1524
- *   +0x02b8 -> line 1533
- *   +0x02bc -> line 1524
- *   +0x02cc -> line 1533
- *   +0x02d4 -> line 1535
- *   +0x02f4 -> line 1536
- *   +0x0314 -> line 1539
- *   +0x0318 -> line 1542
- *   +0x031c -> line 1539
- *   +0x0320 -> line 1549
- *   +0x0338 -> line 1550
- *   +0x0340 -> line 1552
- *   +0x0348 -> line 1554
- *   +0x0350 -> line 1556
- *   +0x0380 -> line 1558
- *   +0x03b8 -> line 1559
- *   +0x03c8 -> line 1564
- *   +0x0408 -> line 1572
- *   +0x0414 -> line 1564
- *   +0x0424 -> line 1572
- *   +0x042c -> line 1574
- *   +0x0448 -> line 1577
- *   +0x0478 -> line 1580
- *   +0x0480 -> line 1584
- *   +0x0488 -> line 1586
- *   +0x048c -> line 1588
- *   +0x0490 -> line 1589
- *   +0x0494 -> line 1592
- *   +0x0498 -> line 1593
- *   +0x04c4 -> line 1594
- *   +0x04c8 -> line 1596
- *   +0x04d8 -> line 1597
- *   +0x04ec -> line 1598
- *   +0x04f4 -> line 1601
- *   +0x04f8 -> line 1603
- *   +0x0508 -> line 1604
- *   +0x0510 -> line 1608
- *   +0x0524 -> line 1611
- *   +0x05b8 -> line 1619
- *   +0x05c0 -> line 1622
- *   +0x05c8 -> line 1623
- *   +0x05cc -> line 1624
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline float MTH_M_xMul(float _xA, float _xB)
 {
     return _xA * _xB;
@@ -4285,147 +3868,6 @@ static inline unsigned int TXT_strlen(const char* s)
     return n;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1327–1468 */
-/* addr: 0x00324e90  size: 3292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1330
- *   +0x0004 -> line 1332
- *   +0x0008 -> line 1331
- *   +0x000c -> line 1327
- *   +0x0010 -> line 1328
- *   +0x0014 -> line 1335
- *   +0x001c -> line 1328
- *   +0x0020 -> line 1329
- *   +0x0024 -> line 1335
- *   +0x004c -> line 1337
- *   +0x0054 -> line 1339
- *   +0x0074 -> line 1340
- *   +0x0078 -> line 1341
- *   +0x0080 -> line 1342
- *   +0x00fc -> line 1343
- *   +0x0100 -> line 1344
- *   +0x0110 -> line 1345
- *   +0x0118 -> line 1347
- *   +0x0120 -> line 1346
- *   +0x0124 -> line 1347
- *   +0x0128 -> line 1348
- *   +0x0130 -> line 1352
- *   +0x0134 -> line 1351
- *   +0x0138 -> line 1352
- *   +0x0174 -> line 1353
- *   +0x017c -> line 1356
- *   +0x01b4 -> line 1357
- *   +0x01b8 -> line 1359
- *   +0x01e8 -> line 1360
- *   +0x01f0 -> line 1361
- *   +0x0230 -> line 1362
- *   +0x0264 -> line 1363
- *   +0x026c -> line 1364
- *   +0x0270 -> line 1367
- *   +0x0274 -> line 1366
- *   +0x0278 -> line 1367
- *   +0x02b4 -> line 1368
- *   +0x02bc -> line 1371
- *   +0x02f4 -> line 1372
- *   +0x02f8 -> line 1374
- *   +0x0328 -> line 1375
- *   +0x0330 -> line 1376
- *   +0x0378 -> line 1377
- *   +0x037c -> line 1376
- *   +0x0380 -> line 1377
- *   +0x0384 -> line 1376
- *   +0x0388 -> line 1377
- *   +0x03c8 -> line 1378
- *   +0x03cc -> line 1377
- *   +0x03d0 -> line 1378
- *   +0x03d4 -> line 1377
- *   +0x03d8 -> line 1378
- *   +0x0404 -> line 1379
- *   +0x040c -> line 1380
- *   +0x0410 -> line 1383
- *   +0x0414 -> line 1382
- *   +0x0418 -> line 1383
- *   +0x0454 -> line 1384
- *   +0x045c -> line 1387
- *   +0x0494 -> line 1388
- *   +0x0498 -> line 1390
- *   +0x04c8 -> line 1391
- *   +0x04d0 -> line 1392
- *   +0x0518 -> line 1393
- *   +0x051c -> line 1392
- *   +0x0520 -> line 1393
- *   +0x0524 -> line 1392
- *   +0x0528 -> line 1393
- *   +0x0554 -> line 1394
- *   +0x055c -> line 1395
- *   +0x0560 -> line 1398
- *   +0x0564 -> line 1397
- *   +0x0568 -> line 1398
- *   +0x05a4 -> line 1399
- *   +0x05ac -> line 1402
- *   +0x05e4 -> line 1403
- *   +0x05e8 -> line 1405
- *   +0x0618 -> line 1406
- *   +0x0620 -> line 1407
- *   +0x0668 -> line 1408
- *   +0x066c -> line 1407
- *   +0x0670 -> line 1408
- *   +0x0674 -> line 1407
- *   +0x0678 -> line 1408
- *   +0x06a4 -> line 1409
- *   +0x06ac -> line 1410
- *   +0x06b0 -> line 1413
- *   +0x06b4 -> line 1412
- *   +0x06b8 -> line 1413
- *   +0x06f4 -> line 1414
- *   +0x06fc -> line 1416
- *   +0x0734 -> line 1417
- *   +0x0738 -> line 1418
- *   +0x0768 -> line 1419
- *   +0x0770 -> line 1420
- *   +0x07a4 -> line 1421
- *   +0x07ac -> line 1424
- *   +0x07b0 -> line 1427
- *   +0x07b4 -> line 1428
- *   +0x07ec -> line 1429
- *   +0x07f4 -> line 1431
- *   +0x07f8 -> line 1429
- *   +0x07fc -> line 1432
- *   +0x0800 -> line 1429
- *   +0x0804 -> line 1432
- *   +0x083c -> line 1433
- *   +0x0844 -> line 1436
- *   +0x0848 -> line 1437
- *   +0x084c -> line 1433
- *   +0x0854 -> line 1437
- *   +0x0858 -> line 1433
- *   +0x085c -> line 1437
- *   +0x0894 -> line 1438
- *   +0x089c -> line 1441
- *   +0x08d4 -> line 1442
- *   +0x08d8 -> line 1443
- *   +0x08e8 -> line 1444
- *   +0x08f0 -> line 1447
- *   +0x08f4 -> line 1448
- *   +0x08fc -> line 1449
- *   +0x0900 -> line 1450
- *   +0x09d8 -> line 1451
- *   +0x0a98 -> line 1454
- *   +0x0aa0 -> line 1456
- *   +0x0b78 -> line 1457
- *   +0x0c80 -> line 1458
- *   +0x0c90 -> line 1459
- *   +0x0c94 -> line 1461
- *   +0x0c98 -> line 1462
- *   +0x0cb4 -> line 1463
- *   +0x0cc4 -> line 1464
- *   +0x0cc8 -> line 1465
- *   +0x0ccc -> line 1466
- *   +0x0cd0 -> line 1467
- *   +0x0cd4 -> line 1468
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 inline char* TXT_strchr(char* s, char c)
 {
     while (*s && *s != c) s++;
@@ -4459,6 +3901,826 @@ inline float TXT_fn_fGetCharPixelHeight(unsigned char ucFont, unsigned char cCha
         return 66.0f;
     return fSizeH * (TXT_g_CurrentHeightRatio * ((float)g_ListOfFonts[ucFont].TabOfCharacter[cChar].uwH * (0.0020833f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight))
                    + TXT_g_CurrentHeightRatio * (0.0020833f * ((float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight * (float)g_ListOfFonts[ucFont].TabOfCharacter[cChar].wYBaseLine)));
+}
+
+int sprintf(char* szBuffer, const char* szFormat, ...);
+int Erm_fn_iMessageBox(char* _szText, char* _szTitle, int _iType);
+float atoff(const char* _szString);
+float sinf(float _xValue);
+float fn_fDrawAChar(float fX, float fY, unsigned char cChar);
+
+int rand(void);
+#define RAND_MAX 0x7fffffff
+int TEX_fn_lGetTextureCaps(int p_stTexture);
+void TEX_fn_vSetTextureCaps(int p_stTexture, int _lTextureCaps);
+int TEX_fn_lGetTextureRealWidth(int p_stTexture);
+int TEX_fn_lGetTextureRealHeight(int p_stTexture);
+void GLI_xSetMaterialTextureForTXT(int hMaterial, int p_stTexture);
+float GLI_vGetGlobalAlpha(void);
+void GLI_vDraw2DSpriteWithUVWithOptimization(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, int hMaterial);
+
+inline float TXT_fn_fGetKerning(unsigned char ucFirst, unsigned char ucSecond, _tdstDefCharacter* p_stDefC)
+{
+    unsigned short i;
+    _tdstFont* p_stFont = &g_ListOfFonts[g_ucCurrentNumFont];
+
+    for (i = 0; i < p_stFont->uwNbKerning; i++)
+    {
+        if (p_stFont->TabOfKerningPairsNotNull[i].wFirst == ucFirst && p_stFont->TabOfKerningPairsNotNull[i].wSecond == ucSecond)
+        {
+            if (p_stDefC->uwXBlackBox == 0)
+                return 0.0f;
+            return (float)p_stDefC->uwW / (float)p_stDefC->uwXBlackBox * (float)p_stFont->TabOfKerningPairsNotNull[i].wKernAmount;
+        }
+    }
+    return 0.0f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 169–174 */
+/* addr: 0x00327e20  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 169
+ *   +0x0014 -> line 170
+ *   +0x001c -> line 173
+ *   +0x003c -> line 174
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void TXT_PauseInvIWantToDrawThisStringNumber(int _iStringNumber)
+{
+    _JFFTXT_* p;
+    if (_iStringNumber < 0 || _iStringNumber >= 200)
+        return;
+    p = &g_JFFTXT[_iStringNumber]; p->ucDrawThisStringDuringPauseInventory = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 181–202 */
+/* addr: 0x00327db0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 181
+ *   +0x000c -> line 183
+ *   +0x0020 -> line 184
+ *   +0x0024 -> line 185
+ *   +0x002c -> line 186
+ *   +0x0030 -> line 187
+ *   +0x0034 -> line 188
+ *   +0x003c -> line 189
+ *   +0x0044 -> line 190
+ *   +0x004c -> line 192
+ *   +0x0054 -> line 194
+ *   +0x0058 -> line 195
+ *   +0x0060 -> line 198
+ *   +0x0068 -> line 202
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MJ_JFFTXT_vAddText(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter)
+{
+    _JFFTXT_* p;
+    if (StringNumber < 200)
+    {
+
+        p = &g_JFFTXT[StringNumber];
+        p->pString = (int)pszString;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->ucTransparency = ucParameter;
+        p->bFrozenDisplay = 0;
+        p->a3_Pos[0] = p_stPosition->xX;
+        p->a3_Pos[1] = p_stPosition->xY;
+        p->a3_Pos[2] = p_stPosition->xZ;
+        p->bOther = 0;
+        if (ViewportNumber == 0)
+        {
+            p->DestinationViewport = 0xff;
+        }
+        else
+        {
+            p->DestinationViewport = ViewportNumber - 1;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 235–256 */
+/* addr: 0x00327d30  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 235
+ *   +0x000c -> line 237
+ *   +0x001c -> line 246
+ *   +0x0020 -> line 237
+ *   +0x0024 -> line 238
+ *   +0x0028 -> line 239
+ *   +0x0030 -> line 240
+ *   +0x0034 -> line 241
+ *   +0x0038 -> line 242
+ *   +0x0040 -> line 243
+ *   +0x0048 -> line 244
+ *   +0x0050 -> line 245
+ *   +0x0054 -> line 247
+ *   +0x005c -> line 249
+ *   +0x0060 -> line 250
+ *   +0x0068 -> line 253
+ *   +0x0070 -> line 256
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MJ_JFFTXT_vAddText3D(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, float xSize, unsigned char* pszString, unsigned char ucParameter)
+{
+    _JFFTXT_* p;
+    if (StringNumber < 200)
+    {
+
+        p = &g_JFFTXT[StringNumber];
+        p->pString = (int)pszString;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->ucTransparency = ucParameter;
+        p->bFrozenDisplay = 0;
+        p->a3_Pos[0] = p_stPosition->xX;
+        p->a3_Pos[1] = p_stPosition->xY;
+        p->a3_Pos[2] = p_stPosition->xZ;
+        p->xTempSize = xSize;
+        p->bOther = 0x60;
+        if (ViewportNumber == 0)
+        {
+            p->DestinationViewport = 0xff;
+        }
+        else
+        {
+            p->DestinationViewport = ViewportNumber - 1;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 263–277 */
+/* addr: 0x00327cc0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 263
+ *   +0x000c -> line 265
+ *   +0x001c -> line 269
+ *   +0x0020 -> line 265
+ *   +0x0024 -> line 275
+ *   +0x0028 -> line 266
+ *   +0x002c -> line 267
+ *   +0x0034 -> line 268
+ *   +0x0038 -> line 269
+ *   +0x003c -> line 270
+ *   +0x0040 -> line 271
+ *   +0x0048 -> line 272
+ *   +0x0050 -> line 273
+ *   +0x0058 -> line 274
+ *   +0x005c -> line 275
+ *   +0x0060 -> line 277
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void JFFTXT_vAddText(int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter)
+{
+    _JFFTXT_* p;
+    if (StringNumber < 200) {
+        p = &g_JFFTXT[StringNumber];
+        p->pString = (int)pszString;
+        p->ulColor = TXT_g_ulDefaultColor;
+        p->ucTransparency = ucParameter;
+        p->ucDrawThisStringDuringSaveGame = 1;
+        p->bFrozenDisplay = 0;
+        p->a3_Pos[0] = p_stPosition->xX;
+        p->a3_Pos[1] = p_stPosition->xY;
+        p->a3_Pos[2] = p_stPosition->xZ;
+        p->bOther = 0;
+        p->DestinationViewport = 255;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 284–289 */
+/* addr: 0x00327c80  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 284
+ *   +0x000c -> line 287
+ *   +0x0038 -> line 289
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vSetColor(int StringNumber, unsigned int ulRed, unsigned int ulGreen, unsigned int ulBlue)
+{
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->ulColor = (ulRed << 16) | (ulGreen << 8) | ulBlue;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 296–301 */
+/* addr: 0x00327c50  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 296
+ *   +0x000c -> line 299
+ *   +0x0024 -> line 301
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vSetTransparence(int StringNumber, unsigned int ulTransparence)
+{
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->ucTransparency = ulTransparence;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 309–315 */
+/* addr: 0x00327c10  size: 52 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 309
+ *   +0x000c -> line 311
+ *   +0x001c -> line 312
+ *   +0x0020 -> line 311
+ *   +0x0024 -> line 312
+ *   +0x0028 -> line 313
+ *   +0x002c -> line 315
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vDoFadeIn(int StringNumber)
+{
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->bOther = 1;
+        param0->ucTransparency = 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 322–327 */
+/* addr: 0x00327be0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 322
+ *   +0x000c -> line 325
+ *   +0x0028 -> line 327
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vDoFadeOut(int StringNumber)
+{
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        param0->bOther = 2;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 334–342 */
+/* addr: 0x00327b90  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 334
+ *   +0x000c -> line 336
+ *   +0x001c -> line 337
+ *   +0x0024 -> line 338
+ *   +0x0034 -> line 340
+ *   +0x0040 -> line 342
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vSetFrameMode(int StringNumber, unsigned char bOnOff)
+{
+    _JFFTXT_* param0;
+    if (StringNumber < 200) {
+        param0 = &g_JFFTXT[StringNumber];
+        if (bOnOff)
+            param0->bOther |= 8;
+        else
+            param0->bOther &= ~8;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 363–445 */
+/* addr: 0x003279b0  size: 468 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 363
+ *   +0x000c -> line 365
+ *   +0x001c -> line 367
+ *   +0x0044 -> line 371
+ *   +0x004c -> line 372
+ *   +0x0054 -> line 377
+ *   +0x005c -> line 378
+ *   +0x0068 -> line 379
+ *   +0x0070 -> line 381
+ *   +0x0074 -> line 382
+ *   +0x007c -> line 385
+ *   +0x0084 -> line 387
+ *   +0x0098 -> line 389
+ *   +0x00a0 -> line 390
+ *   +0x00a8 -> line 393
+ *   +0x00b4 -> line 396
+ *   +0x00bc -> line 398
+ *   +0x00d8 -> line 400
+ *   +0x00e0 -> line 401
+ *   +0x00e8 -> line 404
+ *   +0x00f0 -> line 406
+ *   +0x00f8 -> line 409
+ *   +0x0138 -> line 412
+ *   +0x0144 -> line 414
+ *   +0x014c -> line 416
+ *   +0x0158 -> line 418
+ *   +0x0160 -> line 420
+ *   +0x016c -> line 422
+ *   +0x0174 -> line 424
+ *   +0x0180 -> line 429
+ *   +0x0188 -> line 432
+ *   +0x01b0 -> line 435
+ *   +0x01b8 -> line 436
+ *   +0x01c0 -> line 438
+ *   +0x01cc -> line 445
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void JFFTXT_vExtendText(int StringNumber, int ID, float xParameter)
+{
+    _JFFTXT_* p;
+    if (StringNumber < 200) {
+        p = &g_JFFTXT[StringNumber];
+        switch (ID) {
+        case 0:
+            p->ucTransparency = (int)xParameter;
+            break;
+        case 2:
+            p->bOther = 1;
+            if (!p->ucTransparency) {
+                p->ucTransparency = 1;
+            }
+            break;
+        case 3:
+            p->bOther = 2;
+            break;
+        case 4:
+            p->a3_Pos[2] = xParameter;
+            break;
+        case 5:
+            if ((int)xParameter == 0) {
+                p->bOther &= ~4;
+                break;
+            }
+            else {
+                p->bOther |= 4;
+                p->EffectParameter = (int)xParameter;
+            }
+            break;
+        case 6:
+            if (xParameter == 1.0f) {
+                p->bOther |= 8;
+            }
+            else {
+                p->bOther &= ~8;
+            }
+            break;
+        case 7:
+            switch ((int)xParameter) {
+            case 0:
+                p->bOther &= ~0x10;
+                p->ucForcedColor = 0;
+                break;
+            case 1:
+                p->bOther |= 0x10;
+                p->ucForcedColor = 1;
+                break;
+            case 2:
+                p->bOther |= 0x10;
+                p->ucForcedColor = 2;
+                break;
+            case 3:
+                p->bOther |= 0x10;
+                p->ucForcedColor = 3;
+                break;
+            }
+            break;
+        case 8:
+            switch ((int)xParameter) {
+            case 0:
+                p->bOther &= ~0x80;
+                break;
+            case 1:
+                p->bOther |= 0x80;
+            }
+            break;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 451–460 */
+/* addr: 0x00327970  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 451
+ *   +0x000c -> line 455
+ *   +0x002c -> line 457
+ *   +0x0034 -> line 460
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void JFFTXT_vModifyCaracter(int StringNumber, int Position, int newcar)
+{
+    _JFFTXT_* p;
+    unsigned char* s;
+
+    if (StringNumber < 200)
+    {
+        p = &g_JFFTXT[StringNumber];
+        if (p->pString != 0)
+        {
+            s = (unsigned char*)p->pString;
+            s += Position;
+            *s = newcar;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 734–843 */
+/* addr: 0x003274a0  size: 1232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 734
+ *   +0x0024 -> line 741
+ *   +0x0028 -> line 734
+ *   +0x0030 -> line 743
+ *   +0x003c -> line 745
+ *   +0x0064 -> line 755
+ *   +0x0084 -> line 757
+ *   +0x008c -> line 759
+ *   +0x009c -> line 762
+ *   +0x00a0 -> line 763
+ *   +0x00bc -> line 764
+ *   +0x00c8 -> line 767
+ *   +0x00cc -> line 766
+ *   +0x00d0 -> line 767
+ *   +0x00d4 -> line 768
+ *   +0x00d8 -> line 770
+ *   +0x00e0 -> line 771
+ *   +0x00ec -> line 774
+ *   +0x00f0 -> line 775
+ *   +0x010c -> line 776
+ *   +0x0114 -> line 779
+ *   +0x0118 -> line 778
+ *   +0x011c -> line 779
+ *   +0x0120 -> line 781
+ *   +0x0124 -> line 782
+ *   +0x0128 -> line 784
+ *   +0x0138 -> line 790
+ *   +0x013c -> line 792
+ *   +0x014c -> line 795
+ *   +0x0158 -> line 798
+ *   +0x0160 -> line 801
+ *   +0x01ac -> line 802
+ *   +0x01f0 -> line 804
+ *   +0x01f4 -> line 807
+ *   +0x01fc -> line 809
+ *   +0x0200 -> line 810
+ *   +0x0208 -> line 802
+ *   +0x0214 -> line 804
+ *   +0x0224 -> line 805
+ *   +0x0230 -> line 807
+ *   +0x0234 -> line 805
+ *   +0x0238 -> line 809
+ *   +0x023c -> line 805
+ *   +0x0240 -> line 807
+ *   +0x024c -> line 810
+ *   +0x0254 -> line 813
+ *   +0x0258 -> line 815
+ *   +0x025c -> line 813
+ *   +0x0260 -> line 815
+ *   +0x0268 -> line 813
+ *   +0x026c -> line 815
+ *   +0x0270 -> line 811
+ *   +0x0274 -> line 813
+ *   +0x0284 -> line 815
+ *   +0x02d8 -> line 816
+ *   +0x0334 -> line 817
+ *   +0x0390 -> line 818
+ *   +0x03ec -> line 820
+ *   +0x043c -> line 825
+ *   +0x0444 -> line 826
+ *   +0x0448 -> line 830
+ *   +0x0480 -> line 831
+ *   +0x048c -> line 833
+ *   +0x0490 -> line 834
+ *   +0x04a0 -> line 840
+ *   +0x04a8 -> line 842
+ *   +0x04ac -> line 843
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vAffiche(GLD_tdstViewportAttributes_* p_stVpt, float fFrameLenght)
+{
+    _JFFTXT_* p;
+    int i;
+    unsigned char ucDrawThisString;
+    int trsp;
+    float x1[3];
+    float x2[3];
+
+    for (i = 0; i < 200; i++)
+    {
+        p = &g_JFFTXT[i];
+        if (p->ucTransparency && p->pString && (p->DestinationViewport == g_ucCurrentViewport))
+        {
+            ucDrawThisString = fn_bIsEngineInPause() ? p->ucDrawThisStringDuringPauseGame : 1;
+            if (ucDrawThisString)
+            {
+                if (p->bOther & 1)
+                {
+                    trsp = p->ucTransparency + (int)(200.0f * fFrameLenght);
+                    if (trsp >= 255) { trsp = 255; p->bOther &= 0xFE; }
+                    p->ucTransparency = trsp;
+                }
+                else if (p->bOther & 2)
+                {
+                    trsp = p->ucTransparency - (int)(200.0f * fFrameLenght);
+                    if (trsp <= 0) { trsp = 0; p->bOther &= 0xFD; }
+                    p->ucTransparency = trsp;
+                }
+
+                if (p->bOther & 8)
+                {
+                    g_GLI_bForceAAAColor = 0;
+                    if (p->bOther & 0x40)
+                        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;
+                    else
+                        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+
+                    x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
+                    x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
+                    TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
+                    TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
+                    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
+                    TXT_g_GettingExtents = 1;
+                    TXT_vDrawString(p_stVpt, p);
+
+                    TXT_g_GettingExtents = 0;
+                    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
+
+                    x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
+                    x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
+                    x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;
+                    x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;
+
+                    GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);
+                    g_GLI_bForceAAAColor = 1;
+                    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
+                }
+                GLI_vSetGlobalAlpha((float)p->ucTransparency);
+                TXT_vDrawString(p_stVpt, p);
+            }
+        }
+    }
+    GLI_vEnd2DSpritesWithUVs();
+    g_GLI_bForceAAAColor = 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 850–868 */
+/* addr: 0x00327430  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 850
+ *   +0x0008 -> line 852
+ *   +0x0018 -> line 857
+ *   +0x001c -> line 853
+ *   +0x0020 -> line 858
+ *   +0x0024 -> line 854
+ *   +0x0028 -> line 855
+ *   +0x002c -> line 856
+ *   +0x0030 -> line 857
+ *   +0x0034 -> line 858
+ *   +0x0038 -> line 859
+ *   +0x0044 -> line 861
+ *   +0x0048 -> line 862
+ *   +0x004c -> line 863
+ *   +0x0050 -> line 864
+ *   +0x0060 -> line 866
+ *   +0x0064 -> line 867
+ *   +0x0068 -> line 868
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_vInit(void)
+{
+    int i;
+    static unsigned char ucInitOnlyOnce = 1;
+
+    for (i = 0; i < 200; i++)
+    {
+        g_JFFTXT[i].pString = 0;
+        g_JFFTXT[i].ucTransparency = 0;
+        g_JFFTXT[i].bFrozenDisplay = 0;
+        g_JFFTXT[i].bOther = 0;
+        g_JFFTXT[i].EffectParameter = 0;
+        g_JFFTXT[i].ucDrawThisStringDuringPauseGame = 0;
+        g_JFFTXT[i].ucDrawThisStringDuringPauseInventory = 0;
+        if (ucInitOnlyOnce)
+        {
+            g_JFFTXT[i].ucDrawThisStringDuringPauseGame = 0;
+            g_JFFTXT[i].ucDrawThisStringDuringPauseInventory = 0;
+        }
+    }
+
+    ucInitOnlyOnce = 0;
+    TXT_g_ulDefaultColor = 0xffffffff;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 915–918 */
+/* addr: 0x003273d0  size: 92 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 915
+ *   +0x0018 -> line 916
+ *   +0x001c -> line 915
+ *   +0x0024 -> line 916
+ *   +0x002c -> line 917
+ *   +0x0030 -> line 916
+ *   +0x0034 -> line 917
+ *   +0x0038 -> line 916
+ *   +0x0044 -> line 917
+ *   +0x0054 -> line 918
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_ChangeDefaultColor(float xR, float xG, float xB)
+{
+    TXT_g_ulDefaultColor = (int)(xR * 255.0f) << 16;
+    TXT_g_ulDefaultColor |= (int)(xG * 255.0f) << 8;
+    TXT_g_ulDefaultColor |= (int)(xB * 255.0f);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 962–1070 */
+/* addr: 0x00326c10  size: 1972 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 962
+ *   +0x0004 -> line 969
+ *   +0x0008 -> line 962
+ *   +0x000c -> line 969
+ *   +0x0010 -> line 962
+ *   +0x0014 -> line 969
+ *   +0x0018 -> line 962
+ *   +0x001c -> line 969
+ *   +0x0020 -> line 962
+ *   +0x002c -> line 969
+ *   +0x0030 -> line 962
+ *   +0x0034 -> line 969
+ *   +0x0038 -> line 962
+ *   +0x003c -> line 969
+ *   +0x0040 -> line 962
+ *   +0x0044 -> line 969
+ *   +0x0048 -> line 962
+ *   +0x004c -> line 969
+ *   +0x0050 -> line 962
+ *   +0x0064 -> line 969
+ *   +0x00a0 -> line 971
+ *   +0x00ac -> line 972
+ *   +0x00b8 -> line 975
+ *   +0x00c8 -> line 977
+ *   +0x00cc -> line 978
+ *   +0x00e8 -> line 980
+ *   +0x00fc -> line 982
+ *   +0x010c -> line 984
+ *   +0x0118 -> line 988
+ *   +0x0124 -> line 989
+ *   +0x0128 -> line 988
+ *   +0x0144 -> line 989
+ *   +0x016c -> line 992
+ *   +0x01a0 -> line 993
+ *   +0x01d8 -> line 995
+ *   +0x020c -> line 996
+ *   +0x0244 -> line 998
+ *   +0x0278 -> line 999
+ *   +0x02a8 -> line 1002
+ *   +0x02ec -> line 1003
+ *   +0x02f0 -> line 1002
+ *   +0x02fc -> line 1003
+ *   +0x0338 -> line 1006
+ *   +0x033c -> line 1003
+ *   +0x0348 -> line 1006
+ *   +0x0350 -> line 1007
+ *   +0x035c -> line 1009
+ *   +0x0474 -> line 1010
+ *   +0x047c -> line 1016
+ *   +0x04bc -> line 1019
+ *   +0x04c0 -> line 1016
+ *   +0x04dc -> line 1019
+ *   +0x04e4 -> line 1022
+ *   +0x04f0 -> line 1027
+ *   +0x0534 -> line 1028
+ *   +0x056c -> line 1029
+ *   +0x05a4 -> line 1030
+ *   +0x05e0 -> line 1032
+ *   +0x05e8 -> line 1033
+ *   +0x0630 -> line 1035
+ *   +0x0678 -> line 1040
+ *   +0x0680 -> line 1042
+ *   +0x0688 -> line 1047
+ *   +0x06b8 -> line 1052
+ *   +0x06c0 -> line 1055
+ *   +0x06e0 -> line 1056
+ *   +0x0700 -> line 1058
+ *   +0x0724 -> line 1059
+ *   +0x0744 -> line 1065
+ *   +0x0758 -> line 1066
+ *   +0x075c -> line 1069
+ *   +0x0760 -> line 1068
+ *   +0x0764 -> line 1069
+ *   +0x0774 -> line 1070
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+float fn_fDrawAChar(float fX, float fY, unsigned char cChar)
+{
+    float fUorigin;
+    float fVorigin;
+    float fU;
+    float fV;
+    float fHeight;
+    float fWidth;
+    _tdstDefCharacter stDefC;
+    float fKerning;
+    float dx1;
+    float dx2;
+    float dy1;
+    float dy2;
+    float alphaval;
+
+    stDefC = g_ListOfFonts[g_ucCurrentNumFont].TabOfCharacter[cChar];
+
+    if (!stDefC.ucDef)
+        return 16.0f;
+
+    if (stDefC.ucRefToFontBitmap != g_ucCurrentNumTextureFont)
+    {
+        g_ucCurrentNumTextureFont = stDefC.ucRefToFontBitmap;
+        g_p_TextData = (int)g_TabBitmapFont[stDefC.ucRefToFontBitmap].p_TextureData;
+        TEX_fn_vSetTextureCaps(g_p_TextData, TEX_fn_lGetTextureCaps(g_p_TextData) | 0x200);
+        GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);
+        GLI_xSetMaterialTextureForTXT(g_hMaterialForText, g_p_TextData);
+        g_fOOTexWidth = 1.0f / (float)TEX_fn_lGetTextureRealWidth(g_p_TextData);
+        g_fOOTexHeight = 1.0f / (float)TEX_fn_lGetTextureRealHeight(g_p_TextData);
+    }
+
+    fUorigin = (float)stDefC.uwX * g_fOOTexWidth;
+    fVorigin = (float)stDefC.uwY * g_fOOTexHeight;
+    fU = (float)stDefC.uwW * g_fOOTexWidth;
+    fV = (float)stDefC.uwH * g_fOOTexHeight;
+
+    fWidth = g_fCurrentSizeFontW * (float)stDefC.uwW;
+    fHeight = g_fCurrentSizeFontH * (float)stDefC.uwH;
+
+    fWidth = TXT_g_CurrentWidthRatio * (fWidth * (0.0015625f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth));
+    fHeight = TXT_g_CurrentHeightRatio * (fHeight * (0.0020833f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight));
+
+    if (!g_ucPreviousChar)
+        fKerning = 0.0f;
+    else
+        fKerning = TXT_fn_fGetKerning(g_ucPreviousChar, cChar, &stDefC);
+    fX += g_fCurrentSizeFontW * fKerning;
+
+    fY -= fHeight; fY += TXT_g_CurrentHeightRatio * (0.0020833f * ((float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight * (g_fCurrentSizeFontH * (float)stDefC.wYBaseLine)));
+
+    if (!TXT_g_GettingExtents)
+    {
+        if (TXT_g_WeirdThing)
+        {
+            dx1 = 0.7f * -fWidth + (0.0f - 0.7f * -fWidth) * rand() / RAND_MAX;
+            dx2 = 0.7f * fWidth * rand() / RAND_MAX;
+            dy1 = 0.7f * -fHeight + (0.0f - 0.7f * -fHeight) * rand() / RAND_MAX;
+            dy2 = 0.7f * fHeight * rand() / RAND_MAX;
+
+            alphaval = GLI_vGetGlobalAlpha();
+            GLI_vSetGlobalAlpha(80.0f + 120.0f * rand() / RAND_MAX);
+
+            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX + dx1, fX + fWidth + dx2, fY + dy1, fY + fHeight + dy2, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);
+
+            GLI_vSetGlobalAlpha(alphaval);
+        }
+        else
+        {
+            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX, fX + fWidth, fY, fY + fHeight, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);
+        }
+    }
+    else
+    {
+        if (fX < TXT_g_StringExtents[0]) TXT_g_StringExtents[0] = fX;
+        if (fY < TXT_g_StringExtents[1]) TXT_g_StringExtents[1] = fY;
+        if (fX + fWidth > TXT_g_StringExtents[2]) TXT_g_StringExtents[2] = fX + fWidth;
+        if (fY + fHeight > TXT_g_StringExtents[3]) TXT_g_StringExtents[3] = fY + fHeight;
+    }
+
+    if (fHeight > g_fLetterHeightMax)
+        g_fLetterHeightMax = fHeight;
+
+    g_ucPreviousChar = cChar;
+    return g_fInterLetterRatio * (fWidth + g_fCurrentSizeFontW * fKerning);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1079–1079 */
+/* addr: 0x00326c00  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1079
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H)
+{
+    ComputePixelWidthAndHeightOfString((unsigned char*)_szText, W, H);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1111–1296 */
@@ -4663,840 +4925,6 @@ inline float TXT_fn_fGetCharPixelHeight(unsigned char ucFont, unsigned char cCha
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int sprintf(char* szBuffer, const char* szFormat, ...);
-int Erm_fn_iMessageBox(char* _szText, char* _szTitle, int _iType);
-float atoff(const char* _szString);
-float sinf(float _xValue);
-float fn_fDrawAChar(float fX, float fY, unsigned char cChar);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1079–1079 */
-/* addr: 0x00326c00  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1079
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 962–1070 */
-/* addr: 0x00326c10  size: 1972 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 962
- *   +0x0004 -> line 969
- *   +0x0008 -> line 962
- *   +0x000c -> line 969
- *   +0x0010 -> line 962
- *   +0x0014 -> line 969
- *   +0x0018 -> line 962
- *   +0x001c -> line 969
- *   +0x0020 -> line 962
- *   +0x002c -> line 969
- *   +0x0030 -> line 962
- *   +0x0034 -> line 969
- *   +0x0038 -> line 962
- *   +0x003c -> line 969
- *   +0x0040 -> line 962
- *   +0x0044 -> line 969
- *   +0x0048 -> line 962
- *   +0x004c -> line 969
- *   +0x0050 -> line 962
- *   +0x0064 -> line 969
- *   +0x00a0 -> line 971
- *   +0x00ac -> line 972
- *   +0x00b8 -> line 975
- *   +0x00c8 -> line 977
- *   +0x00cc -> line 978
- *   +0x00e8 -> line 980
- *   +0x00fc -> line 982
- *   +0x010c -> line 984
- *   +0x0118 -> line 988
- *   +0x0124 -> line 989
- *   +0x0128 -> line 988
- *   +0x0144 -> line 989
- *   +0x016c -> line 992
- *   +0x01a0 -> line 993
- *   +0x01d8 -> line 995
- *   +0x020c -> line 996
- *   +0x0244 -> line 998
- *   +0x0278 -> line 999
- *   +0x02a8 -> line 1002
- *   +0x02ec -> line 1003
- *   +0x02f0 -> line 1002
- *   +0x02fc -> line 1003
- *   +0x0338 -> line 1006
- *   +0x033c -> line 1003
- *   +0x0348 -> line 1006
- *   +0x0350 -> line 1007
- *   +0x035c -> line 1009
- *   +0x0474 -> line 1010
- *   +0x047c -> line 1016
- *   +0x04bc -> line 1019
- *   +0x04c0 -> line 1016
- *   +0x04dc -> line 1019
- *   +0x04e4 -> line 1022
- *   +0x04f0 -> line 1027
- *   +0x0534 -> line 1028
- *   +0x056c -> line 1029
- *   +0x05a4 -> line 1030
- *   +0x05e0 -> line 1032
- *   +0x05e8 -> line 1033
- *   +0x0630 -> line 1035
- *   +0x0678 -> line 1040
- *   +0x0680 -> line 1042
- *   +0x0688 -> line 1047
- *   +0x06b8 -> line 1052
- *   +0x06c0 -> line 1055
- *   +0x06e0 -> line 1056
- *   +0x0700 -> line 1058
- *   +0x0724 -> line 1059
- *   +0x0744 -> line 1065
- *   +0x0758 -> line 1066
- *   +0x075c -> line 1069
- *   +0x0760 -> line 1068
- *   +0x0764 -> line 1069
- *   +0x0774 -> line 1070
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int rand(void);
-#define RAND_MAX 0x7fffffff
-int TEX_fn_lGetTextureCaps(int p_stTexture);
-void TEX_fn_vSetTextureCaps(int p_stTexture, int _lTextureCaps);
-int TEX_fn_lGetTextureRealWidth(int p_stTexture);
-int TEX_fn_lGetTextureRealHeight(int p_stTexture);
-void GLI_xSetMaterialTextureForTXT(int hMaterial, int p_stTexture);
-float GLI_vGetGlobalAlpha(void);
-void GLI_vDraw2DSpriteWithUVWithOptimization(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xXMax, float xYMin, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, int hMaterial);
-
-inline float TXT_fn_fGetKerning(unsigned char ucFirst, unsigned char ucSecond, _tdstDefCharacter* p_stDefC)
-{
-    unsigned short i;
-    _tdstFont* p_stFont = &g_ListOfFonts[g_ucCurrentNumFont];
-
-    for (i = 0; i < p_stFont->uwNbKerning; i++)
-    {
-        if (p_stFont->TabOfKerningPairsNotNull[i].wFirst == ucFirst && p_stFont->TabOfKerningPairsNotNull[i].wSecond == ucSecond)
-        {
-            if (p_stDefC->uwXBlackBox == 0)
-                return 0.0f;
-            return (float)p_stDefC->uwW / (float)p_stDefC->uwXBlackBox * (float)p_stFont->TabOfKerningPairsNotNull[i].wKernAmount;
-        }
-    }
-    return 0.0f;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 915–918 */
-/* addr: 0x003273d0  size: 92 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 915
- *   +0x0018 -> line 916
- *   +0x001c -> line 915
- *   +0x0024 -> line 916
- *   +0x002c -> line 917
- *   +0x0030 -> line 916
- *   +0x0034 -> line 917
- *   +0x0038 -> line 916
- *   +0x0044 -> line 917
- *   +0x0054 -> line 918
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 850–868 */
-/* addr: 0x00327430  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 850
- *   +0x0008 -> line 852
- *   +0x0018 -> line 857
- *   +0x001c -> line 853
- *   +0x0020 -> line 858
- *   +0x0024 -> line 854
- *   +0x0028 -> line 855
- *   +0x002c -> line 856
- *   +0x0030 -> line 857
- *   +0x0034 -> line 858
- *   +0x0038 -> line 859
- *   +0x0044 -> line 861
- *   +0x0048 -> line 862
- *   +0x004c -> line 863
- *   +0x0050 -> line 864
- *   +0x0060 -> line 866
- *   +0x0064 -> line 867
- *   +0x0068 -> line 868
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 734–843 */
-/* addr: 0x003274a0  size: 1232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 734
- *   +0x0024 -> line 741
- *   +0x0028 -> line 734
- *   +0x0030 -> line 743
- *   +0x003c -> line 745
- *   +0x0064 -> line 755
- *   +0x0084 -> line 757
- *   +0x008c -> line 759
- *   +0x009c -> line 762
- *   +0x00a0 -> line 763
- *   +0x00bc -> line 764
- *   +0x00c8 -> line 767
- *   +0x00cc -> line 766
- *   +0x00d0 -> line 767
- *   +0x00d4 -> line 768
- *   +0x00d8 -> line 770
- *   +0x00e0 -> line 771
- *   +0x00ec -> line 774
- *   +0x00f0 -> line 775
- *   +0x010c -> line 776
- *   +0x0114 -> line 779
- *   +0x0118 -> line 778
- *   +0x011c -> line 779
- *   +0x0120 -> line 781
- *   +0x0124 -> line 782
- *   +0x0128 -> line 784
- *   +0x0138 -> line 790
- *   +0x013c -> line 792
- *   +0x014c -> line 795
- *   +0x0158 -> line 798
- *   +0x0160 -> line 801
- *   +0x01ac -> line 802
- *   +0x01f0 -> line 804
- *   +0x01f4 -> line 807
- *   +0x01fc -> line 809
- *   +0x0200 -> line 810
- *   +0x0208 -> line 802
- *   +0x0214 -> line 804
- *   +0x0224 -> line 805
- *   +0x0230 -> line 807
- *   +0x0234 -> line 805
- *   +0x0238 -> line 809
- *   +0x023c -> line 805
- *   +0x0240 -> line 807
- *   +0x024c -> line 810
- *   +0x0254 -> line 813
- *   +0x0258 -> line 815
- *   +0x025c -> line 813
- *   +0x0260 -> line 815
- *   +0x0268 -> line 813
- *   +0x026c -> line 815
- *   +0x0270 -> line 811
- *   +0x0274 -> line 813
- *   +0x0284 -> line 815
- *   +0x02d8 -> line 816
- *   +0x0334 -> line 817
- *   +0x0390 -> line 818
- *   +0x03ec -> line 820
- *   +0x043c -> line 825
- *   +0x0444 -> line 826
- *   +0x0448 -> line 830
- *   +0x0480 -> line 831
- *   +0x048c -> line 833
- *   +0x0490 -> line 834
- *   +0x04a0 -> line 840
- *   +0x04a8 -> line 842
- *   +0x04ac -> line 843
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 451–460 */
-/* addr: 0x00327970  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 451
- *   +0x000c -> line 455
- *   +0x002c -> line 457
- *   +0x0034 -> line 460
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 363–445 */
-/* addr: 0x003279b0  size: 468 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 363
- *   +0x000c -> line 365
- *   +0x001c -> line 367
- *   +0x0044 -> line 371
- *   +0x004c -> line 372
- *   +0x0054 -> line 377
- *   +0x005c -> line 378
- *   +0x0068 -> line 379
- *   +0x0070 -> line 381
- *   +0x0074 -> line 382
- *   +0x007c -> line 385
- *   +0x0084 -> line 387
- *   +0x0098 -> line 389
- *   +0x00a0 -> line 390
- *   +0x00a8 -> line 393
- *   +0x00b4 -> line 396
- *   +0x00bc -> line 398
- *   +0x00d8 -> line 400
- *   +0x00e0 -> line 401
- *   +0x00e8 -> line 404
- *   +0x00f0 -> line 406
- *   +0x00f8 -> line 409
- *   +0x0138 -> line 412
- *   +0x0144 -> line 414
- *   +0x014c -> line 416
- *   +0x0158 -> line 418
- *   +0x0160 -> line 420
- *   +0x016c -> line 422
- *   +0x0174 -> line 424
- *   +0x0180 -> line 429
- *   +0x0188 -> line 432
- *   +0x01b0 -> line 435
- *   +0x01b8 -> line 436
- *   +0x01c0 -> line 438
- *   +0x01cc -> line 445
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 334–342 */
-/* addr: 0x00327b90  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 334
- *   +0x000c -> line 336
- *   +0x001c -> line 337
- *   +0x0024 -> line 338
- *   +0x0034 -> line 340
- *   +0x0040 -> line 342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 322–327 */
-/* addr: 0x00327be0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 322
- *   +0x000c -> line 325
- *   +0x0028 -> line 327
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 309–315 */
-/* addr: 0x00327c10  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 309
- *   +0x000c -> line 311
- *   +0x001c -> line 312
- *   +0x0020 -> line 311
- *   +0x0024 -> line 312
- *   +0x0028 -> line 313
- *   +0x002c -> line 315
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 296–301 */
-/* addr: 0x00327c50  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 296
- *   +0x000c -> line 299
- *   +0x0024 -> line 301
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 284–289 */
-/* addr: 0x00327c80  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 284
- *   +0x000c -> line 287
- *   +0x0038 -> line 289
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 263–277 */
-/* addr: 0x00327cc0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 263
- *   +0x000c -> line 265
- *   +0x001c -> line 269
- *   +0x0020 -> line 265
- *   +0x0024 -> line 275
- *   +0x0028 -> line 266
- *   +0x002c -> line 267
- *   +0x0034 -> line 268
- *   +0x0038 -> line 269
- *   +0x003c -> line 270
- *   +0x0040 -> line 271
- *   +0x0048 -> line 272
- *   +0x0050 -> line 273
- *   +0x0058 -> line 274
- *   +0x005c -> line 275
- *   +0x0060 -> line 277
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 235–256 */
-/* addr: 0x00327d30  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 235
- *   +0x000c -> line 237
- *   +0x001c -> line 246
- *   +0x0020 -> line 237
- *   +0x0024 -> line 238
- *   +0x0028 -> line 239
- *   +0x0030 -> line 240
- *   +0x0034 -> line 241
- *   +0x0038 -> line 242
- *   +0x0040 -> line 243
- *   +0x0048 -> line 244
- *   +0x0050 -> line 245
- *   +0x0054 -> line 247
- *   +0x005c -> line 249
- *   +0x0060 -> line 250
- *   +0x0068 -> line 253
- *   +0x0070 -> line 256
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 181–202 */
-/* addr: 0x00327db0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 181
- *   +0x000c -> line 183
- *   +0x0020 -> line 184
- *   +0x0024 -> line 185
- *   +0x002c -> line 186
- *   +0x0030 -> line 187
- *   +0x0034 -> line 188
- *   +0x003c -> line 189
- *   +0x0044 -> line 190
- *   +0x004c -> line 192
- *   +0x0054 -> line 194
- *   +0x0058 -> line 195
- *   +0x0060 -> line 198
- *   +0x0068 -> line 202
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 169–174 */
-/* addr: 0x00327e20  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 169
- *   +0x0014 -> line 170
- *   +0x001c -> line 173
- *   +0x003c -> line 174
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void TXT_PauseInvIWantToDrawThisStringNumber(int _iStringNumber)
-{
-    _JFFTXT_* p;
-    if (_iStringNumber < 0 || _iStringNumber >= 200)
-        return;
-    p = &g_JFFTXT[_iStringNumber]; p->ucDrawThisStringDuringPauseInventory = 1;
-}
-
-void MJ_JFFTXT_vAddText(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter)
-{
-    _JFFTXT_* p;
-    if (StringNumber < 200)
-    {
-
-        p = &g_JFFTXT[StringNumber];
-        p->pString = (int)pszString;
-        p->ulColor = TXT_g_ulDefaultColor;
-        p->ucTransparency = ucParameter;
-        p->bFrozenDisplay = 0;
-        p->a3_Pos[0] = p_stPosition->xX;
-        p->a3_Pos[1] = p_stPosition->xY;
-        p->a3_Pos[2] = p_stPosition->xZ;
-        p->bOther = 0;
-        if (ViewportNumber == 0)
-        {
-            p->DestinationViewport = 0xff;
-        }
-        else
-        {
-            p->DestinationViewport = ViewportNumber - 1;
-        }
-    }
-}
-
-void MJ_JFFTXT_vAddText3D(int ViewportNumber, int StringNumber, MTH3D_tdstVector_* p_stPosition, float xSize, unsigned char* pszString, unsigned char ucParameter)
-{
-    _JFFTXT_* p;
-    if (StringNumber < 200)
-    {
-
-        p = &g_JFFTXT[StringNumber];
-        p->pString = (int)pszString;
-        p->ulColor = TXT_g_ulDefaultColor;
-        p->ucTransparency = ucParameter;
-        p->bFrozenDisplay = 0;
-        p->a3_Pos[0] = p_stPosition->xX;
-        p->a3_Pos[1] = p_stPosition->xY;
-        p->a3_Pos[2] = p_stPosition->xZ;
-        p->xTempSize = xSize;
-        p->bOther = 0x60;
-        if (ViewportNumber == 0)
-        {
-            p->DestinationViewport = 0xff;
-        }
-        else
-        {
-            p->DestinationViewport = ViewportNumber - 1;
-        }
-    }
-}
-
-void JFFTXT_vAddText(int StringNumber, MTH3D_tdstVector_* p_stPosition, unsigned char* pszString, unsigned char ucParameter)
-{
-    _JFFTXT_* p;
-    if (StringNumber < 200) {
-        p = &g_JFFTXT[StringNumber];
-        p->pString = (int)pszString;
-        p->ulColor = TXT_g_ulDefaultColor;
-        p->ucTransparency = ucParameter;
-        p->ucDrawThisStringDuringSaveGame = 1;
-        p->bFrozenDisplay = 0;
-        p->a3_Pos[0] = p_stPosition->xX;
-        p->a3_Pos[1] = p_stPosition->xY;
-        p->a3_Pos[2] = p_stPosition->xZ;
-        p->bOther = 0;
-        p->DestinationViewport = 255;
-    }
-}
-
-void TXT_vSetColor(int StringNumber, unsigned int ulRed, unsigned int ulGreen, unsigned int ulBlue)
-{
-    _JFFTXT_* param0;
-    if (StringNumber < 200) {
-        param0 = &g_JFFTXT[StringNumber];
-        param0->ulColor = (ulRed << 16) | (ulGreen << 8) | ulBlue;
-    }
-}
-
-void TXT_vSetTransparence(int StringNumber, unsigned int ulTransparence)
-{
-    _JFFTXT_* param0;
-    if (StringNumber < 200) {
-        param0 = &g_JFFTXT[StringNumber];
-        param0->ucTransparency = ulTransparence;
-    }
-}
-
-void TXT_vDoFadeIn(int StringNumber)
-{
-    _JFFTXT_* param0;
-    if (StringNumber < 200) {
-        param0 = &g_JFFTXT[StringNumber];
-        param0->bOther = 1;
-        param0->ucTransparency = 1;
-    }
-}
-
-void TXT_vDoFadeOut(int StringNumber)
-{
-    _JFFTXT_* param0;
-    if (StringNumber < 200) {
-        param0 = &g_JFFTXT[StringNumber];
-        param0->bOther = 2;
-    }
-}
-
-void TXT_vSetFrameMode(int StringNumber, unsigned char bOnOff)
-{
-    _JFFTXT_* param0;
-    if (StringNumber < 200) {
-        param0 = &g_JFFTXT[StringNumber];
-        if (bOnOff)
-            param0->bOther |= 8;
-        else
-            param0->bOther &= ~8;
-    }
-}
-
-void JFFTXT_vExtendText(int StringNumber, int ID, float xParameter)
-{
-    _JFFTXT_* p;
-    if (StringNumber < 200) {
-        p = &g_JFFTXT[StringNumber];
-        switch (ID) {
-        case 0:
-            p->ucTransparency = (int)xParameter;
-            break;
-        case 2:
-            p->bOther = 1;
-            if (!p->ucTransparency) {
-                p->ucTransparency = 1;
-            }
-            break;
-        case 3:
-            p->bOther = 2;
-            break;
-        case 4:
-            p->a3_Pos[2] = xParameter;
-            break;
-        case 5:
-            if ((int)xParameter == 0) {
-                p->bOther &= ~4;
-                break;
-            }
-            else {
-                p->bOther |= 4;
-                p->EffectParameter = (int)xParameter;
-            }
-            break;
-        case 6:
-            if (xParameter == 1.0f) {
-                p->bOther |= 8;
-            }
-            else {
-                p->bOther &= ~8;
-            }
-            break;
-        case 7:
-            switch ((int)xParameter) {
-            case 0:
-                p->bOther &= ~0x10;
-                p->ucForcedColor = 0;
-                break;
-            case 1:
-                p->bOther |= 0x10;
-                p->ucForcedColor = 1;
-                break;
-            case 2:
-                p->bOther |= 0x10;
-                p->ucForcedColor = 2;
-                break;
-            case 3:
-                p->bOther |= 0x10;
-                p->ucForcedColor = 3;
-                break;
-            }
-            break;
-        case 8:
-            switch ((int)xParameter) {
-            case 0:
-                p->bOther &= ~0x80;
-                break;
-            case 1:
-                p->bOther |= 0x80;
-            }
-            break;
-        }
-    }
-}
-
-void JFFTXT_vModifyCaracter(int StringNumber, int Position, int newcar)
-{
-    _JFFTXT_* p;
-    unsigned char* s;
-
-    if (StringNumber < 200)
-    {
-        p = &g_JFFTXT[StringNumber];
-        if (p->pString != 0)
-        {
-            s = (unsigned char*)p->pString;
-            s += Position;
-            *s = newcar;
-        }
-    }
-}
-
-void TXT_vAffiche(GLD_tdstViewportAttributes_* p_stVpt, float fFrameLenght)
-{
-    _JFFTXT_* p;
-    int i;
-    unsigned char ucDrawThisString;
-    int trsp;
-    float x1[3];
-    float x2[3];
-
-    for (i = 0; i < 200; i++)
-    {
-        p = &g_JFFTXT[i];
-        if (p->ucTransparency && p->pString && (p->DestinationViewport == g_ucCurrentViewport))
-        {
-            ucDrawThisString = fn_bIsEngineInPause() ? p->ucDrawThisStringDuringPauseGame : 1;
-            if (ucDrawThisString)
-            {
-                if (p->bOther & 1)
-                {
-                    trsp = p->ucTransparency + (int)(200.0f * fFrameLenght);
-                    if (trsp >= 255) { trsp = 255; p->bOther &= 0xFE; }
-                    p->ucTransparency = trsp;
-                }
-                else if (p->bOther & 2)
-                {
-                    trsp = p->ucTransparency - (int)(200.0f * fFrameLenght);
-                    if (trsp <= 0) { trsp = 0; p->bOther &= 0xFD; }
-                    p->ucTransparency = trsp;
-                }
-
-                if (p->bOther & 8)
-                {
-                    g_GLI_bForceAAAColor = 0;
-                    if (p->bOther & 0x40)
-                        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 0;
-                    else
-                        g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
-
-                    x1[0] = p->a3_Pos[0] * (float)p_stVpt->dwWidth * 0.001f;
-                    x1[1] = p->a3_Pos[1] * (float)p_stVpt->dwHeight * 0.001f;
-                    TXT_g_StringExtents[2] = x1[0]; TXT_g_StringExtents[0] = x1[0];
-                    TXT_g_StringExtents[3] = x1[1]; TXT_g_StringExtents[1] = x1[1];
-                    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
-                    TXT_g_GettingExtents = 1;
-                    TXT_vDrawString(p_stVpt, p);
-
-                    TXT_g_GettingExtents = 0;
-                    g_ucCurrentNumTextureFont = 50; g_fCurrentSizeFontW = 1.0f; g_fCurrentSizeFontH = 1.0f; g_fInterLetterRatio = 1.0f; g_ucCurrentNumFont = 0;
-
-                    x1[0] = TXT_g_StringExtents[0] * 100.0f / (float)p_stVpt->dwWidth - 1.0f;
-                    x1[1] = TXT_g_StringExtents[1] * 100.0f / (float)p_stVpt->dwHeight - 1.0f;
-                    x2[0] = TXT_g_StringExtents[2] * 100.0f / (float)p_stVpt->dwWidth + 1.0f;
-                    x2[1] = TXT_g_StringExtents[3] * 100.0f / (float)p_stVpt->dwHeight + 1.0f;
-
-                    GLI_vDisplayFrame(x1, x2, p->ucTransparency * 0.7f, p_stVpt);
-                    g_GLI_bForceAAAColor = 1;
-                    g_bCanResize2DSpriteWithPercentAccordingToViewportRatio = 1;
-                }
-                GLI_vSetGlobalAlpha((float)p->ucTransparency);
-                TXT_vDrawString(p_stVpt, p);
-            }
-        }
-    }
-    GLI_vEnd2DSpritesWithUVs();
-    g_GLI_bForceAAAColor = 0;
-}
-
-void TXT_vInit(void)
-{
-    int i;
-    static unsigned char ucInitOnlyOnce = 1;
-
-    for (i = 0; i < 200; i++)
-    {
-        g_JFFTXT[i].pString = 0;
-        g_JFFTXT[i].ucTransparency = 0;
-        g_JFFTXT[i].bFrozenDisplay = 0;
-        g_JFFTXT[i].bOther = 0;
-        g_JFFTXT[i].EffectParameter = 0;
-        g_JFFTXT[i].ucDrawThisStringDuringPauseGame = 0;
-        g_JFFTXT[i].ucDrawThisStringDuringPauseInventory = 0;
-        if (ucInitOnlyOnce)
-        {
-            g_JFFTXT[i].ucDrawThisStringDuringPauseGame = 0;
-            g_JFFTXT[i].ucDrawThisStringDuringPauseInventory = 0;
-        }
-    }
-
-    ucInitOnlyOnce = 0;
-    TXT_g_ulDefaultColor = 0xffffffff;
-}
-
-void TXT_ChangeDefaultColor(float xR, float xG, float xB)
-{
-    TXT_g_ulDefaultColor = (int)(xR * 255.0f) << 16;
-    TXT_g_ulDefaultColor |= (int)(xG * 255.0f) << 8;
-    TXT_g_ulDefaultColor |= (int)(xB * 255.0f);
-}
-
-float fn_fDrawAChar(float fX, float fY, unsigned char cChar)
-{
-    float fUorigin;
-    float fVorigin;
-    float fU;
-    float fV;
-    float fHeight;
-    float fWidth;
-    _tdstDefCharacter stDefC;
-    float fKerning;
-    float dx1;
-    float dx2;
-    float dy1;
-    float dy2;
-    float alphaval;
-
-    stDefC = g_ListOfFonts[g_ucCurrentNumFont].TabOfCharacter[cChar];
-
-    if (!stDefC.ucDef)
-        return 16.0f;
-
-    if (stDefC.ucRefToFontBitmap != g_ucCurrentNumTextureFont)
-    {
-        g_ucCurrentNumTextureFont = stDefC.ucRefToFontBitmap;
-        g_p_TextData = (int)g_TabBitmapFont[stDefC.ucRefToFontBitmap].p_TextureData;
-        TEX_fn_vSetTextureCaps(g_p_TextData, TEX_fn_lGetTextureCaps(g_p_TextData) | 0x200);
-        GLI_xSetMaterialAmbientCoef(g_hMaterialForText, &g_stColor);
-        GLI_xSetMaterialTextureForTXT(g_hMaterialForText, g_p_TextData);
-        g_fOOTexWidth = 1.0f / (float)TEX_fn_lGetTextureRealWidth(g_p_TextData);
-        g_fOOTexHeight = 1.0f / (float)TEX_fn_lGetTextureRealHeight(g_p_TextData);
-    }
-
-    fUorigin = (float)stDefC.uwX * g_fOOTexWidth;
-    fVorigin = (float)stDefC.uwY * g_fOOTexHeight;
-    fU = (float)stDefC.uwW * g_fOOTexWidth;
-    fV = (float)stDefC.uwH * g_fOOTexHeight;
-
-    fWidth = g_fCurrentSizeFontW * (float)stDefC.uwW;
-    fHeight = g_fCurrentSizeFontH * (float)stDefC.uwH;
-
-    fWidth = TXT_g_CurrentWidthRatio * (fWidth * (0.0015625f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth));
-    fHeight = TXT_g_CurrentHeightRatio * (fHeight * (0.0020833f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight));
-
-    if (!g_ucPreviousChar)
-        fKerning = 0.0f;
-    else
-        fKerning = TXT_fn_fGetKerning(g_ucPreviousChar, cChar, &stDefC);
-    fX += g_fCurrentSizeFontW * fKerning;
-
-    fY -= fHeight; fY += TXT_g_CurrentHeightRatio * (0.0020833f * ((float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight * (g_fCurrentSizeFontH * (float)stDefC.wYBaseLine)));
-
-    if (!TXT_g_GettingExtents)
-    {
-        if (TXT_g_WeirdThing)
-        {
-            dx1 = 0.7f * -fWidth + (0.0f - 0.7f * -fWidth) * rand() / RAND_MAX;
-            dx2 = 0.7f * fWidth * rand() / RAND_MAX;
-            dy1 = 0.7f * -fHeight + (0.0f - 0.7f * -fHeight) * rand() / RAND_MAX;
-            dy2 = 0.7f * fHeight * rand() / RAND_MAX;
-
-            alphaval = GLI_vGetGlobalAlpha();
-            GLI_vSetGlobalAlpha(80.0f + 120.0f * rand() / RAND_MAX);
-
-            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX + dx1, fX + fWidth + dx2, fY + dy1, fY + fHeight + dy2, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);
-
-            GLI_vSetGlobalAlpha(alphaval);
-        }
-        else
-        {
-            GLI_vDraw2DSpriteWithUVWithOptimization((GLD_tdstViewportAttributes_*)g_p_stVpt, fX, fX + fWidth, fY, fY + fHeight, fUorigin, fUorigin + fU, 1.0f - fVorigin, 1.0f - (fVorigin + fV), g_hMaterialForText);
-        }
-    }
-    else
-    {
-        if (fX < TXT_g_StringExtents[0]) TXT_g_StringExtents[0] = fX;
-        if (fY < TXT_g_StringExtents[1]) TXT_g_StringExtents[1] = fY;
-        if (fX + fWidth > TXT_g_StringExtents[2]) TXT_g_StringExtents[2] = fX + fWidth;
-        if (fY + fHeight > TXT_g_StringExtents[3]) TXT_g_StringExtents[3] = fY + fHeight;
-    }
-
-    if (fHeight > g_fLetterHeightMax)
-        g_fLetterHeightMax = fHeight;
-
-    g_ucPreviousChar = cChar;
-    return g_fInterLetterRatio * (fWidth + g_fCurrentSizeFontW * fKerning);
-}
-
-void TXT_fn_fComputePixelLengthOfString(char* _szText, float* W, float* H)
-{
-    ComputePixelWidthAndHeightOfString((unsigned char*)_szText, W, H);
-}
-
 void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_* p)
 {
     unsigned char* szTmp;
@@ -5684,6 +5112,147 @@ void TXT_vDrawAStringOnLine(float fX, float fY, unsigned char* szText, _JFFTXT_*
     TXT_g_WeirdThing = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1327–1468 */
+/* addr: 0x00324e90  size: 3292 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1330
+ *   +0x0004 -> line 1332
+ *   +0x0008 -> line 1331
+ *   +0x000c -> line 1327
+ *   +0x0010 -> line 1328
+ *   +0x0014 -> line 1335
+ *   +0x001c -> line 1328
+ *   +0x0020 -> line 1329
+ *   +0x0024 -> line 1335
+ *   +0x004c -> line 1337
+ *   +0x0054 -> line 1339
+ *   +0x0074 -> line 1340
+ *   +0x0078 -> line 1341
+ *   +0x0080 -> line 1342
+ *   +0x00fc -> line 1343
+ *   +0x0100 -> line 1344
+ *   +0x0110 -> line 1345
+ *   +0x0118 -> line 1347
+ *   +0x0120 -> line 1346
+ *   +0x0124 -> line 1347
+ *   +0x0128 -> line 1348
+ *   +0x0130 -> line 1352
+ *   +0x0134 -> line 1351
+ *   +0x0138 -> line 1352
+ *   +0x0174 -> line 1353
+ *   +0x017c -> line 1356
+ *   +0x01b4 -> line 1357
+ *   +0x01b8 -> line 1359
+ *   +0x01e8 -> line 1360
+ *   +0x01f0 -> line 1361
+ *   +0x0230 -> line 1362
+ *   +0x0264 -> line 1363
+ *   +0x026c -> line 1364
+ *   +0x0270 -> line 1367
+ *   +0x0274 -> line 1366
+ *   +0x0278 -> line 1367
+ *   +0x02b4 -> line 1368
+ *   +0x02bc -> line 1371
+ *   +0x02f4 -> line 1372
+ *   +0x02f8 -> line 1374
+ *   +0x0328 -> line 1375
+ *   +0x0330 -> line 1376
+ *   +0x0378 -> line 1377
+ *   +0x037c -> line 1376
+ *   +0x0380 -> line 1377
+ *   +0x0384 -> line 1376
+ *   +0x0388 -> line 1377
+ *   +0x03c8 -> line 1378
+ *   +0x03cc -> line 1377
+ *   +0x03d0 -> line 1378
+ *   +0x03d4 -> line 1377
+ *   +0x03d8 -> line 1378
+ *   +0x0404 -> line 1379
+ *   +0x040c -> line 1380
+ *   +0x0410 -> line 1383
+ *   +0x0414 -> line 1382
+ *   +0x0418 -> line 1383
+ *   +0x0454 -> line 1384
+ *   +0x045c -> line 1387
+ *   +0x0494 -> line 1388
+ *   +0x0498 -> line 1390
+ *   +0x04c8 -> line 1391
+ *   +0x04d0 -> line 1392
+ *   +0x0518 -> line 1393
+ *   +0x051c -> line 1392
+ *   +0x0520 -> line 1393
+ *   +0x0524 -> line 1392
+ *   +0x0528 -> line 1393
+ *   +0x0554 -> line 1394
+ *   +0x055c -> line 1395
+ *   +0x0560 -> line 1398
+ *   +0x0564 -> line 1397
+ *   +0x0568 -> line 1398
+ *   +0x05a4 -> line 1399
+ *   +0x05ac -> line 1402
+ *   +0x05e4 -> line 1403
+ *   +0x05e8 -> line 1405
+ *   +0x0618 -> line 1406
+ *   +0x0620 -> line 1407
+ *   +0x0668 -> line 1408
+ *   +0x066c -> line 1407
+ *   +0x0670 -> line 1408
+ *   +0x0674 -> line 1407
+ *   +0x0678 -> line 1408
+ *   +0x06a4 -> line 1409
+ *   +0x06ac -> line 1410
+ *   +0x06b0 -> line 1413
+ *   +0x06b4 -> line 1412
+ *   +0x06b8 -> line 1413
+ *   +0x06f4 -> line 1414
+ *   +0x06fc -> line 1416
+ *   +0x0734 -> line 1417
+ *   +0x0738 -> line 1418
+ *   +0x0768 -> line 1419
+ *   +0x0770 -> line 1420
+ *   +0x07a4 -> line 1421
+ *   +0x07ac -> line 1424
+ *   +0x07b0 -> line 1427
+ *   +0x07b4 -> line 1428
+ *   +0x07ec -> line 1429
+ *   +0x07f4 -> line 1431
+ *   +0x07f8 -> line 1429
+ *   +0x07fc -> line 1432
+ *   +0x0800 -> line 1429
+ *   +0x0804 -> line 1432
+ *   +0x083c -> line 1433
+ *   +0x0844 -> line 1436
+ *   +0x0848 -> line 1437
+ *   +0x084c -> line 1433
+ *   +0x0854 -> line 1437
+ *   +0x0858 -> line 1433
+ *   +0x085c -> line 1437
+ *   +0x0894 -> line 1438
+ *   +0x089c -> line 1441
+ *   +0x08d4 -> line 1442
+ *   +0x08d8 -> line 1443
+ *   +0x08e8 -> line 1444
+ *   +0x08f0 -> line 1447
+ *   +0x08f4 -> line 1448
+ *   +0x08fc -> line 1449
+ *   +0x0900 -> line 1450
+ *   +0x09d8 -> line 1451
+ *   +0x0a98 -> line 1454
+ *   +0x0aa0 -> line 1456
+ *   +0x0b78 -> line 1457
+ *   +0x0c80 -> line 1458
+ *   +0x0c90 -> line 1459
+ *   +0x0c94 -> line 1461
+ *   +0x0c98 -> line 1462
+ *   +0x0cb4 -> line 1463
+ *   +0x0cc4 -> line 1464
+ *   +0x0cc8 -> line 1465
+ *   +0x0ccc -> line 1466
+ *   +0x0cd0 -> line 1467
+ *   +0x0cd4 -> line 1468
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ComputePixelWidthAndHeightOfString(unsigned char* szText, float* W, float* H)
 {
     float fWidthMax = 0.0f, fPixelSize = 0.0f;
@@ -5816,6 +5385,94 @@ void ComputePixelWidthAndHeightOfString(unsigned char* szText, float* W, float* 
     *H = fHeightMax;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1477–1624 */
+/* addr: 0x00324890  size: 1528 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1477
+ *   +0x0004 -> line 1484
+ *   +0x0008 -> line 1477
+ *   +0x000c -> line 1484
+ *   +0x0010 -> line 1477
+ *   +0x0014 -> line 1484
+ *   +0x0018 -> line 1477
+ *   +0x0028 -> line 1488
+ *   +0x002c -> line 1477
+ *   +0x003c -> line 1484
+ *   +0x0040 -> line 1487
+ *   +0x0044 -> line 1486
+ *   +0x0048 -> line 1488
+ *   +0x004c -> line 1489
+ *   +0x0050 -> line 1490
+ *   +0x0054 -> line 1494
+ *   +0x0058 -> line 1484
+ *   +0x005c -> line 1495
+ *   +0x0060 -> line 1484
+ *   +0x0064 -> line 1496
+ *   +0x00d4 -> line 1497
+ *   +0x00f0 -> line 1500
+ *   +0x0104 -> line 1501
+ *   +0x010c -> line 1503
+ *   +0x011c -> line 1506
+ *   +0x012c -> line 1509
+ *   +0x0180 -> line 1510
+ *   +0x01d4 -> line 1511
+ *   +0x0204 -> line 1512
+ *   +0x0210 -> line 1511
+ *   +0x0218 -> line 1514
+ *   +0x021c -> line 1511
+ *   +0x0220 -> line 1514
+ *   +0x0224 -> line 1511
+ *   +0x0228 -> line 1514
+ *   +0x022c -> line 1511
+ *   +0x0230 -> line 1514
+ *   +0x0238 -> line 1515
+ *   +0x0270 -> line 1517
+ *   +0x0274 -> line 1518
+ *   +0x027c -> line 1524
+ *   +0x02b8 -> line 1533
+ *   +0x02bc -> line 1524
+ *   +0x02cc -> line 1533
+ *   +0x02d4 -> line 1535
+ *   +0x02f4 -> line 1536
+ *   +0x0314 -> line 1539
+ *   +0x0318 -> line 1542
+ *   +0x031c -> line 1539
+ *   +0x0320 -> line 1549
+ *   +0x0338 -> line 1550
+ *   +0x0340 -> line 1552
+ *   +0x0348 -> line 1554
+ *   +0x0350 -> line 1556
+ *   +0x0380 -> line 1558
+ *   +0x03b8 -> line 1559
+ *   +0x03c8 -> line 1564
+ *   +0x0408 -> line 1572
+ *   +0x0414 -> line 1564
+ *   +0x0424 -> line 1572
+ *   +0x042c -> line 1574
+ *   +0x0448 -> line 1577
+ *   +0x0478 -> line 1580
+ *   +0x0480 -> line 1584
+ *   +0x0488 -> line 1586
+ *   +0x048c -> line 1588
+ *   +0x0490 -> line 1589
+ *   +0x0494 -> line 1592
+ *   +0x0498 -> line 1593
+ *   +0x04c4 -> line 1594
+ *   +0x04c8 -> line 1596
+ *   +0x04d8 -> line 1597
+ *   +0x04ec -> line 1598
+ *   +0x04f4 -> line 1601
+ *   +0x04f8 -> line 1603
+ *   +0x0508 -> line 1604
+ *   +0x0510 -> line 1608
+ *   +0x0524 -> line 1611
+ *   +0x05b8 -> line 1619
+ *   +0x05c0 -> line 1622
+ *   +0x05c8 -> line 1623
+ *   +0x05cc -> line 1624
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p)
 {
     float H;
@@ -5942,6 +5599,37 @@ void TXT_vDrawString(GLD_tdstViewportAttributes_* p_stVpt, _JFFTXT_* p)
     TXT_g_CurrentHeightRatio = 1.0f;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1632–1691 */
+/* addr: 0x00324530  size: 852 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1632
+ *   +0x0044 -> line 1633
+ *   +0x004c -> line 1640
+ *   +0x0050 -> line 1642
+ *   +0x0054 -> line 1640
+ *   +0x0058 -> line 1641
+ *   +0x005c -> line 1643
+ *   +0x00c8 -> line 1644
+ *   +0x00e4 -> line 1647
+ *   +0x00f8 -> line 1648
+ *   +0x0100 -> line 1651
+ *   +0x0110 -> line 1654
+ *   +0x0120 -> line 1658
+ *   +0x0134 -> line 1659
+ *   +0x0138 -> line 1661
+ *   +0x0148 -> line 1663
+ *   +0x0160 -> line 1668
+ *   +0x018c -> line 1672
+ *   +0x01e8 -> line 1673
+ *   +0x01f0 -> line 1677
+ *   +0x01f8 -> line 1680
+ *   +0x025c -> line 1687
+ *   +0x0260 -> line 1688
+ *   +0x02c8 -> line 1689
+ *   +0x0328 -> line 1691
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_GetBoundingBox2(GLD_tdstViewportAttributes_* p_stVpt, unsigned char* String, int* x1, int* y1f, int* x2, int* y2, int XPosText, int YPosText)
 {
     float fRatioVpt;
@@ -5993,6 +5681,23 @@ void TXT_GetBoundingBox2(GLD_tdstViewportAttributes_* p_stVpt, unsigned char* St
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1694–1709 */
+/* addr: 0x00324470  size: 180 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1697
+ *   +0x0004 -> line 1694
+ *   +0x0008 -> line 1697
+ *   +0x001c -> line 1694
+ *   +0x0024 -> line 1697
+ *   +0x0028 -> line 1699
+ *   +0x0038 -> line 1702
+ *   +0x0048 -> line 1703
+ *   +0x006c -> line 1705
+ *   +0x0070 -> line 1707
+ *   +0x00a8 -> line 1709
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_GetBoundingBox(int Index, int* x1, int* y1f, int* x2, int* y2)
 {
     GLD_tdstViewportAttributes_* p_stVpt;
@@ -6007,6 +5712,19 @@ void TXT_GetBoundingBox(int Index, int* x1, int* y1f, int* x2, int* y2)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1728–1733 */
+/* addr: 0x00324450  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1729
+ *   +0x0004 -> line 1728
+ *   +0x0008 -> line 1732
+ *   +0x000c -> line 1728
+ *   +0x0010 -> line 1729
+ *   +0x0014 -> line 1730
+ *   +0x0018 -> line 1733
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vReinitStates(void)
 {
     g_ucCurrentNumFont = 0;
@@ -6016,6 +5734,71 @@ void TXT_vReinitStates(void)
     g_fInterLetterRatio = 1.0f;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1736–1824 */
+/* addr: 0x00324060  size: 1008 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1736
+ *   +0x0004 -> line 1740
+ *   +0x0008 -> line 1736
+ *   +0x0018 -> line 1738
+ *   +0x001c -> line 1740
+ *   +0x0020 -> line 1737
+ *   +0x0024 -> line 1741
+ *   +0x0028 -> line 1743
+ *   +0x002c -> line 1744
+ *   +0x0030 -> line 1746
+ *   +0x0038 -> line 1748
+ *   +0x003c -> line 1749
+ *   +0x0044 -> line 1750
+ *   +0x004c -> line 1752
+ *   +0x0050 -> line 1758
+ *   +0x0054 -> line 1752
+ *   +0x0058 -> line 1753
+ *   +0x0060 -> line 1754
+ *   +0x0068 -> line 1756
+ *   +0x0070 -> line 1758
+ *   +0x0074 -> line 1759
+ *   +0x0078 -> line 1760
+ *   +0x007c -> line 1761
+ *   +0x0080 -> line 1772
+ *   +0x0084 -> line 1774
+ *   +0x0094 -> line 1777
+ *   +0x009c -> line 1780
+ *   +0x00a0 -> line 1783
+ *   +0x00bc -> line 1785
+ *   +0x0108 -> line 1786
+ *   +0x014c -> line 1788
+ *   +0x0150 -> line 1792
+ *   +0x0158 -> line 1791
+ *   +0x015c -> line 1786
+ *   +0x0168 -> line 1788
+ *   +0x0178 -> line 1789
+ *   +0x0184 -> line 1791
+ *   +0x0188 -> line 1789
+ *   +0x018c -> line 1792
+ *   +0x0194 -> line 1795
+ *   +0x0198 -> line 1797
+ *   +0x019c -> line 1795
+ *   +0x01a0 -> line 1797
+ *   +0x01a8 -> line 1795
+ *   +0x01ac -> line 1797
+ *   +0x01b0 -> line 1793
+ *   +0x01b4 -> line 1795
+ *   +0x01c4 -> line 1797
+ *   +0x0218 -> line 1798
+ *   +0x0274 -> line 1799
+ *   +0x02d0 -> line 1800
+ *   +0x032c -> line 1802
+ *   +0x037c -> line 1807
+ *   +0x0384 -> line 1808
+ *   +0x0388 -> line 1813
+ *   +0x03c0 -> line 1815
+ *   +0x03cc -> line 1819
+ *   +0x03d4 -> line 1823
+ *   +0x03d8 -> line 1824
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vAfficheSpecial(char* String, float* a3_Pos)
 {
     _JFFTXT_ DummyString;
@@ -6080,6 +5863,26 @@ void TXT_vAfficheSpecial(char* String, float* a3_Pos)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1827–1851 */
+/* addr: 0x00324000  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1827
+ *   +0x0008 -> line 1830
+ *   +0x0010 -> line 1832
+ *   +0x0014 -> line 1833
+ *   +0x001c -> line 1846
+ *   +0x0020 -> line 1835
+ *   +0x0024 -> line 1836
+ *   +0x0028 -> line 1837
+ *   +0x002c -> line 1839
+ *   +0x0034 -> line 1840
+ *   +0x0038 -> line 1843
+ *   +0x003c -> line 1846
+ *   +0x0044 -> line 1849
+ *   +0x004c -> line 1851
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vAfficheSimple(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z)
 {
     _JFFTXT_* p;
@@ -6100,6 +5903,19 @@ void TXT_vAfficheSimple(GLD_tdstViewportAttributes_* stVpt, char* String, float 
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1854–1861 */
+/* addr: 0x00323f90  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1854
+ *   +0x0008 -> line 1859
+ *   +0x000c -> line 1854
+ *   +0x0010 -> line 1856
+ *   +0x0014 -> line 1859
+ *   +0x0058 -> line 1860
+ *   +0x005c -> line 1861
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor)
 {
     unsigned int ulOldDefaultColor;
@@ -6109,12 +5925,93 @@ void TXT_vAfficheSimpleWithColor(GLD_tdstViewportAttributes_* stVpt, char* Strin
     TXT_g_ulDefaultColor = ulOldDefaultColor;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1864–1869 */
+/* addr: 0x00323ee0  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1864
+ *   +0x0004 -> line 1866
+ *   +0x0008 -> line 1864
+ *   +0x000c -> line 1866
+ *   +0x0010 -> line 1864
+ *   +0x0014 -> line 1866
+ *   +0x0018 -> line 1864
+ *   +0x001c -> line 1866
+ *   +0x0020 -> line 1864
+ *   +0x0040 -> line 1866
+ *   +0x0060 -> line 1868
+ *   +0x0080 -> line 1869
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vAfficheSimpleWithShadow(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor)
 {
     unsigned int ulOldDefaultColor = TXT_g_ulDefaultColor; TXT_g_ulDefaultColor = 0xFF010101; TXT_vAfficheSimple(stVpt, String, x + 2.0f, y + 2.0f, z);
     TXT_g_ulDefaultColor = ulTextColor; TXT_vAfficheSimple(stVpt, String, x, y, z); TXT_g_ulDefaultColor = ulOldDefaultColor;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1872–1950 */
+/* addr: 0x00323b10  size: 972 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1872
+ *   +0x0004 -> line 1875
+ *   +0x0008 -> line 1872
+ *   +0x000c -> line 1875
+ *   +0x0010 -> line 1872
+ *   +0x0014 -> line 1875
+ *   +0x0018 -> line 1872
+ *   +0x001c -> line 1875
+ *   +0x0020 -> line 1872
+ *   +0x0024 -> line 1875
+ *   +0x002c -> line 1880
+ *   +0x0030 -> line 1877
+ *   +0x0034 -> line 1881
+ *   +0x0038 -> line 1877
+ *   +0x003c -> line 1878
+ *   +0x0040 -> line 1886
+ *   +0x0044 -> line 1878
+ *   +0x0048 -> line 1883
+ *   +0x004c -> line 1897
+ *   +0x0050 -> line 1883
+ *   +0x0054 -> line 1884
+ *   +0x0058 -> line 1885
+ *   +0x005c -> line 1899
+ *   +0x006c -> line 1902
+ *   +0x0074 -> line 1905
+ *   +0x007c -> line 1908
+ *   +0x0098 -> line 1910
+ *   +0x00e4 -> line 1911
+ *   +0x0128 -> line 1913
+ *   +0x012c -> line 1917
+ *   +0x0134 -> line 1916
+ *   +0x0138 -> line 1911
+ *   +0x0144 -> line 1913
+ *   +0x0154 -> line 1914
+ *   +0x0160 -> line 1916
+ *   +0x0164 -> line 1914
+ *   +0x0168 -> line 1917
+ *   +0x0170 -> line 1920
+ *   +0x0174 -> line 1922
+ *   +0x0178 -> line 1920
+ *   +0x017c -> line 1922
+ *   +0x0184 -> line 1920
+ *   +0x0188 -> line 1922
+ *   +0x018c -> line 1918
+ *   +0x0190 -> line 1920
+ *   +0x01a0 -> line 1922
+ *   +0x01f4 -> line 1923
+ *   +0x0250 -> line 1924
+ *   +0x02ac -> line 1925
+ *   +0x0308 -> line 1927
+ *   +0x0358 -> line 1932
+ *   +0x0360 -> line 1933
+ *   +0x0364 -> line 1938
+ *   +0x039c -> line 1940
+ *   +0x03a8 -> line 1944
+ *   +0x03b0 -> line 1948
+ *   +0x03b4 -> line 1950
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vRedrawStringByNumber(int Num)
 {
     GLD_tdstViewportAttributes_ stVpt;
@@ -6167,6 +6064,70 @@ void TXT_vRedrawStringByNumber(int Num)
     g_GLI_bForceAAAColor = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 1955–2043 */
+/* addr: 0x003236e0  size: 1068 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1955
+ *   +0x0004 -> line 1959
+ *   +0x0008 -> line 1955
+ *   +0x0018 -> line 1957
+ *   +0x001c -> line 1959
+ *   +0x0020 -> line 1956
+ *   +0x0024 -> line 1960
+ *   +0x0028 -> line 1962
+ *   +0x002c -> line 1963
+ *   +0x0030 -> line 1965
+ *   +0x0038 -> line 1968
+ *   +0x0080 -> line 1969
+ *   +0x0088 -> line 1971
+ *   +0x008c -> line 1977
+ *   +0x0090 -> line 1971
+ *   +0x0094 -> line 1972
+ *   +0x009c -> line 1973
+ *   +0x00a4 -> line 1975
+ *   +0x00ac -> line 1977
+ *   +0x00b0 -> line 1978
+ *   +0x00b4 -> line 1979
+ *   +0x00b8 -> line 1980
+ *   +0x00bc -> line 1991
+ *   +0x00c0 -> line 1993
+ *   +0x00d0 -> line 1996
+ *   +0x00d8 -> line 1999
+ *   +0x00dc -> line 2002
+ *   +0x00f8 -> line 2004
+ *   +0x0144 -> line 2005
+ *   +0x0188 -> line 2007
+ *   +0x018c -> line 2011
+ *   +0x0194 -> line 2010
+ *   +0x0198 -> line 2005
+ *   +0x01a4 -> line 2007
+ *   +0x01b4 -> line 2008
+ *   +0x01c0 -> line 2010
+ *   +0x01c4 -> line 2008
+ *   +0x01c8 -> line 2011
+ *   +0x01d0 -> line 2014
+ *   +0x01d4 -> line 2016
+ *   +0x01d8 -> line 2014
+ *   +0x01dc -> line 2016
+ *   +0x01e4 -> line 2014
+ *   +0x01e8 -> line 2016
+ *   +0x01ec -> line 2012
+ *   +0x01f0 -> line 2014
+ *   +0x0200 -> line 2016
+ *   +0x0254 -> line 2017
+ *   +0x02b0 -> line 2018
+ *   +0x030c -> line 2019
+ *   +0x0368 -> line 2021
+ *   +0x03b8 -> line 2026
+ *   +0x03c0 -> line 2027
+ *   +0x03c4 -> line 2032
+ *   +0x03fc -> line 2034
+ *   +0x0408 -> line 2038
+ *   +0x0410 -> line 2042
+ *   +0x0414 -> line 2043
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_255Transparency)
 {
     _JFFTXT_ DummyString;
@@ -6231,6 +6192,22 @@ void TXT_vAfficheSpecialWithTransparency(char* String, float* a3_Pos, float f0_2
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\TXT\DisplayText.c lines 81–86 */
+/* addr: 0x003236a0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 84
+ *   +0x0004 -> line 81
+ *   +0x0008 -> line 84
+ *   +0x000c -> line 81
+ *   +0x0010 -> line 82
+ *   +0x0014 -> line 84
+ *   +0x0018 -> line 83
+ *   +0x001c -> line 84
+ *   +0x0024 -> line 85
+ *   +0x002c -> line 86
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vInitFont(void)
 {
     g_NbFont = 0;

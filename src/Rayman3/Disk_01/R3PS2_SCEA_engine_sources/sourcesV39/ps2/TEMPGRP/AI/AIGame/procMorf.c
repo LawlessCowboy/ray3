@@ -2946,48 +2946,6 @@ struct tdstProhibit_ {
 
 unsigned char g_ucAIModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 368–443 */
-/* addr: 0x0023bec0  size: 656 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 368
- *   +0x0030 -> line 387
- *   +0x004c -> line 390
- *   +0x005c -> line 392
- *   +0x0060 -> line 390
- *   +0x0064 -> line 392
- *   +0x008c -> line 393
- *   +0x0090 -> line 392
- *   +0x00a0 -> line 393
- *   +0x00cc -> line 395
- *   +0x00d0 -> line 393
- *   +0x00d4 -> line 395
- *   +0x00dc -> line 393
- *   +0x00ec -> line 395
- *   +0x00f8 -> line 414
- *   +0x0100 -> line 398
- *   +0x010c -> line 413
- *   +0x0110 -> line 398
- *   +0x0114 -> line 413
- *   +0x0118 -> line 398
- *   +0x011c -> line 413
- *   +0x0120 -> line 398
- *   +0x0134 -> line 416
- *   +0x0138 -> line 417
- *   +0x014c -> line 419
- *   +0x0154 -> line 421
- *   +0x0178 -> line 422
- *   +0x0190 -> line 425
- *   +0x01b4 -> line 426
- *   +0x01d8 -> line 429
- *   +0x01dc -> line 426
- *   +0x01e4 -> line 429
- *   +0x01fc -> line 433
- *   +0x0230 -> line 435
- *   +0x025c -> line 442
- *   +0x0260 -> line 443
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 short MOR_fn_xMorphing(HIE_tdstSuperObject_* _hActorSuperObject, int _xStartIndexInObjectTable, short* _xEndIndexInObjectTable, unsigned char _ucNbTargets, float* _xRatio, short _xChannelIndex, unsigned char _ucMorphType);
 short MOR_fn_xStopMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
 short MOR_fn_xPrepareMorph(HIE_tdstSuperObject_* _hActorSuperObject, short _xStartIndexInObjectTable, short* _axEndIndexInObjectTable, unsigned char _ucNbTarget, int _iNbMillisecond, float* _axStart, float* _axEnd, unsigned char _ucMorphType, short _xChannelIndex);
@@ -3010,126 +2968,9 @@ tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
 tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 306–365 */
-/* addr: 0x0023c150  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 306
- *   +0x0020 -> line 322
- *   +0x003c -> line 325
- *   +0x0050 -> line 326
- *   +0x0064 -> line 327
- *   +0x0078 -> line 328
- *   +0x008c -> line 331
- *   +0x0090 -> line 328
- *   +0x0094 -> line 338
- *   +0x0098 -> line 340
- *   +0x009c -> line 338
- *   +0x00a0 -> line 331
- *   +0x00a4 -> line 332
- *   +0x00a8 -> line 337
- *   +0x00ac -> line 330
- *   +0x00b0 -> line 332
- *   +0x00b4 -> line 337
- *   +0x00b8 -> line 332
- *   +0x00bc -> line 338
- *   +0x00c0 -> line 333
- *   +0x00c4 -> line 338
- *   +0x00c8 -> line 337
- *   +0x00cc -> line 338
- *   +0x00d4 -> line 340
- *   +0x00e4 -> line 342
- *   +0x00f0 -> line 346
- *   +0x0124 -> line 354
- *   +0x0150 -> line 364
- *   +0x0154 -> line 365
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 274–296 */
-/* addr: 0x0023c2d0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 274
- *   +0x001c -> line 286
- *   +0x0038 -> line 289
- *   +0x0048 -> line 293
- *   +0x0060 -> line 295
- *   +0x0064 -> line 296
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Declared without a narrow return type here: retail passes the result on without an andi. */
 int fn_ucGetConditionUltraOperator(tdeCondId_ eCondId);
 unsigned char MOR_fn_bIsChannelMorphed(HIE_tdstSuperObject_* _hActorSuperObject, short _xChannelIndex);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 226–264 */
-/* addr: 0x0023c350  size: 228 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 226
- *   +0x0018 -> line 231
- *   +0x0020 -> line 238
- *   +0x0038 -> line 241
- *   +0x0054 -> line 245
- *   +0x0060 -> line 248
- *   +0x0064 -> line 245
- *   +0x0068 -> line 248
- *   +0x0070 -> line 250
- *   +0x0078 -> line 256
- *   +0x00a0 -> line 258
- *   +0x00ac -> line 259
- *   +0x00c8 -> line 263
- *   +0x00cc -> line 264
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 126–211 */
-/* addr: 0x0023c440  size: 720 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 126
- *   +0x0030 -> line 150
- *   +0x004c -> line 153
- *   +0x005c -> line 155
- *   +0x0060 -> line 153
- *   +0x0064 -> line 155
- *   +0x008c -> line 156
- *   +0x0090 -> line 155
- *   +0x0094 -> line 156
- *   +0x00bc -> line 158
- *   +0x00c0 -> line 156
- *   +0x00c4 -> line 158
- *   +0x00cc -> line 156
- *   +0x00d8 -> line 158
- *   +0x00e0 -> line 159
- *   +0x00f4 -> line 160
- *   +0x010c -> line 183
- *   +0x0110 -> line 177
- *   +0x0114 -> line 183
- *   +0x0118 -> line 177
- *   +0x011c -> line 178
- *   +0x0124 -> line 179
- *   +0x012c -> line 176
- *   +0x0134 -> line 183
- *   +0x0158 -> line 184
- *   +0x0168 -> line 186
- *   +0x0178 -> line 189
- *   +0x017c -> line 188
- *   +0x0180 -> line 189
- *   +0x0184 -> line 188
- *   +0x0188 -> line 189
- *   +0x01a4 -> line 190
- *   +0x01b8 -> line 194
- *   +0x01dc -> line 195
- *   +0x0200 -> line 198
- *   +0x0208 -> line 195
- *   +0x0210 -> line 198
- *   +0x0230 -> line 200
- *   +0x0270 -> line 203
- *   +0x029c -> line 210
- *   +0x02a0 -> line 211
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 56–107 */
 /* addr: 0x0023c710  size: 328 bytes */
@@ -3187,6 +3028,53 @@ tdstNodeInterpret_* fn_p_stPrepareMorph(HIE_tdstSuperObject_* p_SuperObjPerso, t
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 126–211 */
+/* addr: 0x0023c440  size: 720 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 126
+ *   +0x0030 -> line 150
+ *   +0x004c -> line 153
+ *   +0x005c -> line 155
+ *   +0x0060 -> line 153
+ *   +0x0064 -> line 155
+ *   +0x008c -> line 156
+ *   +0x0090 -> line 155
+ *   +0x0094 -> line 156
+ *   +0x00bc -> line 158
+ *   +0x00c0 -> line 156
+ *   +0x00c4 -> line 158
+ *   +0x00cc -> line 156
+ *   +0x00d8 -> line 158
+ *   +0x00e0 -> line 159
+ *   +0x00f4 -> line 160
+ *   +0x010c -> line 183
+ *   +0x0110 -> line 177
+ *   +0x0114 -> line 183
+ *   +0x0118 -> line 177
+ *   +0x011c -> line 178
+ *   +0x0124 -> line 179
+ *   +0x012c -> line 176
+ *   +0x0134 -> line 183
+ *   +0x0158 -> line 184
+ *   +0x0168 -> line 186
+ *   +0x0178 -> line 189
+ *   +0x017c -> line 188
+ *   +0x0180 -> line 189
+ *   +0x0184 -> line 188
+ *   +0x0188 -> line 189
+ *   +0x01a4 -> line 190
+ *   +0x01b8 -> line 194
+ *   +0x01dc -> line 195
+ *   +0x0200 -> line 198
+ *   +0x0208 -> line 195
+ *   +0x0210 -> line 198
+ *   +0x0230 -> line 200
+ *   +0x0270 -> line 203
+ *   +0x029c -> line 210
+ *   +0x02a0 -> line 211
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     short xStartIndexInObjectTable;
@@ -3276,6 +3164,26 @@ tdstNodeInterpret_* fn_p_stPrepareMorphMT(HIE_tdstSuperObject_* p_SuperObjPerso,
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 226–264 */
+/* addr: 0x0023c350  size: 228 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 226
+ *   +0x0018 -> line 231
+ *   +0x0020 -> line 238
+ *   +0x0038 -> line 241
+ *   +0x0054 -> line 245
+ *   +0x0060 -> line 248
+ *   +0x0064 -> line 245
+ *   +0x0068 -> line 248
+ *   +0x0070 -> line 250
+ *   +0x0078 -> line 256
+ *   +0x00a0 -> line 258
+ *   +0x00ac -> line 259
+ *   +0x00c8 -> line 263
+ *   +0x00cc -> line 264
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstMorphChannelList_* p_stMorph_Next;
@@ -3309,6 +3217,18 @@ tdstNodeInterpret_* fn_p_stStopMorph(HIE_tdstSuperObject_* p_SuperObjPerso, tdst
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 274–296 */
+/* addr: 0x0023c2d0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 274
+ *   +0x001c -> line 286
+ *   +0x0038 -> line 289
+ *   +0x0048 -> line 293
+ *   +0x0060 -> line 295
+ *   +0x0064 -> line 296
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -3323,6 +3243,41 @@ tdstNodeInterpret_* fn_p_stIsMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tds
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 306–365 */
+/* addr: 0x0023c150  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 306
+ *   +0x0020 -> line 322
+ *   +0x003c -> line 325
+ *   +0x0050 -> line 326
+ *   +0x0064 -> line 327
+ *   +0x0078 -> line 328
+ *   +0x008c -> line 331
+ *   +0x0090 -> line 328
+ *   +0x0094 -> line 338
+ *   +0x0098 -> line 340
+ *   +0x009c -> line 338
+ *   +0x00a0 -> line 331
+ *   +0x00a4 -> line 332
+ *   +0x00a8 -> line 337
+ *   +0x00ac -> line 330
+ *   +0x00b0 -> line 332
+ *   +0x00b4 -> line 337
+ *   +0x00b8 -> line 332
+ *   +0x00bc -> line 338
+ *   +0x00c0 -> line 333
+ *   +0x00c4 -> line 338
+ *   +0x00c8 -> line 337
+ *   +0x00cc -> line 338
+ *   +0x00d4 -> line 340
+ *   +0x00e4 -> line 342
+ *   +0x00f0 -> line 346
+ *   +0x0124 -> line 354
+ *   +0x0150 -> line 364
+ *   +0x0154 -> line 365
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     tdstGetSetParam_ stValue[4];
@@ -3360,6 +3315,48 @@ tdstNodeInterpret_* fn_p_stMorphing(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\procMorf.c lines 368–443 */
+/* addr: 0x0023bec0  size: 656 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 368
+ *   +0x0030 -> line 387
+ *   +0x004c -> line 390
+ *   +0x005c -> line 392
+ *   +0x0060 -> line 390
+ *   +0x0064 -> line 392
+ *   +0x008c -> line 393
+ *   +0x0090 -> line 392
+ *   +0x00a0 -> line 393
+ *   +0x00cc -> line 395
+ *   +0x00d0 -> line 393
+ *   +0x00d4 -> line 395
+ *   +0x00dc -> line 393
+ *   +0x00ec -> line 395
+ *   +0x00f8 -> line 414
+ *   +0x0100 -> line 398
+ *   +0x010c -> line 413
+ *   +0x0110 -> line 398
+ *   +0x0114 -> line 413
+ *   +0x0118 -> line 398
+ *   +0x011c -> line 413
+ *   +0x0120 -> line 398
+ *   +0x0134 -> line 416
+ *   +0x0138 -> line 417
+ *   +0x014c -> line 419
+ *   +0x0154 -> line 421
+ *   +0x0178 -> line 422
+ *   +0x0190 -> line 425
+ *   +0x01b4 -> line 426
+ *   +0x01d8 -> line 429
+ *   +0x01dc -> line 426
+ *   +0x01e4 -> line 429
+ *   +0x01fc -> line 433
+ *   +0x0230 -> line 435
+ *   +0x025c -> line 442
+ *   +0x0260 -> line 443
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stMorphingMT(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     HIE_tdstSuperObject_* p_stResultOwnerPerso;

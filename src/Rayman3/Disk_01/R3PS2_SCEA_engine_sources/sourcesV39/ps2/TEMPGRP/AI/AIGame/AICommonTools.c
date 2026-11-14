@@ -3341,21 +3341,6 @@ float acosf(float x);
         asm { msub.s _result, _mthAY, _mthBX } \
     } while (0)
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 332–345 */
-/* addr: 0x0024bd90  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 340
- *   +0x0004 -> line 332
- *   +0x0008 -> line 340
- *   +0x000c -> line 332
- *   +0x002c -> line 335
- *   +0x0050 -> line 338
- *   +0x0054 -> line 340
- *   +0x0058 -> line 341
- *   +0x005c -> line 345
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* The retail code moves the three vector components as 32-bit words, not as
    floats: the destinations are the engine's collision globals. */
 #define MTH_COPY_VECTOR_WORDS(_dst, _src) \
@@ -3378,64 +3363,128 @@ void fn_GetPersoNegativeSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObjec
 void fn_GetPersoSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso);
 int fn_bIsValidObject(HIE_tdstSuperObject_* pPerso);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 295–308 */
-/* addr: 0x0024be00  size: 544 bytes */
+void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObj);
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 52–52 */
+/* addr: 0x0024c7c0  size: 8 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 295
- *   +0x0008 -> line 300
- *   +0x000c -> line 295
- *   +0x001c -> line 299
- *   +0x0020 -> line 295
- *   +0x0024 -> line 299
- *   +0x0028 -> line 295
- *   +0x0030 -> line 299
- *   +0x0038 -> line 300
- *   +0x003c -> line 299
- *   +0x004c -> line 300
- *   +0x0054 -> line 301
- *   +0x0068 -> line 302
- *   +0x00a4 -> line 303
- *   +0x00a8 -> line 302
- *   +0x00ac -> line 303
- *   +0x00cc -> line 305
- *   +0x01e4 -> line 306
- *   +0x01fc -> line 308
+ *   +0x0000 -> line 52
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 243–290 */
-/* addr: 0x0024c020  size: 960 bytes */
+int fn_bIsValidObject(HIE_tdstSuperObject_* pPerso)
+{
+    return pPerso != 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 78–81 */
+/* addr: 0x0024c770  size: 80 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 243
- *   +0x0008 -> line 250
- *   +0x000c -> line 243
- *   +0x0018 -> line 250
- *   +0x0040 -> line 252
- *   +0x0068 -> line 254
- *   +0x0070 -> line 256
- *   +0x0088 -> line 257
- *   +0x009c -> line 259
- *   +0x00a4 -> line 260
- *   +0x00bc -> line 261
- *   +0x00d4 -> line 264
- *   +0x0144 -> line 265
- *   +0x01b0 -> line 268
- *   +0x0274 -> line 270
- *   +0x0298 -> line 273
- *   +0x02c4 -> line 274
- *   +0x0324 -> line 276
- *   +0x0348 -> line 278
- *   +0x0364 -> line 279
- *   +0x036c -> line 280
- *   +0x0384 -> line 281
- *   +0x0388 -> line 284
- *   +0x0390 -> line 286
- *   +0x03a8 -> line 287
- *   +0x03ac -> line 290
+ *   +0x0000 -> line 78
+ *   +0x0010 -> line 79
+ *   +0x001c -> line 80
+ *   +0x0040 -> line 81
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_GetPersoSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
+{
+    MAT_fn_vGetRotationVectorBaseJ(hSuperObjPerso->hGlobalMatrix, p_stDest);
+    p_stDest->xX = -p_stDest->xX; p_stDest->xY = -p_stDest->xY; p_stDest->xZ = -p_stDest->xZ;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 86–86 */
+/* addr: 0x0024c760  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0004 -> line 86
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_GetPersoNegativeSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
+{
+    MAT_fn_vGetRotationVectorBaseJ(hSuperObjPerso->hGlobalMatrix, p_stDest);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 91–102 */
+/* addr: 0x0024c720  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 91
+ *   +0x0018 -> line 97
+ *   +0x0020 -> line 101
+ *   +0x002c -> line 102
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_GetPersoHorizon(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
+{
+    HIE_fn_vUpdateGlobalMatrix(hSuperObjPerso);
+    MAT_fn_vGetRotationVectorBaseI(hSuperObjPerso->hGlobalMatrix, p_stDest);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 106–130 */
+/* addr: 0x0024c670  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 106
+ *   +0x001c -> line 115
+ *   +0x0024 -> line 119
+ *   +0x0034 -> line 120
+ *   +0x005c -> line 121
+ *   +0x0068 -> line 122
+ *   +0x0070 -> line 123
+ *   +0x007c -> line 127
+ *   +0x0090 -> line 130
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_GetPersoBanking(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
+{
+    tdstDynam_* h_Dynam;
+    DNM_stDynamics* p_stDynamic;
+    MAT_tdstTransformation_* hGlobalMatrix; /* Permuter-found match (register allocation): the debug record has no such local; reading the matrix early keeps it in s0 like retail. Not original source and needs cleaning up. */
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+
+    HIE_fn_vUpdateGlobalMatrix(hSuperObjPerso);
+    hGlobalMatrix = hSuperObjPerso->hGlobalMatrix;
+
+    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam)
+    {
+        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+        if (p_stDynamic && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 8) ? 1 : 0))
+        {
+            p_stDest->xX = 0.0f; p_stDest->xY = 0.0f; p_stDest->xZ = 1.0f;
+        }
+        else
+        {
+            p_stDest->xX = 0.0f; p_stDest->xY = 0.0f; p_stDest->xZ = 0.0f;
+        }
+    }
+
+    MAT_fn_vGetRotationVectors(hGlobalMatrix, &stV1, &stV2, p_stDest);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 135–146 */
+/* addr: 0x0024c630  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 135
+ *   +0x0008 -> line 140
+ *   +0x0030 -> line 146
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_bCollideWithGround(HIE_tdstSuperObject_* hPerso)
+{
+    DNM_stReport* p_stDynamReport;
+    p_stDynamReport = fn_pstGetDNMReport(hPerso);
+    if (p_stDynamReport == 0) {
+        return 0;
+    }
+    return (p_stDynamReport->m_ulCurrSurfaceState & 1) == 1;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 163–198 */
 /* addr: 0x0024c3e0  size: 584 bytes */
@@ -3470,135 +3519,6 @@ int fn_bIsValidObject(HIE_tdstSuperObject_* pPerso);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 135–146 */
-/* addr: 0x0024c630  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 135
- *   +0x0008 -> line 140
- *   +0x0030 -> line 146
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void HIE_fn_vUpdateGlobalMatrix(HIE_tdstSuperObject_* hSuperObj);
-DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_* h_Dynam);
-void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 106–130 */
-/* addr: 0x0024c670  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 106
- *   +0x001c -> line 115
- *   +0x0024 -> line 119
- *   +0x0034 -> line 120
- *   +0x005c -> line 121
- *   +0x0068 -> line 122
- *   +0x0070 -> line 123
- *   +0x007c -> line 127
- *   +0x0090 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 91–102 */
-/* addr: 0x0024c720  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 91
- *   +0x0018 -> line 97
- *   +0x0020 -> line 101
- *   +0x002c -> line 102
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 86–86 */
-/* addr: 0x0024c760  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0004 -> line 86
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 78–81 */
-/* addr: 0x0024c770  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 78
- *   +0x0010 -> line 79
- *   +0x001c -> line 80
- *   +0x0040 -> line 81
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 52–52 */
-/* addr: 0x0024c7c0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 52
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-int fn_bIsValidObject(HIE_tdstSuperObject_* pPerso)
-{
-    return pPerso != 0;
-}
-
-void fn_GetPersoSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
-{
-    MAT_fn_vGetRotationVectorBaseJ(hSuperObjPerso->hGlobalMatrix, p_stDest);
-    p_stDest->xX = -p_stDest->xX; p_stDest->xY = -p_stDest->xY; p_stDest->xZ = -p_stDest->xZ;
-}
-
-void fn_GetPersoNegativeSighting(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
-{
-    MAT_fn_vGetRotationVectorBaseJ(hSuperObjPerso->hGlobalMatrix, p_stDest);
-}
-
-void fn_GetPersoHorizon(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
-{
-    HIE_fn_vUpdateGlobalMatrix(hSuperObjPerso);
-    MAT_fn_vGetRotationVectorBaseI(hSuperObjPerso->hGlobalMatrix, p_stDest);
-}
-
-void fn_GetPersoBanking(MTH3D_tdstVector_* p_stDest, HIE_tdstSuperObject_* hSuperObjPerso)
-{
-    tdstDynam_* h_Dynam;
-    DNM_stDynamics* p_stDynamic;
-    MAT_tdstTransformation_* hGlobalMatrix; /* Permuter-found match (register allocation): the debug record has no such local; reading the matrix early keeps it in s0 like retail. Not original source and needs cleaning up. */
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-
-    HIE_fn_vUpdateGlobalMatrix(hSuperObjPerso);
-    hGlobalMatrix = hSuperObjPerso->hGlobalMatrix;
-
-    h_Dynam = hSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
-    if (h_Dynam)
-    {
-        p_stDynamic = fn_p_stDynamGetDynamics(h_Dynam);
-        if (p_stDynamic && ((p_stDynamic->m_tdstDynamicsBaseBlock.ulFlags & 8) ? 1 : 0))
-        {
-            p_stDest->xX = 0.0f; p_stDest->xY = 0.0f; p_stDest->xZ = 1.0f;
-        }
-        else
-        {
-            p_stDest->xX = 0.0f; p_stDest->xY = 0.0f; p_stDest->xZ = 0.0f;
-        }
-    }
-
-    MAT_fn_vGetRotationVectors(hGlobalMatrix, &stV1, &stV2, p_stDest);
-}
-
-int fn_bCollideWithGround(HIE_tdstSuperObject_* hPerso)
-{
-    DNM_stReport* p_stDynamReport;
-    p_stDynamReport = fn_pstGetDNMReport(hPerso);
-    if (p_stDynamReport == 0) {
-        return 0;
-    }
-    return (p_stDynamReport->m_ulCurrSurfaceState & 1) == 1;
-}
-
 float fn_xAngleVectorXOY(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* stVectorV)
 {
     float xNorm;
@@ -3642,6 +3562,38 @@ float fn_xAngleVectorXOY(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* stVect
     return xAngle;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 243–290 */
+/* addr: 0x0024c020  size: 960 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 243
+ *   +0x0008 -> line 250
+ *   +0x000c -> line 243
+ *   +0x0018 -> line 250
+ *   +0x0040 -> line 252
+ *   +0x0068 -> line 254
+ *   +0x0070 -> line 256
+ *   +0x0088 -> line 257
+ *   +0x009c -> line 259
+ *   +0x00a4 -> line 260
+ *   +0x00bc -> line 261
+ *   +0x00d4 -> line 264
+ *   +0x0144 -> line 265
+ *   +0x01b0 -> line 268
+ *   +0x0274 -> line 270
+ *   +0x0298 -> line 273
+ *   +0x02c4 -> line 274
+ *   +0x0324 -> line 276
+ *   +0x0348 -> line 278
+ *   +0x0364 -> line 279
+ *   +0x036c -> line 280
+ *   +0x0384 -> line 281
+ *   +0x0388 -> line 284
+ *   +0x0390 -> line 286
+ *   +0x03a8 -> line 287
+ *   +0x03ac -> line 290
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 float fn_xAngleVectorVertical(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* stVectorV)
 {
     float xNorm;
@@ -3699,6 +3651,31 @@ float fn_xAngleVectorVertical(MTH3D_tdstVector_* stVectorU, MTH3D_tdstVector_* s
     return xCos;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 295–308 */
+/* addr: 0x0024be00  size: 544 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 295
+ *   +0x0008 -> line 300
+ *   +0x000c -> line 295
+ *   +0x001c -> line 299
+ *   +0x0020 -> line 295
+ *   +0x0024 -> line 299
+ *   +0x0028 -> line 295
+ *   +0x0030 -> line 299
+ *   +0x0038 -> line 300
+ *   +0x003c -> line 299
+ *   +0x004c -> line 300
+ *   +0x0054 -> line 301
+ *   +0x0068 -> line 302
+ *   +0x00a4 -> line 303
+ *   +0x00a8 -> line 302
+ *   +0x00ac -> line 303
+ *   +0x00cc -> line 305
+ *   +0x01e4 -> line 306
+ *   +0x01fc -> line 308
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_RotateVectorByAngle(MTH3D_tdstVector_* vector1, float xAngle, MTH3D_tdstVector_* vector2)
 {
     float xSaveX;
@@ -3732,6 +3709,21 @@ void fn_RotateVectorByAngle(MTH3D_tdstVector_* vector1, float xAngle, MTH3D_tdst
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\AICommonTools.c lines 332–345 */
+/* addr: 0x0024bd90  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 340
+ *   +0x0004 -> line 332
+ *   +0x0008 -> line 340
+ *   +0x000c -> line 332
+ *   +0x002c -> line 335
+ *   +0x0050 -> line 338
+ *   +0x0054 -> line 340
+ *   +0x0058 -> line 341
+ *   +0x005c -> line 345
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_CollisionRayCast(HIE_tdstSuperObject_* hSender, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
 {
     MTH_COPY_VECTOR_WORDS(g_stCollideParameterPoint, *p_vPoint);

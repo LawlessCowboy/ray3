@@ -512,16 +512,6 @@ struct CWaveFileIdObj {
 
 int gv_iCD_Opened;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 384–387 */
-/* addr: 0x00189d30  size: 76 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 384
- *   +0x0010 -> line 385
- *   +0x0028 -> line 386
- *   +0x0038 -> line 387
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 namespace usnd {
 struct CL2PS2CoreMgr {
     static void fs_vDesInit();
@@ -542,66 +532,42 @@ extern "C" int SND_fn_iDesInitSound(void);
 extern "C" int SND_fn_iInitSound(void);
 void RackTestCB(void* param);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 366–376 */
-/* addr: 0x00189d80  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 366
- *   +0x0004 -> line 374
- *   +0x0008 -> line 366
- *   +0x0010 -> line 368
- *   +0x0018 -> line 369
- *   +0x0030 -> line 371
- *   +0x0034 -> line 372
- *   +0x0038 -> line 369
- *   +0x004c -> line 374
- *   +0x0060 -> line 375
- *   +0x0074 -> line 376
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma optimize_for_size off
 
 #pragma optimize_for_size reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 356–358 */
-/* addr: 0x00189e10  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 356
- *   +0x000c -> line 357
- *   +0x0020 -> line 358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 346–348 */
-/* addr: 0x00189e40  size: 72 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 346
- *   +0x000c -> line 347
- *   +0x0038 -> line 348
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 309–328 */
-/* addr: 0x00189e90  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 309
- *   +0x0008 -> line 310
- *   +0x0010 -> line 311
- *   +0x0018 -> line 313
- *   +0x0020 -> line 317
- *   +0x0028 -> line 318
- *   +0x0030 -> line 319
- *   +0x0050 -> line 322
- *   +0x0058 -> line 328
- *   +0x005c -> line 327
- *   +0x0060 -> line 328
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" void SND_fn_vKillAllObjectSound(void);
 extern "C" void SND_fn_vSynchroSound(void);
+
+extern "C" int printf(const char* format, ...);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 197–208 */
+/* addr: 0x0018a0b0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 197
+ *   +0x0004 -> line 198
+ *   +0x0010 -> line 200
+ *   +0x001c -> line 201
+ *   +0x0020 -> line 202
+ *   +0x0028 -> line 205
+ *   +0x0034 -> line 206
+ *   +0x0038 -> line 208
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void RackTestCB(void* param)
+{
+    if ((int)param == 1)
+    {
+        printf(">>  Rack opened !\n");
+        gv_iCD_Opened = 1;
+    }
+    else
+    {
+        printf(">>  Rack closed and CD spining !\n");
+        gv_iCD_Opened = 0;
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 216–290 */
 /* addr: 0x00189f00  size: 428 bytes */
@@ -647,37 +613,6 @@ extern "C" void SND_fn_vSynchroSound(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 197–208 */
-/* addr: 0x0018a0b0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 197
- *   +0x0004 -> line 198
- *   +0x0010 -> line 200
- *   +0x001c -> line 201
- *   +0x0020 -> line 202
- *   +0x0028 -> line 205
- *   +0x0034 -> line 206
- *   +0x0038 -> line 208
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern "C" int printf(const char* format, ...);
-
-void RackTestCB(void* param)
-{
-    if ((int)param == 1)
-    {
-        printf(">>  Rack opened !\n");
-        gv_iCD_Opened = 1;
-    }
-    else
-    {
-        printf(">>  Rack closed and CD spining !\n");
-        gv_iCD_Opened = 0;
-    }
-}
-
 int SND_fn_iInitSound(void)
 {
     CLinkTypeActorCont* ro_TypeCont;
@@ -688,6 +623,23 @@ int SND_fn_iInitSound(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 309–328 */
+/* addr: 0x00189e90  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 309
+ *   +0x0008 -> line 310
+ *   +0x0010 -> line 311
+ *   +0x0018 -> line 313
+ *   +0x0020 -> line 317
+ *   +0x0028 -> line 318
+ *   +0x0030 -> line 319
+ *   +0x0050 -> line 322
+ *   +0x0058 -> line 328
+ *   +0x005c -> line 327
+ *   +0x0060 -> line 328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int SND_fn_iDesInitSound(void)
 {
     SND_fn_vKillAllObjectSound();
@@ -700,16 +652,51 @@ int SND_fn_iDesInitSound(void)
     return 3;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 346–348 */
+/* addr: 0x00189e40  size: 72 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 346
+ *   +0x000c -> line 347
+ *   +0x0038 -> line 348
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SND_fn_vGetDefaultRollOff(_RollOffParam* pst_RollOff)
 {
     CLinkTypeActorCont::mfn_roGetInstance(); *pst_RollOff = CLinkTypeActorCont::moACPRolloff;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 356–358 */
+/* addr: 0x00189e10  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 356
+ *   +0x000c -> line 357
+ *   +0x0020 -> line 358
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SND_fn_vSetDefaultRollOff(_RollOffParam* pst_RollOff)
 {
     CLinkTypeActorCont* p_Instance = CLinkTypeActorCont::mfn_roGetInstance(); p_Instance->mfn_vSetDefaultRolloff(pst_RollOff);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 366–376 */
+/* addr: 0x00189d80  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 366
+ *   +0x0004 -> line 374
+ *   +0x0008 -> line 366
+ *   +0x0010 -> line 368
+ *   +0x0018 -> line 369
+ *   +0x0030 -> line 371
+ *   +0x0034 -> line 372
+ *   +0x0038 -> line 369
+ *   +0x004c -> line 374
+ *   +0x0060 -> line 375
+ *   +0x0074 -> line 376
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma optimize_for_size off
 void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int s32_Delay, int s32_FeedBack)
 {
@@ -723,6 +710,16 @@ void SND_fn_p_stPS2ChangeReverb(int s32_Channels, int s32_Mode, int s32_Vol, int
 }
 #pragma optimize_for_size reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeeini.cpp lines 384–387 */
+/* addr: 0x00189d30  size: 76 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 384
+ *   +0x0010 -> line 385
+ *   +0x0028 -> line 386
+ *   +0x0038 -> line 387
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void SND_fn_p_stPS2SetReverbOn(int s32_Channels, int s32_On)
 {
     if (s32_Channels & 1) usnd::CPS2Box::fs_vSetReverbOn(0, s32_On != 0);

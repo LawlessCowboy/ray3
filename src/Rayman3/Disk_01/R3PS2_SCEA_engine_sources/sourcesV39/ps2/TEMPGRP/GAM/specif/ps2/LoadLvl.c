@@ -335,8 +335,6 @@ int gp_stInactiveDynamicWorld;
 int gp_stDynamicWorld;
 int gp_stLight;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\LoadLvl.c lines 68–100 */
-/* addr: 0x00282bb0  size: 492 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
 /* Partial layouts: only the engine-structure members this function reads are
  * named; offsets follow the full tdstEngineStructure_ recovered in Engine.c. */
@@ -380,6 +378,8 @@ inline void LVL_vClearCop0Register24(void)
     asm { mtbpc zero }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\LoadLvl.c lines 68–100 */
+/* addr: 0x00282bb0  size: 492 bytes */
 void fn_vDisplayFix(unsigned char _ucIndex)
 {
     int bCanWrite;

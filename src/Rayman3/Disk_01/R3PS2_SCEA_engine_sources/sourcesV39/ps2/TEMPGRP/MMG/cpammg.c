@@ -87,17 +87,6 @@ extern void Erm_fn_v_UpdateLastError(unsigned short uwStartOfWarningsId, unsigne
                                      unsigned char ucOpenInfoWindow, unsigned char ucStopForDebug,
                                      char* szPersonalMsg);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 44–48 */
-/* addr: 0x00313fc0  size: 64 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 44
- *   +0x002c -> line 46
- *   +0x0034 -> line 47
- *   +0x0038 -> line 48
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
@@ -113,193 +102,263 @@ void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);
 void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
 unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
 void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo);
-void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode);
+/* Retail callers pass seven arguments (a0..a3, t0..t2) and the callee reads a2 as
+   the module's block table, t1 as the alignment and t2 as the mode; the five-parameter
+   debug declaration drops the module id and the malloc-count limit (unused here). */
+void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5152–5153 */
-/* addr: 0x00314000  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5152
- *   +0x0004 -> line 5153
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5148–5148 */
-/* addr: 0x00314010  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 5148
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4624–4708 */
-/* addr: 0x00314020  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4624
- *   +0x0018 -> line 4648
- *   +0x0024 -> line 4649
- *   +0x0040 -> line 4693
- *   +0x0044 -> line 4649
- *   +0x0048 -> line 4693
- *   +0x0054 -> line 4694
- *   +0x0058 -> line 4695
- *   +0x0078 -> line 4696
- *   +0x0084 -> line 4708
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4511–4587 */
-/* addr: 0x003140c0  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4511
- *   +0x0004 -> line 4533
- *   +0x0008 -> line 4511
- *   +0x0018 -> line 4533
- *   +0x0024 -> line 4547
- *   +0x0034 -> line 4578
- *   +0x0038 -> line 4562
- *   +0x003c -> line 4561
- *   +0x0040 -> line 4562
- *   +0x0048 -> line 4579
- *   +0x0088 -> line 4578
- *   +0x0098 -> line 4585
- *   +0x009c -> line 4579
- *   +0x00a0 -> line 4585
- *   +0x00a4 -> line 4579
- *   +0x00a8 -> line 4585
- *   +0x00b8 -> line 4586
- *   +0x00c4 -> line 4587
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4480–4497 */
-/* addr: 0x003141a0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4480
- *   +0x000c -> line 4482
- *   +0x0014 -> line 4480
- *   +0x0020 -> line 4481
- *   +0x0028 -> line 4482
- *   +0x0030 -> line 4483
- *   +0x0060 -> line 4497
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4221–4264 */
-/* addr: 0x00314210  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 4221
- *   +0x0018 -> line 4222
- *   +0x0040 -> line 4225
- *   +0x0044 -> line 4224
- *   +0x004c -> line 4225
- *   +0x0058 -> line 4227
- *   +0x0070 -> line 4229
- *   +0x007c -> line 4230
- *   +0x0080 -> line 4231
- *   +0x0088 -> line 4237
- *   +0x008c -> line 4238
- *   +0x0098 -> line 4237
- *   +0x00a4 -> line 4238
- *   +0x00b4 -> line 4239
- *   +0x00b8 -> line 4240
- *   +0x00c0 -> line 4241
- *   +0x00d0 -> line 4242
- *   +0x00e4 -> line 4243
- *   +0x0100 -> line 4244
- *   +0x0104 -> line 4245
- *   +0x010c -> line 4246
- *   +0x0110 -> line 4247
- *   +0x0114 -> line 4249
- *   +0x0118 -> line 4250
- *   +0x0148 -> line 4252
- *   +0x014c -> line 4250
- *   +0x0154 -> line 4252
- *   +0x0178 -> line 4264
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2755–2782 */
-/* addr: 0x00314390  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2755
- *   +0x0004 -> line 2761
- *   +0x0008 -> line 2755
- *   +0x000c -> line 2761
- *   +0x0010 -> line 2755
- *   +0x0014 -> line 2761
- *   +0x0030 -> line 2778
- *   +0x0038 -> line 2779
- *   +0x0040 -> line 2781
- *   +0x0060 -> line 2782
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);
 void PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);
 void PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);
 void free(void* ptr);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2632–2745 */
-/* addr: 0x00314400  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2632
- *   +0x0004 -> line 2716
- *   +0x0008 -> line 2632
- *   +0x000c -> line 2716
- *   +0x0044 -> line 2745
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);
 unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 1304–1518 */
-/* addr: 0x00314450  size: 492 bytes */
+/* Reconstructed from the retail code.  The free list, the cell split and the
+ * debug signature handling follow the target instruction for instruction;
+ * what is still missing is the exact register allocation (the retail keeps
+ * the size in $s0, the block info in $s1, the previous cell in $s2, the
+ * "found" flag in $s3 and the current cell in $s4) and the line table. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 215–441 */
+/* addr: 0x00314c10  size: 720 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1304
- *   +0x0004 -> line 1311
- *   +0x0008 -> line 1304
- *   +0x000c -> line 1311
- *   +0x0010 -> line 1304
- *   +0x0014 -> line 1336
- *   +0x0018 -> line 1304
- *   +0x0020 -> line 1311
- *   +0x0030 -> line 1336
- *   +0x003c -> line 1337
- *   +0x005c -> line 1341
- *   +0x0068 -> line 1380
- *   +0x006c -> line 1381
- *   +0x0078 -> line 1398
- *   +0x0098 -> line 1401
- *   +0x00a0 -> line 1405
- *   +0x00a4 -> line 1406
- *   +0x00b8 -> line 1433
- *   +0x00c0 -> line 1435
- *   +0x00dc -> line 1438
- *   +0x0104 -> line 1439
- *   +0x0108 -> line 1446
- *   +0x0110 -> line 1448
- *   +0x011c -> line 1453
- *   +0x0124 -> line 1457
- *   +0x0140 -> line 1458
- *   +0x0168 -> line 1459
- *   +0x016c -> line 1466
- *   +0x0174 -> line 1468
- *   +0x017c -> line 1472
- *   +0x0198 -> line 1473
- *   +0x01b4 -> line 1474
- *   +0x01b8 -> line 1486
- *   +0x01c0 -> line 1488
- *   +0x01cc -> line 1517
- *   +0x01d8 -> line 1518
+ *   +0x0000 -> line 215
+ *   +0x0004 -> line 220
+ *   +0x0008 -> line 215
+ *   +0x000c -> line 237
+ *   +0x0010 -> line 215
+ *   +0x0014 -> line 220
+ *   +0x0018 -> line 215
+ *   +0x001c -> line 237
+ *   +0x0020 -> line 215
+ *   +0x0044 -> line 237
+ *   +0x0058 -> line 247
+ *   +0x0068 -> line 249
+ *   +0x0070 -> line 251
+ *   +0x0074 -> line 253
+ *   +0x008c -> line 254
+ *   +0x0090 -> line 297
+ *   +0x00b0 -> line 312
+ *   +0x00c0 -> line 319
+ *   +0x00c4 -> line 322
+ *   +0x00d8 -> line 324
+ *   +0x00e0 -> line 332
+ *   +0x0104 -> line 338
+ *   +0x010c -> line 343
+ *   +0x0130 -> line 346
+ *   +0x0138 -> line 351
+ *   +0x013c -> line 354
+ *   +0x0140 -> line 355
+ *   +0x0148 -> line 363
+ *   +0x014c -> line 356
+ *   +0x0150 -> line 363
+ *   +0x0154 -> line 357
+ *   +0x0158 -> line 363
+ *   +0x015c -> line 383
+ *   +0x0160 -> line 363
+ *   +0x0164 -> line 383
+ *   +0x016c -> line 384
+ *   +0x017c -> line 385
+ *   +0x018c -> line 386
+ *   +0x01a8 -> line 391
+ *   +0x01b0 -> line 399
+ *   +0x01b8 -> line 400
+ *   +0x01bc -> line 401
+ *   +0x01d0 -> line 402
+ *   +0x01d4 -> line 412
+ *   +0x01d8 -> line 405
+ *   +0x01dc -> line 410
+ *   +0x01e0 -> line 405
+ *   +0x01e8 -> line 412
+ *   +0x01f0 -> line 413
+ *   +0x0200 -> line 414
+ *   +0x0204 -> line 415
+ *   +0x021c -> line 416
+ *   +0x0220 -> line 419
+ *   +0x0224 -> line 423
+ *   +0x023c -> line 424
+ *   +0x0240 -> line 426
+ *   +0x0244 -> line 427
+ *   +0x0248 -> line 430
+ *   +0x0260 -> line 431
+ *   +0x029c -> line 438
+ *   +0x02a0 -> line 441
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode)
+{
+    tdstInformationHeaderOfBolckWithoutFree_* param0;
+    unsigned int lTemporaryValue;
+    unsigned char ucAlignment;
+    tdstBlockInfoPriv_* p_stMyBlockInfo;
+    long double* p_uaPtr;
+    unsigned int ulI;
+    char* p_cBegin;
+
+    if (_ucAlignment > 16) {
+        _ucAlignment = 16;
+    }
+    p_stMyBlockInfo = &_p_stMyBlocksInfo[_ucBlockId];
+    if (_ucMode & 1) {
+        ucAlignment = _ucAlignment;
+        if (_ulSize & (ucAlignment - 1)) {
+            _ulSize = ucAlignment + (_ulSize & ~(ucAlignment - 1));
+        }
+        _ulSize += 3;
+    } else {
+        ucAlignment = 16;
+    }
+    if (_ulSize & (ucAlignment - 1)) {
+        _ulSize = ucAlignment + (_ulSize & ~(ucAlignment - 1));
+    }
+    p_cBegin = (char*)malloc(_ulSize);
+    lTemporaryValue = (unsigned int)p_cBegin;
+    if (lTemporaryValue & (ucAlignment - 1)) {
+        lTemporaryValue = ucAlignment + (lTemporaryValue & ~(ucAlignment - 1));
+    }
+    if ((unsigned int)p_cBegin != lTemporaryValue) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 2, -1, 0xFF, 0xFF, 0);
+    }
+    if (p_cBegin == NULL) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x1F, -1, 0xFF, 0xFF, 0);
+        return;
+    }
+    p_stMyBlockInfo->p_cBeginBlock = (int)p_cBegin;
+    p_stMyBlockInfo->p_cEndBlock = (int)p_cBegin + _ulSize - 1;
+    if (!(_ucMode & 1)) {
+        p_stMyBlockInfo->p_cFirstFree = (int)p_cBegin;
+        p_stMyBlockInfo->p_cMaxMem = (int)p_cBegin;
+        ((tdstFreeCell_*)p_cBegin)[0] = (unsigned int)(_ulSize >> 4);
+        ((tdstFreeCell_*)p_cBegin)[1] = 0;
+        if (_ucMode & 2) {
+            _ulSize -= ucAlignment * 2;
+            if (_ulSize) {
+                tdstFreeCell_* p_stCell = (tdstFreeCell_*)(p_cBegin + 0x20);
+                do {
+                    *p_stCell = 0xAAAAAAAA;
+                    _ulSize -= ucAlignment;
+                    p_stCell++;
+                } while (_ulSize);
+            }
+        }
+    } else {
+        p_stMyBlockInfo->p_cMaxMem = (int)p_cBegin + 3;
+        lTemporaryValue = p_stMyBlockInfo->p_cMaxMem;
+        if (lTemporaryValue & (ucAlignment - 1)) {
+            lTemporaryValue = ucAlignment + (lTemporaryValue & ~(ucAlignment - 1));
+        }
+        p_stMyBlockInfo->p_cMaxMem = lTemporaryValue;
+        p_stMyBlockInfo->p_cMaxMem = p_stMyBlockInfo->p_cMaxMem - 1;
+        p_stMyBlockInfo->p_cFirstFree = -1;
+        if (_ucMode & 2) {
+            char* p_cFill = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+            while (p_cFill <= (char*)p_stMyBlockInfo->p_cEndBlock) {
+                *p_cFill = (char)0xAA;
+                p_cFill++;
+            }
+        }
+        param0 = (tdstInformationHeaderOfBolckWithoutFree_*)p_stMyBlockInfo->p_cBeginBlock;
+        param0->ucBoundededHeaderSize = 3;
+        if ((ucAlignment - 1) & 3) {
+            param0->ucBoundededHeaderSize = ucAlignment + (~(ucAlignment - 1) & 3);
+        }
+        param0->ucAlignment = ucAlignment;
+        param0->ucMode = _ucMode;
+        if ((unsigned int)(p_stMyBlockInfo->p_cEndBlock - p_stMyBlockInfo->p_cMaxMem) >= 4) {
+            unsigned int ulPattern = 0xE123456E;
+            char* p_cPattern = (char*)&ulPattern;
+            char* p_cDst = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);
+            char* p_cEnd = p_cDst + 4;
+            while (p_cDst < p_cEnd) {
+                *p_cDst = *p_cPattern;
+                p_cDst++;
+                p_cPattern++;
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 544–576 */
+/* addr: 0x00314bd0  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 544
+ *   +0x0004 -> line 545
+ *   +0x0008 -> line 544
+ *   +0x000c -> line 545
+ *   +0x0010 -> line 544
+ *   +0x0014 -> line 545
+ *   +0x0018 -> line 567
+ *   +0x0020 -> line 574
+ *   +0x0028 -> line 576
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo)
+{
+    tdstBlockInfoPriv_* p_stMyBlockInfo;
+    p_stMyBlockInfo = p_stMyBlocksInfo + ucBlockId;
+    free((void*)p_stMyBlockInfo->p_cBeginBlock);
+    p_stMyBlockInfo->p_cBeginBlock = -1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 594–692 */
+/* addr: 0x00314ac0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 594
+ *   +0x0014 -> line 617
+ *   +0x001c -> line 622
+ *   +0x0024 -> line 625
+ *   +0x0030 -> line 627
+ *   +0x0048 -> line 633
+ *   +0x005c -> line 638
+ *   +0x0074 -> line 640
+ *   +0x007c -> line 645
+ *   +0x00a0 -> line 650
+ *   +0x00a8 -> line 652
+ *   +0x00cc -> line 654
+ *   +0x00d8 -> line 655
+ *   +0x00e0 -> line 689
+ *   +0x00e4 -> line 660
+ *   +0x00e8 -> line 689
+ *   +0x00f4 -> line 690
+ *   +0x00f8 -> line 692
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+unsigned long long* fn_p_vDynAlloc(unsigned int ulSize)
+{
+    unsigned long long* p_uaMalloc;
+    unsigned int ulMalloc;
+    unsigned int ulAligned;
+    if (ulSize == 0) {
+        return 0;
+    }
+    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+    if (ulSize & 0xF) {
+        ulSize = (ulSize & 0xFFFFFFF0) + 0x10;
+    }
+    ulMalloc = (ulSize >> 4) + 1;
+    p_uaMalloc = (unsigned long long*)malloc(ulMalloc * 16);
+    ulAligned = (unsigned int)p_uaMalloc;
+    if (ulAligned & 0xF) {
+        ulAligned = (ulAligned & 0xFFFFFFF0) + 0x10;
+    }
+    if ((unsigned int)p_uaMalloc != ulAligned) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 3, -1, 0xFF, 0xFF, 0);
+    }
+    if (p_uaMalloc == 0) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x20, -1, 0xFF, 0xFF, 0);
+        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+        return 0;
+    }
+    *(tdstFreeCell_*)p_uaMalloc = (tdstFreeCell_)(unsigned long long)ulMalloc;
+    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
+    return (unsigned long long*)((char*)p_uaMalloc + 16);
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 961–1292 */
 /* addr: 0x00314640  size: 1144 bytes */
@@ -382,172 +441,6 @@ unsigned long long* fn_p_vDynAlloc(unsigned int ulSize);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Reconstructed from the retail code.  The free list, the cell split and the
- * debug signature handling follow the target instruction for instruction;
- * what is still missing is the exact register allocation (the retail keeps
- * the size in $s0, the block info in $s1, the previous cell in $s2, the
- * "found" flag in $s3 and the current cell in $s4) and the line table. */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 594–692 */
-/* addr: 0x00314ac0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 594
- *   +0x0014 -> line 617
- *   +0x001c -> line 622
- *   +0x0024 -> line 625
- *   +0x0030 -> line 627
- *   +0x0048 -> line 633
- *   +0x005c -> line 638
- *   +0x0074 -> line 640
- *   +0x007c -> line 645
- *   +0x00a0 -> line 650
- *   +0x00a8 -> line 652
- *   +0x00cc -> line 654
- *   +0x00d8 -> line 655
- *   +0x00e0 -> line 689
- *   +0x00e4 -> line 660
- *   +0x00e8 -> line 689
- *   +0x00f4 -> line 690
- *   +0x00f8 -> line 692
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 544–576 */
-/* addr: 0x00314bd0  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 544
- *   +0x0004 -> line 545
- *   +0x0008 -> line 544
- *   +0x000c -> line 545
- *   +0x0010 -> line 544
- *   +0x0014 -> line 545
- *   +0x0018 -> line 567
- *   +0x0020 -> line 574
- *   +0x0028 -> line 576
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 215–441 */
-/* addr: 0x00314c10  size: 720 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 215
- *   +0x0004 -> line 220
- *   +0x0008 -> line 215
- *   +0x000c -> line 237
- *   +0x0010 -> line 215
- *   +0x0014 -> line 220
- *   +0x0018 -> line 215
- *   +0x001c -> line 237
- *   +0x0020 -> line 215
- *   +0x0044 -> line 237
- *   +0x0058 -> line 247
- *   +0x0068 -> line 249
- *   +0x0070 -> line 251
- *   +0x0074 -> line 253
- *   +0x008c -> line 254
- *   +0x0090 -> line 297
- *   +0x00b0 -> line 312
- *   +0x00c0 -> line 319
- *   +0x00c4 -> line 322
- *   +0x00d8 -> line 324
- *   +0x00e0 -> line 332
- *   +0x0104 -> line 338
- *   +0x010c -> line 343
- *   +0x0130 -> line 346
- *   +0x0138 -> line 351
- *   +0x013c -> line 354
- *   +0x0140 -> line 355
- *   +0x0148 -> line 363
- *   +0x014c -> line 356
- *   +0x0150 -> line 363
- *   +0x0154 -> line 357
- *   +0x0158 -> line 363
- *   +0x015c -> line 383
- *   +0x0160 -> line 363
- *   +0x0164 -> line 383
- *   +0x016c -> line 384
- *   +0x017c -> line 385
- *   +0x018c -> line 386
- *   +0x01a8 -> line 391
- *   +0x01b0 -> line 399
- *   +0x01b8 -> line 400
- *   +0x01bc -> line 401
- *   +0x01d0 -> line 402
- *   +0x01d4 -> line 412
- *   +0x01d8 -> line 405
- *   +0x01dc -> line 410
- *   +0x01e0 -> line 405
- *   +0x01e8 -> line 412
- *   +0x01f0 -> line 413
- *   +0x0200 -> line 414
- *   +0x0204 -> line 415
- *   +0x021c -> line 416
- *   +0x0220 -> line 419
- *   +0x0224 -> line 423
- *   +0x023c -> line 424
- *   +0x0240 -> line 426
- *   +0x0244 -> line 427
- *   +0x0248 -> line 430
- *   +0x0260 -> line 431
- *   +0x029c -> line 438
- *   +0x02a0 -> line 441
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned char _ucAlignment, unsigned char _ucMode)
-{
-    tdstInformationHeaderOfBolckWithoutFree_* param0;
-    unsigned int lTemporaryValue;
-    unsigned char ucAlignment;
-    tdstBlockInfoPriv_* p_stMyBlockInfo;
-    long double* p_uaPtr;
-    unsigned int ulI;
-    char* p_cBegin;
-    /* TODO: decompile from asm/... */
-}
-
-void Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo)
-{
-    tdstBlockInfoPriv_* p_stMyBlockInfo;
-    p_stMyBlockInfo = p_stMyBlocksInfo + ucBlockId;
-    free((void*)p_stMyBlockInfo->p_cBeginBlock);
-    p_stMyBlockInfo->p_cBeginBlock = -1;
-}
-
-unsigned long long* fn_p_vDynAlloc(unsigned int ulSize)
-{
-    unsigned long long* p_uaMalloc;
-    unsigned int ulMalloc;
-    unsigned int ulAligned;
-    if (ulSize == 0) {
-        return 0;
-    }
-    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
-    if (ulSize & 0xF) {
-        ulSize = (ulSize & 0xFFFFFFF0) + 0x10;
-    }
-    ulMalloc = (ulSize >> 4) + 1;
-    p_uaMalloc = (unsigned long long*)malloc(ulMalloc * 16);
-    ulAligned = (unsigned int)p_uaMalloc;
-    if (ulAligned & 0xF) {
-        ulAligned = (ulAligned & 0xFFFFFFF0) + 0x10;
-    }
-    if ((unsigned int)p_uaMalloc != ulAligned) {
-        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 3, -1, 0xFF, 0xFF, 0);
-    }
-    if (p_uaMalloc == 0) {
-        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x20, -1, 0xFF, 0xFF, 0);
-        PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
-        return 0;
-    }
-    *(tdstFreeCell_*)p_uaMalloc = (tdstFreeCell_)(unsigned long long)ulMalloc;
-    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
-    return (unsigned long long*)((char*)p_uaMalloc + 16);
-}
-
 void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
 {
     char* param0;
@@ -691,16 +584,112 @@ void* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 1304–1518 */
+/* addr: 0x00314450  size: 492 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1304
+ *   +0x0004 -> line 1311
+ *   +0x0008 -> line 1304
+ *   +0x000c -> line 1311
+ *   +0x0010 -> line 1304
+ *   +0x0014 -> line 1336
+ *   +0x0018 -> line 1304
+ *   +0x0020 -> line 1311
+ *   +0x0030 -> line 1336
+ *   +0x003c -> line 1337
+ *   +0x005c -> line 1341
+ *   +0x0068 -> line 1380
+ *   +0x006c -> line 1381
+ *   +0x0078 -> line 1398
+ *   +0x0098 -> line 1401
+ *   +0x00a0 -> line 1405
+ *   +0x00a4 -> line 1406
+ *   +0x00b8 -> line 1433
+ *   +0x00c0 -> line 1435
+ *   +0x00dc -> line 1438
+ *   +0x0104 -> line 1439
+ *   +0x0108 -> line 1446
+ *   +0x0110 -> line 1448
+ *   +0x011c -> line 1453
+ *   +0x0124 -> line 1457
+ *   +0x0140 -> line 1458
+ *   +0x0168 -> line 1459
+ *   +0x016c -> line 1466
+ *   +0x0174 -> line 1468
+ *   +0x017c -> line 1472
+ *   +0x0198 -> line 1473
+ *   +0x01b4 -> line 1474
+ *   +0x01b8 -> line 1486
+ *   +0x01c0 -> line 1488
+ *   +0x01cc -> line 1517
+ *   +0x01d8 -> line 1518
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel)
 {
-    long double* param0;
-    long double* p_uaAfterFreeSpace;
-    long double* p_uaSizeMalloc;
-    long double* p_uaNextFree;
+    tdstFreeCell_* param0;
+    tdstFreeCell_* p_stThis;
+    tdstFreeCell_* p_uaAfterFreeSpace;
+    tdstFreeCell_* p_uaSizeMalloc;
+    tdstFreeCell_* p_uaNextFree;
     tdstBlockInfoPriv_* p_stMyBlockInfo;
-    /* TODO: decompile from asm/... */
+
+    p_stMyBlockInfo = *((tdstBlockInfoPriv_**)&((tdstCurrentModeInfo_*)g_d_stCurrentModeInfo)->p_vTdstBlockInfoOrTdstDynInfo + ucChannel * 2);
+    if (p_stMyBlockInfo->p_cFirstFree == -1) {
+        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x2C, -1, 0xFF, 0xFF, 0);
+    }
+    PS2_fn_vEnterCriticalSection(&g_MmgCriticalSection);
+    p_uaAfterFreeSpace = (tdstFreeCell_*)p_stMyBlockInfo->p_cFirstFree;
+    p_uaSizeMalloc = p_uaAfterFreeSpace;
+    while (p_uaAfterFreeSpace != NULL && (unsigned int)p_uaAfterFreeSpace < (unsigned int)p_vMemBlock) {
+        p_uaNextFree = (tdstFreeCell_*)(int)p_uaAfterFreeSpace[1];
+        p_uaSizeMalloc = p_uaAfterFreeSpace;
+        if (p_uaAfterFreeSpace == p_uaNextFree || (char*)p_uaAfterFreeSpace == (char*)p_vMemBlock - 0x10) {
+            return;
+        }
+        p_uaAfterFreeSpace = p_uaNextFree;
+    }
+    param0 = (tdstFreeCell_*)p_vMemBlock - 1;
+    p_stThis = (tdstFreeCell_*)p_vMemBlock;
+    if (p_uaSizeMalloc == p_uaAfterFreeSpace) {
+        if (param0 + (int)param0[0] == p_uaAfterFreeSpace) {
+            p_stThis[-1] = (tdstFreeCell_)(unsigned int)((int)p_stThis[-1] + (int)p_uaAfterFreeSpace[0]);
+            p_stThis[0] = p_uaAfterFreeSpace[1];
+        } else {
+            p_stThis[0] = (tdstFreeCell_)(unsigned int)p_uaAfterFreeSpace;
+        }
+        p_stMyBlockInfo->p_cFirstFree = (int)param0;
+    } else {
+        int lPrevSize;
+        if (param0 + (int)param0[0] == p_uaAfterFreeSpace) {
+            p_stThis[-1] = (tdstFreeCell_)(unsigned int)((int)p_stThis[-1] + (int)p_uaAfterFreeSpace[0]);
+            p_stThis[0] = p_uaAfterFreeSpace[1];
+        } else {
+            p_stThis[0] = p_uaSizeMalloc[1];
+        }
+        lPrevSize = (int)p_uaSizeMalloc[0];
+        if (p_uaSizeMalloc + lPrevSize == param0) {
+            p_uaSizeMalloc[0] = (tdstFreeCell_)(unsigned int)(lPrevSize + (int)p_stThis[-1]);
+            p_uaSizeMalloc[1] = p_stThis[0];
+        } else {
+            p_uaSizeMalloc[1] = (tdstFreeCell_)(unsigned int)param0;
+        }
+    }
+    PS2_fn_vLeaveCriticalSection(&g_MmgCriticalSection);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2632–2745 */
+/* addr: 0x00314400  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2632
+ *   +0x0004 -> line 2716
+ *   +0x0008 -> line 2632
+ *   +0x000c -> line 2716
+ *   +0x0044 -> line 2745
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
 {
     /* Permuter-found match (register allocation); the dead if and the
@@ -719,6 +708,22 @@ void fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 2755–2782 */
+/* addr: 0x00314390  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2755
+ *   +0x0004 -> line 2761
+ *   +0x0008 -> line 2755
+ *   +0x000c -> line 2761
+ *   +0x0010 -> line 2755
+ *   +0x0014 -> line 2761
+ *   +0x0030 -> line 2778
+ *   +0x0038 -> line 2779
+ *   +0x0040 -> line 2781
+ *   +0x0060 -> line 2782
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
 {
     /* Permuter-found match (register allocation); the dead if re-reading the
@@ -738,6 +743,40 @@ void fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4221–4264 */
+/* addr: 0x00314210  size: 384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4221
+ *   +0x0018 -> line 4222
+ *   +0x0040 -> line 4225
+ *   +0x0044 -> line 4224
+ *   +0x004c -> line 4225
+ *   +0x0058 -> line 4227
+ *   +0x0070 -> line 4229
+ *   +0x007c -> line 4230
+ *   +0x0080 -> line 4231
+ *   +0x0088 -> line 4237
+ *   +0x008c -> line 4238
+ *   +0x0098 -> line 4237
+ *   +0x00a4 -> line 4238
+ *   +0x00b4 -> line 4239
+ *   +0x00b8 -> line 4240
+ *   +0x00c0 -> line 4241
+ *   +0x00d0 -> line 4242
+ *   +0x00e4 -> line 4243
+ *   +0x0100 -> line 4244
+ *   +0x0104 -> line 4245
+ *   +0x010c -> line 4246
+ *   +0x0110 -> line 4247
+ *   +0x0114 -> line 4249
+ *   +0x0118 -> line 4250
+ *   +0x0148 -> line 4252
+ *   +0x014c -> line 4250
+ *   +0x0154 -> line 4252
+ *   +0x0178 -> line 4264
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_vBeginAdr)
 {
     tdstBlockInfoPriv_* a_stMyBlockInfo;
@@ -789,6 +828,19 @@ void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4480–4497 */
+/* addr: 0x003141a0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4480
+ *   +0x000c -> line 4482
+ *   +0x0014 -> line 4480
+ *   +0x0020 -> line 4481
+ *   +0x0028 -> line 4482
+ *   +0x0030 -> line 4483
+ *   +0x0060 -> line 4497
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, unsigned char ucChannel)
 {
     /* Retail addresses the mode-info array as (base + field offset) + index,
@@ -802,6 +854,30 @@ void Mmg_fn_v_SetModeAlloc(unsigned char ucModuleId, unsigned char ucNewMode, un
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4511–4587 */
+/* addr: 0x003140c0  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4511
+ *   +0x0004 -> line 4533
+ *   +0x0008 -> line 4511
+ *   +0x0018 -> line 4533
+ *   +0x0024 -> line 4547
+ *   +0x0034 -> line 4578
+ *   +0x0038 -> line 4562
+ *   +0x003c -> line 4561
+ *   +0x0040 -> line 4562
+ *   +0x0048 -> line 4579
+ *   +0x0088 -> line 4578
+ *   +0x0098 -> line 4585
+ *   +0x009c -> line 4579
+ *   +0x00a0 -> line 4585
+ *   +0x00a4 -> line 4579
+ *   +0x00a8 -> line 4585
+ *   +0x00b8 -> line 4586
+ *   +0x00c4 -> line 4587
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
 {
     unsigned char ucI;
@@ -815,6 +891,22 @@ void Mmg_fn_vFirstInitMmgModule(unsigned char ucMaxNbChannel)
     PS2_fn_vCreateCriticalSection(&g_MmgCriticalSection);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 4624–4708 */
+/* addr: 0x00314020  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 4624
+ *   +0x0018 -> line 4648
+ *   +0x0024 -> line 4649
+ *   +0x0040 -> line 4693
+ *   +0x0044 -> line 4649
+ *   +0x0048 -> line 4693
+ *   +0x0054 -> line 4694
+ *   +0x0058 -> line 4695
+ *   +0x0078 -> line 4696
+ *   +0x0084 -> line 4708
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
 {
     unsigned char ucI;
@@ -828,16 +920,41 @@ void Mmg_fn_v_InitMmg(unsigned char ucModuleId, unsigned char ucMaxBlocksNb)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5148–5148 */
+/* addr: 0x00314010  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5148
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void Mmg_fn_vDisableAllocationError(void)
 {
     Mmg_g_bAllocationError = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 5152–5153 */
+/* addr: 0x00314000  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 5152
+ *   +0x0004 -> line 5153
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void Mmg_fn_vEnableAllocationError(void)
 {
     Mmg_g_bAllocationError = 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MMG\cpammg.c lines 44–48 */
+/* addr: 0x00313fc0  size: 64 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 44
+ *   +0x002c -> line 46
+ *   +0x0034 -> line 47
+ *   +0x0038 -> line 48
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
 {
     if (p_stNormal->xZ > -p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) { if (p_stNormal->xZ < p_stDynamic->m_tdstDynamicsBaseBlock.m_xCosSlope) {

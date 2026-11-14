@@ -4,6 +4,10 @@
 
 #include <stddef.h>
 
+extern "C" char* strchr(const char* s, int c);
+extern "C" unsigned int strlen(const char* pch_Str);
+extern "C" void usnd_free(void* pv_Ptr);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 namespace usnd
 {
@@ -37,69 +41,180 @@ typedef enum anon_enum_001bafd7 {
 } anon_enum_001bafd7;
 
 struct usnd::sstring {
-    int m_pcData; /* +0x0 */
+    char* m_pcData; /* +0x0 */
+    static char* ms_czNil;
+    void _Init(const char* pch_Str, unsigned int ui_Length);
+    sstring& operator=(const char* pch_Str)
+    {
+        unsigned int ui_Length = strlen(pch_Str);
+        char* pch_Old = m_pcData;
+        _Init(pch_Str, ui_Length);
+        if (pch_Old != ms_czNil)
+            usnd_free(pch_Old);
+        return *this;
+    }
+    unsigned short length(void) const { return m_pcData ? (unsigned short)strlen(m_pcData) : 0; }
 };
 
-struct CTextFileSrc {
-    /* C++ base CTextFile at +0x0 (defined below; 0x34 bytes). */
-    unsigned char _base_CTextFile[0x34]; /* +0x0 */
-    anon_enum_001bafd7 eCTextFileSrc; /* +0x34 */
-    int mpchBuffer1; /* +0x38 */
-    int mpchBuffer2; /* +0x3c */
-    int mpchBufferEnd; /* +0x40 */
-    char mchBuffer[2048]; /* +0x44 */
-    int mpchCurrent; /* +0x844 */
-    unsigned int mdwPosition; /* +0x848 */
-    unsigned char mfn_bRead(sstring& ro_Sentence);
-    char* mfn_pchParseChar(void) const;
-    unsigned char mfn_bOpen(const char* pch_FilePath);
+typedef enum _ERamLocation {
+    E_RamLocation_RAM = 0,
+} _ERamLocation;
+
+namespace usnd {
+
+class CFlow {
+public:
+    virtual bool fv_bIsEnd(void);
 };
 
-struct CPS2FileSrcFlow {
-    /* C++ base CSrcFlow at +0x0. */
+class CSrcFlow : public virtual CFlow {
+public:
+    virtual ~CSrcFlow();
+    virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb) = 0;
+};
+
+class CPS2FileSrcFlow : public CSrcFlow {
+public:
+    CPS2FileSrcFlow(void);
+    virtual bool fv_bIsEnd(void);
+    virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb);
+    virtual ~CPS2FileSrcFlow();
     unsigned int m_uiFileHandle; /* +0x8 */
     unsigned int m_uiFileOffset; /* +0xc */
     unsigned int m_uiSize; /* +0x10 */
     unsigned int m_uiPos; /* +0x14 */
     unsigned int m_uiEndPos; /* +0x18 */
     unsigned char m_bUseCache; /* +0x1c */
+    bool f_bOpen(const char* pch_FilePath, _ERamLocation e_RamLocation);
 };
+
+}
 
 struct CTextFile {
-    CPS2FileSrcFlow m_File; /* +0x0 */
-    sstring mostringName; /* +0x28 */
+    usnd::CPS2FileSrcFlow m_File; /* +0x0 */
+    usnd::sstring mostringName; /* +0x28 */
     unsigned char m_bOpened; /* +0x2c */
     anon_enum_001bafa4 eState; /* +0x30 */
+    unsigned char mfn_bOpen(const char* pch_FilePath)
+    {
+        if (!m_bOpened)
+        {
+            mostringName = pch_FilePath;
+            if (mostringName.length())
+                m_bOpened = m_File.f_bOpen(mostringName.m_pcData, E_RamLocation_RAM);
+            return m_bOpened;
+        }
+        return 0;
+    }
+    bool mfn_bRead(void* p_Buffer, unsigned int dw_Size)
+    {
+        bool b_Answer = false;
+        if (m_bOpened)
+            b_Answer = m_File.fv_uiRead(p_Buffer, 1, dw_Size) == dw_Size;
+        return b_Answer;
+    }
 };
 
-struct CSrcFlow {
-    /* C++ base CFlow at +0x0. */
-    CFlow CFlow; /* +0x8 */
+struct CTextFileSrc : CTextFile {
+    anon_enum_001bafd7 eCTextFileSrc; /* +0x34 */
+    char* mpchBuffer1; /* +0x38 */
+    char* mpchBuffer2; /* +0x3c */
+    char* mpchBufferEnd; /* +0x40 */
+    char mchBuffer[2048]; /* +0x44 */
+    char* mpchCurrent; /* +0x844 */
+    unsigned int mdwPosition; /* +0x848 */
+    unsigned char mfn_bRead(sstring& ro_Sentence);
+    char* mfn_pchParseChar(void) const;
+    unsigned char mfn_bOpen(const char* pch_FilePath);
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 37–67 */
-/* addr: 0x0018b760  size: 424 bytes */
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+
+
+#define M_MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 44–59 */
+/* addr: 0x0018bd80  size: 296 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 37
- *   +0x0018 -> line 40
- *   +0x0030 -> line 41
- *   +0x003c -> line 43
- *   +0x004c -> line 44
- *   +0x0058 -> line 47
- *   +0x0078 -> line 49
- *   +0x0080 -> line 51
- *   +0x0090 -> line 52
- *   +0x009c -> line 53
- *   +0x00c0 -> line 61
- *   +0x0180 -> line 63
- *   +0x018c -> line 66
- *   +0x0190 -> line 67
+ *   +0x0000 -> line 44
+ *   +0x0014 -> line 46
+ *   +0x009c -> line 48
+ *   +0x00a0 -> line 49
+ *   +0x00a8 -> line 50
+ *   +0x00e0 -> line 52
+ *   +0x0104 -> line 55
+ *   +0x0110 -> line 58
+ *   +0x0114 -> line 59
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned char CTextFileSrc::mfn_bOpen(const char* pch_FilePath)
+{
+    if (CTextFile::mfn_bOpen(pch_FilePath))
+    {
+        mdwPosition = 0;
+        mpchCurrent = mpchBuffer1;
+        if (CTextFile::mfn_bRead(mpchBuffer1, E_BUFFER_SIZE))
+        {
+            CTextFile::mfn_bRead(mpchBuffer2, E_BUFFER_SIZE);
+        }
+        return 1;
+    }
+
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 83–145 */
+/* addr: 0x0018bcd0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 83
+ *   +0x0014 -> line 97
+ *   +0x0020 -> line 98
+ *   +0x0024 -> line 97
+ *   +0x0028 -> line 98
+ *   +0x0030 -> line 100
+ *   +0x0044 -> line 112
+ *   +0x0054 -> line 114
+ *   +0x005c -> line 120
+ *   +0x0064 -> line 122
+ *   +0x006c -> line 124
+ *   +0x0074 -> line 126
+ *   +0x007c -> line 132
+ *   +0x0088 -> line 141
+ *   +0x0098 -> line 145
+ *   +0x009c -> line 143
+ *   +0x00a0 -> line 145
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+char* CTextFileSrc::mfn_pchParseChar(void) const
+{
+    char* pch_SlashR;
+    char* pch_SlashN;
+    char* pch_Answer;
+
+    pch_SlashN = strchr((char*)mpchCurrent, '\n');
+    pch_SlashR = strchr((char*)mpchCurrent, '\r');
+
+    pch_Answer = NULL;
+    if (pch_SlashN != (char*)mpchCurrent && pch_SlashR != (char*)mpchCurrent)
+    {
+        if (!pch_SlashN && !pch_SlashR)
+            pch_Answer = (char*)mpchBufferEnd;
+        else if (!pch_SlashN)
+            pch_Answer = pch_SlashR;
+        else if (!pch_SlashR)
+            pch_Answer = pch_SlashN;
+        else
+            pch_Answer = M_MIN(pch_SlashN, pch_SlashR);
+
+        pch_Answer = M_MIN(pch_Answer, (char*)mpchBufferEnd);
+    }
+
+    return pch_Answer;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 148–192 */
 /* addr: 0x0018b910  size: 752 bytes */
@@ -131,82 +246,6 @@ struct CSrcFlow {
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 83–145 */
-/* addr: 0x0018bcd0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 83
- *   +0x0014 -> line 97
- *   +0x0020 -> line 98
- *   +0x0024 -> line 97
- *   +0x0028 -> line 98
- *   +0x0030 -> line 100
- *   +0x0044 -> line 112
- *   +0x0054 -> line 114
- *   +0x005c -> line 120
- *   +0x0064 -> line 122
- *   +0x006c -> line 124
- *   +0x0074 -> line 126
- *   +0x007c -> line 132
- *   +0x0088 -> line 141
- *   +0x0098 -> line 145
- *   +0x009c -> line 143
- *   +0x00a0 -> line 145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-extern "C" char* strchr(const char* s, int c);
-
-#define M_MIN(a, b) (((a) < (b)) ? (a) : (b))
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 44–59 */
-/* addr: 0x0018bd80  size: 296 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 44
- *   +0x0014 -> line 46
- *   +0x009c -> line 48
- *   +0x00a0 -> line 49
- *   +0x00a8 -> line 50
- *   +0x00e0 -> line 52
- *   +0x0104 -> line 55
- *   +0x0110 -> line 58
- *   +0x0114 -> line 59
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-unsigned char CTextFileSrc::mfn_bOpen(const char* pch_FilePath)
-{
-    /* TODO: decompile from asm/... */
-}
-
-char* CTextFileSrc::mfn_pchParseChar(void) const
-{
-    char* pch_SlashR;
-    char* pch_SlashN;
-    char* pch_Answer;
-
-    pch_SlashN = strchr((char*)mpchCurrent, '\n');
-    pch_SlashR = strchr((char*)mpchCurrent, '\r');
-
-    pch_Answer = NULL;
-    if (pch_SlashN != (char*)mpchCurrent && pch_SlashR != (char*)mpchCurrent)
-    {
-        if (!pch_SlashN && !pch_SlashR)
-            pch_Answer = (char*)mpchBufferEnd;
-        else if (!pch_SlashN)
-            pch_Answer = pch_SlashR;
-        else if (!pch_SlashR)
-            pch_Answer = pch_SlashN;
-        else
-            pch_Answer = M_MIN(pch_SlashN, pch_SlashR);
-
-        pch_Answer = M_MIN(pch_Answer, (char*)mpchBufferEnd);
-    }
-
-    return pch_Answer;
-}
-
 unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
 {
     char* pch_StringNext;
@@ -216,6 +255,26 @@ unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 37–67 */
+/* addr: 0x0018b760  size: 424 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 37
+ *   +0x0018 -> line 40
+ *   +0x0030 -> line 41
+ *   +0x003c -> line 43
+ *   +0x004c -> line 44
+ *   +0x0058 -> line 47
+ *   +0x0078 -> line 49
+ *   +0x0080 -> line 51
+ *   +0x0090 -> line 52
+ *   +0x009c -> line 53
+ *   +0x00c0 -> line 61
+ *   +0x0180 -> line 63
+ *   +0x018c -> line 66
+ *   +0x0190 -> line 67
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
 {
     CUUID aId[20];

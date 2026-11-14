@@ -2921,23 +2921,6 @@ unsigned char g_ucNewActionReturn;
 unsigned char g_ucUseDefaultActionReturn;
 unsigned char g_ucAIModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 32–52 */
-/* addr: 0x001fabd0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 32
- *   +0x0004 -> line 34
- *   +0x0018 -> line 39
- *   +0x001c -> line 40
- *   +0x002c -> line 42
- *   +0x0038 -> line 44
- *   +0x0044 -> line 46
- *   +0x004c -> line 49
- *   +0x0068 -> line 51
- *   +0x006c -> line 52
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule);
@@ -3002,94 +2985,6 @@ inline tdstDsgMem_* fn_p_stSimulateAllocDsgMem(char** p_ptr, tdstDsgVar_** p_p_s
     return p_stDsgMem;
 }
 
-/* addr: 0x001fac50  size: 732 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1539
- *   +0x0020 -> line 1540
- *   +0x0030 -> line 1547
- *   +0x0034 -> line 1550
- *   +0x0038 -> line 1551
- *   +0x003c -> line 1564
- *   +0x0048 -> line 1571
- *   +0x009c -> line 1572
- *   +0x00a0 -> line 1573
- *   +0x00a8 -> line 1575
- *   +0x00b0 -> line 1577
- *   +0x00b8 -> line 1580
- *   +0x00bc -> line 1583
- *   +0x00c0 -> line 1584
- *   +0x00c8 -> line 1586
- *   +0x00d4 -> line 1591
- *   +0x00e0 -> line 1598
- *   +0x0134 -> line 1600
- *   +0x0138 -> line 1601
- *   +0x0140 -> line 1603
- *   +0x0148 -> line 1605
- *   +0x0150 -> line 1608
- *   +0x0154 -> line 1613
- *   +0x0158 -> line 1614
- *   +0x016c -> line 1616
- *   +0x0178 -> line 1618
- *   +0x01c4 -> line 1619
- *   +0x01dc -> line 1622
- *   +0x01ec -> line 1624
- *   +0x0218 -> line 1627
- *   +0x0238 -> line 1633
- *   +0x023c -> line 1634
- *   +0x0244 -> line 1636
- *   +0x024c -> line 1637
- *   +0x0254 -> line 1640
- *   +0x0258 -> line 1641
- *   +0x0260 -> line 1643
- *   +0x0268 -> line 1644
- *   +0x0270 -> line 1647
- *   +0x027c -> line 1650
- *   +0x0288 -> line 1653
- *   +0x02a0 -> line 1654
- *   +0x02a8 -> line 1658
- *   +0x02bc -> line 1668
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1473–1514 */
-/* addr: 0x001faf30  size: 248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1473
- *   +0x001c -> line 1481
- *   +0x0020 -> line 1473
- *   +0x0024 -> line 1481
- *   +0x002c -> line 1483
- *   +0x0030 -> line 1484
- *   +0x0040 -> line 1485
- *   +0x0048 -> line 1486
- *   +0x0050 -> line 1489
- *   +0x0058 -> line 1493
- *   +0x005c -> line 1494
- *   +0x0094 -> line 1496
- *   +0x0098 -> line 1497
- *   +0x009c -> line 1499
- *   +0x00a8 -> line 1501
- *   +0x00ac -> line 1503
- *   +0x00b4 -> line 1501
- *   +0x00b8 -> line 1502
- *   +0x00c0 -> line 1503
- *   +0x00d8 -> line 1514
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1417–1426 */
-/* addr: 0x001fb030  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1417
- *   +0x0014 -> line 1418
- *   +0x001c -> line 1421
- *   +0x0058 -> line 1424
- *   +0x0064 -> line 1426
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_vSetUltraOperatorPerso(HIE_tdstSuperObject_* hCurrentSuperObjPerso, HIE_tdstSuperObject_* hNewCurrentSuperObjPerso);
 void fn_vReinitComport(tdstIntelligence_* p_stIntelligence);
 void ReinitDesignerVariables(AI_tdstMind_* p_stMind);
@@ -3109,59 +3004,6 @@ static inline void fn_vReinitComports(AI_tdstMind_* p_stMind)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1386–1395 */
-/* addr: 0x001fb0b0  size: 112 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1386
- *   +0x0010 -> line 1387
- *   +0x0018 -> line 1390
- *   +0x0054 -> line 1393
- *   +0x0060 -> line 1395
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1342–1342 */
-/* addr: 0x001fb120  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 870–921 */
-/* addr: 0x001fb130  size: 784 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 870
- *   +0x002c -> line 877
- *   +0x0034 -> line 880
- *   +0x0050 -> line 884
- *   +0x0058 -> line 886
- *   +0x0070 -> line 888
- *   +0x0078 -> line 891
- *   +0x0080 -> line 892
- *   +0x0084 -> line 891
- *   +0x0088 -> line 895
- *   +0x009c -> line 899
- *   +0x00a0 -> line 901
- *   +0x00b0 -> line 903
- *   +0x00c8 -> line 904
- *   +0x00cc -> line 903
- *   +0x00d0 -> line 904
- *   +0x01a8 -> line 905
- *   +0x01ac -> line 904
- *   +0x01b0 -> line 905
- *   +0x01cc -> line 906
- *   +0x01d8 -> line 909
- *   +0x02ac -> line 911
- *   +0x02b0 -> line 912
- *   +0x02b4 -> line 909
- *   +0x02b8 -> line 912
- *   +0x02dc -> line 914
- *   +0x02e0 -> line 921
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int SAI_fn_bInsertPointerInTable(void* _p_vValue, int _eFlags);
 int SAI_fn_bInsertArrayInTable(void* param0, unsigned int _ulSize, int _eFlags);
 
@@ -3195,101 +3037,7 @@ inline void fn_vInsertOneDsgVarInSAI(void* p_vAddr, tdeDsgVarTypeId_ eDsgVarType
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 785–831 */
-/* addr: 0x001fb440  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 785
- *   +0x0024 -> line 786
- *   +0x002c -> line 789
- *   +0x0038 -> line 804
- *   +0x0054 -> line 808
- *   +0x0060 -> line 810
- *   +0x0074 -> line 811
- *   +0x0078 -> line 813
- *   +0x0080 -> line 816
- *   +0x0084 -> line 825
- *   +0x00dc -> line 826
- *   +0x00ec -> line 827
- *   +0x00f0 -> line 828
- *   +0x00f4 -> line 826
- *   +0x00f8 -> line 828
- *   +0x011c -> line 830
- *   +0x0120 -> line 831
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 698–758 */
-/* addr: 0x001fb590  size: 396 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 698
- *   +0x002c -> line 699
- *   +0x0034 -> line 702
- *   +0x0040 -> line 717
- *   +0x005c -> line 721
- *   +0x0068 -> line 723
- *   +0x006c -> line 726
- *   +0x0070 -> line 723
- *   +0x0084 -> line 726
- *   +0x008c -> line 728
- *   +0x0094 -> line 729
- *   +0x0098 -> line 731
- *   +0x00a0 -> line 732
- *   +0x00a8 -> line 733
- *   +0x00b0 -> line 736
- *   +0x00b4 -> line 739
- *   +0x00c0 -> line 742
- *   +0x00c4 -> line 751
- *   +0x011c -> line 752
- *   +0x012c -> line 754
- *   +0x0130 -> line 755
- *   +0x0134 -> line 752
- *   +0x0138 -> line 755
- *   +0x015c -> line 757
- *   +0x0160 -> line 758
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 unsigned char fn_bIntelligenceEngine(HIE_tdstSuperObject_* p_SuperObjPerso, tdstIntelligence_* p_stIntelligence);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 504–520 */
-/* addr: 0x001fb720  size: 56 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 504
- *   +0x0008 -> line 505
- *   +0x0014 -> line 507
- *   +0x0018 -> line 516
- *   +0x002c -> line 520
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 480–498 */
-/* addr: 0x001fb760  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 480
- *   +0x0004 -> line 482
- *   +0x0008 -> line 480
- *   +0x000c -> line 481
- *   +0x0018 -> line 482
- *   +0x001c -> line 494
- *   +0x0030 -> line 498
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 232–241 */
-/* addr: 0x001fb7a0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 232
- *   +0x0004 -> line 233
- *   +0x0008 -> line 232
- *   +0x000c -> line 233
- *   +0x0024 -> line 241
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 193–229 */
 /* addr: 0x001fb7d0  size: 52 bytes */
@@ -3324,12 +3072,36 @@ AI_tdstMind_* fn_pstAllocMind(void)
     return p_stMind;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 232–241 */
+/* addr: 0x001fb7a0  size: 48 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 232
+ *   +0x0004 -> line 233
+ *   +0x0008 -> line 232
+ *   +0x000c -> line 233
+ *   +0x0024 -> line 241
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AI_fn_vFirstInit(void)
 {
     if (g_ucAIModuleId == 255)
         g_ucAIModuleId = Erm_fn_ucInitErrMsg(g_ucAIModuleId);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 480–498 */
+/* addr: 0x001fb760  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 480
+ *   +0x0004 -> line 482
+ *   +0x0008 -> line 480
+ *   +0x000c -> line 481
+ *   +0x0018 -> line 482
+ *   +0x001c -> line 494
+ *   +0x0030 -> line 498
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bDoIntelligencePerso(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     AI_tdstMind_* p_stPerso;
@@ -3344,6 +3116,18 @@ unsigned char fn_bDoIntelligencePerso(HIE_tdstSuperObject_* p_SuperObjPerso)
 
 /* The debug record decodes as int, but the result is returned unmasked from
  * the unsigned char fn_bIntelligenceEngine, like fn_bDoIntelligencePerso. */
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 504–520 */
+/* addr: 0x001fb720  size: 56 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 504
+ *   +0x0008 -> line 505
+ *   +0x0014 -> line 507
+ *   +0x0018 -> line 516
+ *   +0x002c -> line 520
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
 {
     AI_tdstMind_* p_stPerso;
@@ -3356,6 +3140,37 @@ unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 698–758 */
+/* addr: 0x001fb590  size: 396 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 698
+ *   +0x002c -> line 699
+ *   +0x0034 -> line 702
+ *   +0x0040 -> line 717
+ *   +0x005c -> line 721
+ *   +0x0068 -> line 723
+ *   +0x006c -> line 726
+ *   +0x0070 -> line 723
+ *   +0x0084 -> line 726
+ *   +0x008c -> line 728
+ *   +0x0094 -> line 729
+ *   +0x0098 -> line 731
+ *   +0x00a0 -> line 732
+ *   +0x00a8 -> line 733
+ *   +0x00b0 -> line 736
+ *   +0x00b4 -> line 739
+ *   +0x00c0 -> line 742
+ *   +0x00c4 -> line 751
+ *   +0x011c -> line 752
+ *   +0x012c -> line 754
+ *   +0x0130 -> line 755
+ *   +0x0134 -> line 752
+ *   +0x0138 -> line 755
+ *   +0x015c -> line 757
+ *   +0x0160 -> line 758
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
 {
     char* ptrDst;
@@ -3406,6 +3221,29 @@ void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeI
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 785–831 */
+/* addr: 0x001fb440  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 785
+ *   +0x0024 -> line 786
+ *   +0x002c -> line 789
+ *   +0x0038 -> line 804
+ *   +0x0054 -> line 808
+ *   +0x0060 -> line 810
+ *   +0x0074 -> line 811
+ *   +0x0078 -> line 813
+ *   +0x0080 -> line 816
+ *   +0x0084 -> line 825
+ *   +0x00dc -> line 826
+ *   +0x00ec -> line 827
+ *   +0x00f0 -> line 828
+ *   +0x00f4 -> line 826
+ *   +0x00f8 -> line 828
+ *   +0x011c -> line 830
+ *   +0x0120 -> line 831
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
 {
     char* ptrDst;
@@ -3445,6 +3283,39 @@ void ReinitDesignerVariables(AI_tdstMind_* p_stMind)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 870–921 */
+/* addr: 0x001fb130  size: 784 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 870
+ *   +0x002c -> line 877
+ *   +0x0034 -> line 880
+ *   +0x0050 -> line 884
+ *   +0x0058 -> line 886
+ *   +0x0070 -> line 888
+ *   +0x0078 -> line 891
+ *   +0x0080 -> line 892
+ *   +0x0084 -> line 891
+ *   +0x0088 -> line 895
+ *   +0x009c -> line 899
+ *   +0x00a0 -> line 901
+ *   +0x00b0 -> line 903
+ *   +0x00c8 -> line 904
+ *   +0x00cc -> line 903
+ *   +0x00d0 -> line 904
+ *   +0x01a8 -> line 905
+ *   +0x01ac -> line 904
+ *   +0x01b0 -> line 905
+ *   +0x01cc -> line 906
+ *   +0x01d8 -> line 909
+ *   +0x02ac -> line 911
+ *   +0x02b0 -> line 912
+ *   +0x02b4 -> line 909
+ *   +0x02b8 -> line 912
+ *   +0x02dc -> line 914
+ *   +0x02e0 -> line 921
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
 {
     tdeDsgVarTypeId_ eDsgVarTypeId;
@@ -3485,10 +3356,28 @@ void AI_fn_vInsertDsgVarInSAI(AI_tdstMind_* p_stMind)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1342–1342 */
+/* addr: 0x001fb120  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1342
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vSecondPassOfMindLoading(void)
 {
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1386–1395 */
+/* addr: 0x001fb0b0  size: 112 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1386
+ *   +0x0010 -> line 1387
+ *   +0x0018 -> line 1390
+ *   +0x0054 -> line 1393
+ *   +0x0060 -> line 1395
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReinitAI(AI_tdstMind_* p_stMind)
 {
     if (p_stMind)
@@ -3498,6 +3387,17 @@ void fn_vReinitAI(AI_tdstMind_* p_stMind)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1417–1426 */
+/* addr: 0x001fb030  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1417
+ *   +0x0014 -> line 1418
+ *   +0x001c -> line 1421
+ *   +0x0058 -> line 1424
+ *   +0x0064 -> line 1426
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
 {
     if (p_stMind)
@@ -3507,6 +3407,32 @@ void fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniTyp
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 1473–1514 */
+/* addr: 0x001faf30  size: 248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1473
+ *   +0x001c -> line 1481
+ *   +0x0020 -> line 1473
+ *   +0x0024 -> line 1481
+ *   +0x002c -> line 1483
+ *   +0x0030 -> line 1484
+ *   +0x0040 -> line 1485
+ *   +0x0048 -> line 1486
+ *   +0x0050 -> line 1489
+ *   +0x0058 -> line 1493
+ *   +0x005c -> line 1494
+ *   +0x0094 -> line 1496
+ *   +0x0098 -> line 1497
+ *   +0x009c -> line 1499
+ *   +0x00a8 -> line 1501
+ *   +0x00ac -> line 1503
+ *   +0x00b4 -> line 1501
+ *   +0x00b8 -> line 1502
+ *   +0x00c0 -> line 1503
+ *   +0x00d8 -> line 1514
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char ucActionTableNbEntry)
 {
     tdstActionTable_* p_stActionTable;
@@ -3540,6 +3466,55 @@ tdstActionTable_* fn_p_stSimulateAllocActionTable(char** p_ptr, unsigned char uc
     return p_stActionTable;
 }
 
+/* addr: 0x001fac50  size: 732 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1539
+ *   +0x0020 -> line 1540
+ *   +0x0030 -> line 1547
+ *   +0x0034 -> line 1550
+ *   +0x0038 -> line 1551
+ *   +0x003c -> line 1564
+ *   +0x0048 -> line 1571
+ *   +0x009c -> line 1572
+ *   +0x00a0 -> line 1573
+ *   +0x00a8 -> line 1575
+ *   +0x00b0 -> line 1577
+ *   +0x00b8 -> line 1580
+ *   +0x00bc -> line 1583
+ *   +0x00c0 -> line 1584
+ *   +0x00c8 -> line 1586
+ *   +0x00d4 -> line 1591
+ *   +0x00e0 -> line 1598
+ *   +0x0134 -> line 1600
+ *   +0x0138 -> line 1601
+ *   +0x0140 -> line 1603
+ *   +0x0148 -> line 1605
+ *   +0x0150 -> line 1608
+ *   +0x0154 -> line 1613
+ *   +0x0158 -> line 1614
+ *   +0x016c -> line 1616
+ *   +0x0178 -> line 1618
+ *   +0x01c4 -> line 1619
+ *   +0x01dc -> line 1622
+ *   +0x01ec -> line 1624
+ *   +0x0218 -> line 1627
+ *   +0x0238 -> line 1633
+ *   +0x023c -> line 1634
+ *   +0x0244 -> line 1636
+ *   +0x024c -> line 1637
+ *   +0x0254 -> line 1640
+ *   +0x0258 -> line 1641
+ *   +0x0260 -> line 1643
+ *   +0x0268 -> line 1644
+ *   +0x0270 -> line 1647
+ *   +0x027c -> line 1650
+ *   +0x0288 -> line 1653
+ *   +0x02a0 -> line 1654
+ *   +0x02a8 -> line 1658
+ *   +0x02bc -> line 1668
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tdstMind_* p_stMindDst)
 {
     char* ptr;
@@ -3624,6 +3599,22 @@ void fn_vSimulateMindAllocationFromAnotherMind(AI_tdstMind_* p_stMindSrc, AI_tds
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIBase\AI_Proto.c lines 32–52 */
+/* addr: 0x001fabd0  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 32
+ *   +0x0004 -> line 34
+ *   +0x0018 -> line 39
+ *   +0x001c -> line 40
+ *   +0x002c -> line 42
+ *   +0x0038 -> line 44
+ *   +0x0044 -> line 46
+ *   +0x004c -> line 49
+ *   +0x0068 -> line 51
+ *   +0x006c -> line 52
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_ucIsRuleInActionTable(tdstIntelligence_* p_stIntelligence, unsigned char ucNumRule)
 {
     /* The debug local list is (p_stEntry, ucCurrentEntry, ucNbEntries); the retail

@@ -398,24 +398,6 @@ extern "C" tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
 extern "C" HIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_*);
 extern "C" int fn_bTestCustomBitSubAnim(HIE_tdstSuperObject_*, unsigned int, unsigned int);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1085–1116 */
-/* addr: 0x0020dc40  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1085
- *   +0x0004 -> line 1095
- *   +0x0008 -> line 1085
- *   +0x0018 -> line 1086
- *   +0x001c -> line 1095
- *   +0x002c -> line 1101
- *   +0x0034 -> line 1104
- *   +0x0044 -> line 1106
- *   +0x004c -> line 1114
- *   +0x0054 -> line 1115
- *   +0x0058 -> line 1116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 extern "C" tdstNodeInterpret_* fn_p_stCheckMCStatus(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
@@ -441,315 +423,282 @@ extern "C" tdstNodeInterpret_* fn_p_stCollisionWP(HIE_tdstSuperObject_* p_SuperO
 extern "C" tdstNodeInterpret_* fn_p_stCustomBitsCond(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
 extern "C" tdstNodeInterpret_* fn_p_stZDMCollideWithObstacle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1054–1080 */
-/* addr: 0x0020dcb0  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1054
- *   +0x0004 -> line 1064
- *   +0x0008 -> line 1054
- *   +0x0018 -> line 1055
- *   +0x001c -> line 1064
- *   +0x002c -> line 1069
- *   +0x0038 -> line 1070
- *   +0x0040 -> line 1078
- *   +0x0048 -> line 1079
- *   +0x004c -> line 1080
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Target callback uses a1/a2 for tree/result; debug omitted unused a0. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1029–1046 */
-/* addr: 0x0020dd10  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1029
- *   +0x0014 -> line 1034
- *   +0x0024 -> line 1044
- *   +0x0028 -> line 1046
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Target callback uses a1/a2 for tree/result; debug omitted unused a0. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 971–1005 */
-/* addr: 0x0020dd50  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 971
- *   +0x0024 -> line 972
- *   +0x0028 -> line 979
- *   +0x0040 -> line 981
- *   +0x0054 -> line 988
- *   +0x0060 -> line 989
- *   +0x0064 -> line 988
- *   +0x0068 -> line 991
- *   +0x0078 -> line 994
- *   +0x0090 -> line 995
- *   +0x0098 -> line 1003
- *   +0x00a0 -> line 1004
- *   +0x00a4 -> line 1005
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 920–953 */
-/* addr: 0x0020de10  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 920
- *   +0x0024 -> line 921
- *   +0x0028 -> line 928
- *   +0x0040 -> line 930
- *   +0x006c -> line 933
- *   +0x0078 -> line 934
- *   +0x0090 -> line 935
- *   +0x009c -> line 938
- *   +0x00a8 -> line 939
- *   +0x00bc -> line 940
- *   +0x00c4 -> line 943
- *   +0x00d0 -> line 944
- *   +0x00e4 -> line 945
- *   +0x00ec -> line 951
- *   +0x00f4 -> line 952
- *   +0x00f8 -> line 953
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 868–902 */
-/* addr: 0x0020df30  size: 184 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 868
- *   +0x001c -> line 876
- *   +0x0038 -> line 879
- *   +0x0050 -> line 882
- *   +0x0058 -> line 885
- *   +0x0060 -> line 886
- *   +0x0068 -> line 890
- *   +0x007c -> line 892
- *   +0x0090 -> line 893
- *   +0x0098 -> line 897
- *   +0x009c -> line 901
- *   +0x00a0 -> line 902
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 823–825 */
-/* addr: 0x0020dff0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 823
- *   +0x0004 -> line 824
- *   +0x0008 -> line 823
- *   +0x000c -> line 825
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 812–816 */
-/* addr: 0x0020e010  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 812
- *   +0x0014 -> line 813
- *   +0x0024 -> line 814
- *   +0x0028 -> line 816
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Target callback uses a1/a2 for tree/result; debug omitted unused a0. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 799–807 */
-/* addr: 0x0020e050  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 799
- *   +0x0014 -> line 801
- *   +0x0024 -> line 805
- *   +0x0028 -> line 807
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* Target callback uses a1/a2 for tree/result; debug omitted unused a0. */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 777–792 */
-/* addr: 0x0020e090  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 777
- *   +0x0014 -> line 781
- *   +0x001c -> line 785
- *   +0x002c -> line 790
- *   +0x0030 -> line 792
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+#pragma optimize_for_size off
+inline int MTH_bIsNull(float xValue)
+{
+    int bResult = 1;
+    if (!(MTH_xAbs(xValue) < 0.00001f))
+        bResult = 0;
+    return bResult;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 720–757 */
-/* addr: 0x0020e0e0  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 720
- *   +0x0020 -> line 721
- *   +0x0028 -> line 728
- *   +0x0040 -> line 730
- *   +0x0050 -> line 731
- *   +0x0070 -> line 735
- *   +0x008c -> line 736
- *   +0x0094 -> line 741
- *   +0x00a0 -> line 742
- *   +0x00c4 -> line 747
- *   +0x00cc -> line 755
- *   +0x00d4 -> line 756
- *   +0x00d8 -> line 757
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+#pragma optimize_for_size reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 670–708 */
-/* addr: 0x0020e1e0  size: 260 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 670
- *   +0x0024 -> line 672
- *   +0x0028 -> line 678
- *   +0x0040 -> line 680
- *   +0x0044 -> line 681
- *   +0x0048 -> line 680
- *   +0x004c -> line 681
- *   +0x0084 -> line 684
- *   +0x0090 -> line 685
- *   +0x0098 -> line 688
- *   +0x00a4 -> line 689
- *   +0x00ac -> line 692
- *   +0x00b8 -> line 693
- *   +0x00c0 -> line 696
- *   +0x00cc -> line 697
- *   +0x00d4 -> line 700
- *   +0x00e4 -> line 707
- *   +0x00e8 -> line 708
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+inline int TestStateCustomBits(tdstState_* hState, unsigned int ulMask)
+{
+    int bResult;
+    if (hState) {
+        if (!(ulMask & fn_ucGetStateCustomBits(hState)))
+            bResult = 0;
+        else
+            bResult = 1;
+    } else {
+        bResult = 0;
+    }
+    return bResult;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 642–655 */
-/* addr: 0x0020e2f0  size: 104 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 642
- *   +0x0014 -> line 644
- *   +0x0020 -> line 646
- *   +0x0030 -> line 648
- *   +0x0038 -> line 650
- *   +0x0044 -> line 651
- *   +0x004c -> line 653
- *   +0x0050 -> line 654
- *   +0x0054 -> line 655
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+inline unsigned char TestCollidedMaterial(GMT_tdstGameMaterial_* hMaterial, unsigned short xTestMask)
+{
+    GMT_tdstCollideMaterial_* hCollideMaterial;
+    unsigned short xIdentifier;
+    if (!GMT_fn_b_ulIsValid(hMaterial))
+        return 0;
+    hCollideMaterial = GMT_fn_hGetCollideMaterial(hMaterial);
+    if (hCollideMaterial == (GMT_tdstCollideMaterial_*)-1)
+        return 0;
+    xIdentifier = GMT_fn_hGetCollideMaterialIdentifier(hCollideMaterial);
+    return xTestMask == (xTestMask & xIdentifier);
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 542–631 */
-/* addr: 0x0020e360  size: 512 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 14–69 */
+/* addr: 0x0020eee0  size: 632 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 542
- *   +0x0028 -> line 547
- *   +0x002c -> line 542
- *   +0x0030 -> line 546
- *   +0x0034 -> line 543
- *   +0x0038 -> line 555
- *   +0x0050 -> line 559
- *   +0x007c -> line 566
- *   +0x008c -> line 567
- *   +0x0090 -> line 566
- *   +0x0094 -> line 569
- *   +0x00a4 -> line 570
- *   +0x00a8 -> line 571
- *   +0x00b0 -> line 575
- *   +0x00c0 -> line 576
- *   +0x00c4 -> line 578
- *   +0x00d4 -> line 581
- *   +0x00e4 -> line 583
- *   +0x00ec -> line 586
- *   +0x00f0 -> line 587
- *   +0x00f8 -> line 594
- *   +0x011c -> line 595
- *   +0x0124 -> line 597
- *   +0x012c -> line 595
- *   +0x0130 -> line 597
- *   +0x0138 -> line 598
- *   +0x013c -> line 599
- *   +0x0144 -> line 604
- *   +0x0168 -> line 605
- *   +0x0170 -> line 607
- *   +0x0178 -> line 605
- *   +0x017c -> line 607
- *   +0x0184 -> line 610
- *   +0x0194 -> line 612
- *   +0x019c -> line 615
- *   +0x01a4 -> line 624
- *   +0x01bc -> line 625
- *   +0x01cc -> line 628
- *   +0x01d8 -> line 630
- *   +0x01dc -> line 631
+ *   +0x0000 -> line 14
+ *   +0x0024 -> line 20
+ *   +0x002c -> line 27
+ *   +0x0044 -> line 30
+ *   +0x0054 -> line 32
+ *   +0x0058 -> line 33
+ *   +0x0060 -> line 36
+ *   +0x0070 -> line 38
+ *   +0x0074 -> line 36
+ *   +0x0078 -> line 40
+ *   +0x007c -> line 44
+ *   +0x00b4 -> line 47
+ *   +0x00bc -> line 48
+ *   +0x0114 -> line 49
+ *   +0x011c -> line 52
+ *   +0x0124 -> line 53
+ *   +0x017c -> line 54
+ *   +0x0184 -> line 57
+ *   +0x018c -> line 58
+ *   +0x01e4 -> line 59
+ *   +0x01ec -> line 62
+ *   +0x01f8 -> line 63
+ *   +0x0254 -> line 68
+ *   +0x0258 -> line 69
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stZDMCollideWithObstacle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+{
+    unsigned short xTestMask;
+    unsigned int ulSurfState;
+    DNM_stReport* p_stDynamReport;
+    tdeCondId_ eCondId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stParam;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    if (!(p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso))) {
+        *p_lValue = 0;
+        return p_stTree;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ulSurfState = p_stDynamReport->m_ulCurrSurfaceState;
+    xTestMask = (unsigned short)stParam.uParam.lValue;
+    *p_lValue = 0;
+    switch (eCondId) {
+    case 0x49:
+        if (ulSurfState)
+            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stObstacle.hCollidedMaterial, xTestMask);
+        break;
+    case 0x4a:
+        if (ulSurfState & 4)
+            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stWall.hCollidedMaterial, xTestMask);
+        break;
+    case 0x4b:
+        if (ulSurfState & 1)
+            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stGround.hCollidedMaterial, xTestMask);
+        break;
+    case 0x4c:
+        if (ulSurfState & 0x10)
+            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stCeil.hCollidedMaterial, xTestMask);
+        break;
+    }
+    return p_stTree;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 478–524 */
-/* addr: 0x0020e560  size: 268 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 85–137 */
+/* addr: 0x0020ed90  size: 332 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 478
- *   +0x001c -> line 491
- *   +0x0038 -> line 494
- *   +0x0050 -> line 495
- *   +0x0060 -> line 499
- *   +0x006c -> line 500
- *   +0x0074 -> line 502
- *   +0x007c -> line 503
- *   +0x0084 -> line 505
- *   +0x009c -> line 507
- *   +0x00a8 -> line 508
- *   +0x00b0 -> line 509
- *   +0x00b8 -> line 514
- *   +0x00c4 -> line 516
- *   +0x00d4 -> line 518
- *   +0x00d8 -> line 519
- *   +0x00e4 -> line 521
- *   +0x00f0 -> line 523
- *   +0x00f4 -> line 524
+ *   +0x0000 -> line 85
+ *   +0x0024 -> line 88
+ *   +0x0028 -> line 93
+ *   +0x0040 -> line 96
+ *   +0x0054 -> line 98
+ *   +0x0074 -> line 103
+ *   +0x0090 -> line 106
+ *   +0x00b0 -> line 107
+ *   +0x00b8 -> line 111
+ *   +0x00dc -> line 114
+ *   +0x00e4 -> line 126
+ *   +0x00f4 -> line 127
+ *   +0x012c -> line 136
+ *   +0x0130 -> line 137
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stCustomBitsCond(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+{
+    unsigned int ulMask;
+    tdeCondId_ eCondId;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stParam;
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    switch (eCondId) {
+    default:
+        *p_lValue = 0;
+        break;
+    case 0x57:
+        {
+            int iBit = stParam.uParam.lValue - 1;
+            iBit = (short)iBit;
+            if (iBit < 32)
+                *p_lValue = ((1 << iBit) & hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits) ? 1 : 0;
+            else
+                *p_lValue = ((1 << (iBit - 32)) & hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulAICustomBits) ? 1 : 0;
+        }
+        break;
+    case 0x5a:
+        ulMask = stParam.uParam.ulValue;
+        {
+            tdstState_* hState = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
+            *p_lValue = TestStateCustomBits(hState, ulMask);
+        }
+        break;
+    }
+    return p_stTree;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 450–469 */
-/* addr: 0x0020e670  size: 144 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 150–193 */
+/* addr: 0x0020ec20  size: 360 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 450
- *   +0x0024 -> line 451
- *   +0x0028 -> line 457
- *   +0x0040 -> line 459
- *   +0x0054 -> line 462
- *   +0x0060 -> line 463
- *   +0x0068 -> line 467
- *   +0x0070 -> line 468
- *   +0x0074 -> line 469
+ *   +0x0000 -> line 150
+ *   +0x0018 -> line 158
+ *   +0x002c -> line 159
+ *   +0x0038 -> line 162
+ *   +0x0040 -> line 159
+ *   +0x0044 -> line 162
+ *   +0x004c -> line 163
+ *   +0x0050 -> line 166
+ *   +0x0060 -> line 168
+ *   +0x0064 -> line 169
+ *   +0x006c -> line 174
+ *   +0x0078 -> line 176
+ *   +0x0080 -> line 178
+ *   +0x00c0 -> line 179
+ *   +0x00c8 -> line 182
+ *   +0x0104 -> line 187
+ *   +0x013c -> line 188
+ *   +0x0144 -> line 190
+ *   +0x0148 -> line 192
+ *   +0x014c -> line 193
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* fn_p_stCollisionWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+{
+    MTH3D_tdstVector_ stPosWP;
+    HIE_tdstSuperObject_* hPerso;
+    WP_tdstWayPoint_* hWP;
+    tdstGetSetParam_ stParam;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    hWP = (WP_tdstWayPoint_*)stParam.uParam.pValue;
+    if (!hPerso || !hWP) {
+        *p_lValue = 0;
+        return p_stTree;
+    }
+    if (hWP->m_hSuperObject) {
+        WP_fnv_WayPoint_ComputeLocation(hWP, &stPosWP);
+        stPosWP.xX = stPosWP.xX - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+        stPosWP.xY = stPosWP.xY - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+        stPosWP.xZ = stPosWP.xZ - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+    } else {
+        stPosWP.xX = hWP->m_stVertex.xX - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
+        stPosWP.xY = hWP->m_stVertex.xY - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
+        stPosWP.xZ = hWP->m_stVertex.xZ - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
+    }
+    {
+        float xResult;
+        float xRadius;
+        float xX = stPosWP.xX;
+        float xY = stPosWP.xY;
+        float xZ = stPosWP.xZ;
+        xRadius = hWP->m_xRadius;
+        /* Retail +0x114..0x120 uses this accumulator chain. */
+        asm {
+            mula.s xX, xX
+            madda.s xY, xY
+            madda.s xZ, xZ
+            msub.s xResult, xRadius, xRadius
+        }
+        if (!(xResult <= 0.0f))
+            *p_lValue = 0;
+        else
+            *p_lValue = 1;
+    }
+    return p_stTree;
+}
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 407–439 */
-/* addr: 0x0020e700  size: 224 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 209–221 */
+/* addr: 0x0020eb40  size: 216 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 407
- *   +0x0024 -> line 408
- *   +0x0028 -> line 415
- *   +0x0040 -> line 417
- *   +0x0068 -> line 420
- *   +0x0074 -> line 421
- *   +0x007c -> line 425
- *   +0x0088 -> line 426
- *   +0x0090 -> line 430
- *   +0x009c -> line 431
- *   +0x00b0 -> line 432
- *   +0x00b8 -> line 437
- *   +0x00c0 -> line 438
- *   +0x00c4 -> line 439
+ *   +0x0000 -> line 209
+ *   +0x0010 -> line 214
+ *   +0x0018 -> line 217
+ *   +0x001c -> line 214
+ *   +0x0020 -> line 217
+ *   +0x0024 -> line 215
+ *   +0x0028 -> line 217
+ *   +0x00bc -> line 220
+ *   +0x00c0 -> line 217
+ *   +0x00c8 -> line 221
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma optimize_for_size off
+tdstNodeInterpret_* fn_p_stNullVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
+{
+    MTH3D_tdstVector_* p_stVector;
+    tdstGetSetParam_ stParam;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    p_stVector = &stParam.uParam.stVectorValue;
+    {
+        int bResult = MTH_bIsNull(p_stVector->xX);
+        if (bResult)
+            bResult = MTH_bIsNull(p_stVector->xY);
+        bResult = bResult != 0;
+        if (bResult)
+            bResult = MTH_bIsNull(p_stVector->xZ);
+        *p_lValue = bResult ? 1 : 0;
+    }
+    return p_stTree;
+}
+#pragma optimize_for_size reset
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 231–395 */
 /* addr: 0x0020e7e0  size: 864 bytes */
@@ -840,277 +789,6 @@ extern "C" tdstNodeInterpret_* fn_p_stZDMCollideWithObstacle(HIE_tdstSuperObject
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 209–221 */
-/* addr: 0x0020eb40  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 209
- *   +0x0010 -> line 214
- *   +0x0018 -> line 217
- *   +0x001c -> line 214
- *   +0x0020 -> line 217
- *   +0x0024 -> line 215
- *   +0x0028 -> line 217
- *   +0x00bc -> line 220
- *   +0x00c0 -> line 217
- *   +0x00c8 -> line 221
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma optimize_for_size off
-inline int MTH_bIsNull(float xValue)
-{
-    int bResult = 1;
-    if (!(MTH_xAbs(xValue) < 0.00001f))
-        bResult = 0;
-    return bResult;
-}
-
-#pragma optimize_for_size reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 150–193 */
-/* addr: 0x0020ec20  size: 360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 150
- *   +0x0018 -> line 158
- *   +0x002c -> line 159
- *   +0x0038 -> line 162
- *   +0x0040 -> line 159
- *   +0x0044 -> line 162
- *   +0x004c -> line 163
- *   +0x0050 -> line 166
- *   +0x0060 -> line 168
- *   +0x0064 -> line 169
- *   +0x006c -> line 174
- *   +0x0078 -> line 176
- *   +0x0080 -> line 178
- *   +0x00c0 -> line 179
- *   +0x00c8 -> line 182
- *   +0x0104 -> line 187
- *   +0x013c -> line 188
- *   +0x0144 -> line 190
- *   +0x0148 -> line 192
- *   +0x014c -> line 193
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 85–137 */
-/* addr: 0x0020ed90  size: 332 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 85
- *   +0x0024 -> line 88
- *   +0x0028 -> line 93
- *   +0x0040 -> line 96
- *   +0x0054 -> line 98
- *   +0x0074 -> line 103
- *   +0x0090 -> line 106
- *   +0x00b0 -> line 107
- *   +0x00b8 -> line 111
- *   +0x00dc -> line 114
- *   +0x00e4 -> line 126
- *   +0x00f4 -> line 127
- *   +0x012c -> line 136
- *   +0x0130 -> line 137
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-inline int TestStateCustomBits(tdstState_* hState, unsigned int ulMask)
-{
-    int bResult;
-    if (hState) {
-        if (!(ulMask & fn_ucGetStateCustomBits(hState)))
-            bResult = 0;
-        else
-            bResult = 1;
-    } else {
-        bResult = 0;
-    }
-    return bResult;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 14–69 */
-/* addr: 0x0020eee0  size: 632 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 14
- *   +0x0024 -> line 20
- *   +0x002c -> line 27
- *   +0x0044 -> line 30
- *   +0x0054 -> line 32
- *   +0x0058 -> line 33
- *   +0x0060 -> line 36
- *   +0x0070 -> line 38
- *   +0x0074 -> line 36
- *   +0x0078 -> line 40
- *   +0x007c -> line 44
- *   +0x00b4 -> line 47
- *   +0x00bc -> line 48
- *   +0x0114 -> line 49
- *   +0x011c -> line 52
- *   +0x0124 -> line 53
- *   +0x017c -> line 54
- *   +0x0184 -> line 57
- *   +0x018c -> line 58
- *   +0x01e4 -> line 59
- *   +0x01ec -> line 62
- *   +0x01f8 -> line 63
- *   +0x0254 -> line 68
- *   +0x0258 -> line 69
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-inline unsigned char TestCollidedMaterial(GMT_tdstGameMaterial_* hMaterial, unsigned short xTestMask)
-{
-    GMT_tdstCollideMaterial_* hCollideMaterial;
-    unsigned short xIdentifier;
-    if (!GMT_fn_b_ulIsValid(hMaterial))
-        return 0;
-    hCollideMaterial = GMT_fn_hGetCollideMaterial(hMaterial);
-    if (hCollideMaterial == (GMT_tdstCollideMaterial_*)-1)
-        return 0;
-    xIdentifier = GMT_fn_hGetCollideMaterialIdentifier(hCollideMaterial);
-    return xTestMask == (xTestMask & xIdentifier);
-}
-
-tdstNodeInterpret_* fn_p_stZDMCollideWithObstacle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
-{
-    unsigned short xTestMask;
-    unsigned int ulSurfState;
-    DNM_stReport* p_stDynamReport;
-    tdeCondId_ eCondId;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
-    eCondId = p_stTree[-1].uDummy.uId.eCondId;
-    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
-    if (!(p_stDynamReport = fn_pstGetDNMReport(hNewSuperObjPerso))) {
-        *p_lValue = 0;
-        return p_stTree;
-    }
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    ulSurfState = p_stDynamReport->m_ulCurrSurfaceState;
-    xTestMask = (unsigned short)stParam.uParam.lValue;
-    *p_lValue = 0;
-    switch (eCondId) {
-    case 0x49:
-        if (ulSurfState)
-            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stObstacle.hCollidedMaterial, xTestMask);
-        break;
-    case 0x4a:
-        if (ulSurfState & 4)
-            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stWall.hCollidedMaterial, xTestMask);
-        break;
-    case 0x4b:
-        if (ulSurfState & 1)
-            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stGround.hCollidedMaterial, xTestMask);
-        break;
-    case 0x4c:
-        if (ulSurfState & 0x10)
-            *p_lValue = TestCollidedMaterial(p_stDynamReport->m_stCeil.hCollidedMaterial, xTestMask);
-        break;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stCustomBitsCond(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
-{
-    unsigned int ulMask;
-    tdeCondId_ eCondId;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stParam;
-    eCondId = p_stTree[-1].uDummy.uId.eCondId;
-    fn_vGetUltraOperatorPerso(fn_ucGetConditionUltraOperator(eCondId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    switch (eCondId) {
-    default:
-        *p_lValue = 0;
-        break;
-    case 0x57:
-        {
-            int iBit = stParam.uParam.lValue - 1;
-            iBit = (short)iBit;
-            if (iBit < 32)
-                *p_lValue = ((1 << iBit) & hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulCustomBits) ? 1 : 0;
-            else
-                *p_lValue = ((1 << (iBit - 32)) & hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_StandardGame->ulAICustomBits) ? 1 : 0;
-        }
-        break;
-    case 0x5a:
-        ulMask = stParam.uParam.ulValue;
-        {
-            tdstState_* hState = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_3dData->h_CurrentState;
-            *p_lValue = TestStateCustomBits(hState, ulMask);
-        }
-        break;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* fn_p_stCollisionWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
-{
-    MTH3D_tdstVector_ stPosWP;
-    HIE_tdstSuperObject_* hPerso;
-    WP_tdstWayPoint_* hWP;
-    tdstGetSetParam_ stParam;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hPerso = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)stParam.uParam.pValue)->h_StandardGame);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    hWP = (WP_tdstWayPoint_*)stParam.uParam.pValue;
-    if (!hPerso || !hWP) {
-        *p_lValue = 0;
-        return p_stTree;
-    }
-    if (hWP->m_hSuperObject) {
-        WP_fnv_WayPoint_ComputeLocation(hWP, &stPosWP);
-        stPosWP.xX = stPosWP.xX - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
-        stPosWP.xY = stPosWP.xY - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
-        stPosWP.xZ = stPosWP.xZ - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
-    } else {
-        stPosWP.xX = hWP->m_stVertex.xX - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xX;
-        stPosWP.xY = hWP->m_stVertex.xY - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xY;
-        stPosWP.xZ = hWP->m_stVertex.xZ - hPerso->hGlobalMatrix->stTransformMatrix.stCol_3.xZ;
-    }
-    {
-        float xResult;
-        float xRadius;
-        float xX = stPosWP.xX;
-        float xY = stPosWP.xY;
-        float xZ = stPosWP.xZ;
-        xRadius = hWP->m_xRadius;
-        /* Retail +0x114..0x120 uses this accumulator chain. */
-        asm {
-            mula.s xX, xX
-            madda.s xY, xY
-            madda.s xZ, xZ
-            msub.s xResult, xRadius, xRadius
-        }
-        if (!(xResult <= 0.0f))
-            *p_lValue = 0;
-        else
-            *p_lValue = 1;
-    }
-    return p_stTree;
-}
-
-#pragma optimize_for_size off
-tdstNodeInterpret_* fn_p_stNullVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
-{
-    MTH3D_tdstVector_* p_stVector;
-    tdstGetSetParam_ stParam;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
-    p_stVector = &stParam.uParam.stVectorValue;
-    {
-        int bResult = MTH_bIsNull(p_stVector->xX);
-        if (bResult)
-            bResult = MTH_bIsNull(p_stVector->xY);
-        bResult = bResult != 0;
-        if (bResult)
-            bResult = MTH_bIsNull(p_stVector->xZ);
-        *p_lValue = bResult ? 1 : 0;
-    }
-    return p_stTree;
-}
-#pragma optimize_for_size reset
-
 tdstNodeInterpret_* fn_p_stMechanicOption(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     DNM_stDynamics* pstDynamic;
@@ -1233,6 +911,26 @@ tdstNodeInterpret_* fn_p_stMechanicOption(HIE_tdstSuperObject_* p_SuperObjPerso,
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 407–439 */
+/* addr: 0x0020e700  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 407
+ *   +0x0024 -> line 408
+ *   +0x0028 -> line 415
+ *   +0x0040 -> line 417
+ *   +0x0068 -> line 420
+ *   +0x0074 -> line 421
+ *   +0x007c -> line 425
+ *   +0x0088 -> line 426
+ *   +0x0090 -> line 430
+ *   +0x009c -> line 431
+ *   +0x00b0 -> line 432
+ *   +0x00b8 -> line 437
+ *   +0x00c0 -> line 438
+ *   +0x00c4 -> line 439
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckAnimEnd(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
@@ -1257,6 +955,21 @@ tdstNodeInterpret_* fn_p_stCheckAnimEnd(HIE_tdstSuperObject_* p_SuperObjPerso, t
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 450–469 */
+/* addr: 0x0020e670  size: 144 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 450
+ *   +0x0024 -> line 451
+ *   +0x0028 -> line 457
+ *   +0x0040 -> line 459
+ *   +0x0054 -> line 462
+ *   +0x0060 -> line 463
+ *   +0x0068 -> line 467
+ *   +0x0070 -> line 468
+ *   +0x0074 -> line 469
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckAnimSmooth(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     HIE_tdstSuperObject_* hNewSuperObjPerso;
@@ -1273,6 +986,31 @@ tdstNodeInterpret_* fn_p_stCheckAnimSmooth(HIE_tdstSuperObject_* p_SuperObjPerso
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 478–524 */
+/* addr: 0x0020e560  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 478
+ *   +0x001c -> line 491
+ *   +0x0038 -> line 494
+ *   +0x0050 -> line 495
+ *   +0x0060 -> line 499
+ *   +0x006c -> line 500
+ *   +0x0074 -> line 502
+ *   +0x007c -> line 503
+ *   +0x0084 -> line 505
+ *   +0x009c -> line 507
+ *   +0x00a8 -> line 508
+ *   +0x00b0 -> line 509
+ *   +0x00b8 -> line 514
+ *   +0x00c4 -> line 516
+ *   +0x00d4 -> line 518
+ *   +0x00d8 -> line 519
+ *   +0x00e4 -> line 521
+ *   +0x00f0 -> line 523
+ *   +0x00f4 -> line 524
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stHierarchySon(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdstDynam_* h_Dynam;
@@ -1310,6 +1048,52 @@ tdstNodeInterpret_* fn_p_stHierarchySon(HIE_tdstSuperObject_* p_SuperObjPerso, t
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 542–631 */
+/* addr: 0x0020e360  size: 512 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 542
+ *   +0x0028 -> line 547
+ *   +0x002c -> line 542
+ *   +0x0030 -> line 546
+ *   +0x0034 -> line 543
+ *   +0x0038 -> line 555
+ *   +0x0050 -> line 559
+ *   +0x007c -> line 566
+ *   +0x008c -> line 567
+ *   +0x0090 -> line 566
+ *   +0x0094 -> line 569
+ *   +0x00a4 -> line 570
+ *   +0x00a8 -> line 571
+ *   +0x00b0 -> line 575
+ *   +0x00c0 -> line 576
+ *   +0x00c4 -> line 578
+ *   +0x00d4 -> line 581
+ *   +0x00e4 -> line 583
+ *   +0x00ec -> line 586
+ *   +0x00f0 -> line 587
+ *   +0x00f8 -> line 594
+ *   +0x011c -> line 595
+ *   +0x0124 -> line 597
+ *   +0x012c -> line 595
+ *   +0x0130 -> line 597
+ *   +0x0138 -> line 598
+ *   +0x013c -> line 599
+ *   +0x0144 -> line 604
+ *   +0x0168 -> line 605
+ *   +0x0170 -> line 607
+ *   +0x0178 -> line 605
+ *   +0x017c -> line 607
+ *   +0x0184 -> line 610
+ *   +0x0194 -> line 612
+ *   +0x019c -> line 615
+ *   +0x01a4 -> line 624
+ *   +0x01bc -> line 625
+ *   +0x01cc -> line 628
+ *   +0x01d8 -> line 630
+ *   +0x01dc -> line 631
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckCapabilities(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
@@ -1357,6 +1141,21 @@ tdstNodeInterpret_* fn_p_stCheckCapabilities(HIE_tdstSuperObject_* p_SuperObjPer
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 642–655 */
+/* addr: 0x0020e2f0  size: 104 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 642
+ *   +0x0014 -> line 644
+ *   +0x0020 -> line 646
+ *   +0x0030 -> line 648
+ *   +0x0038 -> line 650
+ *   +0x0044 -> line 651
+ *   +0x004c -> line 653
+ *   +0x0050 -> line 654
+ *   +0x0054 -> line 655
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stIsPersoActive(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdstGetSetParam_ stParam;
@@ -1368,6 +1167,30 @@ tdstNodeInterpret_* fn_p_stIsPersoActive(HIE_tdstSuperObject_* p_SuperObjPerso, 
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 670–708 */
+/* addr: 0x0020e1e0  size: 260 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 670
+ *   +0x0024 -> line 672
+ *   +0x0028 -> line 678
+ *   +0x0040 -> line 680
+ *   +0x0044 -> line 681
+ *   +0x0048 -> line 680
+ *   +0x004c -> line 681
+ *   +0x0084 -> line 684
+ *   +0x0090 -> line 685
+ *   +0x0098 -> line 688
+ *   +0x00a4 -> line 689
+ *   +0x00ac -> line 692
+ *   +0x00b8 -> line 693
+ *   +0x00c0 -> line 696
+ *   +0x00cc -> line 697
+ *   +0x00d4 -> line 700
+ *   +0x00e4 -> line 707
+ *   +0x00e8 -> line 708
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stIsCollisionFlag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdstCollSet_* hCollSet;
@@ -1396,6 +1219,25 @@ tdstNodeInterpret_* fn_p_stIsCollisionFlag(HIE_tdstSuperObject_* p_SuperObjPerso
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 720–757 */
+/* addr: 0x0020e0e0  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 720
+ *   +0x0020 -> line 721
+ *   +0x0028 -> line 728
+ *   +0x0040 -> line 730
+ *   +0x0050 -> line 731
+ *   +0x0070 -> line 735
+ *   +0x008c -> line 736
+ *   +0x0094 -> line 741
+ *   +0x00a0 -> line 742
+ *   +0x00c4 -> line 747
+ *   +0x00cc -> line 755
+ *   +0x00d4 -> line 756
+ *   +0x00d8 -> line 757
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stIsOf(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
@@ -1425,6 +1267,17 @@ tdstNodeInterpret_* fn_p_stIsOf(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeI
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 777–792 */
+/* addr: 0x0020e090  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 777
+ *   +0x0014 -> line 781
+ *   +0x001c -> line 785
+ *   +0x002c -> line 790
+ *   +0x0030 -> line 792
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stAJoypadIsConnected(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdstGetSetParam_ stParam;
@@ -1433,24 +1286,72 @@ tdstNodeInterpret_* fn_p_stAJoypadIsConnected(HIE_tdstSuperObject_* p_SuperObjPe
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 799–807 */
+/* addr: 0x0020e050  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 799
+ *   +0x0014 -> line 801
+ *   +0x0024 -> line 805
+ *   +0x0028 -> line 807
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stAKeyJustPressed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     *p_lValue = IPT_fn_bAKeyJustPressed();
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 812–816 */
+/* addr: 0x0020e010  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 812
+ *   +0x0014 -> line 813
+ *   +0x0024 -> line 814
+ *   +0x0028 -> line 816
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stAButtonPadJustPressed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     *p_lValue = IPT_fn_bAButtonPadJustPressed();
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 823–825 */
+/* addr: 0x0020dff0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 823
+ *   +0x0004 -> line 824
+ *   +0x0008 -> line 823
+ *   +0x000c -> line 825
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stDemoCondition(void* p_unknown, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     *p_lValue = g_stEngineStructure.xDemoMode;
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 868–902 */
+/* addr: 0x0020df30  size: 184 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 868
+ *   +0x001c -> line 876
+ *   +0x0038 -> line 879
+ *   +0x0050 -> line 882
+ *   +0x0058 -> line 885
+ *   +0x0060 -> line 886
+ *   +0x0068 -> line 890
+ *   +0x007c -> line 892
+ *   +0x0090 -> line 893
+ *   +0x0098 -> line 897
+ *   +0x009c -> line 901
+ *   +0x00a0 -> line 902
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stTooFarCondition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdstStandardGame_* param0;
@@ -1470,6 +1371,28 @@ tdstNodeInterpret_* fn_p_stTooFarCondition(HIE_tdstSuperObject_* p_SuperObjPerso
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 920–953 */
+/* addr: 0x0020de10  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 920
+ *   +0x0024 -> line 921
+ *   +0x0028 -> line 928
+ *   +0x0040 -> line 930
+ *   +0x006c -> line 933
+ *   +0x0078 -> line 934
+ *   +0x0090 -> line 935
+ *   +0x009c -> line 938
+ *   +0x00a8 -> line 939
+ *   +0x00bc -> line 940
+ *   +0x00c4 -> line 943
+ *   +0x00d0 -> line 944
+ *   +0x00e4 -> line 945
+ *   +0x00ec -> line 951
+ *   +0x00f4 -> line 952
+ *   +0x00f8 -> line 953
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckSubAnim(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
@@ -1496,6 +1419,25 @@ tdstNodeInterpret_* fn_p_stCheckSubAnim(HIE_tdstSuperObject_* p_SuperObjPerso, t
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 971–1005 */
+/* addr: 0x0020dd50  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 971
+ *   +0x0024 -> line 972
+ *   +0x0028 -> line 979
+ *   +0x0040 -> line 981
+ *   +0x0054 -> line 988
+ *   +0x0060 -> line 989
+ *   +0x0064 -> line 988
+ *   +0x0068 -> line 991
+ *   +0x0078 -> line 994
+ *   +0x0090 -> line 995
+ *   +0x0098 -> line 1003
+ *   +0x00a0 -> line 1004
+ *   +0x00a4 -> line 1005
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckCustomBitSubAnim(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
@@ -1517,12 +1459,38 @@ tdstNodeInterpret_* fn_p_stCheckCustomBitSubAnim(HIE_tdstSuperObject_* p_SuperOb
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1029–1046 */
+/* addr: 0x0020dd10  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1029
+ *   +0x0014 -> line 1034
+ *   +0x0024 -> line 1044
+ *   +0x0028 -> line 1046
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stLoadInProgress(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     *p_lValue = fn_bIsLoadInProgress();
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1054–1080 */
+/* addr: 0x0020dcb0  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1054
+ *   +0x0004 -> line 1064
+ *   +0x0008 -> line 1054
+ *   +0x0018 -> line 1055
+ *   +0x001c -> line 1064
+ *   +0x002c -> line 1069
+ *   +0x0038 -> line 1070
+ *   +0x0040 -> line 1078
+ *   +0x0048 -> line 1079
+ *   +0x004c -> line 1080
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckSAV2LastError(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdeCondId_ eCondId;
@@ -1537,6 +1505,23 @@ tdstNodeInterpret_* fn_p_stCheckSAV2LastError(HIE_tdstSuperObject_* p_SuperObjPe
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond1.cxx lines 1085–1116 */
+/* addr: 0x0020dc40  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1085
+ *   +0x0004 -> line 1095
+ *   +0x0008 -> line 1085
+ *   +0x0018 -> line 1086
+ *   +0x001c -> line 1095
+ *   +0x002c -> line 1101
+ *   +0x0034 -> line 1104
+ *   +0x0044 -> line 1106
+ *   +0x004c -> line 1114
+ *   +0x0054 -> line 1115
+ *   +0x0058 -> line 1116
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* fn_p_stCheckMCStatus(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* p_lValue)
 {
     tdstGetSetParam_ stParam;

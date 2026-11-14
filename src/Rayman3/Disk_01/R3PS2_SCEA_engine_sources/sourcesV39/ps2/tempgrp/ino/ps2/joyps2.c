@@ -74,15 +74,6 @@ unsigned int GLI_g_bInExpertRasters;
 unsigned int GLI_g_bInMenu;
 int g_EngineHasBeenPausedBecauseOfMC;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 27–28 */
-/* addr: 0x002eef80  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 27
- *   +0x0004 -> line 28
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev);
@@ -94,144 +85,8 @@ short INOPS2_fn_wRegisterJoystick(short _wJoystickNum);
 short INOPS2_fn_wInit(void);
 short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 791–802 */
-/* addr: 0x002eef90  size: 280 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 791
- *   +0x0004 -> line 797
- *   +0x0008 -> line 791
- *   +0x0018 -> line 792
- *   +0x001c -> line 794
- *   +0x0020 -> line 795
- *   +0x0024 -> line 797
- *   +0x0030 -> line 798
- *   +0x0040 -> line 799
- *   +0x0054 -> line 798
- *   +0x0058 -> line 799
- *   +0x0100 -> line 802
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void* memcpy(void* dst, const void* src, size_t n);
 short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 772–773 */
-/* addr: 0x002ef0b0  size: 44 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 772
- *   +0x0024 -> line 773
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 737–765 */
-/* addr: 0x002ef0e0  size: 656 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 737
- *   +0x0004 -> line 741
- *   +0x0008 -> line 737
- *   +0x000c -> line 741
- *   +0x0010 -> line 737
- *   +0x0020 -> line 741
- *   +0x0024 -> line 737
- *   +0x0028 -> line 741
- *   +0x002c -> line 737
- *   +0x0030 -> line 741
- *   +0x0034 -> line 737
- *   +0x0038 -> line 741
- *   +0x003c -> line 737
- *   +0x0040 -> line 742
- *   +0x0044 -> line 741
- *   +0x0048 -> line 742
- *   +0x004c -> line 741
- *   +0x0050 -> line 742
- *   +0x0054 -> line 741
- *   +0x0058 -> line 742
- *   +0x005c -> line 744
- *   +0x0068 -> line 745
- *   +0x0080 -> line 747
- *   +0x008c -> line 748
- *   +0x0094 -> line 749
- *   +0x00ac -> line 751
- *   +0x0128 -> line 752
- *   +0x01e8 -> line 755
- *   +0x0248 -> line 757
- *   +0x024c -> line 761
- *   +0x0258 -> line 765
- *   +0x025c -> line 761
- *   +0x0260 -> line 765
- *   +0x0274 -> line 761
- *   +0x0278 -> line 765
- *   +0x0280 -> line 761
- *   +0x0284 -> line 765
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 723–729 */
-/* addr: 0x002ef370  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 723
- *   +0x0004 -> line 728
- *   +0x0008 -> line 723
- *   +0x000c -> line 724
- *   +0x0010 -> line 725
- *   +0x0014 -> line 729
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 623–684 */
-/* addr: 0x002ef390  size: 876 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 623
- *   +0x0004 -> line 626
- *   +0x0008 -> line 623
- *   +0x0020 -> line 626
- *   +0x0024 -> line 623
- *   +0x0028 -> line 626
- *   +0x002c -> line 623
- *   +0x0030 -> line 626
- *   +0x0034 -> line 623
- *   +0x0038 -> line 626
- *   +0x0048 -> line 628
- *   +0x0058 -> line 629
- *   +0x005c -> line 628
- *   +0x0060 -> line 629
- *   +0x0064 -> line 628
- *   +0x0068 -> line 629
- *   +0x006c -> line 628
- *   +0x0070 -> line 629
- *   +0x0074 -> line 630
- *   +0x00a8 -> line 631
- *   +0x00bc -> line 635
- *   +0x0180 -> line 636
- *   +0x0190 -> line 638
- *   +0x01ec -> line 639
- *   +0x02b0 -> line 642
- *   +0x0310 -> line 645
- *   +0x0318 -> line 659
- *   +0x032c -> line 663
- *   +0x0330 -> line 673
- *   +0x033c -> line 684
- *   +0x0340 -> line 683
- *   +0x0344 -> line 684
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 598–605 */
-/* addr: 0x002ef700  size: 88 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 598
- *   +0x0008 -> line 599
- *   +0x0014 -> line 600
- *   +0x001c -> line 602
- *   +0x0028 -> line 604
- *   +0x004c -> line 605
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 325–587 */
 /* addr: 0x002ef760  size: 2324 bytes */
@@ -340,6 +195,18 @@ short fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyStat
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 598–605 */
+/* addr: 0x002ef700  size: 88 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 598
+ *   +0x0008 -> line 599
+ *   +0x0014 -> line 600
+ *   +0x001c -> line 602
+ *   +0x0028 -> line 604
+ *   +0x004c -> line 605
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short INOPS2_fn_wInit(void)
 {
     if (gs_iScePadInit)
@@ -348,6 +215,44 @@ short INOPS2_fn_wInit(void)
     return gs_iScePadInit == 1 ? 1 : -1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 623–684 */
+/* addr: 0x002ef390  size: 876 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 623
+ *   +0x0004 -> line 626
+ *   +0x0008 -> line 623
+ *   +0x0020 -> line 626
+ *   +0x0024 -> line 623
+ *   +0x0028 -> line 626
+ *   +0x002c -> line 623
+ *   +0x0030 -> line 626
+ *   +0x0034 -> line 623
+ *   +0x0038 -> line 626
+ *   +0x0048 -> line 628
+ *   +0x0058 -> line 629
+ *   +0x005c -> line 628
+ *   +0x0060 -> line 629
+ *   +0x0064 -> line 628
+ *   +0x0068 -> line 629
+ *   +0x006c -> line 628
+ *   +0x0070 -> line 629
+ *   +0x0074 -> line 630
+ *   +0x00a8 -> line 631
+ *   +0x00bc -> line 635
+ *   +0x0180 -> line 636
+ *   +0x0190 -> line 638
+ *   +0x01ec -> line 639
+ *   +0x02b0 -> line 642
+ *   +0x0310 -> line 645
+ *   +0x0318 -> line 659
+ *   +0x032c -> line 663
+ *   +0x0330 -> line 673
+ *   +0x033c -> line 684
+ *   +0x0340 -> line 683
+ *   +0x0344 -> line 684
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
 {
     int iSlot;
@@ -356,6 +261,18 @@ short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 723–729 */
+/* addr: 0x002ef370  size: 28 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 723
+ *   +0x0004 -> line 728
+ *   +0x0008 -> line 723
+ *   +0x000c -> line 724
+ *   +0x0010 -> line 725
+ *   +0x0014 -> line 729
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
 {
     _p_stJoyCaps->m_a_stAxisCaps[0].m_lRange = 128;
@@ -365,6 +282,49 @@ short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 737–765 */
+/* addr: 0x002ef0e0  size: 656 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 737
+ *   +0x0004 -> line 741
+ *   +0x0008 -> line 737
+ *   +0x000c -> line 741
+ *   +0x0010 -> line 737
+ *   +0x0020 -> line 741
+ *   +0x0024 -> line 737
+ *   +0x0028 -> line 741
+ *   +0x002c -> line 737
+ *   +0x0030 -> line 741
+ *   +0x0034 -> line 737
+ *   +0x0038 -> line 741
+ *   +0x003c -> line 737
+ *   +0x0040 -> line 742
+ *   +0x0044 -> line 741
+ *   +0x0048 -> line 742
+ *   +0x004c -> line 741
+ *   +0x0050 -> line 742
+ *   +0x0054 -> line 741
+ *   +0x0058 -> line 742
+ *   +0x005c -> line 744
+ *   +0x0068 -> line 745
+ *   +0x0080 -> line 747
+ *   +0x008c -> line 748
+ *   +0x0094 -> line 749
+ *   +0x00ac -> line 751
+ *   +0x0128 -> line 752
+ *   +0x01e8 -> line 755
+ *   +0x0248 -> line 757
+ *   +0x024c -> line 761
+ *   +0x0258 -> line 765
+ *   +0x025c -> line 761
+ *   +0x0260 -> line 765
+ *   +0x0274 -> line 761
+ *   +0x0278 -> line 765
+ *   +0x0280 -> line 761
+ *   +0x0284 -> line 765
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
 {
     int iSlot;
@@ -373,11 +333,37 @@ short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 772–773 */
+/* addr: 0x002ef0b0  size: 44 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 772
+ *   +0x0024 -> line 773
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short INOPS2_fn_wJoyCheckConnectionFast(short _wJoystickNum)
 {
     return !gs_a_DeconnectedJoy[(int)_wJoystickNum];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 791–802 */
+/* addr: 0x002eef90  size: 280 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 791
+ *   +0x0004 -> line 797
+ *   +0x0008 -> line 791
+ *   +0x0018 -> line 792
+ *   +0x001c -> line 794
+ *   +0x0020 -> line 795
+ *   +0x0024 -> line 797
+ *   +0x0030 -> line 798
+ *   +0x0040 -> line 799
+ *   +0x0054 -> line 798
+ *   +0x0058 -> line 799
+ *   +0x0100 -> line 802
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
 {
     stJoystickState* p_stState;
@@ -397,6 +383,14 @@ short INOPS2_fn_wReadJoystick(stDevice* _p_stDev)
     return wReturn;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 27–28 */
+/* addr: 0x002eef80  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 27
+ *   +0x0004 -> line 28
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned short INO_fn_uwJoyPreviousDirections(stDevice* _hDev)
 {
     return ((stJoystickState*)_hDev->m_p_stLastState)->m_uwDirections;

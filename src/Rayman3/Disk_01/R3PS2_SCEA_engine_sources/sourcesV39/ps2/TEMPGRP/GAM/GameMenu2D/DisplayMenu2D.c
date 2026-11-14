@@ -199,14 +199,6 @@ void TXT_fn_fComputePixelLengthOfString(char* szString, float* pfWidth, float* p
 char* strstr(const char* s, const char* t);
 void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float yYMin, float xXMax, float yYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 18–18 */
-/* addr: 0x0028dd30  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 18
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned int fn_uiOpenStream(char* szFilename);
@@ -238,156 +230,1457 @@ void fn_vAnimeBeginPage(void);
 void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
 void fn_vReinitSpriteScale(void);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2436–2534 */
-/* addr: 0x0028dd40  size: 4424 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2436
- *   +0x0014 -> line 2439
- *   +0x0088 -> line 2442
- *   +0x0090 -> line 2447
- *   +0x009c -> line 2451
- *   +0x00a4 -> line 2454
- *   +0x00ac -> line 2456
- *   +0x00e0 -> line 2460
- *   +0x0144 -> line 2463
- *   +0x017c -> line 2466
- *   +0x0184 -> line 2467
- *   +0x018c -> line 2469
- *   +0x0194 -> line 2470
- *   +0x019c -> line 2472
- *   +0x0220 -> line 2473
- *   +0x0228 -> line 2475
- *   +0x02d4 -> line 2480
- *   +0x02dc -> line 2484
- *   +0x02e8 -> line 2485
- *   +0x0360 -> line 2489
- *   +0x0368 -> line 2491
- *   +0x039c -> line 2494
- *   +0x03ac -> line 2495
- *   +0x03b4 -> line 2497
- *   +0x03c4 -> line 2498
- *   +0x08c4 -> line 2500
- *   +0x08cc -> line 2502
- *   +0x0914 -> line 2505
- *   +0x09f4 -> line 2506
- *   +0x09fc -> line 2508
- *   +0x0a04 -> line 2509
- *   +0x0a0c -> line 2511
- *   +0x0a40 -> line 2512
- *   +0x0aa4 -> line 2513
- *   +0x0ab4 -> line 2514
- *   +0x0b98 -> line 2515
- *   +0x0ba0 -> line 2517
- *   +0x0c80 -> line 2518
- *   +0x0e74 -> line 2519
- *   +0x0e7c -> line 2521
- *   +0x0e84 -> line 2523
- *   +0x0fc8 -> line 2525
- *   +0x0fd0 -> line 2527
- *   +0x0fe0 -> line 2528
- *   +0x111c -> line 2531
- *   +0x1128 -> line 2532
- *   +0x1130 -> line 2534
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName);
+int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName);
+int GLI_bLoadSnapShotTexture(char* _pFileName, int* p_hMaterial);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2187–2246 */
-/* addr: 0x0028ee90  size: 2692 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2187
- *   +0x0004 -> line 2194
- *   +0x0008 -> line 2187
- *   +0x000c -> line 2194
- *   +0x0010 -> line 2187
- *   +0x002c -> line 2194
- *   +0x0058 -> line 2197
- *   +0x0090 -> line 2198
- *   +0x0098 -> line 2200
- *   +0x00cc -> line 2201
- *   +0x00d4 -> line 2202
- *   +0x00d8 -> line 2201
- *   +0x00e0 -> line 2202
- *   +0x00e8 -> line 2201
- *   +0x010c -> line 2202
- *   +0x0114 -> line 2203
- *   +0x0128 -> line 2206
- *   +0x0160 -> line 2209
- *   +0x0198 -> line 2211
- *   +0x01a0 -> line 2212
- *   +0x01a8 -> line 2211
- *   +0x01ac -> line 2212
- *   +0x01b0 -> line 2213
- *   +0x01bc -> line 2214
- *   +0x01d8 -> line 2216
- *   +0x01ec -> line 2217
- *   +0x01f8 -> line 2218
- *   +0x01fc -> line 2221
- *   +0x052c -> line 2224
- *   +0x0530 -> line 2227
- *   +0x0538 -> line 2224
- *   +0x053c -> line 2225
- *   +0x0540 -> line 2227
- *   +0x0588 -> line 2228
- *   +0x05cc -> line 2229
- *   +0x05d4 -> line 2232
- *   +0x060c -> line 2234
- *   +0x0644 -> line 2235
- *   +0x0664 -> line 2237
- *   +0x0994 -> line 2238
- *   +0x09e4 -> line 2242
- *   +0x0a14 -> line 2243
- *   +0x0a5c -> line 2246
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE);
+unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE);
+void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages, unsigned int _Id);
+extern char* FON_fn_szGetTextPointerForHandle(int hString);
+void TXT_vAfficheSimpleWithShadow(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor);
+int sprintf(char* s, const char* format, ...);
+size_t strlen(const char* s);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2115–2182 */
-/* addr: 0x0028f920  size: 5604 bytes */
+static void fn_vDrawSelectedText(float X, float Y, char* szText);
+
+static inline void fn_vDrawUnselectedText(char* szText, float X, float Y)
+{
+    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szText, X, Y, 0.0f, 0xFFF5E9CF);
+}
+
+void CheckMenu2DTextures(void);
+void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
+
+void GLI_vEnd2DSpritesWithUVs(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+void GLI_vDraw2DRectangleWithColor(GLI_tdstMaterial_* hMaterial, unsigned int ulColor, float f1, float f2, float f3, float f4);
+
+static void fn_vDrawSelectedText(float X, float Y, char* szText);
+void fn_vDrawOnOff(float X, float Y, int State);
+
+void GLI_vEnd2DSpritesWithUVs(void);
+void GLI_vSetGlobalAlpha(float Alpha);
+void GLI_vDraw2DRectangleWithColor(GLI_tdstMaterial_* hMaterial, unsigned int ulColor, float f1, float f2, float f3, float f4);
+
+static inline void fn_vDrawSelectedText(float X, float Y, char* szText)
+{
+    float fWidth;
+    float fHeight;
+    char szMsg[100];
+
+    TXT_fn_fComputePixelLengthOfString(szText, &fWidth, &fHeight);
+    fWidth = 100.0f * (fWidth / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+    fHeight = 100.0f * (fHeight / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+
+    if (strstr(szText, "\\l") != NULL)
+    {
+        GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+            0.1f * X - fWidth - 2.0f, 0.1f * Y - 7.0f,
+            1.0f + (0.1f * X + fWidth), 0.1f * Y + fHeight,
+            0.3f, 0.64f, 0.42f, 0.56f,
+            (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
+    }
+    else
+    {
+        GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+            0.1f * X - fWidth - 2.0f, 0.1f * Y - 7.0f,
+            1.0f + (0.1f * X + fWidth), 0.1f * Y + fHeight,
+            0.3f, 0.64f, 0.42f, 0.56f,
+            (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
+    }
+
+    sprintf(szMsg, "\\jc\\z%d:%s", g_CurrentSelectedTextSize, szText);
+    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, X, Y, 0.0f, 0xFFFFDA00);
+}
+
+static inline void fn_vDrawAreYouSureFrame(float fHalfWidth, float fRight, float fBottom)
+{
+    GLI_vEnd2DSpritesWithUVs();
+    GLI_vSetGlobalAlpha(187.0f);
+    GLI_vDraw2DRectangleWithColor((GLI_tdstMaterial_*)g_hSelectedFrameMaterialForMenu2D, 0xBB000000,
+        (40.0f - fHalfWidth) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
+        fRight * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
+        30.0f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f,
+        fBottom * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f);
+    GLI_vEnd2DSpritesWithUVs();
+    GLI_vSetGlobalAlpha(255.0f);
+}
+
+void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
+
+/* The functions below are in their original source-line order (retail
+ * emits them in reverse); these prototypes keep earlier calls valid. */
+unsigned int fn_uiOpenStream(char* szFilename);
+void fn_vReinitSpriteScale(void);
+void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
+void fn_vAnimeBeginPage(void);
+void fn_vAnimeEndPage(void);
+void SetAreYouSureValue(int Val);
+int fn_GetAreYouSureValue(void);
+void fn_vChangeAreYouSureValue(void);
+void fn_vDrawAreYouSurePage(void);
+void fn_vDrawClassicPage(void);
+void fn_vDrawOnOff(float X, float Y, int State);
+void fn_vDrawCenteredYesNo(float X, float Y, int State);
+void fn_vDrawVideoOptionPage(void);
+void fn_vDrawGraduation(float xX, float yY, unsigned char NbGradOn);
+void fn_vIncreaseGrad(void);
+void fn_vDecreaseGrad(void);
+void fn_vChangeCurrentSelectedChar(void);
+void fn_vDrawSavePage(void);
+void fn_vDrawArcadePage(void);
+void fn_vDrawCinematicPage(void);
+void fn_vDrawXTraPage(void);
+void fn_vDrawRecapPage(void);
+void fn_vPreviousSnapShot(void);
+void fn_vNextSnapShot(void);
+void fn_vDrawGlobalInfo(void);
+void DrawCurrentPage(void);
+void DrawTitle(void);
+void fn_vDisplayInGameMenu2D(GLD_tdstViewportAttributes_* p_stVpt);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 275–276 */
+/* addr: 0x00296700  size: 12 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2115
- *   +0x0004 -> line 2116
- *   +0x0008 -> line 2115
- *   +0x000c -> line 2116
- *   +0x0010 -> line 2115
- *   +0x0034 -> line 2116
- *   +0x0078 -> line 2119
- *   +0x0854 -> line 2120
- *   +0x085c -> line 2127
- *   +0x0928 -> line 2128
- *   +0x0930 -> line 2130
- *   +0x0e18 -> line 2131
- *   +0x0e20 -> line 2133
- *   +0x0e28 -> line 2134
- *   +0x0e30 -> line 2136
- *   +0x0e38 -> line 2137
- *   +0x0e40 -> line 2139
- *   +0x0e48 -> line 2140
- *   +0x0e50 -> line 2142
- *   +0x0e58 -> line 2143
- *   +0x0e60 -> line 2145
- *   +0x10b4 -> line 2146
- *   +0x10bc -> line 2148
- *   +0x1354 -> line 2149
- *   +0x135c -> line 2151
- *   +0x1444 -> line 2152
- *   +0x144c -> line 2157
- *   +0x1454 -> line 2158
- *   +0x145c -> line 2160
- *   +0x1464 -> line 2161
- *   +0x146c -> line 2163
- *   +0x14bc -> line 2164
- *   +0x14c4 -> line 2169
- *   +0x1514 -> line 2170
- *   +0x151c -> line 2173
- *   +0x1594 -> line 2174
- *   +0x159c -> line 2176
- *   +0x15a4 -> line 2177
- *   +0x15ac -> line 2179
- *   +0x15b4 -> line 2182
+ *   +0x0000 -> line 275
+ *   +0x0004 -> line 276
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void fn_vReinitSpriteScale(void)
+{
+    g_CurrentSelectedSpriteScale = 1.0f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 284–312 */
+/* addr: 0x00296620  size: 212 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 284
+ *   +0x0004 -> line 291
+ *   +0x0008 -> line 284
+ *   +0x000c -> line 287
+ *   +0x0010 -> line 289
+ *   +0x0014 -> line 291
+ *   +0x0018 -> line 288
+ *   +0x001c -> line 289
+ *   +0x0020 -> line 291
+ *   +0x002c -> line 290
+ *   +0x0030 -> line 292
+ *   +0x003c -> line 294
+ *   +0x0048 -> line 296
+ *   +0x0054 -> line 298
+ *   +0x0064 -> line 299
+ *   +0x0070 -> line 298
+ *   +0x0074 -> line 299
+ *   +0x0084 -> line 303
+ *   +0x008c -> line 306
+ *   +0x009c -> line 307
+ *   +0x00ac -> line 306
+ *   +0x00b0 -> line 307
+ *   +0x00c0 -> line 309
+ *   +0x00c8 -> line 312
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial)
+{
+    float H;
+    float W1;
+    float H1;
+    float W;
+
+    W = xXMax - xXMin;
+    H = xYMax - xYMin;
+    W1 = W * g_CurrentSelectedSpriteScale;
+    H1 = H * g_CurrentSelectedSpriteScale;
+    xXMin = xXMin + (W - W1) / 2.0f;
+    xYMin = xYMin + (H - H1) / 2.0f;
+    GLI_vDraw2DSpriteWithPercentAndUVs(p_stVpt, xXMin, xYMin, xXMin + W1, xYMin + H1, xUMin, xUMax, xVMin, xVMax, hMaterial);
+
+    if (g_IsIncreaseSelectedSpriteScale)
+    {
+        g_CurrentSelectedSpriteScale += 0.02f;
+        if (g_CurrentSelectedSpriteScale >= 1.0f)
+            g_IsIncreaseSelectedSpriteScale = 0;
+    }
+    else
+    {
+        g_CurrentSelectedSpriteScale -= 0.02f;
+        if (g_CurrentSelectedSpriteScale <= 0.7f)
+            g_IsIncreaseSelectedSpriteScale = 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 349–390 */
+/* addr: 0x00296420  size: 504 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 349
+ *   +0x0020 -> line 350
+ *   +0x0030 -> line 353
+ *   +0x003c -> line 355
+ *   +0x0054 -> line 356
+ *   +0x0064 -> line 357
+ *   +0x0078 -> line 359
+ *   +0x0080 -> line 362
+ *   +0x0098 -> line 363
+ *   +0x00a8 -> line 364
+ *   +0x00bc -> line 365
+ *   +0x00c0 -> line 370
+ *   +0x00e0 -> line 371
+ *   +0x00f0 -> line 373
+ *   +0x0168 -> line 379
+ *   +0x0178 -> line 378
+ *   +0x017c -> line 379
+ *   +0x01a0 -> line 382
+ *   +0x01a4 -> line 381
+ *   +0x01a8 -> line 382
+ *   +0x01b8 -> line 383
+ *   +0x01c0 -> line 385
+ *   +0x01c4 -> line 388
+ *   +0x01d4 -> line 389
+ *   +0x01e4 -> line 388
+ *   +0x01e8 -> line 389
+ *   +0x01ec -> line 388
+ *   +0x01f0 -> line 390
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 349–390 */
+/* addr: 0x00296420  size: 504 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 349
+ *   +0x0020 -> line 350
+ *   +0x0030 -> line 353
+ *   +0x003c -> line 355
+ *   +0x0054 -> line 356
+ *   +0x0064 -> line 357
+ *   +0x0078 -> line 359
+ *   +0x0080 -> line 362
+ *   +0x0098 -> line 363
+ *   +0x00a8 -> line 364
+ *   +0x00bc -> line 365
+ *   +0x00c0 -> line 370
+ *   +0x00e0 -> line 371
+ *   +0x00f0 -> line 373
+ *   +0x0168 -> line 379
+ *   +0x0178 -> line 378
+ *   +0x017c -> line 379
+ *   +0x01a0 -> line 382
+ *   +0x01a4 -> line 381
+ *   +0x01a8 -> line 382
+ *   +0x01b8 -> line 383
+ *   +0x01c0 -> line 385
+ *   +0x01c4 -> line 388
+ *   +0x01d4 -> line 389
+ *   +0x01e4 -> line 388
+ *   +0x01e8 -> line 389
+ *   +0x01ec -> line 388
+ *   +0x01f0 -> line 390
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vAnimeBeginPage(void)
+{
+    if (g_YTitle < 12.0f)
+        g_YTitle += 4.0f;
+
+    if (g_GotoRight != 0)
+    {
+        if (g_XText < g_XTextLeft)
+            g_XText += 4.0f;
+        if (g_XText > g_XTextLeft)
+            g_XText = g_XTextLeft;
+    }
+    else
+    {
+        if (g_XText > g_XTextLeft)
+            g_XText -= 4.0f;
+        if (g_XText < g_XTextLeft)
+            g_XText = g_XTextLeft;
+    }
+
+    if (g_YButtonText > 80.0f)
+        g_YButtonText -= 4.0f;
+
+    if (g_YTitle >= 12.0f && ((g_XText >= g_XTextLeft && g_GotoRight != 0) || (g_XText <= g_XTextLeft && g_GotoRight == 0)) && g_YButtonText <= 80.0f)
+    {
+        g_XText = g_XTextLeft;
+        if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eLevelTypePage)
+        {
+            g_CurrentActionMenu2D = eActionAnimeStamp;
+            g_NumStepAnimeStamp = 0; g_XCenterStamp = 50.0f; g_YCenterStamp = 50.0f; g_ScaleStamp = 6.0f;
+        }
+        else
+        {
+            g_CurrentActionMenu2D = eActionNothing;
+        }
+    }
+
+    g_AngleGear1 += 0.3f;
+    g_AngleGear2 -= 0.4f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 400–460 */
+/* addr: 0x00296210  size: 516 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 400
+ *   +0x0020 -> line 401
+ *   +0x0030 -> line 404
+ *   +0x003c -> line 406
+ *   +0x005c -> line 407
+ *   +0x0068 -> line 408
+ *   +0x0070 -> line 411
+ *   +0x008c -> line 412
+ *   +0x009c -> line 416
+ *   +0x00bc -> line 417
+ *   +0x00cc -> line 419
+ *   +0x0124 -> line 431
+ *   +0x0128 -> line 430
+ *   +0x012c -> line 431
+ *   +0x0130 -> line 433
+ *   +0x0138 -> line 432
+ *   +0x013c -> line 434
+ *   +0x0144 -> line 435
+ *   +0x014c -> line 437
+ *   +0x0154 -> line 438
+ *   +0x01b0 -> line 442
+ *   +0x01b8 -> line 445
+ *   +0x01bc -> line 446
+ *   +0x01c4 -> line 451
+ *   +0x01cc -> line 454
+ *   +0x01d0 -> line 458
+ *   +0x01e0 -> line 459
+ *   +0x01f0 -> line 458
+ *   +0x01f4 -> line 459
+ *   +0x01f8 -> line 458
+ *   +0x01fc -> line 460
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vAnimeEndPage(void)
+{
+    if (g_YTitle >= -20.0f)
+    {
+        g_YTitle -= 4.0f;
+    }
+
+    if (g_GotoRight != 0)
+    {
+        if (g_XText <= 75.0f)
+        {
+            g_XText += 4.0f;
+        }
+    }
+    else
+    {
+        if (g_XText >= 0.0f)
+        {
+            g_XText -= 4.0f;
+        }
+    }
+
+    if (g_YButtonText <= 95.0f)
+    {
+        g_YButtonText += 4.0f;
+    }
+
+    if (g_YTitle < -20.0f && (g_XText > 75.0f || g_XText < 0.0f))
+    {
+        g_CurrentSelection = 0;
+        g_CurrentActionMenu2D = eActionBeginOfPage;
+        g_YTitle = -20.0f;
+        g_CurrentMenu2DPage = g_NextPage;
+
+        if (g_GotoRight != 0)
+        {
+            g_XText = 0.0f;
+        }
+        else
+        {
+            g_XText = 75.0f;
+        }
+
+        switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
+        {
+            case eSaveFileTypePage:
+                g_XTextLeft = 18.0f;
+                break;
+            case eControlOptionTypePage:
+            case eAudioOptionTypePage:
+                g_XTextLeft = 27.0f;
+                break;
+            case eLoadFileTypePage:
+                g_CurrentActionMenu2D = eActionWait;
+                break;
+            default:
+                g_XTextLeft = 39.0f;
+                break;
+        }
+    }
+
+    g_AngleGear1 -= 0.3f;
+    g_AngleGear2 += 0.4f;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 588–588 */
+/* addr: 0x00296200  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 588
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void SetAreYouSureValue(int Val)
+{
+    g_AreYouSureValue = Val;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 593–593 */
+/* addr: 0x002961f0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 593
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_GetAreYouSureValue(void)
+{
+    return g_AreYouSureValue;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 597–598 */
+/* addr: 0x002961d0  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 597
+ *   +0x000c -> line 598
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vChangeAreYouSureValue(void)
+{
+    g_AreYouSureValue = 1 - g_AreYouSureValue;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 601–629 */
+/* addr: 0x002959d0  size: 2040 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 601
+ *   +0x0008 -> line 607
+ *   +0x000c -> line 601
+ *   +0x0018 -> line 607
+ *   +0x00ac -> line 610
+ *   +0x00b0 -> line 608
+ *   +0x00bc -> line 610
+ *   +0x00c0 -> line 607
+ *   +0x00c4 -> line 608
+ *   +0x00c8 -> line 607
+ *   +0x00cc -> line 608
+ *   +0x00d4 -> line 610
+ *   +0x00d8 -> line 608
+ *   +0x00dc -> line 610
+ *   +0x00f4 -> line 607
+ *   +0x00f8 -> line 610
+ *   +0x0284 -> line 611
+ *   +0x0290 -> line 613
+ *   +0x029c -> line 611
+ *   +0x02b4 -> line 613
+ *   +0x02bc -> line 611
+ *   +0x02c0 -> line 613
+ *   +0x02d0 -> line 615
+ *   +0x02dc -> line 617
+ *   +0x02fc -> line 618
+ *   +0x0518 -> line 619
+ *   +0x0538 -> line 620
+ *   +0x055c -> line 621
+ *   +0x0564 -> line 624
+ *   +0x0580 -> line 625
+ *   +0x05a4 -> line 626
+ *   +0x05c4 -> line 627
+ *   +0x07e0 -> line 629
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawAreYouSurePage(void)
+{
+    char szMsg[50];
+    float fL;
+    float fH;
+    float fY_YesNo;
+
+    TXT_fn_fComputePixelLengthOfString((char*)g_szAreYouSureQuestion, &fL, &fH);
+    fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+    fL = 5.0f + fL / 2.0f;
+
+    fn_vDrawAreYouSureFrame(fL, 40.0f + fL, 50.0f + fH);
+
+    fY_YesNo = 10.0f * (50.0f + fH - 5.0f);
+    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, (char*)g_szAreYouSureQuestion, 400.0f, 400.0f, 0.0f, 0xFFF5E9CF);
+
+    if (g_AreYouSureValue)
+    {
+        sprintf(szMsg, "%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText));
+        fn_vDrawSelectedText(350.0f, fY_YesNo, szMsg);
+        sprintf(szMsg, "\\jc%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText));
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 450.0f, fY_YesNo, 0.0f, 0xFFF5E9CF);
+    }
+    else
+    {
+        sprintf(szMsg, "\\jc%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText));
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 350.0f, fY_YesNo, 0.0f, 0xFFF5E9CF);
+        sprintf(szMsg, "%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText));
+        fn_vDrawSelectedText(450.0f, fY_YesNo, szMsg);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 703–736 */
+/* addr: 0x002955b0  size: 1048 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 703
+ *   +0x0004 -> line 707
+ *   +0x0008 -> line 703
+ *   +0x000c -> line 707
+ *   +0x0010 -> line 703
+ *   +0x0020 -> line 707
+ *   +0x004c -> line 708
+ *   +0x005c -> line 710
+ *   +0x0060 -> line 711
+ *   +0x006c -> line 713
+ *   +0x0078 -> line 715
+ *   +0x008c -> line 716
+ *   +0x02b4 -> line 717
+ *   +0x02c0 -> line 720
+ *   +0x02d0 -> line 722
+ *   +0x02e4 -> line 723
+ *   +0x0310 -> line 724
+ *   +0x0318 -> line 727
+ *   +0x0330 -> line 728
+ *   +0x035c -> line 730
+ *   +0x0360 -> line 731
+ *   +0x03a4 -> line 732
+ *   +0x03b0 -> line 734
+ *   +0x03c4 -> line 735
+ *   +0x03fc -> line 736
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawClassicPage(void)
+{
+    float Y;
+    unsigned int i;
+    char szTmp[50];
+
+    if (strlen(aMenu2DPages[g_CurrentMenu2DPage].Title) == 0)
+        Y = 300.0f;
+    else
+        Y = 400.0f;
+
+    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)
+    {
+        if (i == g_CurrentSelection)
+        {
+            sprintf(szTmp, "%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            fn_vDrawSelectedText(10.0f * g_XText, Y, szTmp);
+        }
+        else if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[i])
+        {
+            sprintf(szTmp, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFF003264);
+        }
+        else
+        {
+            sprintf(szTmp, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFFF5E9CF);
+        }
+
+        if (strstr(aMenu2DPages[g_CurrentMenu2DPage].aText[i], "\\l") != NULL)
+            Y += 140.0f;
+        else
+            Y += 110.0f;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 745–769 */
+/* addr: 0x00295180  size: 1064 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 745
+ *   +0x0014 -> line 748
+ *   +0x001c -> line 751
+ *   +0x0044 -> line 752
+ *   +0x00e8 -> line 754
+ *   +0x00ec -> line 753
+ *   +0x00f0 -> line 754
+ *   +0x00f4 -> line 753
+ *   +0x00fc -> line 754
+ *   +0x0100 -> line 752
+ *   +0x0104 -> line 754
+ *   +0x010c -> line 753
+ *   +0x0110 -> line 752
+ *   +0x0114 -> line 753
+ *   +0x0118 -> line 754
+ *   +0x011c -> line 752
+ *   +0x0120 -> line 754
+ *   +0x0128 -> line 755
+ *   +0x01c8 -> line 757
+ *   +0x01cc -> line 756
+ *   +0x01d0 -> line 757
+ *   +0x01d4 -> line 756
+ *   +0x01dc -> line 755
+ *   +0x01e0 -> line 756
+ *   +0x01e4 -> line 755
+ *   +0x01e8 -> line 756
+ *   +0x01ec -> line 757
+ *   +0x0214 -> line 758
+ *   +0x021c -> line 761
+ *   +0x0248 -> line 762
+ *   +0x02ec -> line 764
+ *   +0x02f0 -> line 763
+ *   +0x02f4 -> line 764
+ *   +0x02f8 -> line 763
+ *   +0x0300 -> line 764
+ *   +0x0304 -> line 762
+ *   +0x0308 -> line 764
+ *   +0x0310 -> line 763
+ *   +0x0314 -> line 762
+ *   +0x0318 -> line 763
+ *   +0x031c -> line 764
+ *   +0x0320 -> line 762
+ *   +0x0324 -> line 764
+ *   +0x032c -> line 765
+ *   +0x03cc -> line 767
+ *   +0x03d0 -> line 766
+ *   +0x03d4 -> line 767
+ *   +0x03d8 -> line 766
+ *   +0x03e0 -> line 765
+ *   +0x03e4 -> line 766
+ *   +0x03e8 -> line 765
+ *   +0x03ec -> line 766
+ *   +0x03f0 -> line 767
+ *   +0x0414 -> line 769
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawOnOff(float X, float Y, int State)
+{
+    float fL;
+    float fH;
+
+    if (State)
+    {
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), X, Y, 0.0f, 0xFFFFDA00);
+        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, " - ", X, Y, 0.0f, 0xFFF5E9CF);
+        TXT_fn_fComputePixelLengthOfString(" - ", &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[69].hText), X, Y, 0.0f, 0xFF003264);
+    }
+    else
+    {
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), X, Y, 0.0f, 0xFF003264);
+        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, " - ", X, Y, 0.0f, 0xFFF5E9CF);
+        TXT_fn_fComputePixelLengthOfString(" - ", &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[69].hText), X, Y, 0.0f, 0xFFFFDA00);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 772–809 */
+/* addr: 0x00294ab0  size: 1740 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 772
+ *   +0x0004 -> line 777
+ *   +0x0008 -> line 772
+ *   +0x001c -> line 777
+ *   +0x00c0 -> line 778
+ *   +0x00c4 -> line 777
+ *   +0x00c8 -> line 778
+ *   +0x00cc -> line 777
+ *   +0x00d8 -> line 778
+ *   +0x0178 -> line 780
+ *   +0x0180 -> line 779
+ *   +0x0184 -> line 780
+ *   +0x0188 -> line 779
+ *   +0x018c -> line 780
+ *   +0x0190 -> line 778
+ *   +0x01a0 -> line 779
+ *   +0x01a4 -> line 778
+ *   +0x01a8 -> line 780
+ *   +0x023c -> line 781
+ *   +0x0244 -> line 782
+ *   +0x024c -> line 780
+ *   +0x0250 -> line 783
+ *   +0x0254 -> line 781
+ *   +0x0258 -> line 780
+ *   +0x025c -> line 782
+ *   +0x0260 -> line 781
+ *   +0x0264 -> line 782
+ *   +0x0268 -> line 783
+ *   +0x027c -> line 785
+ *   +0x0284 -> line 787
+ *   +0x02ac -> line 788
+ *   +0x0354 -> line 791
+ *   +0x0358 -> line 789
+ *   +0x035c -> line 791
+ *   +0x0360 -> line 789
+ *   +0x0368 -> line 791
+ *   +0x036c -> line 788
+ *   +0x0370 -> line 790
+ *   +0x0374 -> line 789
+ *   +0x0378 -> line 790
+ *   +0x037c -> line 789
+ *   +0x0380 -> line 791
+ *   +0x0388 -> line 788
+ *   +0x038c -> line 790
+ *   +0x0390 -> line 791
+ *   +0x0394 -> line 788
+ *   +0x0398 -> line 791
+ *   +0x03a0 -> line 792
+ *   +0x0440 -> line 795
+ *   +0x0444 -> line 793
+ *   +0x0448 -> line 795
+ *   +0x044c -> line 793
+ *   +0x0454 -> line 792
+ *   +0x0458 -> line 794
+ *   +0x045c -> line 793
+ *   +0x0460 -> line 792
+ *   +0x0464 -> line 793
+ *   +0x0468 -> line 794
+ *   +0x046c -> line 792
+ *   +0x0470 -> line 795
+ *   +0x0498 -> line 796
+ *   +0x04a0 -> line 799
+ *   +0x04cc -> line 800
+ *   +0x0574 -> line 803
+ *   +0x0578 -> line 801
+ *   +0x057c -> line 803
+ *   +0x0580 -> line 801
+ *   +0x0588 -> line 803
+ *   +0x058c -> line 800
+ *   +0x0590 -> line 802
+ *   +0x0594 -> line 801
+ *   +0x0598 -> line 802
+ *   +0x059c -> line 801
+ *   +0x05a0 -> line 803
+ *   +0x05a8 -> line 800
+ *   +0x05ac -> line 802
+ *   +0x05b0 -> line 803
+ *   +0x05b4 -> line 800
+ *   +0x05b8 -> line 803
+ *   +0x05c0 -> line 804
+ *   +0x0660 -> line 807
+ *   +0x0664 -> line 805
+ *   +0x0668 -> line 807
+ *   +0x066c -> line 805
+ *   +0x0674 -> line 804
+ *   +0x0678 -> line 806
+ *   +0x067c -> line 805
+ *   +0x0680 -> line 804
+ *   +0x0684 -> line 805
+ *   +0x0688 -> line 806
+ *   +0x068c -> line 804
+ *   +0x0690 -> line 807
+ *   +0x06b4 -> line 809
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawCenteredYesNo(float X, float Y, int State)
+{
+    float fL;
+    float fH;
+    float fW;
+    float fW2;
+
+    TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), &fW, &fH);
+    fW = 100.0f * (fW / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+    TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText), &fW2, &fH);
+    fW2 = 100.0f * (fW2 / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+    fW += fW2;
+    TXT_fn_fComputePixelLengthOfString("-", &fW2, &fH);
+    fW2 = 100.0f * (fW2 / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+    fW += fW2;
+    fW += 6.0f;
+    X -= 5.0f * fW;
+
+    if (!State)
+    {
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), X, Y, 0.0f, 0xFFFFDA00);
+        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        X += 3.0f;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, "-", X, Y, 0.0f, 0xFFF5E9CF);
+        TXT_fn_fComputePixelLengthOfString("-", &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        X += 3.0f;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText), X, Y, 0.0f, 0xFF003264);
+    }
+    else
+    {
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), X, Y, 0.0f, 0xFF003264);
+        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        X += 3.0f;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, "-", X, Y, 0.0f, 0xFFF5E9CF);
+        TXT_fn_fComputePixelLengthOfString("-", &fL, &fH);
+        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
+        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
+        X += 10.0f * fL;
+        X += 3.0f;
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText), X, Y, 0.0f, 0xFFFFDA00);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 828–859 */
+/* addr: 0x002945f0  size: 1204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 828
+ *   +0x0020 -> line 831
+ *   +0x0024 -> line 828
+ *   +0x0028 -> line 833
+ *   +0x0030 -> line 835
+ *   +0x003c -> line 837
+ *   +0x0040 -> line 838
+ *   +0x0054 -> line 837
+ *   +0x005c -> line 839
+ *   +0x0060 -> line 840
+ *   +0x006c -> line 842
+ *   +0x0080 -> line 843
+ *   +0x0338 -> line 844
+ *   +0x0340 -> line 847
+ *   +0x0358 -> line 848
+ *   +0x03b0 -> line 850
+ *   +0x03bc -> line 852
+ *   +0x043c -> line 853
+ *   +0x044c -> line 854
+ *   +0x0450 -> line 853
+ *   +0x0458 -> line 855
+ *   +0x0494 -> line 859
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawVideoOptionPage(void)
+{
+    char szMsg[50];
+    unsigned int i;
+    int g_XTextOld;
+
+    g_XTextOld = 0;
+
+    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)
+    {
+        if (i == 1)
+        {
+            g_XTextOld = g_XText;
+            g_XText -= 12.0f;
+        }
+
+        if (i == g_CurrentSelection)
+        {
+            sprintf(szMsg, "%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            fn_vDrawSelectedText(10.0f * g_XText, 400 + 110 * i, szMsg);
+        }
+        else
+        {
+            sprintf(szMsg, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
+            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 10.0f * g_XText, 400 + 110 * i, 0.0f, 0xFFF5E9CF);
+        }
+
+        if (i == 1)
+        {
+            fn_vDrawOnOff(250.0f + 10.0f * g_XText, 400 + 110 * i, aMenu2DPages[g_CurrentMenu2DPage].aValue[i]);
+            g_XText = g_XTextOld;
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 984–998 */
+/* addr: 0x002941e0  size: 1036 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 984
+ *   +0x0018 -> line 987
+ *   +0x001c -> line 984
+ *   +0x0024 -> line 987
+ *   +0x002c -> line 989
+ *   +0x003c -> line 990
+ *   +0x0210 -> line 994
+ *   +0x03d8 -> line 997
+ *   +0x03f0 -> line 998
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawGraduation(float xX, float yY, unsigned char NbGradOn)
+{
+    unsigned char i;
+
+    for (i = 0; i < 10; i++)
+    {
+        if (i < NbGradOn)
+        {
+            GLI_vEnd2DSpritesWithUVs();
+            GLI_vSetGlobalAlpha(255.0f);
+            GLI_vDraw2DRectangleWithColor((GLI_tdstMaterial_*)g_hSelectedFrameMaterialForMenu2D, 0xFF9597B0,
+                (xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
+                (1.5f + xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
+                yY * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f,
+                (4.0f + yY) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f);
+            GLI_vEnd2DSpritesWithUVs();
+            GLI_vSetGlobalAlpha(255.0f);
+        }
+        else
+        {
+            GLI_vEnd2DSpritesWithUVs();
+            GLI_vSetGlobalAlpha(255.0f);
+            GLI_vDraw2DRectangleWithColor((GLI_tdstMaterial_*)g_hSelectedFrameMaterialForMenu2D, 0xFFFFDA00,
+                (xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
+                (1.5f + xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
+                yY * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f,
+                (4.0f + yY) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f);
+            GLI_vEnd2DSpritesWithUVs();
+            GLI_vSetGlobalAlpha(255.0f);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1014–1023 */
+/* addr: 0x00294160  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1014
+ *   +0x0004 -> line 1015
+ *   +0x0008 -> line 1014
+ *   +0x000c -> line 1015
+ *   +0x0024 -> line 1016
+ *   +0x002c -> line 1019
+ *   +0x0060 -> line 1021
+ *   +0x006c -> line 1023
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vIncreaseGrad(void)
+{
+    if (g_aNbGradOn[g_CurrentSelection] < 10) {
+        g_aNbGradOn[g_CurrentSelection]++;
+    }
+    if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eAudioOptionTypePage) {
+        fn_vUpdateVolumeLineGameMenu2D(g_CurrentSelection, g_aNbGradOn[g_CurrentSelection], 10);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1026–1037 */
+/* addr: 0x002940e0  size: 116 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1026
+ *   +0x0004 -> line 1027
+ *   +0x0008 -> line 1026
+ *   +0x000c -> line 1027
+ *   +0x0020 -> line 1029
+ *   +0x0024 -> line 1032
+ *   +0x0028 -> line 1029
+ *   +0x002c -> line 1032
+ *   +0x005c -> line 1034
+ *   +0x0068 -> line 1037
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDecreaseGrad(void)
+{
+    if (g_aNbGradOn[g_CurrentSelection] > 0) {
+        g_aNbGradOn[g_CurrentSelection]--;
+        if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eAudioOptionTypePage) {
+            fn_vUpdateVolumeLineGameMenu2D(g_CurrentSelection, g_aNbGradOn[g_CurrentSelection], 10);
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1054–1084 */
+/* addr: 0x00293fa0  size: 320 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1054
+ *   +0x0004 -> line 1056
+ *   +0x0008 -> line 1054
+ *   +0x0014 -> line 1056
+ *   +0x001c -> line 1058
+ *   +0x0020 -> line 1056
+ *   +0x0024 -> line 1058
+ *   +0x0048 -> line 1061
+ *   +0x0068 -> line 1063
+ *   +0x006c -> line 1065
+ *   +0x0070 -> line 1063
+ *   +0x007c -> line 1065
+ *   +0x0090 -> line 1067
+ *   +0x00c0 -> line 1071
+ *   +0x00cc -> line 1072
+ *   +0x00dc -> line 1073
+ *   +0x00e4 -> line 1076
+ *   +0x00fc -> line 1077
+ *   +0x0110 -> line 1078
+ *   +0x0120 -> line 1081
+ *   +0x012c -> line 1084
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vChangeCurrentSelectedChar(void)
+{
+    char* szTmp;
+    unsigned int N;
+
+    szTmp = FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[39].hText);
+
+    N = g_CurrentColForSelection + g_CurrentLineForSelection * g_NbColForSelection; if (N >= strlen(szTmp))
+    {
+        g_CurrentColForSelection = (int)strlen(szTmp) - g_CurrentLineForSelection * g_NbColForSelection - 1;
+    }
+
+    N = g_CurrentColForSelection + g_CurrentLineForSelection * g_NbColForSelection;
+
+    if (N == strlen(szTmp) - 1)
+    {
+        if (g_CurrentSelectedCharNumber > 0 && (g_CurrentSelectedCharNumber != g_NbCharForSaveName - 1 || g_CurrentNameForSavePage[g_CurrentSelectedCharNumber] == 0))
+        {
+            g_CurrentSelectedCharNumber--;
+        }
+        g_CurrentNameForSavePage[g_CurrentSelectedCharNumber] = 0;
+    }
+    else
+    {
+        g_CurrentNameForSavePage[g_CurrentSelectedCharNumber] = szTmp[N];
+
+        if (g_CurrentSelectedCharNumber < g_NbCharForSaveName - 1)
+            g_CurrentSelectedCharNumber++;
+        else
+            g_CurrentLineForSelection = g_NbLineForSelection - 1;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1087–1179 */
+/* addr: 0x00292d50  size: 4676 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1087
+ *   +0x0004 -> line 1091
+ *   +0x0008 -> line 1087
+ *   +0x0030 -> line 1091
+ *   +0x003c -> line 1093
+ *   +0x0044 -> line 1097
+ *   +0x0048 -> line 1093
+ *   +0x004c -> line 1097
+ *   +0x007c -> line 1094
+ *   +0x0084 -> line 1097
+ *   +0x0388 -> line 1100
+ *   +0x03a8 -> line 1101
+ *   +0x03d8 -> line 1102
+ *   +0x0470 -> line 1106
+ *   +0x0474 -> line 1103
+ *   +0x0478 -> line 1106
+ *   +0x047c -> line 1103
+ *   +0x0480 -> line 1106
+ *   +0x0484 -> line 1103
+ *   +0x0488 -> line 1102
+ *   +0x0490 -> line 1103
+ *   +0x0494 -> line 1102
+ *   +0x0498 -> line 1106
+ *   +0x04ac -> line 1108
+ *   +0x04bc -> line 1110
+ *   +0x04d8 -> line 1111
+ *   +0x0748 -> line 1112
+ *   +0x0750 -> line 1115
+ *   +0x0770 -> line 1116
+ *   +0x07e4 -> line 1117
+ *   +0x07e8 -> line 1118
+ *   +0x0808 -> line 1121
+ *   +0x081c -> line 1123
+ *   +0x082c -> line 1125
+ *   +0x0838 -> line 1126
+ *   +0x0aa8 -> line 1127
+ *   +0x0ab0 -> line 1130
+ *   +0x0ac0 -> line 1131
+ *   +0x0b34 -> line 1132
+ *   +0x0b38 -> line 1133
+ *   +0x0b50 -> line 1135
+ *   +0x0b68 -> line 1137
+ *   +0x0b84 -> line 1140
+ *   +0x0b8c -> line 1145
+ *   +0x0b98 -> line 1147
+ *   +0x0ba0 -> line 1149
+ *   +0x0bb8 -> line 1152
+ *   +0x0bd0 -> line 1153
+ *   +0x0e60 -> line 1155
+ *   +0x0e68 -> line 1158
+ *   +0x0e84 -> line 1159
+ *   +0x0ee0 -> line 1163
+ *   +0x0efc -> line 1165
+ *   +0x0f08 -> line 1167
+ *   +0x0f20 -> line 1170
+ *   +0x0f40 -> line 1171
+ *   +0x0f7c -> line 1172
+ *   +0x0f84 -> line 1176
+ *   +0x0fa0 -> line 1177
+ *   +0x1214 -> line 1179
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawSavePage(void)
+{
+    char szChar[50];
+    char* szTmp;
+    unsigned int j;
+    int N;
+    int i;
+    int c;
+    int l;
+    float fH;
+    float fL;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1223–1254 */
+/* addr: 0x00292460  size: 2288 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1223
+ *   +0x0004 -> line 1227
+ *   +0x0008 -> line 1223
+ *   +0x000c -> line 1227
+ *   +0x0010 -> line 1223
+ *   +0x0028 -> line 1227
+ *   +0x0050 -> line 1231
+ *   +0x0060 -> line 1233
+ *   +0x006c -> line 1234
+ *   +0x0350 -> line 1237
+ *   +0x0384 -> line 1238
+ *   +0x03dc -> line 1240
+ *   +0x03e8 -> line 1243
+ *   +0x03f4 -> line 1244
+ *   +0x06c0 -> line 1247
+ *   +0x06e0 -> line 1248
+ *   +0x073c -> line 1251
+ *   +0x0740 -> line 1252
+ *   +0x0784 -> line 1253
+ *   +0x08d0 -> line 1254
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawArcadePage(void)
+{
+    char szMsg[50];
+    unsigned int j;
+    unsigned int i;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1317–1377 */
+/* addr: 0x00292000  size: 1120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1317
+ *   +0x0010 -> line 1318
+ *   +0x0014 -> line 1325
+ *   +0x001c -> line 1331
+ *   +0x0024 -> line 1332
+ *   +0x0030 -> line 1334
+ *   +0x0050 -> line 1335
+ *   +0x0060 -> line 1337
+ *   +0x0068 -> line 1338
+ *   +0x0128 -> line 1345
+ *   +0x01e0 -> line 1351
+ *   +0x01e8 -> line 1354
+ *   +0x01f0 -> line 1355
+ *   +0x02b0 -> line 1362
+ *   +0x0364 -> line 1368
+ *   +0x0368 -> line 1369
+ *   +0x036c -> line 1370
+ *   +0x0398 -> line 1371
+ *   +0x03bc -> line 1373
+ *   +0x0414 -> line 1376
+ *   +0x0448 -> line 1377
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawCinematicPage(void)
+{
+    int l;
+    int c;
+    int j;
+
+    j = 0;
+    CheckMenu2DTextures();
+
+    for (l = 0; l < g_NbLineForSelection; l++)
+    {
+        for (c = 0; c < g_NbColForSelection; c++)
+        {
+            int bSelected = (c == g_CurrentColForSelection && l == g_CurrentLineForSelection);
+
+            if (j < g_NbCinematicOpen)
+            {
+                if (bSelected)
+                {
+                    fn_vDraw2DSelectedSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
+                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
+                        0.33f * c, 0.33f + 0.33f * c, 0.33f * l, 0.33f + 0.33f * l,
+                        (GLI_tdstMaterial_*)g_hFixMaterialForSelectedFilms);
+                }
+                else
+                {
+                    GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
+                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
+                        0.33f * c, 0.33f + 0.33f * c, 0.33f * l, 0.33f + 0.33f * l,
+                        (GLI_tdstMaterial_*)g_hFixMaterialForSelectedFilms);
+                }
+            }
+            else
+            {
+                if (bSelected)
+                {
+                    fn_vDraw2DSelectedSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
+                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
+                        0.5f, 1.0f, 0.0f, 0.5f,
+                        (GLI_tdstMaterial_*)g_hFixMaterialForArcadeAndFilms);
+                }
+                else
+                {
+                    GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
+                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
+                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
+                        0.5f, 1.0f, 0.0f, 0.5f,
+                        (GLI_tdstMaterial_*)g_hFixMaterialForArcadeAndFilms);
+                }
+            }
+
+            j++;
+        }
+    }
+
+    if (g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection < g_NbCinematicOpen)
+    {
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt,
+            FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[g_FirstCineNameText + g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection].hText),
+            120.0f, 825.0f, 0.0f, 0xFFF5E9CF);
+    }
+    else
+    {
+        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText), 120.0f, 825.0f, 0.0f, 0xFFF5E9CF);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1401–1439 */
+/* addr: 0x002916f0  size: 2316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1401
+ *   +0x0024 -> line 1403
+ *   +0x0028 -> line 1406
+ *   +0x0034 -> line 1407
+ *   +0x0038 -> line 1409
+ *   +0x006c -> line 1413
+ *   +0x0074 -> line 1415
+ *   +0x0080 -> line 1417
+ *   +0x00a8 -> line 1418
+ *   +0x0360 -> line 1419
+ *   +0x0368 -> line 1422
+ *   +0x0394 -> line 1423
+ *   +0x03ec -> line 1425
+ *   +0x03f8 -> line 1428
+ *   +0x0404 -> line 1429
+ *   +0x06d0 -> line 1432
+ *   +0x06f0 -> line 1433
+ *   +0x074c -> line 1436
+ *   +0x0754 -> line 1437
+ *   +0x0794 -> line 1438
+ *   +0x08e4 -> line 1439
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawXTraPage(void)
+{
+    unsigned int i;
+    unsigned int j;
+    unsigned int N;
+    char szMsg[50];
+
+    N = g_NbArcadeOpen;
+    i = 0;
+    if (N >= 10)
+        N = 9;
+
+    for (j = aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry; j < aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry + aMenu2DPages[g_CurrentMenu2DPage].NbSelection; j++, i++)
+    {
+        if (j < N)
+        {
+            if (i == g_CurrentSelection)
+            {
+                sprintf(szMsg, "%s%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[48].hText), g_aNumLesson[j]);
+                fn_vDrawSelectedText(10.0f * g_XText, 380 + 100 * i, szMsg);
+            }
+            else
+            {
+                sprintf(szMsg, "\\jc%s%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[48].hText), g_aNumLesson[j]);
+                fn_vDrawUnselectedText(szMsg, 10.0f * g_XText, 380 + 100 * i);
+            }
+        }
+        else
+        {
+            if (i == g_CurrentSelection)
+            {
+                fn_vDrawSelectedText(10.0f * g_XText, 380 + 100 * i, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText));
+            }
+            else
+            {
+                sprintf(szMsg, "\\jc%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText));
+                fn_vDrawUnselectedText(szMsg, 10.0f * g_XText, 380 + 100 * i);
+            }
+        }
+    }
+
+    if (aMenu2DPages[g_CurrentMenu2DPage].NbEntry >= aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
+    {
+        if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry != 0)
+            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 37.0f, 26.0f, 42.0f, 30.0f, 0.31f, 0.41f, 0.12f, 0.19f, (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
+        if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry + aMenu2DPages[g_CurrentMenu2DPage].NbSelection < aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
+            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 37.0f, 79.0f, 42.0f, 83.0f, 0.3f, 0.41f, 0.007f, 0.086f, (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1472–1486 */
+/* addr: 0x002915e0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1472
+ *   +0x0004 -> line 1475
+ *   +0x0008 -> line 1472
+ *   +0x000c -> line 1475
+ *   +0x003c -> line 1477
+ *   +0x0058 -> line 1479
+ *   +0x0074 -> line 1480
+ *   +0x0078 -> line 1481
+ *   +0x0098 -> line 1483
+ *   +0x00d4 -> line 1485
+ *   +0x00fc -> line 1486
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDrawRecapPage(void)
+{
+    unsigned int i;
+    char szTmp[2048];
+    GLD_tdstViewportAttributes_* pVpt;
+
+    fn_vEncodeKey((unsigned char*)g_szHallOfFameKeyString, fn_ulR3GetEnvScore(0), fn_ulR3GetEnvNbCage(0), g_aForKeyAlgo[3]);
+
+    for (i = 0; i < strlen(g_szHallOfFameKeyString); i++)
+    {
+        if (g_szHallOfFameKeyString[i] == '-')
+            g_szHallOfFameKeyString[i] = '|';
+    }
+
+    sprintf(szTmp, "\\jc%s\\l\\l%s\\l\\l%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[102].hText), g_szHallOfFameKeyString, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[103].hText));
+
+    pVpt = (GLD_tdstViewportAttributes_*)g_p_stVpt;
+    TXT_vAfficheSimpleWithShadow(pVpt, szTmp, 500.0f, 160.0f, 0.0f, 0xFFF5E9CF);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1593–1618 */
+/* addr: 0x00291530  size: 168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1593
+ *   +0x0008 -> line 1594
+ *   +0x0014 -> line 1598
+ *   +0x0024 -> line 1599
+ *   +0x0034 -> line 1603
+ *   +0x003c -> line 1601
+ *   +0x0040 -> line 1603
+ *   +0x0044 -> line 1601
+ *   +0x0048 -> line 1603
+ *   +0x006c -> line 1605
+ *   +0x0070 -> line 1611
+ *   +0x0078 -> line 1605
+ *   +0x007c -> line 1611
+ *   +0x0088 -> line 1613
+ *   +0x008c -> line 1614
+ *   +0x0090 -> line 1613
+ *   +0x0094 -> line 1614
+ *   +0x009c -> line 1618
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vPreviousSnapShot(void)
+{
+    int lSnapID;
+
+    if (!g_bAlbumIsWorking)
+    {
+        lSnapID = fn_dwFindPreviousSnappedPicture(g_stAlbum.lSnapID, g_stAlbum.szFileName);
+        if (lSnapID != g_stAlbum.lSnapID)
+        {
+            g_stAlbum.lSnapID = lSnapID;
+            if (lSnapID != aMenu2DPages[g_AlbumPage].NbEntry)
+            {
+                g_bAlbumIsWorking = 1;
+                g_bAlbumLoadInProgress = 1;
+                GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
+                g_stAlbum.fPicturePercentage = 0.0f;
+                g_stAlbum.bMoveBackward = 1;
+            }
+        }
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1621–1643 */
+/* addr: 0x00291490  size: 160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1621
+ *   +0x0008 -> line 1622
+ *   +0x0014 -> line 1626
+ *   +0x0024 -> line 1627
+ *   +0x0034 -> line 1630
+ *   +0x003c -> line 1629
+ *   +0x0040 -> line 1630
+ *   +0x0044 -> line 1629
+ *   +0x0048 -> line 1630
+ *   +0x006c -> line 1632
+ *   +0x0070 -> line 1637
+ *   +0x0078 -> line 1632
+ *   +0x007c -> line 1637
+ *   +0x0088 -> line 1639
+ *   +0x0094 -> line 1643
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vNextSnapShot(void)
+{
+    int lSnapID;
+
+    if (!g_bAlbumIsWorking)
+    {
+        lSnapID = fn_dwFindNextSnappedPicture(g_stAlbum.lSnapID, g_stAlbum.szFileName);
+        if (lSnapID != g_stAlbum.lSnapID)
+        {
+            g_stAlbum.lSnapID = lSnapID;
+            if (lSnapID != aMenu2DPages[g_AlbumPage].NbEntry)
+            {
+                g_bAlbumIsWorking = 1;
+                g_bAlbumLoadInProgress = 1;
+                GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
+                g_stAlbum.bMoveForward = 1;
+            }
+        }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2037–2112 */
 /* addr: 0x00290f10  size: 1408 bytes */
@@ -517,1474 +1810,6 @@ void fn_vReinitSpriteScale(void);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1621–1643 */
-/* addr: 0x00291490  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1621
- *   +0x0008 -> line 1622
- *   +0x0014 -> line 1626
- *   +0x0024 -> line 1627
- *   +0x0034 -> line 1630
- *   +0x003c -> line 1629
- *   +0x0040 -> line 1630
- *   +0x0044 -> line 1629
- *   +0x0048 -> line 1630
- *   +0x006c -> line 1632
- *   +0x0070 -> line 1637
- *   +0x0078 -> line 1632
- *   +0x007c -> line 1637
- *   +0x0088 -> line 1639
- *   +0x0094 -> line 1643
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-int fn_dwFindNextSnappedPicture(int lSnapID, char* _szFileName);
-int fn_dwFindPreviousSnappedPicture(int lSnapID, char* _szFileName);
-int GLI_bLoadSnapShotTexture(char* _pFileName, int* p_hMaterial);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1593–1618 */
-/* addr: 0x00291530  size: 168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1593
- *   +0x0008 -> line 1594
- *   +0x0014 -> line 1598
- *   +0x0024 -> line 1599
- *   +0x0034 -> line 1603
- *   +0x003c -> line 1601
- *   +0x0040 -> line 1603
- *   +0x0044 -> line 1601
- *   +0x0048 -> line 1603
- *   +0x006c -> line 1605
- *   +0x0070 -> line 1611
- *   +0x0078 -> line 1605
- *   +0x007c -> line 1611
- *   +0x0088 -> line 1613
- *   +0x008c -> line 1614
- *   +0x0090 -> line 1613
- *   +0x0094 -> line 1614
- *   +0x009c -> line 1618
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1472–1486 */
-/* addr: 0x002915e0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1472
- *   +0x0004 -> line 1475
- *   +0x0008 -> line 1472
- *   +0x000c -> line 1475
- *   +0x003c -> line 1477
- *   +0x0058 -> line 1479
- *   +0x0074 -> line 1480
- *   +0x0078 -> line 1481
- *   +0x0098 -> line 1483
- *   +0x00d4 -> line 1485
- *   +0x00fc -> line 1486
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-unsigned int fn_ulR3GetEnvScore(unsigned int ulIndE);
-unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE);
-void fn_vEncodeKey(unsigned char* _Key, unsigned int _Score, unsigned int _Cages, unsigned int _Id);
-extern char* FON_fn_szGetTextPointerForHandle(int hString);
-void TXT_vAfficheSimpleWithShadow(GLD_tdstViewportAttributes_* stVpt, char* String, float x, float y, float z, unsigned int ulTextColor);
-int sprintf(char* s, const char* format, ...);
-size_t strlen(const char* s);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1401–1439 */
-/* addr: 0x002916f0  size: 2316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1401
- *   +0x0024 -> line 1403
- *   +0x0028 -> line 1406
- *   +0x0034 -> line 1407
- *   +0x0038 -> line 1409
- *   +0x006c -> line 1413
- *   +0x0074 -> line 1415
- *   +0x0080 -> line 1417
- *   +0x00a8 -> line 1418
- *   +0x0360 -> line 1419
- *   +0x0368 -> line 1422
- *   +0x0394 -> line 1423
- *   +0x03ec -> line 1425
- *   +0x03f8 -> line 1428
- *   +0x0404 -> line 1429
- *   +0x06d0 -> line 1432
- *   +0x06f0 -> line 1433
- *   +0x074c -> line 1436
- *   +0x0754 -> line 1437
- *   +0x0794 -> line 1438
- *   +0x08e4 -> line 1439
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static void fn_vDrawSelectedText(float X, float Y, char* szText);
-
-static inline void fn_vDrawUnselectedText(char* szText, float X, float Y)
-{
-    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szText, X, Y, 0.0f, 0xFFF5E9CF);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1317–1377 */
-/* addr: 0x00292000  size: 1120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1317
- *   +0x0010 -> line 1318
- *   +0x0014 -> line 1325
- *   +0x001c -> line 1331
- *   +0x0024 -> line 1332
- *   +0x0030 -> line 1334
- *   +0x0050 -> line 1335
- *   +0x0060 -> line 1337
- *   +0x0068 -> line 1338
- *   +0x0128 -> line 1345
- *   +0x01e0 -> line 1351
- *   +0x01e8 -> line 1354
- *   +0x01f0 -> line 1355
- *   +0x02b0 -> line 1362
- *   +0x0364 -> line 1368
- *   +0x0368 -> line 1369
- *   +0x036c -> line 1370
- *   +0x0398 -> line 1371
- *   +0x03bc -> line 1373
- *   +0x0414 -> line 1376
- *   +0x0448 -> line 1377
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void CheckMenu2DTextures(void);
-void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1223–1254 */
-/* addr: 0x00292460  size: 2288 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1223
- *   +0x0004 -> line 1227
- *   +0x0008 -> line 1223
- *   +0x000c -> line 1227
- *   +0x0010 -> line 1223
- *   +0x0028 -> line 1227
- *   +0x0050 -> line 1231
- *   +0x0060 -> line 1233
- *   +0x006c -> line 1234
- *   +0x0350 -> line 1237
- *   +0x0384 -> line 1238
- *   +0x03dc -> line 1240
- *   +0x03e8 -> line 1243
- *   +0x03f4 -> line 1244
- *   +0x06c0 -> line 1247
- *   +0x06e0 -> line 1248
- *   +0x073c -> line 1251
- *   +0x0740 -> line 1252
- *   +0x0784 -> line 1253
- *   +0x08d0 -> line 1254
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1087–1179 */
-/* addr: 0x00292d50  size: 4676 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1087
- *   +0x0004 -> line 1091
- *   +0x0008 -> line 1087
- *   +0x0030 -> line 1091
- *   +0x003c -> line 1093
- *   +0x0044 -> line 1097
- *   +0x0048 -> line 1093
- *   +0x004c -> line 1097
- *   +0x007c -> line 1094
- *   +0x0084 -> line 1097
- *   +0x0388 -> line 1100
- *   +0x03a8 -> line 1101
- *   +0x03d8 -> line 1102
- *   +0x0470 -> line 1106
- *   +0x0474 -> line 1103
- *   +0x0478 -> line 1106
- *   +0x047c -> line 1103
- *   +0x0480 -> line 1106
- *   +0x0484 -> line 1103
- *   +0x0488 -> line 1102
- *   +0x0490 -> line 1103
- *   +0x0494 -> line 1102
- *   +0x0498 -> line 1106
- *   +0x04ac -> line 1108
- *   +0x04bc -> line 1110
- *   +0x04d8 -> line 1111
- *   +0x0748 -> line 1112
- *   +0x0750 -> line 1115
- *   +0x0770 -> line 1116
- *   +0x07e4 -> line 1117
- *   +0x07e8 -> line 1118
- *   +0x0808 -> line 1121
- *   +0x081c -> line 1123
- *   +0x082c -> line 1125
- *   +0x0838 -> line 1126
- *   +0x0aa8 -> line 1127
- *   +0x0ab0 -> line 1130
- *   +0x0ac0 -> line 1131
- *   +0x0b34 -> line 1132
- *   +0x0b38 -> line 1133
- *   +0x0b50 -> line 1135
- *   +0x0b68 -> line 1137
- *   +0x0b84 -> line 1140
- *   +0x0b8c -> line 1145
- *   +0x0b98 -> line 1147
- *   +0x0ba0 -> line 1149
- *   +0x0bb8 -> line 1152
- *   +0x0bd0 -> line 1153
- *   +0x0e60 -> line 1155
- *   +0x0e68 -> line 1158
- *   +0x0e84 -> line 1159
- *   +0x0ee0 -> line 1163
- *   +0x0efc -> line 1165
- *   +0x0f08 -> line 1167
- *   +0x0f20 -> line 1170
- *   +0x0f40 -> line 1171
- *   +0x0f7c -> line 1172
- *   +0x0f84 -> line 1176
- *   +0x0fa0 -> line 1177
- *   +0x1214 -> line 1179
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1054–1084 */
-/* addr: 0x00293fa0  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1054
- *   +0x0004 -> line 1056
- *   +0x0008 -> line 1054
- *   +0x0014 -> line 1056
- *   +0x001c -> line 1058
- *   +0x0020 -> line 1056
- *   +0x0024 -> line 1058
- *   +0x0048 -> line 1061
- *   +0x0068 -> line 1063
- *   +0x006c -> line 1065
- *   +0x0070 -> line 1063
- *   +0x007c -> line 1065
- *   +0x0090 -> line 1067
- *   +0x00c0 -> line 1071
- *   +0x00cc -> line 1072
- *   +0x00dc -> line 1073
- *   +0x00e4 -> line 1076
- *   +0x00fc -> line 1077
- *   +0x0110 -> line 1078
- *   +0x0120 -> line 1081
- *   +0x012c -> line 1084
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1026–1037 */
-/* addr: 0x002940e0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1026
- *   +0x0004 -> line 1027
- *   +0x0008 -> line 1026
- *   +0x000c -> line 1027
- *   +0x0020 -> line 1029
- *   +0x0024 -> line 1032
- *   +0x0028 -> line 1029
- *   +0x002c -> line 1032
- *   +0x005c -> line 1034
- *   +0x0068 -> line 1037
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 1014–1023 */
-/* addr: 0x00294160  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1014
- *   +0x0004 -> line 1015
- *   +0x0008 -> line 1014
- *   +0x000c -> line 1015
- *   +0x0024 -> line 1016
- *   +0x002c -> line 1019
- *   +0x0060 -> line 1021
- *   +0x006c -> line 1023
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 984–998 */
-/* addr: 0x002941e0  size: 1036 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 984
- *   +0x0018 -> line 987
- *   +0x001c -> line 984
- *   +0x0024 -> line 987
- *   +0x002c -> line 989
- *   +0x003c -> line 990
- *   +0x0210 -> line 994
- *   +0x03d8 -> line 997
- *   +0x03f0 -> line 998
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vEnd2DSpritesWithUVs(void);
-void GLI_vSetGlobalAlpha(float Alpha);
-void GLI_vDraw2DRectangleWithColor(GLI_tdstMaterial_* hMaterial, unsigned int ulColor, float f1, float f2, float f3, float f4);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 828–859 */
-/* addr: 0x002945f0  size: 1204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 828
- *   +0x0020 -> line 831
- *   +0x0024 -> line 828
- *   +0x0028 -> line 833
- *   +0x0030 -> line 835
- *   +0x003c -> line 837
- *   +0x0040 -> line 838
- *   +0x0054 -> line 837
- *   +0x005c -> line 839
- *   +0x0060 -> line 840
- *   +0x006c -> line 842
- *   +0x0080 -> line 843
- *   +0x0338 -> line 844
- *   +0x0340 -> line 847
- *   +0x0358 -> line 848
- *   +0x03b0 -> line 850
- *   +0x03bc -> line 852
- *   +0x043c -> line 853
- *   +0x044c -> line 854
- *   +0x0450 -> line 853
- *   +0x0458 -> line 855
- *   +0x0494 -> line 859
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static void fn_vDrawSelectedText(float X, float Y, char* szText);
-void fn_vDrawOnOff(float X, float Y, int State);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 772–809 */
-/* addr: 0x00294ab0  size: 1740 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 772
- *   +0x0004 -> line 777
- *   +0x0008 -> line 772
- *   +0x001c -> line 777
- *   +0x00c0 -> line 778
- *   +0x00c4 -> line 777
- *   +0x00c8 -> line 778
- *   +0x00cc -> line 777
- *   +0x00d8 -> line 778
- *   +0x0178 -> line 780
- *   +0x0180 -> line 779
- *   +0x0184 -> line 780
- *   +0x0188 -> line 779
- *   +0x018c -> line 780
- *   +0x0190 -> line 778
- *   +0x01a0 -> line 779
- *   +0x01a4 -> line 778
- *   +0x01a8 -> line 780
- *   +0x023c -> line 781
- *   +0x0244 -> line 782
- *   +0x024c -> line 780
- *   +0x0250 -> line 783
- *   +0x0254 -> line 781
- *   +0x0258 -> line 780
- *   +0x025c -> line 782
- *   +0x0260 -> line 781
- *   +0x0264 -> line 782
- *   +0x0268 -> line 783
- *   +0x027c -> line 785
- *   +0x0284 -> line 787
- *   +0x02ac -> line 788
- *   +0x0354 -> line 791
- *   +0x0358 -> line 789
- *   +0x035c -> line 791
- *   +0x0360 -> line 789
- *   +0x0368 -> line 791
- *   +0x036c -> line 788
- *   +0x0370 -> line 790
- *   +0x0374 -> line 789
- *   +0x0378 -> line 790
- *   +0x037c -> line 789
- *   +0x0380 -> line 791
- *   +0x0388 -> line 788
- *   +0x038c -> line 790
- *   +0x0390 -> line 791
- *   +0x0394 -> line 788
- *   +0x0398 -> line 791
- *   +0x03a0 -> line 792
- *   +0x0440 -> line 795
- *   +0x0444 -> line 793
- *   +0x0448 -> line 795
- *   +0x044c -> line 793
- *   +0x0454 -> line 792
- *   +0x0458 -> line 794
- *   +0x045c -> line 793
- *   +0x0460 -> line 792
- *   +0x0464 -> line 793
- *   +0x0468 -> line 794
- *   +0x046c -> line 792
- *   +0x0470 -> line 795
- *   +0x0498 -> line 796
- *   +0x04a0 -> line 799
- *   +0x04cc -> line 800
- *   +0x0574 -> line 803
- *   +0x0578 -> line 801
- *   +0x057c -> line 803
- *   +0x0580 -> line 801
- *   +0x0588 -> line 803
- *   +0x058c -> line 800
- *   +0x0590 -> line 802
- *   +0x0594 -> line 801
- *   +0x0598 -> line 802
- *   +0x059c -> line 801
- *   +0x05a0 -> line 803
- *   +0x05a8 -> line 800
- *   +0x05ac -> line 802
- *   +0x05b0 -> line 803
- *   +0x05b4 -> line 800
- *   +0x05b8 -> line 803
- *   +0x05c0 -> line 804
- *   +0x0660 -> line 807
- *   +0x0664 -> line 805
- *   +0x0668 -> line 807
- *   +0x066c -> line 805
- *   +0x0674 -> line 804
- *   +0x0678 -> line 806
- *   +0x067c -> line 805
- *   +0x0680 -> line 804
- *   +0x0684 -> line 805
- *   +0x0688 -> line 806
- *   +0x068c -> line 804
- *   +0x0690 -> line 807
- *   +0x06b4 -> line 809
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 745–769 */
-/* addr: 0x00295180  size: 1064 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 745
- *   +0x0014 -> line 748
- *   +0x001c -> line 751
- *   +0x0044 -> line 752
- *   +0x00e8 -> line 754
- *   +0x00ec -> line 753
- *   +0x00f0 -> line 754
- *   +0x00f4 -> line 753
- *   +0x00fc -> line 754
- *   +0x0100 -> line 752
- *   +0x0104 -> line 754
- *   +0x010c -> line 753
- *   +0x0110 -> line 752
- *   +0x0114 -> line 753
- *   +0x0118 -> line 754
- *   +0x011c -> line 752
- *   +0x0120 -> line 754
- *   +0x0128 -> line 755
- *   +0x01c8 -> line 757
- *   +0x01cc -> line 756
- *   +0x01d0 -> line 757
- *   +0x01d4 -> line 756
- *   +0x01dc -> line 755
- *   +0x01e0 -> line 756
- *   +0x01e4 -> line 755
- *   +0x01e8 -> line 756
- *   +0x01ec -> line 757
- *   +0x0214 -> line 758
- *   +0x021c -> line 761
- *   +0x0248 -> line 762
- *   +0x02ec -> line 764
- *   +0x02f0 -> line 763
- *   +0x02f4 -> line 764
- *   +0x02f8 -> line 763
- *   +0x0300 -> line 764
- *   +0x0304 -> line 762
- *   +0x0308 -> line 764
- *   +0x0310 -> line 763
- *   +0x0314 -> line 762
- *   +0x0318 -> line 763
- *   +0x031c -> line 764
- *   +0x0320 -> line 762
- *   +0x0324 -> line 764
- *   +0x032c -> line 765
- *   +0x03cc -> line 767
- *   +0x03d0 -> line 766
- *   +0x03d4 -> line 767
- *   +0x03d8 -> line 766
- *   +0x03e0 -> line 765
- *   +0x03e4 -> line 766
- *   +0x03e8 -> line 765
- *   +0x03ec -> line 766
- *   +0x03f0 -> line 767
- *   +0x0414 -> line 769
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 703–736 */
-/* addr: 0x002955b0  size: 1048 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 703
- *   +0x0004 -> line 707
- *   +0x0008 -> line 703
- *   +0x000c -> line 707
- *   +0x0010 -> line 703
- *   +0x0020 -> line 707
- *   +0x004c -> line 708
- *   +0x005c -> line 710
- *   +0x0060 -> line 711
- *   +0x006c -> line 713
- *   +0x0078 -> line 715
- *   +0x008c -> line 716
- *   +0x02b4 -> line 717
- *   +0x02c0 -> line 720
- *   +0x02d0 -> line 722
- *   +0x02e4 -> line 723
- *   +0x0310 -> line 724
- *   +0x0318 -> line 727
- *   +0x0330 -> line 728
- *   +0x035c -> line 730
- *   +0x0360 -> line 731
- *   +0x03a4 -> line 732
- *   +0x03b0 -> line 734
- *   +0x03c4 -> line 735
- *   +0x03fc -> line 736
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void GLI_vEnd2DSpritesWithUVs(void);
-void GLI_vSetGlobalAlpha(float Alpha);
-void GLI_vDraw2DRectangleWithColor(GLI_tdstMaterial_* hMaterial, unsigned int ulColor, float f1, float f2, float f3, float f4);
-
-static inline void fn_vDrawSelectedText(float X, float Y, char* szText)
-{
-    float fWidth;
-    float fHeight;
-    char szMsg[100];
-
-    TXT_fn_fComputePixelLengthOfString(szText, &fWidth, &fHeight);
-    fWidth = 100.0f * (fWidth / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-    fHeight = 100.0f * (fHeight / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-
-    if (strstr(szText, "\\l") != NULL)
-    {
-        GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
-            0.1f * X - fWidth - 2.0f, 0.1f * Y - 7.0f,
-            1.0f + (0.1f * X + fWidth), 0.1f * Y + fHeight,
-            0.3f, 0.64f, 0.42f, 0.56f,
-            (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
-    }
-    else
-    {
-        GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
-            0.1f * X - fWidth - 2.0f, 0.1f * Y - 7.0f,
-            1.0f + (0.1f * X + fWidth), 0.1f * Y + fHeight,
-            0.3f, 0.64f, 0.42f, 0.56f,
-            (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
-    }
-
-    sprintf(szMsg, "\\jc\\z%d:%s", g_CurrentSelectedTextSize, szText);
-    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, X, Y, 0.0f, 0xFFFFDA00);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 601–629 */
-/* addr: 0x002959d0  size: 2040 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 601
- *   +0x0008 -> line 607
- *   +0x000c -> line 601
- *   +0x0018 -> line 607
- *   +0x00ac -> line 610
- *   +0x00b0 -> line 608
- *   +0x00bc -> line 610
- *   +0x00c0 -> line 607
- *   +0x00c4 -> line 608
- *   +0x00c8 -> line 607
- *   +0x00cc -> line 608
- *   +0x00d4 -> line 610
- *   +0x00d8 -> line 608
- *   +0x00dc -> line 610
- *   +0x00f4 -> line 607
- *   +0x00f8 -> line 610
- *   +0x0284 -> line 611
- *   +0x0290 -> line 613
- *   +0x029c -> line 611
- *   +0x02b4 -> line 613
- *   +0x02bc -> line 611
- *   +0x02c0 -> line 613
- *   +0x02d0 -> line 615
- *   +0x02dc -> line 617
- *   +0x02fc -> line 618
- *   +0x0518 -> line 619
- *   +0x0538 -> line 620
- *   +0x055c -> line 621
- *   +0x0564 -> line 624
- *   +0x0580 -> line 625
- *   +0x05a4 -> line 626
- *   +0x05c4 -> line 627
- *   +0x07e0 -> line 629
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-static inline void fn_vDrawAreYouSureFrame(float fHalfWidth, float fRight, float fBottom)
-{
-    GLI_vEnd2DSpritesWithUVs();
-    GLI_vSetGlobalAlpha(187.0f);
-    GLI_vDraw2DRectangleWithColor((GLI_tdstMaterial_*)g_hSelectedFrameMaterialForMenu2D, 0xBB000000,
-        (40.0f - fHalfWidth) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
-        fRight * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
-        30.0f * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f,
-        fBottom * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f);
-    GLI_vEnd2DSpritesWithUVs();
-    GLI_vSetGlobalAlpha(255.0f);
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 597–598 */
-/* addr: 0x002961d0  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 597
- *   +0x000c -> line 598
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 593–593 */
-/* addr: 0x002961f0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 593
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 588–588 */
-/* addr: 0x00296200  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 588
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 400–460 */
-/* addr: 0x00296210  size: 516 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 400
- *   +0x0020 -> line 401
- *   +0x0030 -> line 404
- *   +0x003c -> line 406
- *   +0x005c -> line 407
- *   +0x0068 -> line 408
- *   +0x0070 -> line 411
- *   +0x008c -> line 412
- *   +0x009c -> line 416
- *   +0x00bc -> line 417
- *   +0x00cc -> line 419
- *   +0x0124 -> line 431
- *   +0x0128 -> line 430
- *   +0x012c -> line 431
- *   +0x0130 -> line 433
- *   +0x0138 -> line 432
- *   +0x013c -> line 434
- *   +0x0144 -> line 435
- *   +0x014c -> line 437
- *   +0x0154 -> line 438
- *   +0x01b0 -> line 442
- *   +0x01b8 -> line 445
- *   +0x01bc -> line 446
- *   +0x01c4 -> line 451
- *   +0x01cc -> line 454
- *   +0x01d0 -> line 458
- *   +0x01e0 -> line 459
- *   +0x01f0 -> line 458
- *   +0x01f4 -> line 459
- *   +0x01f8 -> line 458
- *   +0x01fc -> line 460
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 349–390 */
-/* addr: 0x00296420  size: 504 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 349
- *   +0x0020 -> line 350
- *   +0x0030 -> line 353
- *   +0x003c -> line 355
- *   +0x0054 -> line 356
- *   +0x0064 -> line 357
- *   +0x0078 -> line 359
- *   +0x0080 -> line 362
- *   +0x0098 -> line 363
- *   +0x00a8 -> line 364
- *   +0x00bc -> line 365
- *   +0x00c0 -> line 370
- *   +0x00e0 -> line 371
- *   +0x00f0 -> line 373
- *   +0x0168 -> line 379
- *   +0x0178 -> line 378
- *   +0x017c -> line 379
- *   +0x01a0 -> line 382
- *   +0x01a4 -> line 381
- *   +0x01a8 -> line 382
- *   +0x01b8 -> line 383
- *   +0x01c0 -> line 385
- *   +0x01c4 -> line 388
- *   +0x01d4 -> line 389
- *   +0x01e4 -> line 388
- *   +0x01e8 -> line 389
- *   +0x01ec -> line 388
- *   +0x01f0 -> line 390
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 349–390 */
-/* addr: 0x00296420  size: 504 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 349
- *   +0x0020 -> line 350
- *   +0x0030 -> line 353
- *   +0x003c -> line 355
- *   +0x0054 -> line 356
- *   +0x0064 -> line 357
- *   +0x0078 -> line 359
- *   +0x0080 -> line 362
- *   +0x0098 -> line 363
- *   +0x00a8 -> line 364
- *   +0x00bc -> line 365
- *   +0x00c0 -> line 370
- *   +0x00e0 -> line 371
- *   +0x00f0 -> line 373
- *   +0x0168 -> line 379
- *   +0x0178 -> line 378
- *   +0x017c -> line 379
- *   +0x01a0 -> line 382
- *   +0x01a4 -> line 381
- *   +0x01a8 -> line 382
- *   +0x01b8 -> line 383
- *   +0x01c0 -> line 385
- *   +0x01c4 -> line 388
- *   +0x01d4 -> line 389
- *   +0x01e4 -> line 388
- *   +0x01e8 -> line 389
- *   +0x01ec -> line 388
- *   +0x01f0 -> line 390
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void GLI_vDraw2DSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 284–312 */
-/* addr: 0x00296620  size: 212 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 284
- *   +0x0004 -> line 291
- *   +0x0008 -> line 284
- *   +0x000c -> line 287
- *   +0x0010 -> line 289
- *   +0x0014 -> line 291
- *   +0x0018 -> line 288
- *   +0x001c -> line 289
- *   +0x0020 -> line 291
- *   +0x002c -> line 290
- *   +0x0030 -> line 292
- *   +0x003c -> line 294
- *   +0x0048 -> line 296
- *   +0x0054 -> line 298
- *   +0x0064 -> line 299
- *   +0x0070 -> line 298
- *   +0x0074 -> line 299
- *   +0x0084 -> line 303
- *   +0x008c -> line 306
- *   +0x009c -> line 307
- *   +0x00ac -> line 306
- *   +0x00b0 -> line 307
- *   +0x00c0 -> line 309
- *   +0x00c8 -> line 312
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 275–276 */
-/* addr: 0x00296700  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 275
- *   +0x0004 -> line 276
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* The functions below are in their original source-line order (retail
- * emits them in reverse); these prototypes keep earlier calls valid. */
-unsigned int fn_uiOpenStream(char* szFilename);
-void fn_vReinitSpriteScale(void);
-void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial);
-void fn_vAnimeBeginPage(void);
-void fn_vAnimeEndPage(void);
-void SetAreYouSureValue(int Val);
-int fn_GetAreYouSureValue(void);
-void fn_vChangeAreYouSureValue(void);
-void fn_vDrawAreYouSurePage(void);
-void fn_vDrawClassicPage(void);
-void fn_vDrawOnOff(float X, float Y, int State);
-void fn_vDrawCenteredYesNo(float X, float Y, int State);
-void fn_vDrawVideoOptionPage(void);
-void fn_vDrawGraduation(float xX, float yY, unsigned char NbGradOn);
-void fn_vIncreaseGrad(void);
-void fn_vDecreaseGrad(void);
-void fn_vChangeCurrentSelectedChar(void);
-void fn_vDrawSavePage(void);
-void fn_vDrawArcadePage(void);
-void fn_vDrawCinematicPage(void);
-void fn_vDrawXTraPage(void);
-void fn_vDrawRecapPage(void);
-void fn_vPreviousSnapShot(void);
-void fn_vNextSnapShot(void);
-void fn_vDrawGlobalInfo(void);
-void DrawCurrentPage(void);
-void DrawTitle(void);
-void fn_vDisplayInGameMenu2D(GLD_tdstViewportAttributes_* p_stVpt);
-
-void fn_vReinitSpriteScale(void)
-{
-    g_CurrentSelectedSpriteScale = 1.0f;
-}
-
-void fn_vDraw2DSelectedSpriteWithPercentAndUVs(GLD_tdstViewportAttributes_* p_stVpt, float xXMin, float xYMin, float xXMax, float xYMax, float xUMin, float xUMax, float xVMin, float xVMax, GLI_tdstMaterial_* hMaterial)
-{
-    float H;
-    float W1;
-    float H1;
-    float W;
-
-    W = xXMax - xXMin;
-    H = xYMax - xYMin;
-    W1 = W * g_CurrentSelectedSpriteScale;
-    H1 = H * g_CurrentSelectedSpriteScale;
-    xXMin = xXMin + (W - W1) / 2.0f;
-    xYMin = xYMin + (H - H1) / 2.0f;
-    GLI_vDraw2DSpriteWithPercentAndUVs(p_stVpt, xXMin, xYMin, xXMin + W1, xYMin + H1, xUMin, xUMax, xVMin, xVMax, hMaterial);
-
-    if (g_IsIncreaseSelectedSpriteScale)
-    {
-        g_CurrentSelectedSpriteScale += 0.02f;
-        if (g_CurrentSelectedSpriteScale >= 1.0f)
-            g_IsIncreaseSelectedSpriteScale = 0;
-    }
-    else
-    {
-        g_CurrentSelectedSpriteScale -= 0.02f;
-        if (g_CurrentSelectedSpriteScale <= 0.7f)
-            g_IsIncreaseSelectedSpriteScale = 1;
-    }
-}
-
-void fn_vAnimeBeginPage(void)
-{
-    if (g_YTitle < 12.0f)
-        g_YTitle += 4.0f;
-
-    if (g_GotoRight != 0)
-    {
-        if (g_XText < g_XTextLeft)
-            g_XText += 4.0f;
-        if (g_XText > g_XTextLeft)
-            g_XText = g_XTextLeft;
-    }
-    else
-    {
-        if (g_XText > g_XTextLeft)
-            g_XText -= 4.0f;
-        if (g_XText < g_XTextLeft)
-            g_XText = g_XTextLeft;
-    }
-
-    if (g_YButtonText > 80.0f)
-        g_YButtonText -= 4.0f;
-
-    if (g_YTitle >= 12.0f && ((g_XText >= g_XTextLeft && g_GotoRight != 0) || (g_XText <= g_XTextLeft && g_GotoRight == 0)) && g_YButtonText <= 80.0f)
-    {
-        g_XText = g_XTextLeft;
-        if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eLevelTypePage)
-        {
-            g_CurrentActionMenu2D = eActionAnimeStamp;
-            g_NumStepAnimeStamp = 0; g_XCenterStamp = 50.0f; g_YCenterStamp = 50.0f; g_ScaleStamp = 6.0f;
-        }
-        else
-        {
-            g_CurrentActionMenu2D = eActionNothing;
-        }
-    }
-
-    g_AngleGear1 += 0.3f;
-    g_AngleGear2 -= 0.4f;
-}
-
-void fn_vAnimeEndPage(void)
-{
-    if (g_YTitle >= -20.0f)
-    {
-        g_YTitle -= 4.0f;
-    }
-
-    if (g_GotoRight != 0)
-    {
-        if (g_XText <= 75.0f)
-        {
-            g_XText += 4.0f;
-        }
-    }
-    else
-    {
-        if (g_XText >= 0.0f)
-        {
-            g_XText -= 4.0f;
-        }
-    }
-
-    if (g_YButtonText <= 95.0f)
-    {
-        g_YButtonText += 4.0f;
-    }
-
-    if (g_YTitle < -20.0f && (g_XText > 75.0f || g_XText < 0.0f))
-    {
-        g_CurrentSelection = 0;
-        g_CurrentActionMenu2D = eActionBeginOfPage;
-        g_YTitle = -20.0f;
-        g_CurrentMenu2DPage = g_NextPage;
-
-        if (g_GotoRight != 0)
-        {
-            g_XText = 0.0f;
-        }
-        else
-        {
-            g_XText = 75.0f;
-        }
-
-        switch (aMenu2DPages[g_CurrentMenu2DPage].eTypePage)
-        {
-            case eSaveFileTypePage:
-                g_XTextLeft = 18.0f;
-                break;
-            case eControlOptionTypePage:
-            case eAudioOptionTypePage:
-                g_XTextLeft = 27.0f;
-                break;
-            case eLoadFileTypePage:
-                g_CurrentActionMenu2D = eActionWait;
-                break;
-            default:
-                g_XTextLeft = 39.0f;
-                break;
-        }
-    }
-
-    g_AngleGear1 -= 0.3f;
-    g_AngleGear2 += 0.4f;
-}
-
-void SetAreYouSureValue(int Val)
-{
-    g_AreYouSureValue = Val;
-}
-
-int fn_GetAreYouSureValue(void)
-{
-    return g_AreYouSureValue;
-}
-
-void fn_vChangeAreYouSureValue(void)
-{
-    g_AreYouSureValue = 1 - g_AreYouSureValue;
-}
-
-void fn_vDrawAreYouSurePage(void)
-{
-    char szMsg[50];
-    float fL;
-    float fH;
-    float fY_YesNo;
-
-    TXT_fn_fComputePixelLengthOfString((char*)g_szAreYouSureQuestion, &fL, &fH);
-    fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-    fL = 5.0f + fL / 2.0f;
-
-    fn_vDrawAreYouSureFrame(fL, 40.0f + fL, 50.0f + fH);
-
-    fY_YesNo = 10.0f * (50.0f + fH - 5.0f);
-    TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, (char*)g_szAreYouSureQuestion, 400.0f, 400.0f, 0.0f, 0xFFF5E9CF);
-
-    if (g_AreYouSureValue)
-    {
-        sprintf(szMsg, "%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText));
-        fn_vDrawSelectedText(350.0f, fY_YesNo, szMsg);
-        sprintf(szMsg, "\\jc%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText));
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 450.0f, fY_YesNo, 0.0f, 0xFFF5E9CF);
-    }
-    else
-    {
-        sprintf(szMsg, "\\jc%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText));
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 350.0f, fY_YesNo, 0.0f, 0xFFF5E9CF);
-        sprintf(szMsg, "%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText));
-        fn_vDrawSelectedText(450.0f, fY_YesNo, szMsg);
-    }
-}
-
-void fn_vDrawClassicPage(void)
-{
-    float Y;
-    unsigned int i;
-    char szTmp[50];
-
-    if (strlen(aMenu2DPages[g_CurrentMenu2DPage].Title) == 0)
-        Y = 300.0f;
-    else
-        Y = 400.0f;
-
-    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)
-    {
-        if (i == g_CurrentSelection)
-        {
-            sprintf(szTmp, "%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
-            fn_vDrawSelectedText(10.0f * g_XText, Y, szTmp);
-        }
-        else if (aMenu2DPages[g_CurrentMenu2DPage].abGrayed[i])
-        {
-            sprintf(szTmp, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
-            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFF003264);
-        }
-        else
-        {
-            sprintf(szTmp, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
-            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szTmp, 10.0f * g_XText, Y, 0.0f, 0xFFF5E9CF);
-        }
-
-        if (strstr(aMenu2DPages[g_CurrentMenu2DPage].aText[i], "\\l") != NULL)
-            Y += 140.0f;
-        else
-            Y += 110.0f;
-    }
-}
-
-void fn_vDrawOnOff(float X, float Y, int State)
-{
-    float fL;
-    float fH;
-
-    if (State)
-    {
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), X, Y, 0.0f, 0xFFFFDA00);
-        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, " - ", X, Y, 0.0f, 0xFFF5E9CF);
-        TXT_fn_fComputePixelLengthOfString(" - ", &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[69].hText), X, Y, 0.0f, 0xFF003264);
-    }
-    else
-    {
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), X, Y, 0.0f, 0xFF003264);
-        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[68].hText), &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, " - ", X, Y, 0.0f, 0xFFF5E9CF);
-        TXT_fn_fComputePixelLengthOfString(" - ", &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[69].hText), X, Y, 0.0f, 0xFFFFDA00);
-    }
-}
-
-void fn_vDrawCenteredYesNo(float X, float Y, int State)
-{
-    float fL;
-    float fH;
-    float fW;
-    float fW2;
-
-    TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), &fW, &fH);
-    fW = 100.0f * (fW / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-    TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText), &fW2, &fH);
-    fW2 = 100.0f * (fW2 / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-    fW += fW2;
-    TXT_fn_fComputePixelLengthOfString("-", &fW2, &fH);
-    fW2 = 100.0f * (fW2 / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-    fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-    fW += fW2;
-    fW += 6.0f;
-    X -= 5.0f * fW;
-
-    if (!State)
-    {
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), X, Y, 0.0f, 0xFFFFDA00);
-        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        X += 3.0f;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, "-", X, Y, 0.0f, 0xFFF5E9CF);
-        TXT_fn_fComputePixelLengthOfString("-", &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        X += 3.0f;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText), X, Y, 0.0f, 0xFF003264);
-    }
-    else
-    {
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), X, Y, 0.0f, 0xFF003264);
-        TXT_fn_fComputePixelLengthOfString(FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[82].hText), &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        X += 3.0f;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, "-", X, Y, 0.0f, 0xFFF5E9CF);
-        TXT_fn_fComputePixelLengthOfString("-", &fL, &fH);
-        fL = 100.0f * (fL / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth);
-        fH = 100.0f * (fH / (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight);
-        X += 10.0f * fL;
-        X += 3.0f;
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[83].hText), X, Y, 0.0f, 0xFFFFDA00);
-    }
-}
-
-void fn_vDrawVideoOptionPage(void)
-{
-    char szMsg[50];
-    unsigned int i;
-    int g_XTextOld;
-
-    g_XTextOld = 0;
-
-    for (i = 0; i < aMenu2DPages[g_CurrentMenu2DPage].NbSelection; i++)
-    {
-        if (i == 1)
-        {
-            g_XTextOld = g_XText;
-            g_XText -= 12.0f;
-        }
-
-        if (i == g_CurrentSelection)
-        {
-            sprintf(szMsg, "%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
-            fn_vDrawSelectedText(10.0f * g_XText, 400 + 110 * i, szMsg);
-        }
-        else
-        {
-            sprintf(szMsg, "\\jc\\z250:%s", aMenu2DPages[g_CurrentMenu2DPage].aText[i]);
-            TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, szMsg, 10.0f * g_XText, 400 + 110 * i, 0.0f, 0xFFF5E9CF);
-        }
-
-        if (i == 1)
-        {
-            fn_vDrawOnOff(250.0f + 10.0f * g_XText, 400 + 110 * i, aMenu2DPages[g_CurrentMenu2DPage].aValue[i]);
-            g_XText = g_XTextOld;
-        }
-    }
-}
-
-void fn_vDrawGraduation(float xX, float yY, unsigned char NbGradOn)
-{
-    unsigned char i;
-
-    for (i = 0; i < 10; i++)
-    {
-        if (i < NbGradOn)
-        {
-            GLI_vEnd2DSpritesWithUVs();
-            GLI_vSetGlobalAlpha(255.0f);
-            GLI_vDraw2DRectangleWithColor((GLI_tdstMaterial_*)g_hSelectedFrameMaterialForMenu2D, 0xFF9597B0,
-                (xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
-                (1.5f + xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
-                yY * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f,
-                (4.0f + yY) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f);
-            GLI_vEnd2DSpritesWithUVs();
-            GLI_vSetGlobalAlpha(255.0f);
-        }
-        else
-        {
-            GLI_vEnd2DSpritesWithUVs();
-            GLI_vSetGlobalAlpha(255.0f);
-            GLI_vDraw2DRectangleWithColor((GLI_tdstMaterial_*)g_hSelectedFrameMaterialForMenu2D, 0xFFFFDA00,
-                (xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
-                (1.5f + xX + 2.0f * ((float)(i / 2) * 2.0f)) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwWidth / 100.0f,
-                yY * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f,
-                (4.0f + yY) * (float)((GLD_tdstViewportAttributes_*)g_p_stVpt)->dwHeight / 100.0f);
-            GLI_vEnd2DSpritesWithUVs();
-            GLI_vSetGlobalAlpha(255.0f);
-        }
-    }
-}
-
-void fn_vIncreaseGrad(void)
-{
-    if (g_aNbGradOn[g_CurrentSelection] < 10) {
-        g_aNbGradOn[g_CurrentSelection]++;
-    }
-    if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eAudioOptionTypePage) {
-        fn_vUpdateVolumeLineGameMenu2D(g_CurrentSelection, g_aNbGradOn[g_CurrentSelection], 10);
-    }
-}
-
-void fn_vDecreaseGrad(void)
-{
-    if (g_aNbGradOn[g_CurrentSelection] > 0) {
-        g_aNbGradOn[g_CurrentSelection]--;
-        if (aMenu2DPages[g_CurrentMenu2DPage].eTypePage == eAudioOptionTypePage) {
-            fn_vUpdateVolumeLineGameMenu2D(g_CurrentSelection, g_aNbGradOn[g_CurrentSelection], 10);
-        }
-    }
-}
-
-void fn_vChangeCurrentSelectedChar(void)
-{
-    char* szTmp;
-    unsigned int N;
-
-    szTmp = FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[39].hText);
-
-    N = g_CurrentColForSelection + g_CurrentLineForSelection * g_NbColForSelection; if (N >= strlen(szTmp))
-    {
-        g_CurrentColForSelection = (int)strlen(szTmp) - g_CurrentLineForSelection * g_NbColForSelection - 1;
-    }
-
-    N = g_CurrentColForSelection + g_CurrentLineForSelection * g_NbColForSelection;
-
-    if (N == strlen(szTmp) - 1)
-    {
-        if (g_CurrentSelectedCharNumber > 0 && (g_CurrentSelectedCharNumber != g_NbCharForSaveName - 1 || g_CurrentNameForSavePage[g_CurrentSelectedCharNumber] == 0))
-        {
-            g_CurrentSelectedCharNumber--;
-        }
-        g_CurrentNameForSavePage[g_CurrentSelectedCharNumber] = 0;
-    }
-    else
-    {
-        g_CurrentNameForSavePage[g_CurrentSelectedCharNumber] = szTmp[N];
-
-        if (g_CurrentSelectedCharNumber < g_NbCharForSaveName - 1)
-            g_CurrentSelectedCharNumber++;
-        else
-            g_CurrentLineForSelection = g_NbLineForSelection - 1;
-    }
-}
-
-void fn_vDrawSavePage(void)
-{
-    char szChar[50];
-    char* szTmp;
-    unsigned int j;
-    int N;
-    int i;
-    int c;
-    int l;
-    float fH;
-    float fL;
-    /* TODO: decompile from asm/... */
-}
-
-void fn_vDrawArcadePage(void)
-{
-    char szMsg[50];
-    unsigned int j;
-    unsigned int i;
-    /* TODO: decompile from asm/... */
-}
-
-void fn_vDrawCinematicPage(void)
-{
-    int l;
-    int c;
-    int j;
-
-    j = 0;
-    CheckMenu2DTextures();
-
-    for (l = 0; l < g_NbLineForSelection; l++)
-    {
-        for (c = 0; c < g_NbColForSelection; c++)
-        {
-            int bSelected = (c == g_CurrentColForSelection && l == g_CurrentLineForSelection);
-
-            if (j < g_NbCinematicOpen)
-            {
-                if (bSelected)
-                {
-                    fn_vDraw2DSelectedSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
-                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
-                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
-                        0.33f * c, 0.33f + 0.33f * c, 0.33f * l, 0.33f + 0.33f * l,
-                        (GLI_tdstMaterial_*)g_hFixMaterialForSelectedFilms);
-                }
-                else
-                {
-                    GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
-                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
-                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
-                        0.33f * c, 0.33f + 0.33f * c, 0.33f * l, 0.33f + 0.33f * l,
-                        (GLI_tdstMaterial_*)g_hFixMaterialForSelectedFilms);
-                }
-            }
-            else
-            {
-                if (bSelected)
-                {
-                    fn_vDraw2DSelectedSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
-                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
-                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
-                        0.5f, 1.0f, 0.0f, 0.5f,
-                        (GLI_tdstMaterial_*)g_hFixMaterialForArcadeAndFilms);
-                }
-                else
-                {
-                    GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt,
-                        22.0f + 11.0f * c, 28.0f + 17.0f * l,
-                        22.0f + 10.0f * (c + 1) + c, 28.0f + 16.0f * (l + 1) + l - 1.5f,
-                        0.5f, 1.0f, 0.0f, 0.5f,
-                        (GLI_tdstMaterial_*)g_hFixMaterialForArcadeAndFilms);
-                }
-            }
-
-            j++;
-        }
-    }
-
-    if (g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection < g_NbCinematicOpen)
-    {
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt,
-            FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[g_FirstCineNameText + g_CurrentColForSelection + g_NbColForSelection * g_CurrentLineForSelection].hText),
-            120.0f, 825.0f, 0.0f, 0xFFF5E9CF);
-    }
-    else
-    {
-        TXT_vAfficheSimpleWithShadow((GLD_tdstViewportAttributes_*)g_p_stVpt, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText), 120.0f, 825.0f, 0.0f, 0xFFF5E9CF);
-    }
-}
-
-void fn_vDrawXTraPage(void)
-{
-    unsigned int i;
-    unsigned int j;
-    unsigned int N;
-    char szMsg[50];
-
-    N = g_NbArcadeOpen;
-    i = 0;
-    if (N >= 10)
-        N = 9;
-
-    for (j = aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry; j < aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry + aMenu2DPages[g_CurrentMenu2DPage].NbSelection; j++, i++)
-    {
-        if (j < N)
-        {
-            if (i == g_CurrentSelection)
-            {
-                sprintf(szMsg, "%s%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[48].hText), g_aNumLesson[j]);
-                fn_vDrawSelectedText(10.0f * g_XText, 380 + 100 * i, szMsg);
-            }
-            else
-            {
-                sprintf(szMsg, "\\jc%s%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[48].hText), g_aNumLesson[j]);
-                fn_vDrawUnselectedText(szMsg, 10.0f * g_XText, 380 + 100 * i);
-            }
-        }
-        else
-        {
-            if (i == g_CurrentSelection)
-            {
-                fn_vDrawSelectedText(10.0f * g_XText, 380 + 100 * i, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText));
-            }
-            else
-            {
-                sprintf(szMsg, "\\jc%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[99].hText));
-                fn_vDrawUnselectedText(szMsg, 10.0f * g_XText, 380 + 100 * i);
-            }
-        }
-    }
-
-    if (aMenu2DPages[g_CurrentMenu2DPage].NbEntry >= aMenu2DPages[g_CurrentMenu2DPage].NbSelection)
-    {
-        if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry != 0)
-            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 37.0f, 26.0f, 42.0f, 30.0f, 0.31f, 0.41f, 0.12f, 0.19f, (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
-        if (aMenu2DPages[g_CurrentMenu2DPage].CurrentFirstEntry + aMenu2DPages[g_CurrentMenu2DPage].NbSelection < aMenu2DPages[g_CurrentMenu2DPage].NbEntry)
-            GLI_vDraw2DSpriteWithPercentAndUVs((GLD_tdstViewportAttributes_*)g_p_stVpt, 37.0f, 79.0f, 42.0f, 83.0f, 0.3f, 0.41f, 0.007f, 0.086f, (GLI_tdstMaterial_*)g_hFixMaterialForMenu2D);
-    }
-}
-
-void fn_vDrawRecapPage(void)
-{
-    unsigned int i;
-    char szTmp[2048];
-    GLD_tdstViewportAttributes_* pVpt;
-
-    fn_vEncodeKey((unsigned char*)g_szHallOfFameKeyString, fn_ulR3GetEnvScore(0), fn_ulR3GetEnvNbCage(0), g_aForKeyAlgo[3]);
-
-    for (i = 0; i < strlen(g_szHallOfFameKeyString); i++)
-    {
-        if (g_szHallOfFameKeyString[i] == '-')
-            g_szHallOfFameKeyString[i] = '|';
-    }
-
-    sprintf(szTmp, "\\jc%s\\l\\l%s\\l\\l%s", FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[102].hText), g_szHallOfFameKeyString, FON_fn_szGetTextPointerForHandle(g_aBinDataForMenu[103].hText));
-
-    pVpt = (GLD_tdstViewportAttributes_*)g_p_stVpt;
-    TXT_vAfficheSimpleWithShadow(pVpt, szTmp, 500.0f, 160.0f, 0.0f, 0xFFF5E9CF);
-}
-
-void fn_vPreviousSnapShot(void)
-{
-    int lSnapID;
-
-    if (!g_bAlbumIsWorking)
-    {
-        lSnapID = fn_dwFindPreviousSnappedPicture(g_stAlbum.lSnapID, g_stAlbum.szFileName);
-        if (lSnapID != g_stAlbum.lSnapID)
-        {
-            g_stAlbum.lSnapID = lSnapID;
-            if (lSnapID != aMenu2DPages[g_AlbumPage].NbEntry)
-            {
-                g_bAlbumIsWorking = 1;
-                g_bAlbumLoadInProgress = 1;
-                GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
-                g_stAlbum.fPicturePercentage = 0.0f;
-                g_stAlbum.bMoveBackward = 1;
-            }
-        }
-    }
-}
-
-void fn_vNextSnapShot(void)
-{
-    int lSnapID;
-
-    if (!g_bAlbumIsWorking)
-    {
-        lSnapID = fn_dwFindNextSnappedPicture(g_stAlbum.lSnapID, g_stAlbum.szFileName);
-        if (lSnapID != g_stAlbum.lSnapID)
-        {
-            g_stAlbum.lSnapID = lSnapID;
-            if (lSnapID != aMenu2DPages[g_AlbumPage].NbEntry)
-            {
-                g_bAlbumIsWorking = 1;
-                g_bAlbumLoadInProgress = 1;
-                GLI_bLoadSnapShotTexture(g_stAlbum.szFileName, g_hFixMaterialForAlbum);
-                g_stAlbum.bMoveForward = 1;
-            }
-        }
-    }
-}
-
 void fn_vDrawGlobalInfo(void)
 {
     float XChar;
@@ -1996,11 +1821,106 @@ void fn_vDrawGlobalInfo(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2115–2182 */
+/* addr: 0x0028f920  size: 5604 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2115
+ *   +0x0004 -> line 2116
+ *   +0x0008 -> line 2115
+ *   +0x000c -> line 2116
+ *   +0x0010 -> line 2115
+ *   +0x0034 -> line 2116
+ *   +0x0078 -> line 2119
+ *   +0x0854 -> line 2120
+ *   +0x085c -> line 2127
+ *   +0x0928 -> line 2128
+ *   +0x0930 -> line 2130
+ *   +0x0e18 -> line 2131
+ *   +0x0e20 -> line 2133
+ *   +0x0e28 -> line 2134
+ *   +0x0e30 -> line 2136
+ *   +0x0e38 -> line 2137
+ *   +0x0e40 -> line 2139
+ *   +0x0e48 -> line 2140
+ *   +0x0e50 -> line 2142
+ *   +0x0e58 -> line 2143
+ *   +0x0e60 -> line 2145
+ *   +0x10b4 -> line 2146
+ *   +0x10bc -> line 2148
+ *   +0x1354 -> line 2149
+ *   +0x135c -> line 2151
+ *   +0x1444 -> line 2152
+ *   +0x144c -> line 2157
+ *   +0x1454 -> line 2158
+ *   +0x145c -> line 2160
+ *   +0x1464 -> line 2161
+ *   +0x146c -> line 2163
+ *   +0x14bc -> line 2164
+ *   +0x14c4 -> line 2169
+ *   +0x1514 -> line 2170
+ *   +0x151c -> line 2173
+ *   +0x1594 -> line 2174
+ *   +0x159c -> line 2176
+ *   +0x15a4 -> line 2177
+ *   +0x15ac -> line 2179
+ *   +0x15b4 -> line 2182
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DrawCurrentPage(void)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2187–2246 */
+/* addr: 0x0028ee90  size: 2692 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2187
+ *   +0x0004 -> line 2194
+ *   +0x0008 -> line 2187
+ *   +0x000c -> line 2194
+ *   +0x0010 -> line 2187
+ *   +0x002c -> line 2194
+ *   +0x0058 -> line 2197
+ *   +0x0090 -> line 2198
+ *   +0x0098 -> line 2200
+ *   +0x00cc -> line 2201
+ *   +0x00d4 -> line 2202
+ *   +0x00d8 -> line 2201
+ *   +0x00e0 -> line 2202
+ *   +0x00e8 -> line 2201
+ *   +0x010c -> line 2202
+ *   +0x0114 -> line 2203
+ *   +0x0128 -> line 2206
+ *   +0x0160 -> line 2209
+ *   +0x0198 -> line 2211
+ *   +0x01a0 -> line 2212
+ *   +0x01a8 -> line 2211
+ *   +0x01ac -> line 2212
+ *   +0x01b0 -> line 2213
+ *   +0x01bc -> line 2214
+ *   +0x01d8 -> line 2216
+ *   +0x01ec -> line 2217
+ *   +0x01f8 -> line 2218
+ *   +0x01fc -> line 2221
+ *   +0x052c -> line 2224
+ *   +0x0530 -> line 2227
+ *   +0x0538 -> line 2224
+ *   +0x053c -> line 2225
+ *   +0x0540 -> line 2227
+ *   +0x0588 -> line 2228
+ *   +0x05cc -> line 2229
+ *   +0x05d4 -> line 2232
+ *   +0x060c -> line 2234
+ *   +0x0644 -> line 2235
+ *   +0x0664 -> line 2237
+ *   +0x0994 -> line 2238
+ *   +0x09e4 -> line 2242
+ *   +0x0a14 -> line 2243
+ *   +0x0a5c -> line 2246
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void DrawTitle(void)
 {
     int D2;
@@ -2020,11 +1940,71 @@ void DrawTitle(void)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 2436–2534 */
+/* addr: 0x0028dd40  size: 4424 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2436
+ *   +0x0014 -> line 2439
+ *   +0x0088 -> line 2442
+ *   +0x0090 -> line 2447
+ *   +0x009c -> line 2451
+ *   +0x00a4 -> line 2454
+ *   +0x00ac -> line 2456
+ *   +0x00e0 -> line 2460
+ *   +0x0144 -> line 2463
+ *   +0x017c -> line 2466
+ *   +0x0184 -> line 2467
+ *   +0x018c -> line 2469
+ *   +0x0194 -> line 2470
+ *   +0x019c -> line 2472
+ *   +0x0220 -> line 2473
+ *   +0x0228 -> line 2475
+ *   +0x02d4 -> line 2480
+ *   +0x02dc -> line 2484
+ *   +0x02e8 -> line 2485
+ *   +0x0360 -> line 2489
+ *   +0x0368 -> line 2491
+ *   +0x039c -> line 2494
+ *   +0x03ac -> line 2495
+ *   +0x03b4 -> line 2497
+ *   +0x03c4 -> line 2498
+ *   +0x08c4 -> line 2500
+ *   +0x08cc -> line 2502
+ *   +0x0914 -> line 2505
+ *   +0x09f4 -> line 2506
+ *   +0x09fc -> line 2508
+ *   +0x0a04 -> line 2509
+ *   +0x0a0c -> line 2511
+ *   +0x0a40 -> line 2512
+ *   +0x0aa4 -> line 2513
+ *   +0x0ab4 -> line 2514
+ *   +0x0b98 -> line 2515
+ *   +0x0ba0 -> line 2517
+ *   +0x0c80 -> line 2518
+ *   +0x0e74 -> line 2519
+ *   +0x0e7c -> line 2521
+ *   +0x0e84 -> line 2523
+ *   +0x0fc8 -> line 2525
+ *   +0x0fd0 -> line 2527
+ *   +0x0fe0 -> line 2528
+ *   +0x111c -> line 2531
+ *   +0x1128 -> line 2532
+ *   +0x1130 -> line 2534
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_vDisplayInGameMenu2D(GLD_tdstViewportAttributes_* p_stVpt)
 {
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\GameMenu2D\DisplayMenu2D.c lines 18–18 */
+/* addr: 0x0028dd30  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 18
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_uiOpenStream(char* szFilename)
 {
     return fs_uiOpen__Q24usnd11CPS2FileMgrFPCc13_ERamLocation(szFilename, 0);

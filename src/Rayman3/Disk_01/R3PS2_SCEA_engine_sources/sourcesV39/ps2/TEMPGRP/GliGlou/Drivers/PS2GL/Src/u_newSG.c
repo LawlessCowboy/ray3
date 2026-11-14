@@ -130,69 +130,6 @@ C_VertexArrayContainer::C_VertexArrayContainer(unsigned int NbSprites)
 
 extern "C" {
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_newSG.c lines 194–308 */
-/* addr: 0x002cf6b0  size: 1372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 194
- *   +0x0004 -> line 206
- *   +0x0008 -> line 194
- *   +0x000c -> line 206
- *   +0x0010 -> line 194
- *   +0x002c -> line 202
- *   +0x0030 -> line 194
- *   +0x0060 -> line 209
- *   +0x006c -> line 206
- *   +0x0078 -> line 207
- *   +0x0084 -> line 209
- *   +0x008c -> line 211
- *   +0x00f8 -> line 218
- *   +0x00fc -> line 217
- *   +0x0104 -> line 218
- *   +0x0108 -> line 225
- *   +0x010c -> line 227
- *   +0x0114 -> line 225
- *   +0x0118 -> line 229
- *   +0x0138 -> line 230
- *   +0x0150 -> line 231
- *   +0x0160 -> line 238
- *   +0x0170 -> line 239
- *   +0x0184 -> line 243
- *   +0x01a8 -> line 246
- *   +0x01b0 -> line 248
- *   +0x01b4 -> line 246
- *   +0x01b8 -> line 248
- *   +0x01d8 -> line 252
- *   +0x01e0 -> line 261
- *   +0x0278 -> line 262
- *   +0x0280 -> line 263
- *   +0x0318 -> line 264
- *   +0x0330 -> line 265
- *   +0x03b8 -> line 266
- *   +0x03d0 -> line 268
- *   +0x03dc -> line 272
- *   +0x03f0 -> line 273
- *   +0x0404 -> line 275
- *   +0x0428 -> line 276
- *   +0x0430 -> line 280
- *   +0x0434 -> line 285
- *   +0x0444 -> line 286
- *   +0x0458 -> line 290
- *   +0x047c -> line 293
- *   +0x0484 -> line 295
- *   +0x0488 -> line 293
- *   +0x048c -> line 295
- *   +0x04a4 -> line 297
- *   +0x04b0 -> line 300
- *   +0x04c8 -> line 302
- *   +0x04cc -> line 300
- *   +0x04d4 -> line 301
- *   +0x04d8 -> line 302
- *   +0x04f0 -> line 305
- *   +0x0510 -> line 307
- *   +0x0514 -> line 308
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoint_* pPoint, unsigned int Edge, float U);
 void J_New_GetParticleSpriteFromInterpolatedPoints(float (*pParticles)[4], J_New_InterpolPoint_* p1, J_New_InterpolPoint_* p2, float V);
 
@@ -300,6 +237,69 @@ void J_New_GetInterpolPointOnEdge(J_New_ParticleFace_* pFace, J_New_InterpolPoin
     pPoint->UVs[1] = pUV1[p1 * 2] * A[0] + pUV1[p2 * 2] * A[1];
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_newSG.c lines 194–308 */
+/* addr: 0x002cf6b0  size: 1372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 194
+ *   +0x0004 -> line 206
+ *   +0x0008 -> line 194
+ *   +0x000c -> line 206
+ *   +0x0010 -> line 194
+ *   +0x002c -> line 202
+ *   +0x0030 -> line 194
+ *   +0x0060 -> line 209
+ *   +0x006c -> line 206
+ *   +0x0078 -> line 207
+ *   +0x0084 -> line 209
+ *   +0x008c -> line 211
+ *   +0x00f8 -> line 218
+ *   +0x00fc -> line 217
+ *   +0x0104 -> line 218
+ *   +0x0108 -> line 225
+ *   +0x010c -> line 227
+ *   +0x0114 -> line 225
+ *   +0x0118 -> line 229
+ *   +0x0138 -> line 230
+ *   +0x0150 -> line 231
+ *   +0x0160 -> line 238
+ *   +0x0170 -> line 239
+ *   +0x0184 -> line 243
+ *   +0x01a8 -> line 246
+ *   +0x01b0 -> line 248
+ *   +0x01b4 -> line 246
+ *   +0x01b8 -> line 248
+ *   +0x01d8 -> line 252
+ *   +0x01e0 -> line 261
+ *   +0x0278 -> line 262
+ *   +0x0280 -> line 263
+ *   +0x0318 -> line 264
+ *   +0x0330 -> line 265
+ *   +0x03b8 -> line 266
+ *   +0x03d0 -> line 268
+ *   +0x03dc -> line 272
+ *   +0x03f0 -> line 273
+ *   +0x0404 -> line 275
+ *   +0x0428 -> line 276
+ *   +0x0430 -> line 280
+ *   +0x0434 -> line 285
+ *   +0x0444 -> line 286
+ *   +0x0458 -> line 290
+ *   +0x047c -> line 293
+ *   +0x0484 -> line 295
+ *   +0x0488 -> line 293
+ *   +0x048c -> line 295
+ *   +0x04a4 -> line 297
+ *   +0x04b0 -> line 300
+ *   +0x04c8 -> line 302
+ *   +0x04cc -> line 300
+ *   +0x04d4 -> line 301
+ *   +0x04d8 -> line 302
+ *   +0x04f0 -> line 305
+ *   +0x0510 -> line 307
+ *   +0x0514 -> line 308
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int J_New_CreateParticlesOnFace(float (*pParticles)[4], unsigned int MaxParticles, J_New_ParticleFace_* pFace, float _fU, float _fV, float NoiseLevel)
 {
     int Edge[3];

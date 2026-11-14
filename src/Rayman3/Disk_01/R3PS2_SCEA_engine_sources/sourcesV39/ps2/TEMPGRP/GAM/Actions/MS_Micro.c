@@ -1150,14 +1150,6 @@ tdstIndexMicrosList_ g_stIndexMicrosList;
 tdstEngineStructure_ g_stEngineStructure;
 unsigned char g_ucGameModuleId;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 131–131 */
-/* addr: 0x00272070  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 131
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 unsigned int fn_ulMSWaySizeOf(void);
@@ -1192,14 +1184,978 @@ void fn_vMicroInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit
 void fn_vMicroFree(tdstEngineObject_* p_stObject);
 void fn_vMicroAlloc(tdstEngineObject_* p_stObject);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 856–857 */
-/* addr: 0x00272080  size: 20 bytes */
+int fn_rGetMicroCoordinateX(int s32_ObjectId);
+int fn_rGetMicroCoordinateY(int s32_ObjectId);
+int fn_rGetMicroCoordinateZ(int s32_ObjectId);
+int fn_rGetMicroVelocityX(int s32_ObjectId);
+int fn_rGetMicroVelocityY(int s32_ObjectId);
+int fn_rGetMicroVelocityZ(int s32_ObjectId);
+int fn_rGetMicroNormalX(int s32_ObjectId);
+int fn_rGetMicroNormalY(int s32_ObjectId);
+int fn_rGetMicroNormalZ(int s32_ObjectId);
+int fn_rGetMicroTangentX(int s32_ObjectId);
+int fn_rGetMicroTangentY(int s32_ObjectId);
+int fn_rGetMicroTangentZ(int s32_ObjectId);
+int RetMicroSonoreFILTRE(void);
+int fn_bGetMicroVelocity(int s32_ObjectId, _stVector* pst_Vector);
+int fn_bGetMicroNormal(int s32_ObjectId, _stVector* pst_Vector);
+int fn_bGetMicroTangent(int s32_ObjectId, _stVector* pst_Vector);
+static inline int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector);
+void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro);
+void SND_fn_vDestroyMicroSound(int s32_MicroId);
+int SND_fn_lCreateMicroSound(void);
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+
+tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
+void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* p_stMatrix, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, MTH3D_tdstVector_* p_stV3);
+
+tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex);
+HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
+
+DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
+float fn_rClampValue(float r_Value);
+/* Not original source, needs cleaning up: inferred inline helper (retail keeps a third stack vector and null-tests &st_Velocity). */
+static inline MTH3D_tdstVector_ fn_stClampVector(MTH3D_tdstVector_* p_stVector)
+{
+    MTH3D_tdstVector_ stResult;
+    stResult.xX = 0.0f;
+    if (p_stVector != NULL)
+    {
+        stResult.xX = fn_rClampValue(p_stVector->xX);
+        stResult.xY = fn_rClampValue(p_stVector->xY);
+        stResult.xZ = fn_rClampValue(p_stVector->xZ);
+    }
+    return stResult;
+}
+
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 856
- *   +0x000c -> line 857
+ *   +0x0000 -> line 354
+ *   +0x0014 -> line 358
+ *   +0x001c -> line 361
+ *   +0x0054 -> line 362
+ *   +0x005c -> line 365
+ *   +0x0064 -> line 366
+ *   +0x006c -> line 369
+ *   +0x0070 -> line 373
+ *   +0x0074 -> line 369
+ *   +0x0080 -> line 370
+ *   +0x0084 -> line 369
+ *   +0x0090 -> line 370
+ *   +0x0094 -> line 371
+ *   +0x009c -> line 372
+ *   +0x00a4 -> line 377
+ *   +0x00a8 -> line 378
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+
+#pragma auto_inline on
+
+#pragma auto_inline reset
+
+void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
+MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
+void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 146–173 */
+/* addr: 0x00273210  size: 284 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 146
+ *   +0x0014 -> line 149
+ *   +0x001c -> line 150
+ *   +0x0048 -> line 152
+ *   +0x0054 -> line 153
+ *   +0x0080 -> line 156
+ *   +0x0098 -> line 160
+ *   +0x00a0 -> line 156
+ *   +0x00a4 -> line 160
+ *   +0x00b0 -> line 161
+ *   +0x00b4 -> line 160
+ *   +0x00b8 -> line 161
+ *   +0x00c8 -> line 162
+ *   +0x00d4 -> line 165
+ *   +0x00dc -> line 166
+ *   +0x00e4 -> line 170
+ *   +0x00f0 -> line 172
+ *   +0x0108 -> line 173
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+void fn_vMicroAlloc(tdstEngineObject_* p_stObject)
+{
+    MTH3D_tdstVector_ stI;
+    MTH3D_tdstVector_ stJ;
+    MTH3D_tdstVector_ stK;
+
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (p_stObject->h_Micro) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
+    }
+
+    {
+        tdstMicro_* hMicro = (tdstMicro_*)HMU_fn_p_vMalloc(sizeof(tdstMicro_), 0);
+        hMicro->hMicroMatrix = GEO_fn_hCreateMatrix();
+        p_stObject->h_Micro = hMicro;
+    }
+
+    stJ.xX = -1.0f; stJ.xY = 0.0f; stJ.xZ = 0.0f;
+    stK.xX = 0.0f; stK.xY = 0.0f; stK.xZ = 1.0f;
+    if (p_stObject->h_Cineinfo)
+    {
+        stI.xX = 0.0f; stI.xY = -1.0f; stI.xZ = 0.0f;
+    }
+    else
+    {
+        stI.xX = 0.0f; stI.xY = 1.0f; stI.xZ = 0.0f;
+    }
+
+    MAT_fn_vSetRotationVectors(p_stObject->h_Micro->hMicroMatrix, &stI, &stJ, &stK);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 197–208 */
+/* addr: 0x00273180  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 197
+ *   +0x0010 -> line 198
+ *   +0x0018 -> line 199
+ *   +0x0044 -> line 201
+ *   +0x0050 -> line 202
+ *   +0x007c -> line 208
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vMicroFree(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Micro) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 222–243 */
+/* addr: 0x002730b0  size: 208 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 222
+ *   +0x0014 -> line 223
+ *   +0x001c -> line 224
+ *   +0x0048 -> line 226
+ *   +0x0054 -> line 227
+ *   +0x0080 -> line 229
+ *   +0x00a4 -> line 235
+ *   +0x00b4 -> line 236
+ *   +0x00bc -> line 243
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vMicroInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Micro) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+
+    switch (eObjectInit)
+    {
+    case OTI_MapLoaded:
+    case OTI_ReinitTheMap:
+        if (p_stObject->h_Micro->bIsActive)
+            fn_vAddMicro(p_stObject);
+        break;
+    case OTI_WhenGameStart:
+    case OTI_LoadSavedGame:
+    case OTI_PlayerDead:
+    case OTI_AlwaysCreated:
+        break;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 257–276 */
+/* addr: 0x00273020  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 257
+ *   +0x0010 -> line 258
+ *   +0x0018 -> line 259
+ *   +0x0044 -> line 261
+ *   +0x0050 -> line 262
+ *   +0x007c -> line 276
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vMicroDesinit(tdstEngineObject_* p_stObject)
+{
+    if (!p_stObject) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
+    }
+    if (!p_stObject->h_Micro) {
+        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 294–294 */
+/* addr: 0x00273010  size: 16 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 294
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vMicroCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
+{
+    memcpy(_p_stObjectDest->h_Micro, _p_stObjectSrc->h_Micro, 8);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 309–327 */
+/* addr: 0x00272fa0  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 309
+ *   +0x0014 -> line 311
+ *   +0x001c -> line 313
+ *   +0x0028 -> line 315
+ *   +0x0030 -> line 317
+ *   +0x0038 -> line 320
+ *   +0x0044 -> line 322
+ *   +0x004c -> line 325
+ *   +0x0050 -> line 327
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vMicroSetActivationFlag(tdstEngineObject_* hEngObj, tdstMicro_* h_MS_Micro, unsigned char _bActive)
+{
+    if (_bActive)
+    {
+        if (!h_MS_Micro->bIsActive)
+        {
+            fn_vAddMicro(hEngObj);
+        }
+    }
+    else
+    {
+        if (h_MS_Micro->bIsActive)
+        {
+            fn_vDeleteMicro(hEngObj);
+        }
+    }
+
+    h_MS_Micro->bIsActive = _bActive;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 337–343 */
+/* addr: 0x00272f60  size: 60 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 337
+ *   +0x0010 -> line 339
+ *   +0x001c -> line 340
+ *   +0x0024 -> line 341
+ *   +0x0030 -> line 342
+ *   +0x0034 -> line 343
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+#pragma auto_inline on
+tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex)
+{
+    tdstIndexMicros_* hMicro;
+
+    for (hMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn; hMicro != NULL; hMicro = hMicro->hNextBrotherDyn)
+        if (hMicro->lIndex == lIndex)
+            return hMicro->hMicroObj;
+    return NULL;
+}
+#pragma auto_inline reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 354–378 */
+/* addr: 0x00272ea0  size: 188 bytes */
+static inline int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector)
+{
+    MSMicroVector st_Vertex;
+    HIE_tdstSuperObject_* h_SuperObj;
+    int b_Answer;
+    tdstEngineObject_* h_Micro;
+
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        h_Micro = fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_Micro != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(h_Micro->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                st_Vertex.i[0] = ((int*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3)[0]; st_Vertex.i[1] = ((int*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3)[1]; st_Vertex.i[2] = ((int*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3)[2];
+                pst_Vector->f32x = st_Vertex.v.xX;
+                pst_Vector->f32y = st_Vertex.v.xY;
+                pst_Vector->f32z = st_Vertex.v.xZ;
+                b_Answer = 1;
+            }
+        }
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 380–389 */
+/* addr: 0x00272dc0  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 380
+ *   +0x0008 -> line 385
+ *   +0x000c -> line 380
+ *   +0x0014 -> line 384
+ *   +0x0018 -> line 385
+ *   +0x00ac -> line 386
+ *   +0x00c8 -> line 388
+ *   +0x00cc -> line 389
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroCoordinateX(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroPosition(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 391–400 */
+/* addr: 0x00272ce0  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 391
+ *   +0x0008 -> line 396
+ *   +0x000c -> line 391
+ *   +0x0014 -> line 395
+ *   +0x0018 -> line 396
+ *   +0x00ac -> line 397
+ *   +0x00c8 -> line 399
+ *   +0x00cc -> line 400
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroCoordinateY(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroPosition(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32y * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 402–411 */
+/* addr: 0x00272c00  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 402
+ *   +0x0008 -> line 407
+ *   +0x000c -> line 402
+ *   +0x0014 -> line 406
+ *   +0x0018 -> line 407
+ *   +0x00ac -> line 408
+ *   +0x00c8 -> line 410
+ *   +0x00cc -> line 411
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroCoordinateZ(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroPosition(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32z * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 438–438 */
+/* addr: 0x00272bf0  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 438
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+float fn_rClampValue(float r_Value)
+{
+    return r_Value;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 454–508 */
+/* addr: 0x00272a40  size: 420 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 454
+ *   +0x0014 -> line 458
+ *   +0x001c -> line 461
+ *   +0x0054 -> line 462
+ *   +0x005c -> line 465
+ *   +0x0064 -> line 466
+ *   +0x006c -> line 469
+ *   +0x0074 -> line 470
+ *   +0x007c -> line 473
+ *   +0x0084 -> line 474
+ *   +0x008c -> line 482
+ *   +0x0098 -> line 485
+ *   +0x009c -> line 486
+ *   +0x00e8 -> line 487
+ *   +0x00f4 -> line 488
+ *   +0x0100 -> line 489
+ *   +0x0108 -> line 490
+ *   +0x0110 -> line 493
+ *   +0x0118 -> line 494
+ *   +0x0120 -> line 495
+ *   +0x0128 -> line 497
+ *   +0x0168 -> line 501
+ *   +0x016c -> line 497
+ *   +0x0174 -> line 498
+ *   +0x017c -> line 499
+ *   +0x0184 -> line 500
+ *   +0x018c -> line 507
+ *   +0x0190 -> line 508
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_bGetMicroVelocity(int s32_ObjectId, _stVector* pst_Vector)
+{
+    float xInvDTInSecond;
+    MTH3D_tdstVector_* param0;
+    MTH3D_tdstVector_ st_Velocity;
+    MTH3D_tdstVector_ st_Clamped;
+    DNM_stDynamics* p_stDynamics;
+    tdstDynam_* h_Dynam;
+    HIE_tdstSuperObject_* h_SuperObj;
+    int b_Answer;
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it. */
+        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_SuperObj != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                h_Dynam = h_SuperObj->hLinkedObject.p_stCharacter->h_Dynam;
+                if (h_Dynam != NULL)
+                {
+                    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
+                    if (p_stDynamics != NULL)
+                    {
+                        if (p_stDynamics->m_tdstDynamicsBaseBlock.m_lObjectType == 0)
+                        {
+                            param0 = &p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport->m_stAbsolutePrevSpeed.m_stLinear;
+                            xInvDTInSecond = 1000.0f / (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
+                            st_Velocity.xX = param0->xX * xInvDTInSecond;
+                            st_Velocity.xY = param0->xY * xInvDTInSecond;
+                            st_Velocity.xZ = param0->xZ * xInvDTInSecond;
+                        }
+                        else
+                        {
+                            st_Velocity.xX = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
+                            st_Velocity.xY = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
+                            st_Velocity.xZ = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
+                        }
+
+                        st_Clamped = fn_stClampVector(&st_Velocity);
+                        pst_Vector->f32x = st_Clamped.xX;
+                        pst_Vector->f32y = st_Clamped.xY;
+                        pst_Vector->f32z = st_Clamped.xZ;
+                        b_Answer = 1;
+                    }
+                }
+            }
+        }
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 510–518 */
+/* addr: 0x002729f0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 510
+ *   +0x0008 -> line 515
+ *   +0x000c -> line 510
+ *   +0x0010 -> line 515
+ *   +0x0020 -> line 516
+ *   +0x003c -> line 517
+ *   +0x0040 -> line 518
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroVelocityX(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 520–528 */
+/* addr: 0x002729a0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 520
+ *   +0x0008 -> line 525
+ *   +0x000c -> line 520
+ *   +0x0010 -> line 525
+ *   +0x0020 -> line 526
+ *   +0x003c -> line 527
+ *   +0x0040 -> line 528
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroVelocityY(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32y * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 530–538 */
+/* addr: 0x00272950  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 530
+ *   +0x0008 -> line 535
+ *   +0x000c -> line 530
+ *   +0x0010 -> line 535
+ *   +0x0020 -> line 536
+ *   +0x003c -> line 537
+ *   +0x0040 -> line 538
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroVelocityZ(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32z * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 549–596 */
+/* addr: 0x00272820  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 549
+ *   +0x0014 -> line 553
+ *   +0x001c -> line 556
+ *   +0x0054 -> line 557
+ *   +0x005c -> line 560
+ *   +0x0064 -> line 561
+ *   +0x006c -> line 564
+ *   +0x0074 -> line 565
+ *   +0x007c -> line 572
+ *   +0x0080 -> line 573
+ *   +0x0094 -> line 574
+ *   +0x00a8 -> line 579
+ *   +0x00ac -> line 590
+ *   +0x00b0 -> line 579
+ *   +0x00bc -> line 583
+ *   +0x00c4 -> line 587
+ *   +0x00cc -> line 579
+ *   +0x00e0 -> line 583
+ *   +0x00ec -> line 579
+ *   +0x00f0 -> line 583
+ *   +0x00f4 -> line 587
+ *   +0x0100 -> line 583
+ *   +0x0104 -> line 587
+ *   +0x0110 -> line 588
+ *   +0x0114 -> line 589
+ *   +0x0118 -> line 595
+ *   +0x011c -> line 596
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_bGetMicroNormal(int s32_ObjectId, _stVector* pst_Vector)
+{
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV3;
+    MTH3D_tdstVector_ stW1;
+    MTH3D_tdstVector_ stW2;
+    MTH3D_tdstVector_ stW3;
+    MAT_tdstTransformation_* pMatrix2;
+    tdstMicro_* h_MSMicro;
+    HIE_tdstSuperObject_* h_SuperObj;
+    int b_Answer;
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it;
+         * the block temporaries below are likewise not in the debug locals. */
+        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_SuperObj != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                h_MSMicro = h_SuperObj->hLinkedObject.p_stCharacter->h_Micro;
+                if (h_MSMicro != NULL)
+                {
+                    pMatrix2 = h_MSMicro->hMicroMatrix;
+                    MAT_fn_vGetRotationVectors(h_SuperObj->hGlobalMatrix, &stV1, &stV2, &stV3);
+                    MAT_fn_vGetRotationVectors(pMatrix2, &stW1, &stW2, &stW3);
+                    {
+                        float xY, xZ;
+                        xY = stV1.xY * stW1.xX + stV2.xY * stW1.xY + stV3.xY * stW1.xZ;
+                        xZ = stV1.xZ * stW1.xX + stV2.xZ * stW1.xY + stV3.xZ * stW1.xZ;
+                        pst_Vector->f32x = stV1.xX * stW1.xX + stV2.xX * stW1.xY + stV3.xX * stW1.xZ;
+                        pst_Vector->f32y = xY;
+                        pst_Vector->f32z = xZ;
+                    }
+                    b_Answer = 1;
+                }
+            }
+        }
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 598–606 */
+/* addr: 0x002727d0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 598
+ *   +0x0008 -> line 603
+ *   +0x000c -> line 598
+ *   +0x0010 -> line 603
+ *   +0x0020 -> line 604
+ *   +0x003c -> line 605
+ *   +0x0040 -> line 606
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroNormalX(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 608–616 */
+/* addr: 0x00272780  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 608
+ *   +0x0008 -> line 613
+ *   +0x000c -> line 608
+ *   +0x0010 -> line 613
+ *   +0x0020 -> line 614
+ *   +0x003c -> line 615
+ *   +0x0040 -> line 616
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroNormalY(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32y * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 618–626 */
+/* addr: 0x00272730  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 618
+ *   +0x0008 -> line 623
+ *   +0x000c -> line 618
+ *   +0x0010 -> line 623
+ *   +0x0020 -> line 624
+ *   +0x003c -> line 625
+ *   +0x0040 -> line 626
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroNormalZ(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32z * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 637–685 */
+/* addr: 0x00272600  size: 304 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 637
+ *   +0x0014 -> line 641
+ *   +0x001c -> line 644
+ *   +0x0054 -> line 645
+ *   +0x005c -> line 648
+ *   +0x0064 -> line 649
+ *   +0x006c -> line 652
+ *   +0x0074 -> line 653
+ *   +0x007c -> line 660
+ *   +0x0080 -> line 661
+ *   +0x0094 -> line 662
+ *   +0x00a8 -> line 668
+ *   +0x00ac -> line 679
+ *   +0x00b0 -> line 668
+ *   +0x00bc -> line 672
+ *   +0x00c4 -> line 676
+ *   +0x00cc -> line 668
+ *   +0x00e0 -> line 672
+ *   +0x00ec -> line 668
+ *   +0x00f0 -> line 672
+ *   +0x00f4 -> line 676
+ *   +0x0100 -> line 672
+ *   +0x0104 -> line 676
+ *   +0x0110 -> line 677
+ *   +0x0114 -> line 678
+ *   +0x0118 -> line 684
+ *   +0x011c -> line 685
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_bGetMicroTangent(int s32_ObjectId, _stVector* pst_Vector)
+{
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    MTH3D_tdstVector_ stV3;
+    MTH3D_tdstVector_ stW1;
+    MTH3D_tdstVector_ stW2;
+    MTH3D_tdstVector_ stW3;
+    MAT_tdstTransformation_* pMatrix2;
+    tdstMicro_* h_MSMicro;
+    HIE_tdstSuperObject_* h_SuperObj;
+    int b_Answer;
+    b_Answer = 0;
+    if (pst_Vector != NULL)
+    {
+        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it;
+         * the block temporaries below are likewise not in the debug locals. */
+        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
+        if (h_SuperObj != NULL)
+        {
+            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
+            if (h_SuperObj != NULL)
+            {
+                h_MSMicro = h_SuperObj->hLinkedObject.p_stCharacter->h_Micro;
+                if (h_MSMicro != NULL)
+                {
+                    pMatrix2 = h_MSMicro->hMicroMatrix;
+                    MAT_fn_vGetRotationVectors(h_SuperObj->hGlobalMatrix, &stV1, &stV2, &stV3);
+                    MAT_fn_vGetRotationVectors(pMatrix2, &stW1, &stW2, &stW3);
+                    {
+                        float xY, xZ;
+                        xY = stV1.xY * stW2.xX + stV2.xY * stW2.xY + stV3.xY * stW2.xZ;
+                        xZ = stV1.xZ * stW2.xX + stV2.xZ * stW2.xY + stV3.xZ * stW2.xZ;
+                        pst_Vector->f32x = stV1.xX * stW2.xX + stV2.xX * stW2.xY + stV3.xX * stW2.xZ;
+                        pst_Vector->f32y = xY;
+                        pst_Vector->f32z = xZ;
+                    }
+                    b_Answer = 1;
+                }
+            }
+        }
+    }
+    return b_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 687–695 */
+/* addr: 0x002725b0  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 687
+ *   +0x0008 -> line 692
+ *   +0x000c -> line 687
+ *   +0x0010 -> line 692
+ *   +0x0020 -> line 693
+ *   +0x003c -> line 694
+ *   +0x0040 -> line 695
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroTangentX(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+    r_Answer = 0;
+    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32x * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 697–705 */
+/* addr: 0x00272560  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 697
+ *   +0x0008 -> line 702
+ *   +0x000c -> line 697
+ *   +0x0010 -> line 702
+ *   +0x0020 -> line 703
+ *   +0x003c -> line 704
+ *   +0x0040 -> line 705
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroTangentY(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+
+    r_Answer = 0;
+    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
+        r_Answer = st_Vector.f32y * 65536.0f;
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 707–715 */
+/* addr: 0x00272510  size: 80 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 707
+ *   +0x0008 -> line 712
+ *   +0x000c -> line 707
+ *   +0x0010 -> line 712
+ *   +0x0020 -> line 713
+ *   +0x003c -> line 714
+ *   +0x0040 -> line 715
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int fn_rGetMicroTangentZ(int s32_ObjectId)
+{
+    _stVector st_Vector;
+    int r_Answer;
+
+    r_Answer = 0;
+    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
+        r_Answer = (int)(st_Vector.f32z * 65536.0f);
+    }
+    return r_Answer;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 723–723 */
+/* addr: 0x00272500  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 723
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+int RetMicroSonoreFILTRE(void)
+{
+    return 0;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 729–741 */
+/* addr: 0x002723c0  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 729
+ *   +0x0004 -> line 733
+ *   +0x0008 -> line 729
+ *   +0x0018 -> line 733
+ *   +0x0020 -> line 735
+ *   +0x0024 -> line 733
+ *   +0x0028 -> line 735
+ *   +0x002c -> line 736
+ *   +0x0038 -> line 737
+ *   +0x003c -> line 738
+ *   +0x0100 -> line 740
+ *   +0x0104 -> line 738
+ *   +0x011c -> line 740
+ *   +0x0124 -> line 741
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vAddMicro(tdstEngineObject_* hEngObj)
+{
+    tdstIndexMicros_* hMicro;
+
+    hMicro = (tdstIndexMicros_*)HMU_fn_p_vMalloc(sizeof(tdstIndexMicros_), 0);
+    hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL;
+    hMicro->lIndex = SND_fn_lCreateMicroSound();
+    hMicro->hMicroObj = hEngObj;
+    if (hMicro->hNextBrotherDyn != NULL) { hMicro->hNextBrotherDyn->hPrevBrotherDyn = hMicro->hPrevBrotherDyn; } if (hMicro->hPrevBrotherDyn != NULL) { hMicro->hPrevBrotherDyn->hNextBrotherDyn = hMicro->hNextBrotherDyn; } if (hMicro->hFatherDyn != NULL) { hMicro->hFatherDyn->lNumberOfElementsDyn--; if (hMicro->hFatherDyn->hFirstElementDyn == hMicro) { hMicro->hFatherDyn->hFirstElementDyn = hMicro->hNextBrotherDyn; } { tdstIndexMicros_** ppLast = &hMicro->hFatherDyn->hLastElementDyn; if (hMicro->hFatherDyn->hLastElementDyn == hMicro) { *ppLast = hMicro->hPrevBrotherDyn; } } } hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL; hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = g_stIndexMicrosList.hMicrosList.hLastElementDyn; hMicro->hFatherDyn = &g_stIndexMicrosList.hMicrosList; if (g_stIndexMicrosList.hMicrosList.hFirstElementDyn == NULL) { g_stIndexMicrosList.hMicrosList.hFirstElementDyn = hMicro; } else { g_stIndexMicrosList.hMicrosList.hLastElementDyn->hNextBrotherDyn = hMicro; } g_stIndexMicrosList.hMicrosList.hLastElementDyn = hMicro; g_stIndexMicrosList.hMicrosList.lNumberOfElementsDyn++;
+    hEngObj->h_Micro->bIsActive = 1;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 747–772 */
+/* addr: 0x002722c0  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 747
+ *   +0x0004 -> line 754
+ *   +0x0008 -> line 747
+ *   +0x0018 -> line 754
+ *   +0x0024 -> line 756
+ *   +0x0030 -> line 757
+ *   +0x0038 -> line 758
+ *   +0x0048 -> line 760
+ *   +0x0050 -> line 762
+ *   +0x0058 -> line 763
+ *   +0x00d8 -> line 770
+ *   +0x00e0 -> line 772
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vDeleteMicro(tdstEngineObject_* _hEngObj)
+{
+    tdstIndexMicros_* hCurrentMicro;
+    tdstIndexMicros_* hMicro;
+
+    hMicro = NULL;
+    for (hCurrentMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn; hCurrentMicro != NULL; hCurrentMicro = hCurrentMicro->hNextBrotherDyn)
+    {
+        if (hCurrentMicro->hMicroObj == _hEngObj)
+            hMicro = hCurrentMicro;
+    }
+    if (hMicro != NULL)
+    {
+        SND_fn_vDestroyMicroSound(hMicro->lIndex);
+        if (hMicro->hNextBrotherDyn != NULL) { hMicro->hNextBrotherDyn->hPrevBrotherDyn = hMicro->hPrevBrotherDyn; } if (hMicro->hPrevBrotherDyn != NULL) { hMicro->hPrevBrotherDyn->hNextBrotherDyn = hMicro->hNextBrotherDyn; } if (hMicro->hFatherDyn != NULL) { hMicro->hFatherDyn->lNumberOfElementsDyn--; if (hMicro->hFatherDyn->hFirstElementDyn == hMicro) { hMicro->hFatherDyn->hFirstElementDyn = hMicro->hNextBrotherDyn; } { tdstIndexMicros_** ppLast = &hMicro->hFatherDyn->hLastElementDyn; if (hMicro->hFatherDyn->hLastElementDyn == hMicro) { *ppLast = hMicro->hPrevBrotherDyn; } } } hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL;
+        _hEngObj->h_Micro->bIsActive = 0;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 779–789 */
+/* addr: 0x002721b0  size: 268 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 779
+ *   +0x0004 -> line 783
+ *   +0x0008 -> line 779
+ *   +0x0014 -> line 783
+ *   +0x0034 -> line 785
+ *   +0x003c -> line 786
+ *   +0x00c4 -> line 787
+ *   +0x00e0 -> line 788
+ *   +0x00f8 -> line 789
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_vRemoveAllMicros(void)
+{
+    tdstIndexMicros_* hNextElement;
+    tdstIndexMicros_* hMicro;
+
+    for (hMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn, hNextElement = (hMicro != NULL) ? hMicro->hNextBrotherDyn : NULL; hMicro != NULL; hMicro = hNextElement, hNextElement = (hNextElement != NULL) ? hNextElement->hNextBrotherDyn : NULL)
+    {
+        SND_fn_vDestroyMicroSound(hMicro->lIndex);
+        if (hMicro->hNextBrotherDyn != NULL) { hMicro->hNextBrotherDyn->hPrevBrotherDyn = hMicro->hPrevBrotherDyn; } if (hMicro->hPrevBrotherDyn != NULL) { hMicro->hPrevBrotherDyn->hNextBrotherDyn = hMicro->hNextBrotherDyn; } if (hMicro->hFatherDyn != NULL) { hMicro->hFatherDyn->lNumberOfElementsDyn--; if (hMicro->hFatherDyn->hFirstElementDyn == hMicro) { hMicro->hFatherDyn->hFirstElementDyn = hMicro->hNextBrotherDyn; } { tdstIndexMicros_** ppLast = &hMicro->hFatherDyn->hLastElementDyn; if (hMicro->hFatherDyn->hLastElementDyn == hMicro) { *ppLast = hMicro->hPrevBrotherDyn; } } } hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL;
+    }
+    g_stIndexMicrosList.hMicrosList.hFirstElementDyn = NULL; g_stIndexMicrosList.hMicrosList.hLastElementDyn = NULL; g_stIndexMicrosList.hMicrosList.lNumberOfElementsDyn = 0;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 794–818 */
 /* addr: 0x002720a0  size: 272 bytes */
@@ -1265,1002 +2221,6 @@ void fn_vMicroAlloc(tdstEngineObject_* p_stObject);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-int fn_rGetMicroCoordinateX(int s32_ObjectId);
-int fn_rGetMicroCoordinateY(int s32_ObjectId);
-int fn_rGetMicroCoordinateZ(int s32_ObjectId);
-int fn_rGetMicroVelocityX(int s32_ObjectId);
-int fn_rGetMicroVelocityY(int s32_ObjectId);
-int fn_rGetMicroVelocityZ(int s32_ObjectId);
-int fn_rGetMicroNormalX(int s32_ObjectId);
-int fn_rGetMicroNormalY(int s32_ObjectId);
-int fn_rGetMicroNormalZ(int s32_ObjectId);
-int fn_rGetMicroTangentX(int s32_ObjectId);
-int fn_rGetMicroTangentY(int s32_ObjectId);
-int fn_rGetMicroTangentZ(int s32_ObjectId);
-int RetMicroSonoreFILTRE(void);
-int fn_bGetMicroVelocity(int s32_ObjectId, _stVector* pst_Vector);
-int fn_bGetMicroNormal(int s32_ObjectId, _stVector* pst_Vector);
-int fn_bGetMicroTangent(int s32_ObjectId, _stVector* pst_Vector);
-static inline int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector);
-void SND_fn_vSetRetMicroSound(_tdstAllRetMicroSound* pst_IMicro);
-void SND_fn_vDestroyMicroSound(int s32_MicroId);
-int SND_fn_lCreateMicroSound(void);
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 779–789 */
-/* addr: 0x002721b0  size: 268 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 779
- *   +0x0004 -> line 783
- *   +0x0008 -> line 779
- *   +0x0014 -> line 783
- *   +0x0034 -> line 785
- *   +0x003c -> line 786
- *   +0x00c4 -> line 787
- *   +0x00e0 -> line 788
- *   +0x00f8 -> line 789
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 747–772 */
-/* addr: 0x002722c0  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 747
- *   +0x0004 -> line 754
- *   +0x0008 -> line 747
- *   +0x0018 -> line 754
- *   +0x0024 -> line 756
- *   +0x0030 -> line 757
- *   +0x0038 -> line 758
- *   +0x0048 -> line 760
- *   +0x0050 -> line 762
- *   +0x0058 -> line 763
- *   +0x00d8 -> line 770
- *   +0x00e0 -> line 772
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 729–741 */
-/* addr: 0x002723c0  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 729
- *   +0x0004 -> line 733
- *   +0x0008 -> line 729
- *   +0x0018 -> line 733
- *   +0x0020 -> line 735
- *   +0x0024 -> line 733
- *   +0x0028 -> line 735
- *   +0x002c -> line 736
- *   +0x0038 -> line 737
- *   +0x003c -> line 738
- *   +0x0100 -> line 740
- *   +0x0104 -> line 738
- *   +0x011c -> line 740
- *   +0x0124 -> line 741
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 723–723 */
-/* addr: 0x00272500  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 723
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 707–715 */
-/* addr: 0x00272510  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 707
- *   +0x0008 -> line 712
- *   +0x000c -> line 707
- *   +0x0010 -> line 712
- *   +0x0020 -> line 713
- *   +0x003c -> line 714
- *   +0x0040 -> line 715
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 697–705 */
-/* addr: 0x00272560  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 697
- *   +0x0008 -> line 702
- *   +0x000c -> line 697
- *   +0x0010 -> line 702
- *   +0x0020 -> line 703
- *   +0x003c -> line 704
- *   +0x0040 -> line 705
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 687–695 */
-/* addr: 0x002725b0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 687
- *   +0x0008 -> line 692
- *   +0x000c -> line 687
- *   +0x0010 -> line 692
- *   +0x0020 -> line 693
- *   +0x003c -> line 694
- *   +0x0040 -> line 695
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 637–685 */
-/* addr: 0x00272600  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 637
- *   +0x0014 -> line 641
- *   +0x001c -> line 644
- *   +0x0054 -> line 645
- *   +0x005c -> line 648
- *   +0x0064 -> line 649
- *   +0x006c -> line 652
- *   +0x0074 -> line 653
- *   +0x007c -> line 660
- *   +0x0080 -> line 661
- *   +0x0094 -> line 662
- *   +0x00a8 -> line 668
- *   +0x00ac -> line 679
- *   +0x00b0 -> line 668
- *   +0x00bc -> line 672
- *   +0x00c4 -> line 676
- *   +0x00cc -> line 668
- *   +0x00e0 -> line 672
- *   +0x00ec -> line 668
- *   +0x00f0 -> line 672
- *   +0x00f4 -> line 676
- *   +0x0100 -> line 672
- *   +0x0104 -> line 676
- *   +0x0110 -> line 677
- *   +0x0114 -> line 678
- *   +0x0118 -> line 684
- *   +0x011c -> line 685
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex);
-HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
-void MAT_fn_vGetRotationVectors(MAT_tdstTransformation_* p_stMatrix, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, MTH3D_tdstVector_* p_stV3);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 618–626 */
-/* addr: 0x00272730  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 618
- *   +0x0008 -> line 623
- *   +0x000c -> line 618
- *   +0x0010 -> line 623
- *   +0x0020 -> line 624
- *   +0x003c -> line 625
- *   +0x0040 -> line 626
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 608–616 */
-/* addr: 0x00272780  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 608
- *   +0x0008 -> line 613
- *   +0x000c -> line 608
- *   +0x0010 -> line 613
- *   +0x0020 -> line 614
- *   +0x003c -> line 615
- *   +0x0040 -> line 616
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 598–606 */
-/* addr: 0x002727d0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 598
- *   +0x0008 -> line 603
- *   +0x000c -> line 598
- *   +0x0010 -> line 603
- *   +0x0020 -> line 604
- *   +0x003c -> line 605
- *   +0x0040 -> line 606
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 549–596 */
-/* addr: 0x00272820  size: 304 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 549
- *   +0x0014 -> line 553
- *   +0x001c -> line 556
- *   +0x0054 -> line 557
- *   +0x005c -> line 560
- *   +0x0064 -> line 561
- *   +0x006c -> line 564
- *   +0x0074 -> line 565
- *   +0x007c -> line 572
- *   +0x0080 -> line 573
- *   +0x0094 -> line 574
- *   +0x00a8 -> line 579
- *   +0x00ac -> line 590
- *   +0x00b0 -> line 579
- *   +0x00bc -> line 583
- *   +0x00c4 -> line 587
- *   +0x00cc -> line 579
- *   +0x00e0 -> line 583
- *   +0x00ec -> line 579
- *   +0x00f0 -> line 583
- *   +0x00f4 -> line 587
- *   +0x0100 -> line 583
- *   +0x0104 -> line 587
- *   +0x0110 -> line 588
- *   +0x0114 -> line 589
- *   +0x0118 -> line 595
- *   +0x011c -> line 596
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 530–538 */
-/* addr: 0x00272950  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 530
- *   +0x0008 -> line 535
- *   +0x000c -> line 530
- *   +0x0010 -> line 535
- *   +0x0020 -> line 536
- *   +0x003c -> line 537
- *   +0x0040 -> line 538
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 520–528 */
-/* addr: 0x002729a0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 520
- *   +0x0008 -> line 525
- *   +0x000c -> line 520
- *   +0x0010 -> line 525
- *   +0x0020 -> line 526
- *   +0x003c -> line 527
- *   +0x0040 -> line 528
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 510–518 */
-/* addr: 0x002729f0  size: 80 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 510
- *   +0x0008 -> line 515
- *   +0x000c -> line 510
- *   +0x0010 -> line 515
- *   +0x0020 -> line 516
- *   +0x003c -> line 517
- *   +0x0040 -> line 518
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex);
-HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* p_stStandardGame);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 454–508 */
-/* addr: 0x00272a40  size: 420 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 454
- *   +0x0014 -> line 458
- *   +0x001c -> line 461
- *   +0x0054 -> line 462
- *   +0x005c -> line 465
- *   +0x0064 -> line 466
- *   +0x006c -> line 469
- *   +0x0074 -> line 470
- *   +0x007c -> line 473
- *   +0x0084 -> line 474
- *   +0x008c -> line 482
- *   +0x0098 -> line 485
- *   +0x009c -> line 486
- *   +0x00e8 -> line 487
- *   +0x00f4 -> line 488
- *   +0x0100 -> line 489
- *   +0x0108 -> line 490
- *   +0x0110 -> line 493
- *   +0x0118 -> line 494
- *   +0x0120 -> line 495
- *   +0x0128 -> line 497
- *   +0x0168 -> line 501
- *   +0x016c -> line 497
- *   +0x0174 -> line 498
- *   +0x017c -> line 499
- *   +0x0184 -> line 500
- *   +0x018c -> line 507
- *   +0x0190 -> line 508
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-DNM_stDynamics* fn_p_stDynamGetDynamics(tdstDynam_*);
-float fn_rClampValue(float r_Value);
-/* Not original source, needs cleaning up: inferred inline helper (retail keeps a third stack vector and null-tests &st_Velocity). */
-static inline MTH3D_tdstVector_ fn_stClampVector(MTH3D_tdstVector_* p_stVector)
-{
-    MTH3D_tdstVector_ stResult;
-    stResult.xX = 0.0f;
-    if (p_stVector != NULL)
-    {
-        stResult.xX = fn_rClampValue(p_stVector->xX);
-        stResult.xY = fn_rClampValue(p_stVector->xY);
-        stResult.xZ = fn_rClampValue(p_stVector->xZ);
-    }
-    return stResult;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 438–438 */
-/* addr: 0x00272bf0  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 438
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 402–411 */
-/* addr: 0x00272c00  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 402
- *   +0x0008 -> line 407
- *   +0x000c -> line 402
- *   +0x0014 -> line 406
- *   +0x0018 -> line 407
- *   +0x00ac -> line 408
- *   +0x00c8 -> line 410
- *   +0x00cc -> line 411
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 391–400 */
-/* addr: 0x00272ce0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 391
- *   +0x0008 -> line 396
- *   +0x000c -> line 391
- *   +0x0014 -> line 395
- *   +0x0018 -> line 396
- *   +0x00ac -> line 397
- *   +0x00c8 -> line 399
- *   +0x00cc -> line 400
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 380–389 */
-/* addr: 0x00272dc0  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 380
- *   +0x0008 -> line 385
- *   +0x000c -> line 380
- *   +0x0014 -> line 384
- *   +0x0018 -> line 385
- *   +0x00ac -> line 386
- *   +0x00c8 -> line 388
- *   +0x00cc -> line 389
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 354
- *   +0x0014 -> line 358
- *   +0x001c -> line 361
- *   +0x0054 -> line 362
- *   +0x005c -> line 365
- *   +0x0064 -> line 366
- *   +0x006c -> line 369
- *   +0x0070 -> line 373
- *   +0x0074 -> line 369
- *   +0x0080 -> line 370
- *   +0x0084 -> line 369
- *   +0x0090 -> line 370
- *   +0x0094 -> line 371
- *   +0x009c -> line 372
- *   +0x00a4 -> line 377
- *   +0x00a8 -> line 378
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 337–343 */
-/* addr: 0x00272f60  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 337
- *   +0x0010 -> line 339
- *   +0x001c -> line 340
- *   +0x0024 -> line 341
- *   +0x0030 -> line 342
- *   +0x0034 -> line 343
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-#pragma auto_inline on
-
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 309–327 */
-/* addr: 0x00272fa0  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 309
- *   +0x0014 -> line 311
- *   +0x001c -> line 313
- *   +0x0028 -> line 315
- *   +0x0030 -> line 317
- *   +0x0038 -> line 320
- *   +0x0044 -> line 322
- *   +0x004c -> line 325
- *   +0x0050 -> line 327
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 294–294 */
-/* addr: 0x00273010  size: 16 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 294
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 257–276 */
-/* addr: 0x00273020  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 257
- *   +0x0010 -> line 258
- *   +0x0018 -> line 259
- *   +0x0044 -> line 261
- *   +0x0050 -> line 262
- *   +0x007c -> line 276
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 222–243 */
-/* addr: 0x002730b0  size: 208 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 222
- *   +0x0014 -> line 223
- *   +0x001c -> line 224
- *   +0x0048 -> line 226
- *   +0x0054 -> line 227
- *   +0x0080 -> line 229
- *   +0x00a4 -> line 235
- *   +0x00b4 -> line 236
- *   +0x00bc -> line 243
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 197–208 */
-/* addr: 0x00273180  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 197
- *   +0x0010 -> line 198
- *   +0x0018 -> line 199
- *   +0x0044 -> line 201
- *   +0x0050 -> line 202
- *   +0x007c -> line 208
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void* HMU_fn_p_vMalloc(unsigned int u32Size, unsigned char bTempMalloc);
-MAT_tdstTransformation_* GEO_fn_hCreateMatrix(void);
-void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 146–173 */
-/* addr: 0x00273210  size: 284 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 146
- *   +0x0014 -> line 149
- *   +0x001c -> line 150
- *   +0x0048 -> line 152
- *   +0x0054 -> line 153
- *   +0x0080 -> line 156
- *   +0x0098 -> line 160
- *   +0x00a0 -> line 156
- *   +0x00a4 -> line 160
- *   +0x00b0 -> line 161
- *   +0x00b4 -> line 160
- *   +0x00b8 -> line 161
- *   +0x00c8 -> line 162
- *   +0x00d4 -> line 165
- *   +0x00dc -> line 166
- *   +0x00e4 -> line 170
- *   +0x00f0 -> line 172
- *   +0x0108 -> line 173
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void fn_vMicroAlloc(tdstEngineObject_* p_stObject)
-{
-    MTH3D_tdstVector_ stI;
-    MTH3D_tdstVector_ stJ;
-    MTH3D_tdstVector_ stK;
-
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (p_stObject->h_Micro) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 13, -1, 255, 255, NULL);
-    }
-
-    {
-        tdstMicro_* hMicro = (tdstMicro_*)HMU_fn_p_vMalloc(sizeof(tdstMicro_), 0);
-        hMicro->hMicroMatrix = GEO_fn_hCreateMatrix();
-        p_stObject->h_Micro = hMicro;
-    }
-
-    stJ.xX = -1.0f; stJ.xY = 0.0f; stJ.xZ = 0.0f;
-    stK.xX = 0.0f; stK.xY = 0.0f; stK.xZ = 1.0f;
-    if (p_stObject->h_Cineinfo)
-    {
-        stI.xX = 0.0f; stI.xY = -1.0f; stI.xZ = 0.0f;
-    }
-    else
-    {
-        stI.xX = 0.0f; stI.xY = 1.0f; stI.xZ = 0.0f;
-    }
-
-    MAT_fn_vSetRotationVectors(p_stObject->h_Micro->hMicroMatrix, &stI, &stJ, &stK);
-}
-
-void fn_vMicroFree(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_Micro) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
-
-void fn_vMicroInit(tdstEngineObject_* p_stObject, tdeObjectTreeInit_ eObjectInit)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_Micro) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-
-    switch (eObjectInit)
-    {
-    case OTI_MapLoaded:
-    case OTI_ReinitTheMap:
-        if (p_stObject->h_Micro->bIsActive)
-            fn_vAddMicro(p_stObject);
-        break;
-    case OTI_WhenGameStart:
-    case OTI_LoadSavedGame:
-    case OTI_PlayerDead:
-    case OTI_AlwaysCreated:
-        break;
-    }
-}
-
-void fn_vMicroDesinit(tdstEngineObject_* p_stObject)
-{
-    if (!p_stObject) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 14, -1, 255, 255, NULL);
-    }
-    if (!p_stObject->h_Micro) {
-        Erm_fn_ClearLastError(0); Erm_fn_v_UpdateLastError(48, g_ucGameModuleId, 0, 15, -1, 255, 255, NULL);
-    }
-}
-
-void fn_vMicroCopyClone(tdstEngineObject_* _p_stObjectDest, tdstEngineObject_* _p_stObjectSrc)
-{
-    memcpy(_p_stObjectDest->h_Micro, _p_stObjectSrc->h_Micro, 8);
-}
-
-void fn_vMicroSetActivationFlag(tdstEngineObject_* hEngObj, tdstMicro_* h_MS_Micro, unsigned char _bActive)
-{
-    if (_bActive)
-    {
-        if (!h_MS_Micro->bIsActive)
-        {
-            fn_vAddMicro(hEngObj);
-        }
-    }
-    else
-    {
-        if (h_MS_Micro->bIsActive)
-        {
-            fn_vDeleteMicro(hEngObj);
-        }
-    }
-
-    h_MS_Micro->bIsActive = _bActive;
-}
-
-#pragma auto_inline on
-tdstEngineObject_* fn_hReturnHandleMicroFromIndex(int lIndex)
-{
-    tdstIndexMicros_* hMicro;
-
-    for (hMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn; hMicro != NULL; hMicro = hMicro->hNextBrotherDyn)
-        if (hMicro->lIndex == lIndex)
-            return hMicro->hMicroObj;
-    return NULL;
-}
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 354–378 */
-/* addr: 0x00272ea0  size: 188 bytes */
-static inline int fn_bGetMicroPosition(int s32_ObjectId, _stVector* pst_Vector)
-{
-    MSMicroVector st_Vertex;
-    HIE_tdstSuperObject_* h_SuperObj;
-    int b_Answer;
-    tdstEngineObject_* h_Micro;
-
-    b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        h_Micro = fn_hReturnHandleMicroFromIndex(s32_ObjectId);
-        if (h_Micro != NULL)
-        {
-            h_SuperObj = fn_h_StandardGameGetSuperObject(h_Micro->h_StandardGame);
-            if (h_SuperObj != NULL)
-            {
-                st_Vertex.i[0] = ((int*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3)[0]; st_Vertex.i[1] = ((int*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3)[1]; st_Vertex.i[2] = ((int*)&h_SuperObj->hGlobalMatrix->stTransformMatrix.stCol_3)[2];
-                pst_Vector->f32x = st_Vertex.v.xX;
-                pst_Vector->f32y = st_Vertex.v.xY;
-                pst_Vector->f32z = st_Vertex.v.xZ;
-                b_Answer = 1;
-            }
-        }
-    }
-    return b_Answer;
-}
-
-int fn_rGetMicroCoordinateX(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroPosition(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32x * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroCoordinateY(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroPosition(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32y * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroCoordinateZ(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroPosition(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32z * 65536.0f);
-    }
-    return r_Answer;
-}
-
-float fn_rClampValue(float r_Value)
-{
-    return r_Value;
-}
-
-int fn_bGetMicroVelocity(int s32_ObjectId, _stVector* pst_Vector)
-{
-    float xInvDTInSecond;
-    MTH3D_tdstVector_* param0;
-    MTH3D_tdstVector_ st_Velocity;
-    MTH3D_tdstVector_ st_Clamped;
-    DNM_stDynamics* p_stDynamics;
-    tdstDynam_* h_Dynam;
-    HIE_tdstSuperObject_* h_SuperObj;
-    int b_Answer;
-    b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it. */
-        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
-        if (h_SuperObj != NULL)
-        {
-            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
-            if (h_SuperObj != NULL)
-            {
-                h_Dynam = h_SuperObj->hLinkedObject.p_stCharacter->h_Dynam;
-                if (h_Dynam != NULL)
-                {
-                    p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam);
-                    if (p_stDynamics != NULL)
-                    {
-                        if (p_stDynamics->m_tdstDynamicsBaseBlock.m_lObjectType == 0)
-                        {
-                            param0 = &p_stDynamics->m_tdstDynamicsBaseBlock.m_pstReport->m_stAbsolutePrevSpeed.m_stLinear;
-                            xInvDTInSecond = 1000.0f / (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime;
-                            st_Velocity.xX = param0->xX * xInvDTInSecond;
-                            st_Velocity.xY = param0->xY * xInvDTInSecond;
-                            st_Velocity.xZ = param0->xZ * xInvDTInSecond;
-                        }
-                        else
-                        {
-                            st_Velocity.xX = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xX;
-                            st_Velocity.xY = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xY;
-                            st_Velocity.xZ = p_stDynamics->m_tdstDynamicsBaseBlock.m_stPreviousSpeed.xZ;
-                        }
-
-                        st_Clamped = fn_stClampVector(&st_Velocity);
-                        pst_Vector->f32x = st_Clamped.xX;
-                        pst_Vector->f32y = st_Clamped.xY;
-                        pst_Vector->f32z = st_Clamped.xZ;
-                        b_Answer = 1;
-                    }
-                }
-            }
-        }
-    }
-    return b_Answer;
-}
-
-int fn_rGetMicroVelocityX(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32x * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroVelocityY(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32y * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroVelocityZ(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroVelocity(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32z * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_bGetMicroNormal(int s32_ObjectId, _stVector* pst_Vector)
-{
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV3;
-    MTH3D_tdstVector_ stW1;
-    MTH3D_tdstVector_ stW2;
-    MTH3D_tdstVector_ stW3;
-    MAT_tdstTransformation_* pMatrix2;
-    tdstMicro_* h_MSMicro;
-    HIE_tdstSuperObject_* h_SuperObj;
-    int b_Answer;
-    b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it;
-         * the block temporaries below are likewise not in the debug locals. */
-        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
-        if (h_SuperObj != NULL)
-        {
-            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
-            if (h_SuperObj != NULL)
-            {
-                h_MSMicro = h_SuperObj->hLinkedObject.p_stCharacter->h_Micro;
-                if (h_MSMicro != NULL)
-                {
-                    pMatrix2 = h_MSMicro->hMicroMatrix;
-                    MAT_fn_vGetRotationVectors(h_SuperObj->hGlobalMatrix, &stV1, &stV2, &stV3);
-                    MAT_fn_vGetRotationVectors(pMatrix2, &stW1, &stW2, &stW3);
-                    {
-                        float xY, xZ;
-                        xY = stV1.xY * stW1.xX + stV2.xY * stW1.xY + stV3.xY * stW1.xZ;
-                        xZ = stV1.xZ * stW1.xX + stV2.xZ * stW1.xY + stV3.xZ * stW1.xZ;
-                        pst_Vector->f32x = stV1.xX * stW1.xX + stV2.xX * stW1.xY + stV3.xX * stW1.xZ;
-                        pst_Vector->f32y = xY;
-                        pst_Vector->f32z = xZ;
-                    }
-                    b_Answer = 1;
-                }
-            }
-        }
-    }
-    return b_Answer;
-}
-
-int fn_rGetMicroNormalX(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32x * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroNormalY(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32y * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroNormalZ(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroNormal(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32z * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_bGetMicroTangent(int s32_ObjectId, _stVector* pst_Vector)
-{
-    MTH3D_tdstVector_ stV1;
-    MTH3D_tdstVector_ stV2;
-    MTH3D_tdstVector_ stV3;
-    MTH3D_tdstVector_ stW1;
-    MTH3D_tdstVector_ stW2;
-    MTH3D_tdstVector_ stW3;
-    MAT_tdstTransformation_* pMatrix2;
-    tdstMicro_* h_MSMicro;
-    HIE_tdstSuperObject_* h_SuperObj;
-    int b_Answer;
-    b_Answer = 0;
-    if (pst_Vector != NULL)
-    {
-        /* Not original source, needs cleaning up: debug lists no engine-object local, so h_SuperObj briefly holds it;
-         * the block temporaries below are likewise not in the debug locals. */
-        h_SuperObj = (HIE_tdstSuperObject_*)fn_hReturnHandleMicroFromIndex(s32_ObjectId);
-        if (h_SuperObj != NULL)
-        {
-            h_SuperObj = fn_h_StandardGameGetSuperObject(((tdstEngineObject_*)h_SuperObj)->h_StandardGame);
-            if (h_SuperObj != NULL)
-            {
-                h_MSMicro = h_SuperObj->hLinkedObject.p_stCharacter->h_Micro;
-                if (h_MSMicro != NULL)
-                {
-                    pMatrix2 = h_MSMicro->hMicroMatrix;
-                    MAT_fn_vGetRotationVectors(h_SuperObj->hGlobalMatrix, &stV1, &stV2, &stV3);
-                    MAT_fn_vGetRotationVectors(pMatrix2, &stW1, &stW2, &stW3);
-                    {
-                        float xY, xZ;
-                        xY = stV1.xY * stW2.xX + stV2.xY * stW2.xY + stV3.xY * stW2.xZ;
-                        xZ = stV1.xZ * stW2.xX + stV2.xZ * stW2.xY + stV3.xZ * stW2.xZ;
-                        pst_Vector->f32x = stV1.xX * stW2.xX + stV2.xX * stW2.xY + stV3.xX * stW2.xZ;
-                        pst_Vector->f32y = xY;
-                        pst_Vector->f32z = xZ;
-                    }
-                    b_Answer = 1;
-                }
-            }
-        }
-    }
-    return b_Answer;
-}
-
-int fn_rGetMicroTangentX(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-    r_Answer = 0;
-    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32x * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroTangentY(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-
-    r_Answer = 0;
-    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
-        r_Answer = st_Vector.f32y * 65536.0f;
-    }
-    return r_Answer;
-}
-
-int fn_rGetMicroTangentZ(int s32_ObjectId)
-{
-    _stVector st_Vector;
-    int r_Answer;
-
-    r_Answer = 0;
-    if (fn_bGetMicroTangent(s32_ObjectId, &st_Vector)) {
-        r_Answer = (int)(st_Vector.f32z * 65536.0f);
-    }
-    return r_Answer;
-}
-
-int RetMicroSonoreFILTRE(void)
-{
-    return 0;
-}
-
-void fn_vAddMicro(tdstEngineObject_* hEngObj)
-{
-    tdstIndexMicros_* hMicro;
-
-    hMicro = (tdstIndexMicros_*)HMU_fn_p_vMalloc(sizeof(tdstIndexMicros_), 0);
-    hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL;
-    hMicro->lIndex = SND_fn_lCreateMicroSound();
-    hMicro->hMicroObj = hEngObj;
-    if (hMicro->hNextBrotherDyn != NULL) { hMicro->hNextBrotherDyn->hPrevBrotherDyn = hMicro->hPrevBrotherDyn; } if (hMicro->hPrevBrotherDyn != NULL) { hMicro->hPrevBrotherDyn->hNextBrotherDyn = hMicro->hNextBrotherDyn; } if (hMicro->hFatherDyn != NULL) { hMicro->hFatherDyn->lNumberOfElementsDyn--; if (hMicro->hFatherDyn->hFirstElementDyn == hMicro) { hMicro->hFatherDyn->hFirstElementDyn = hMicro->hNextBrotherDyn; } { tdstIndexMicros_** ppLast = &hMicro->hFatherDyn->hLastElementDyn; if (hMicro->hFatherDyn->hLastElementDyn == hMicro) { *ppLast = hMicro->hPrevBrotherDyn; } } } hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL; hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = g_stIndexMicrosList.hMicrosList.hLastElementDyn; hMicro->hFatherDyn = &g_stIndexMicrosList.hMicrosList; if (g_stIndexMicrosList.hMicrosList.hFirstElementDyn == NULL) { g_stIndexMicrosList.hMicrosList.hFirstElementDyn = hMicro; } else { g_stIndexMicrosList.hMicrosList.hLastElementDyn->hNextBrotherDyn = hMicro; } g_stIndexMicrosList.hMicrosList.hLastElementDyn = hMicro; g_stIndexMicrosList.hMicrosList.lNumberOfElementsDyn++;
-    hEngObj->h_Micro->bIsActive = 1;
-}
-
-void fn_vDeleteMicro(tdstEngineObject_* _hEngObj)
-{
-    tdstIndexMicros_* hCurrentMicro;
-    tdstIndexMicros_* hMicro;
-
-    hMicro = NULL;
-    for (hCurrentMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn; hCurrentMicro != NULL; hCurrentMicro = hCurrentMicro->hNextBrotherDyn)
-    {
-        if (hCurrentMicro->hMicroObj == _hEngObj)
-            hMicro = hCurrentMicro;
-    }
-    if (hMicro != NULL)
-    {
-        SND_fn_vDestroyMicroSound(hMicro->lIndex);
-        if (hMicro->hNextBrotherDyn != NULL) { hMicro->hNextBrotherDyn->hPrevBrotherDyn = hMicro->hPrevBrotherDyn; } if (hMicro->hPrevBrotherDyn != NULL) { hMicro->hPrevBrotherDyn->hNextBrotherDyn = hMicro->hNextBrotherDyn; } if (hMicro->hFatherDyn != NULL) { hMicro->hFatherDyn->lNumberOfElementsDyn--; if (hMicro->hFatherDyn->hFirstElementDyn == hMicro) { hMicro->hFatherDyn->hFirstElementDyn = hMicro->hNextBrotherDyn; } { tdstIndexMicros_** ppLast = &hMicro->hFatherDyn->hLastElementDyn; if (hMicro->hFatherDyn->hLastElementDyn == hMicro) { *ppLast = hMicro->hPrevBrotherDyn; } } } hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL;
-        _hEngObj->h_Micro->bIsActive = 0;
-    }
-}
-
-void fn_vRemoveAllMicros(void)
-{
-    tdstIndexMicros_* hNextElement;
-    tdstIndexMicros_* hMicro;
-
-    for (hMicro = g_stIndexMicrosList.hMicrosList.hFirstElementDyn, hNextElement = (hMicro != NULL) ? hMicro->hNextBrotherDyn : NULL; hMicro != NULL; hMicro = hNextElement, hNextElement = (hNextElement != NULL) ? hNextElement->hNextBrotherDyn : NULL)
-    {
-        SND_fn_vDestroyMicroSound(hMicro->lIndex);
-        if (hMicro->hNextBrotherDyn != NULL) { hMicro->hNextBrotherDyn->hPrevBrotherDyn = hMicro->hPrevBrotherDyn; } if (hMicro->hPrevBrotherDyn != NULL) { hMicro->hPrevBrotherDyn->hNextBrotherDyn = hMicro->hNextBrotherDyn; } if (hMicro->hFatherDyn != NULL) { hMicro->hFatherDyn->lNumberOfElementsDyn--; if (hMicro->hFatherDyn->hFirstElementDyn == hMicro) { hMicro->hFatherDyn->hFirstElementDyn = hMicro->hNextBrotherDyn; } { tdstIndexMicros_** ppLast = &hMicro->hFatherDyn->hLastElementDyn; if (hMicro->hFatherDyn->hLastElementDyn == hMicro) { *ppLast = hMicro->hPrevBrotherDyn; } } } hMicro->hNextBrotherDyn = NULL; hMicro->hPrevBrotherDyn = NULL; hMicro->hFatherDyn = NULL;
-    }
-    g_stIndexMicrosList.hMicrosList.hFirstElementDyn = NULL; g_stIndexMicrosList.hMicrosList.hLastElementDyn = NULL; g_stIndexMicrosList.hMicrosList.lNumberOfElementsDyn = 0;
-}
-
 void fn_vInitMicrosFunction(void)
 {
     _tdstAllRetMicroSound st_pfnRetMicroSound;
@@ -2288,11 +2248,26 @@ void fn_vInitMicrosFunction(void)
     g_stIndexMicrosList.hMicrosList.hFirstElementDyn = NULL; g_stIndexMicrosList.hMicrosList.hLastElementDyn = NULL; g_stIndexMicrosList.hMicrosList.lNumberOfElementsDyn = 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 856–857 */
+/* addr: 0x00272080  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 856
+ *   +0x000c -> line 857
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void GAM_fn_vChangeCharacterForMicro(HIE_tdstSuperObject_* _hCharacter)
 {
     g_stIndexMicrosList.hMicrosList.hFirstElementDyn->hMicroObj = _hCharacter->hLinkedObject.p_stCharacter;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MS_Micro.c lines 131–131 */
+/* addr: 0x00272070  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 131
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int fn_ulMSWaySizeOf(void)
 {
     return 12;

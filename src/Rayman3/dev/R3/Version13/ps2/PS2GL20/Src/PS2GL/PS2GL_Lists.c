@@ -1628,28 +1628,6 @@ void plyPS2glDrawArrays(anon_26*);
 void plyPS2glBegin(anon_8*);
 float vColorLimit128[4];
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2390–2412 */
-/* addr: 0x00150f60  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2390
- *   +0x0018 -> line 2395
- *   +0x001c -> line 2390
- *   +0x002c -> line 2392
- *   +0x0030 -> line 2395
- *   +0x0038 -> line 2397
- *   +0x0060 -> line 2400
- *   +0x006c -> line 2402
- *   +0x007c -> line 2403
- *   +0x00d4 -> line 2404
- *   +0x00e8 -> line 2405
- *   +0x00f8 -> line 2406
- *   +0x0108 -> line 2408
- *   +0x0118 -> line 2410
- *   +0x0150 -> line 2411
- *   +0x0160 -> line 2412
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tagListData** PS2glSearchList(unsigned int list);
 void PS2glCallSDL(tagListData* pListData);
 void PS2glExecuteListData(tagListData* pData);
@@ -1690,87 +1668,9 @@ void PS2glFreeListDataPartially(tagListData* pDataOfList);
 tagListData** PS2glAddLists(unsigned int list, int range);
 tagListData** PS2glSearchList(unsigned int list);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2363–2387 */
-/* addr: 0x001510e0  size: 68 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2363
- *   +0x0008 -> line 2364
- *   +0x0010 -> line 2381
- *   +0x0014 -> line 2383
- *   +0x0020 -> line 2384
- *   +0x0030 -> line 2386
- *   +0x0038 -> line 2387
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tagListData** PS2glSearchList(unsigned int list);
 void PS2glCallSDL(tagListData* pListData);
 void PS2glExecuteListData(tagListData* pData);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2251–2358 */
-/* addr: 0x00151130  size: 512 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2251
- *   +0x001c -> line 2254
- *   +0x0028 -> line 2256
- *   +0x0030 -> line 2258
- *   +0x0034 -> line 2259
- *   +0x0040 -> line 2260
- *   +0x0048 -> line 2263
- *   +0x0050 -> line 2265
- *   +0x0054 -> line 2267
- *   +0x005c -> line 2272
- *   +0x0060 -> line 2274
- *   +0x0064 -> line 2272
- *   +0x0068 -> line 2276
- *   +0x006c -> line 2273
- *   +0x0070 -> line 2279
- *   +0x0074 -> line 2270
- *   +0x0078 -> line 2280
- *   +0x007c -> line 2277
- *   +0x0080 -> line 2280
- *   +0x008c -> line 2282
- *   +0x0090 -> line 2283
- *   +0x009c -> line 2285
- *   +0x00a4 -> line 2287
- *   +0x00a8 -> line 2289
- *   +0x00ac -> line 2290
- *   +0x00c0 -> line 2292
- *   +0x00c8 -> line 2303
- *   +0x00d0 -> line 2304
- *   +0x00d4 -> line 2306
- *   +0x00d8 -> line 2307
- *   +0x00e4 -> line 2308
- *   +0x00ec -> line 2311
- *   +0x00fc -> line 2314
- *   +0x0108 -> line 2315
- *   +0x0110 -> line 2316
- *   +0x011c -> line 2317
- *   +0x0124 -> line 2320
- *   +0x012c -> line 2321
- *   +0x013c -> line 2324
- *   +0x0144 -> line 2325
- *   +0x014c -> line 2326
- *   +0x0158 -> line 2327
- *   +0x0160 -> line 2331
- *   +0x0170 -> line 2334
- *   +0x0174 -> line 2336
- *   +0x017c -> line 2337
- *   +0x0188 -> line 2340
- *   +0x018c -> line 2341
- *   +0x0190 -> line 2343
- *   +0x01a0 -> line 2346
- *   +0x01ac -> line 2347
- *   +0x01b4 -> line 2348
- *   +0x01c0 -> line 2349
- *   +0x01c8 -> line 2350
- *   +0x01d0 -> line 2351
- *   +0x01d8 -> line 2352
- *   +0x01e4 -> line 2353
- *   +0x01e8 -> line 2358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 extern void impPS2glBegin(unsigned int mode);
 extern void impPS2glEnd(void);
@@ -1781,192 +1681,9 @@ extern void GsUpdateLimited(void);
 extern unsigned int VU1BufferFreeSpace(void);
 extern void VU1UpdateMatriceOutsideSDL(tagGLcontext* pctx);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2140–2248 */
-/* addr: 0x00151330  size: 992 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2140
- *   +0x0018 -> line 2144
- *   +0x001c -> line 2142
- *   +0x0020 -> line 2144
- *   +0x002c -> line 2147
- *   +0x003c -> line 2149
- *   +0x004c -> line 2151
- *   +0x0050 -> line 2152
- *   +0x0058 -> line 2153
- *   +0x0060 -> line 2154
- *   +0x0068 -> line 2157
- *   +0x0080 -> line 2159
- *   +0x009c -> line 2160
- *   +0x00ac -> line 2162
- *   +0x00c4 -> line 2163
- *   +0x00d4 -> line 2164
- *   +0x00ec -> line 2165
- *   +0x00f8 -> line 2167
- *   +0x0104 -> line 2168
- *   +0x0120 -> line 2169
- *   +0x0130 -> line 2170
- *   +0x0148 -> line 2171
- *   +0x0154 -> line 2172
- *   +0x0160 -> line 2181
- *   +0x0170 -> line 2183
- *   +0x0180 -> line 2184
- *   +0x0188 -> line 2185
- *   +0x0190 -> line 2188
- *   +0x019c -> line 2189
- *   +0x01a4 -> line 2191
- *   +0x01b0 -> line 2195
- *   +0x01c4 -> line 2197
- *   +0x01d4 -> line 2198
- *   +0x01dc -> line 2199
- *   +0x01e0 -> line 2201
- *   +0x01e4 -> line 2199
- *   +0x01ec -> line 2200
- *   +0x01f0 -> line 2201
- *   +0x01f4 -> line 2202
- *   +0x01fc -> line 2203
- *   +0x0204 -> line 2205
- *   +0x0208 -> line 2206
- *   +0x0210 -> line 2209
- *   +0x021c -> line 2211
- *   +0x0220 -> line 2213
- *   +0x0234 -> line 2214
- *   +0x023c -> line 2215
- *   +0x024c -> line 2216
- *   +0x0250 -> line 2217
- *   +0x0254 -> line 2216
- *   +0x0258 -> line 2217
- *   +0x0264 -> line 2221
- *   +0x0274 -> line 2222
- *   +0x0288 -> line 2224
- *   +0x0298 -> line 2227
- *   +0x02b4 -> line 2229
- *   +0x02bc -> line 2227
- *   +0x02dc -> line 2230
- *   +0x02ec -> line 2231
- *   +0x0300 -> line 2233
- *   +0x0310 -> line 2234
- *   +0x0338 -> line 2236
- *   +0x0340 -> line 2237
- *   +0x03a0 -> line 2240
- *   +0x03ac -> line 2241
- *   +0x03b0 -> line 2240
- *   +0x03b8 -> line 2241
- *   +0x03c4 -> line 2246
- *   +0x03c8 -> line 2248
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2106–2137 */
-/* addr: 0x00151710  size: 360 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2106
- *   +0x0004 -> line 2111
- *   +0x0008 -> line 2106
- *   +0x0010 -> line 2111
- *   +0x0014 -> line 2108
- *   +0x0018 -> line 2111
- *   +0x0020 -> line 2112
- *   +0x0028 -> line 2116
- *   +0x0044 -> line 2118
- *   +0x004c -> line 2116
- *   +0x006c -> line 2119
- *   +0x007c -> line 2120
- *   +0x0090 -> line 2122
- *   +0x00a0 -> line 2123
- *   +0x00c8 -> line 2125
- *   +0x00d0 -> line 2126
- *   +0x0130 -> line 2129
- *   +0x013c -> line 2130
- *   +0x0140 -> line 2129
- *   +0x0148 -> line 2130
- *   +0x0154 -> line 2135
- *   +0x0158 -> line 2137
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2026–2102 */
-/* addr: 0x00151880  size: 348 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2026
- *   +0x001c -> line 2030
- *   +0x0024 -> line 2062
- *   +0x0034 -> line 2064
- *   +0x003c -> line 2067
- *   +0x0050 -> line 2069
- *   +0x005c -> line 2071
- *   +0x0064 -> line 2074
- *   +0x0068 -> line 2075
- *   +0x0070 -> line 2076
- *   +0x0078 -> line 2078
- *   +0x008c -> line 2079
- *   +0x009c -> line 2080
- *   +0x00a0 -> line 2081
- *   +0x00a4 -> line 2082
- *   +0x00ac -> line 2085
- *   +0x00b0 -> line 2088
- *   +0x00b4 -> line 2085
- *   +0x00b8 -> line 2088
- *   +0x00c8 -> line 2089
- *   +0x00d8 -> line 2092
- *   +0x00dc -> line 2090
- *   +0x00e4 -> line 2093
- *   +0x00e8 -> line 2092
- *   +0x00ec -> line 2090
- *   +0x00f0 -> line 2093
- *   +0x00fc -> line 2094
- *   +0x010c -> line 2095
- *   +0x0110 -> line 2096
- *   +0x0118 -> line 2098
- *   +0x011c -> line 2100
- *   +0x0120 -> line 2098
- *   +0x0128 -> line 2099
- *   +0x012c -> line 2100
- *   +0x0140 -> line 2102
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tagListData** PS2glAddLists(unsigned int list, int range);
 void PS2glFreeListData(tagListData* pDataOfList);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1971–2023 */
-/* addr: 0x001519e0  size: 316 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1971
- *   +0x0004 -> line 1973
- *   +0x0008 -> line 1971
- *   +0x000c -> line 1973
- *   +0x0018 -> line 1975
- *   +0x0024 -> line 1976
- *   +0x002c -> line 1979
- *   +0x0030 -> line 1980
- *   +0x0048 -> line 1983
- *   +0x0054 -> line 1989
- *   +0x005c -> line 1990
- *   +0x006c -> line 1992
- *   +0x0078 -> line 1995
- *   +0x007c -> line 1998
- *   +0x009c -> line 2002
- *   +0x00a4 -> line 2003
- *   +0x00ac -> line 2009
- *   +0x00b0 -> line 2006
- *   +0x00b4 -> line 2009
- *   +0x00b8 -> line 2006
- *   +0x00bc -> line 2011
- *   +0x00c0 -> line 2006
- *   +0x00c4 -> line 2011
- *   +0x00e0 -> line 2014
- *   +0x00ec -> line 2015
- *   +0x00fc -> line 2017
- *   +0x0104 -> line 2018
- *   +0x010c -> line 2019
- *   +0x0120 -> line 2020
- *   +0x0128 -> line 2022
- *   +0x0130 -> line 2023
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glBegin(unsigned int mode);
 void PS2glEnd(void);
 int PS2glComposeStaticDisplayList(tagListData* pListData);
@@ -1974,388 +1691,1043 @@ int PS2glComposeStaticDisplayList(tagListData* pListData);
 void PS2glFreeListDataPartially(tagListData* pDataOfList);
 void PS2glFreeListData(tagListData* pDataOfList);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1789–1966 */
-/* addr: 0x00151b20  size: 1168 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1789
- *   +0x0004 -> line 1791
- *   +0x0008 -> line 1789
- *   +0x0020 -> line 1791
- *   +0x0024 -> line 1799
- *   +0x0028 -> line 1792
- *   +0x002c -> line 1791
- *   +0x0034 -> line 1799
- *   +0x003c -> line 1802
- *   +0x0044 -> line 1805
- *   +0x0058 -> line 1806
- *   +0x0060 -> line 1808
- *   +0x0068 -> line 1812
- *   +0x0074 -> line 1813
- *   +0x007c -> line 1814
- *   +0x008c -> line 1815
- *   +0x0094 -> line 1817
- *   +0x00a4 -> line 1820
- *   +0x00b0 -> line 1821
- *   +0x00b4 -> line 1820
- *   +0x00b8 -> line 1821
- *   +0x00bc -> line 1820
- *   +0x00c0 -> line 1821
- *   +0x00c4 -> line 1820
- *   +0x00c8 -> line 1821
- *   +0x00d0 -> line 1826
- *   +0x00d4 -> line 1821
- *   +0x00d8 -> line 1826
- *   +0x00dc -> line 1829
- *   +0x00e0 -> line 1830
- *   +0x00e4 -> line 1835
- *   +0x00e8 -> line 1830
- *   +0x00f0 -> line 1829
- *   +0x00f4 -> line 1830
- *   +0x00f8 -> line 1835
- *   +0x0100 -> line 1836
- *   +0x0108 -> line 1838
- *   +0x0130 -> line 1849
- *   +0x0140 -> line 1851
- *   +0x0160 -> line 1853
- *   +0x0168 -> line 1851
- *   +0x0188 -> line 1854
- *   +0x01a0 -> line 1855
- *   +0x01b8 -> line 1857
- *   +0x01d0 -> line 1858
- *   +0x01fc -> line 1860
- *   +0x0204 -> line 1861
- *   +0x0274 -> line 1883
- *   +0x0278 -> line 1886
- *   +0x0280 -> line 1893
- *   +0x0284 -> line 1887
- *   +0x0288 -> line 1894
- *   +0x028c -> line 1887
- *   +0x0294 -> line 1889
- *   +0x029c -> line 1890
- *   +0x02a4 -> line 1893
- *   +0x02b4 -> line 1894
- *   +0x02bc -> line 1895
- *   +0x02c0 -> line 1907
- *   +0x02c4 -> line 1895
- *   +0x02c8 -> line 1907
- *   +0x02cc -> line 1904
- *   +0x02d0 -> line 1907
- *   +0x02d8 -> line 1906
- *   +0x02dc -> line 1907
- *   +0x02e0 -> line 1904
- *   +0x02e8 -> line 1906
- *   +0x02ec -> line 1907
- *   +0x02fc -> line 1908
- *   +0x030c -> line 1909
- *   +0x031c -> line 1914
- *   +0x0320 -> line 1911
- *   +0x0324 -> line 1912
- *   +0x0328 -> line 1913
- *   +0x032c -> line 1914
- *   +0x0330 -> line 1915
- *   +0x0338 -> line 1916
- *   +0x0340 -> line 1924
- *   +0x0358 -> line 1926
- *   +0x0378 -> line 1928
- *   +0x039c -> line 1934
- *   +0x03a0 -> line 1932
- *   +0x03a4 -> line 1934
- *   +0x03b0 -> line 1936
- *   +0x03b8 -> line 1938
- *   +0x03bc -> line 1939
- *   +0x03d0 -> line 1940
- *   +0x03dc -> line 1942
- *   +0x03e0 -> line 1941
- *   +0x03e4 -> line 1942
- *   +0x03ec -> line 1944
- *   +0x03f0 -> line 1946
- *   +0x03f4 -> line 1944
- *   +0x03fc -> line 1945
- *   +0x0400 -> line 1946
- *   +0x0410 -> line 1947
- *   +0x041c -> line 1948
- *   +0x0428 -> line 1949
- *   +0x0430 -> line 1952
- *   +0x0438 -> line 1956
- *   +0x0440 -> line 1958
- *   +0x0450 -> line 1959
- *   +0x0458 -> line 1962
- *   +0x045c -> line 1961
- *   +0x0460 -> line 1962
- *   +0x0464 -> line 1965
- *   +0x0468 -> line 1963
- *   +0x0470 -> line 1966
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1722–1783 */
-/* addr: 0x00151fb0  size: 464 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1722
- *   +0x0018 -> line 1723
- *   +0x0020 -> line 1727
- *   +0x0024 -> line 1723
- *   +0x0028 -> line 1727
- *   +0x0038 -> line 1728
- *   +0x0040 -> line 1730
- *   +0x0048 -> line 1732
- *   +0x0058 -> line 1735
- *   +0x0064 -> line 1736
- *   +0x006c -> line 1738
- *   +0x007c -> line 1739
- *   +0x0080 -> line 1738
- *   +0x0084 -> line 1739
- *   +0x0090 -> line 1743
- *   +0x0094 -> line 1751
- *   +0x0098 -> line 1743
- *   +0x009c -> line 1751
- *   +0x00a0 -> line 1744
- *   +0x00a4 -> line 1751
- *   +0x00a8 -> line 1744
- *   +0x00ac -> line 1751
- *   +0x00b0 -> line 1745
- *   +0x00b4 -> line 1755
- *   +0x00b8 -> line 1745
- *   +0x00bc -> line 1751
- *   +0x00c8 -> line 1755
- *   +0x00cc -> line 1757
- *   +0x00d8 -> line 1751
- *   +0x00e0 -> line 1755
- *   +0x00e8 -> line 1757
- *   +0x00f0 -> line 1751
- *   +0x00f4 -> line 1757
- *   +0x00f8 -> line 1751
- *   +0x00fc -> line 1757
- *   +0x0104 -> line 1763
- *   +0x0108 -> line 1751
- *   +0x010c -> line 1755
- *   +0x0114 -> line 1757
- *   +0x0124 -> line 1759
- *   +0x0128 -> line 1763
- *   +0x0138 -> line 1764
- *   +0x0140 -> line 1771
- *   +0x0144 -> line 1765
- *   +0x0148 -> line 1772
- *   +0x014c -> line 1774
- *   +0x0150 -> line 1771
- *   +0x0154 -> line 1772
- *   +0x0158 -> line 1774
- *   +0x015c -> line 1777
- *   +0x0160 -> line 1765
- *   +0x0164 -> line 1766
- *   +0x0170 -> line 1767
- *   +0x017c -> line 1771
- *   +0x0184 -> line 1772
- *   +0x018c -> line 1774
- *   +0x0194 -> line 1770
- *   +0x019c -> line 1777
- *   +0x01a0 -> line 1779
- *   +0x01a4 -> line 1782
- *   +0x01a8 -> line 1779
- *   +0x01ac -> line 1782
- *   +0x01b0 -> line 1779
- *   +0x01b4 -> line 1782
- *   +0x01b8 -> line 1783
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern void PS2glFreeListData(tagListData* pData);
 extern void* memset(void* dst, int c, unsigned int n);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1702–1718 */
-/* addr: 0x00152180  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1702
- *   +0x0004 -> line 1708
- *   +0x0008 -> line 1702
- *   +0x0010 -> line 1703
- *   +0x0018 -> line 1710
- *   +0x0024 -> line 1712
- *   +0x002c -> line 1715
- *   +0x0034 -> line 1717
- *   +0x0044 -> line 1718
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void PS2glFreeListData(tagListData* pDataOfList);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1604–1695 */
-/* addr: 0x001521e0  size: 600 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1604
- *   +0x0004 -> line 1606
- *   +0x0008 -> line 1604
- *   +0x0024 -> line 1605
- *   +0x0028 -> line 1604
- *   +0x002c -> line 1605
- *   +0x0030 -> line 1604
- *   +0x0034 -> line 1607
- *   +0x0038 -> line 1606
- *   +0x003c -> line 1610
- *   +0x0044 -> line 1612
- *   +0x0050 -> line 1614
- *   +0x0054 -> line 1616
- *   +0x0060 -> line 1618
- *   +0x0068 -> line 1619
- *   +0x006c -> line 1621
- *   +0x0074 -> line 1623
- *   +0x0084 -> line 1624
- *   +0x0088 -> line 1626
- *   +0x0090 -> line 1628
- *   +0x00b4 -> line 1633
- *   +0x00b8 -> line 1631
- *   +0x00bc -> line 1632
- *   +0x00c8 -> line 1633
- *   +0x00d4 -> line 1634
- *   +0x00e4 -> line 1635
- *   +0x00e8 -> line 1637
- *   +0x00f0 -> line 1639
- *   +0x0100 -> line 1642
- *   +0x0108 -> line 1644
- *   +0x010c -> line 1645
- *   +0x0110 -> line 1646
- *   +0x0118 -> line 1645
- *   +0x0120 -> line 1646
- *   +0x012c -> line 1647
- *   +0x0130 -> line 1649
- *   +0x013c -> line 1652
- *   +0x0140 -> line 1653
- *   +0x0158 -> line 1656
- *   +0x0160 -> line 1657
- *   +0x0180 -> line 1659
- *   +0x018c -> line 1663
- *   +0x0190 -> line 1664
- *   +0x0198 -> line 1665
- *   +0x01b8 -> line 1666
- *   +0x01c0 -> line 1669
- *   +0x01cc -> line 1672
- *   +0x01d4 -> line 1675
- *   +0x01dc -> line 1677
- *   +0x01ec -> line 1680
- *   +0x01f4 -> line 1683
- *   +0x0200 -> line 1685
- *   +0x020c -> line 1688
- *   +0x0218 -> line 1690
- *   +0x0220 -> line 1692
- *   +0x0224 -> line 1693
- *   +0x0228 -> line 1694
- *   +0x0230 -> line 1695
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1596–1601 */
-/* addr: 0x00152440  size: 96 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1596
- *   +0x0004 -> line 1597
- *   +0x0008 -> line 1596
- *   +0x0018 -> line 1597
- *   +0x001c -> line 1598
- *   +0x0038 -> line 1600
- *   +0x003c -> line 1599
- *   +0x004c -> line 1601
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tagListData** PS2glAddLists(unsigned int list, int range);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1582–1584 */
-/* addr: 0x001524a0  size: 32 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1582
- *   +0x0008 -> line 1583
- *   +0x0010 -> line 1584
- *   +0x0014 -> line 1583
- *   +0x0018 -> line 1584
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 tagListData** PS2glSearchList(unsigned int list);
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1578–1579 */
-/* addr: 0x001524c0  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1578
- *   +0x0004 -> line 1579
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1531–1570 */
-/* addr: 0x001524d0  size: 192 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1531
- *   +0x0004 -> line 1547
- *   +0x0008 -> line 1531
- *   +0x000c -> line 1547
- *   +0x0010 -> line 1531
- *   +0x001c -> line 1540
- *   +0x0020 -> line 1549
- *   +0x0028 -> line 1551
- *   +0x002c -> line 1555
- *   +0x0038 -> line 1557
- *   +0x0068 -> line 1561
- *   +0x0070 -> line 1562
- *   +0x0074 -> line 1563
- *   +0x0078 -> line 1564
- *   +0x0090 -> line 1566
- *   +0x0094 -> line 1567
- *   +0x00a0 -> line 1569
- *   +0x00a8 -> line 1570
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1498–1528 */
-/* addr: 0x00152590  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1498
- *   +0x0004 -> line 1505
- *   +0x000c -> line 1511
- *   +0x0024 -> line 1507
- *   +0x0028 -> line 1511
- *   +0x0030 -> line 1513
- *   +0x003c -> line 1515
- *   +0x0058 -> line 1518
- *   +0x005c -> line 1519
- *   +0x0060 -> line 1520
- *   +0x0064 -> line 1521
- *   +0x0068 -> line 1522
- *   +0x006c -> line 1523
- *   +0x0088 -> line 1524
- *   +0x008c -> line 1525
- *   +0x0098 -> line 1528
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1446–1480 */
-/* addr: 0x00152630  size: 136 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1446
- *   +0x0004 -> line 1447
- *   +0x0014 -> line 1450
- *   +0x001c -> line 1453
- *   +0x0030 -> line 1454
- *   +0x0038 -> line 1456
- *   +0x0044 -> line 1457
- *   +0x004c -> line 1460
- *   +0x0050 -> line 1462
- *   +0x0060 -> line 1466
- *   +0x0068 -> line 1469
- *   +0x006c -> line 1475
- *   +0x0074 -> line 1478
- *   +0x0080 -> line 1480
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 #define VIFCODE(p) ((tagstVIFCode*)&(*(p))[3])
 void PS2glListBufferTriangleStripToTriangle(float (*pBuf)[4], int iSrcStart, int iDstStart);
 void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ);
 void PS2glMergeBB(float* pDstBB, float* pSrcBB);
+
+/* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
+inline float PS2gl_xSqrt(float x)
+{
+    float r;
+    asm { sqrt.s r, x }
+    return r;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 30–53 */
+/* addr: 0x00154b90  size: 132 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 31
+ *   +0x0004 -> line 30
+ *   +0x0008 -> line 31
+ *   +0x000c -> line 30
+ *   +0x0010 -> line 38
+ *   +0x0014 -> line 40
+ *   +0x0020 -> line 41
+ *   +0x0028 -> line 42
+ *   +0x0038 -> line 44
+ *   +0x0040 -> line 46
+ *   +0x0048 -> line 47
+ *   +0x0060 -> line 48
+ *   +0x006c -> line 49
+ *   +0x0070 -> line 50
+ *   +0x0078 -> line 52
+ *   +0x007c -> line 53
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+
+tagListData** PS2glSearchList(unsigned int list)
+{
+    tagListNodeSingle* pSingleIndex;
+    int iOffset;
+    tagListNode* pNode;
+    int I;
+
+    pNode = g_PS2glContext.ListPool.pFirstNode;
+    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
+    for (I = 0; I < 64; I++, pSingleIndex++)
+    {
+        if (pSingleIndex->nIndex == list)
+            return &pSingleIndex->pData;
+    }
+    while (pNode)
+    {
+        iOffset = list - pNode->nIndex;
+        if ((iOffset >= 0) && (iOffset < pNode->iSize))
+            return (tagListData**)&pNode->apData[iOffset];
+        pNode = pNode->pNext;
+    }
+    return NULL;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 56–98 */
+/* addr: 0x00154aa0  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 56
+ *   +0x0014 -> line 61
+ *   +0x0024 -> line 62
+ *   +0x0034 -> line 64
+ *   +0x003c -> line 70
+ *   +0x0040 -> line 68
+ *   +0x0044 -> line 72
+ *   +0x0050 -> line 76
+ *   +0x0054 -> line 77
+ *   +0x005c -> line 79
+ *   +0x006c -> line 80
+ *   +0x0070 -> line 83
+ *   +0x0084 -> line 84
+ *   +0x0088 -> line 87
+ *   +0x008c -> line 85
+ *   +0x0090 -> line 83
+ *   +0x0094 -> line 86
+ *   +0x0098 -> line 87
+ *   +0x00a4 -> line 89
+ *   +0x00b4 -> line 90
+ *   +0x00b8 -> line 91
+ *   +0x00bc -> line 93
+ *   +0x00cc -> line 95
+ *   +0x00d4 -> line 98
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tagListData** PS2glAddLists(unsigned int list, int range)
+{
+    tagListNode* pNode;
+    tagListNodeSingle* pSingleIndex;
+    int I;
+
+    if (!list)
+        return NULL;
+    if (range <= 0)
+        return NULL;
+    if (range == 1)
+    {
+        for (I = 0, pSingleIndex = g_PS2glContext.ListPool.aSingleIndex; I < 64; I++, pSingleIndex++)
+        {
+            if (!pSingleIndex->nIndex)
+            {
+                pSingleIndex->nIndex = list;
+                return &pSingleIndex->pData;
+            }
+        }
+    }
+    pNode = (tagListNode*)PS2glAllocator(sizeof(tagListNode) + (range - 1) * sizeof(int));
+    pNode->iSize = range;
+    pNode->nIndex = list;
+    pNode->pNext = NULL;
+    memset(pNode->apData, 0, range * sizeof(int));
+    if (g_PS2glContext.ListPool.pLastNode)
+        g_PS2glContext.ListPool.pLastNode->pNext = pNode;
+    g_PS2glContext.ListPool.pLastNode = pNode;
+    if (!g_PS2glContext.ListPool.pFirstNode)
+        g_PS2glContext.ListPool.pFirstNode = pNode;
+    return (tagListData**)pNode->apData;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 101–175 */
+/* addr: 0x001549f0  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 101
+ *   +0x0014 -> line 106
+ *   +0x001c -> line 123
+ *   +0x0020 -> line 128
+ *   +0x0028 -> line 135
+ *   +0x0034 -> line 136
+ *   +0x0038 -> line 137
+ *   +0x0048 -> line 153
+ *   +0x0050 -> line 157
+ *   +0x005c -> line 162
+ *   +0x0068 -> line 163
+ *   +0x006c -> line 164
+ *   +0x0070 -> line 165
+ *   +0x007c -> line 170
+ *   +0x0088 -> line 171
+ *   +0x008c -> line 172
+ *   +0x0090 -> line 174
+ *   +0x0098 -> line 175
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glFreeListDataPartially(tagListData* pDataOfList)
+{
+    tagGLprimbuf* pPrimBuf;
+    tagGLprimbuf* pNext;
+    tagGLlistcalls* pCalls;
+
+    if (pDataOfList)
+    {
+        pCalls = pDataOfList->pCalls;
+        pPrimBuf = pDataOfList->pPrimBufHead;
+        while (pCalls)
+        {
+            tagGLlistcalls* pNextCalls = pCalls->pNext;
+            PS2glLiberator(pCalls);
+            pCalls = pNextCalls;
+        }
+        pDataOfList->pCalls = NULL;
+        while (pPrimBuf)
+        {
+            pNext = pPrimBuf->pNext;
+            if (pPrimBuf->pCode)
+            {
+                PS2glLiberator((void*)pPrimBuf->pCode);
+                pPrimBuf->pCode = 0;
+            }
+            if (pPrimBuf->pData)
+            {
+                PS2glLiberator(pPrimBuf->pData);
+                pPrimBuf->pData = NULL;
+            }
+            pPrimBuf = pNext;
+        }
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 178–248 */
+/* addr: 0x00154870  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 178
+ *   +0x001c -> line 183
+ *   +0x0024 -> line 188
+ *   +0x0028 -> line 186
+ *   +0x002c -> line 187
+ *   +0x0030 -> line 188
+ *   +0x003c -> line 190
+ *   +0x0048 -> line 191
+ *   +0x004c -> line 192
+ *   +0x0058 -> line 194
+ *   +0x0064 -> line 195
+ *   +0x0068 -> line 209
+ *   +0x0070 -> line 212
+ *   +0x0074 -> line 211
+ *   +0x0078 -> line 212
+ *   +0x0080 -> line 213
+ *   +0x0084 -> line 214
+ *   +0x0090 -> line 217
+ *   +0x0098 -> line 220
+ *   +0x00b0 -> line 221
+ *   +0x00c8 -> line 222
+ *   +0x00e0 -> line 223
+ *   +0x00ec -> line 225
+ *   +0x00f8 -> line 228
+ *   +0x0100 -> line 242
+ *   +0x0118 -> line 243
+ *   +0x0130 -> line 244
+ *   +0x013c -> line 246
+ *   +0x0148 -> line 247
+ *   +0x0154 -> line 248
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glFreeListData(tagListData* pDataOfList)
+{
+    tagGLprimbuf* pNext;
+    tagGLlistdatas* pDatas;
+    tagGLprimbuf* pPrimBuf;
+    tagGLlistcalls* pCalls;
+
+    if (pDataOfList)
+    {
+        pCalls = pDataOfList->pCalls;
+        pDatas = pDataOfList->pDatas;
+        pPrimBuf = pDataOfList->pPrimBufHead;
+        if ((unsigned int)pDataOfList->pDmaBuffer > 1)
+        {
+            PS2glLiberator(pDataOfList->pDmaBuffer);
+            pDataOfList->pDmaBuffer = NULL;
+            if (pDataOfList->pSDLIndices)
+            {
+                PS2glLiberator((void*)pDataOfList->pSDLIndices);
+                pDataOfList->pSDLIndices = 0;
+            }
+        }
+        while (pCalls)
+        {
+            tagGLlistcalls* pNextCalls = pCalls->pNext;
+            PS2glLiberator(pCalls);
+            pCalls = pNextCalls;
+        }
+        while (pDatas)
+        {
+            tagGLlistdatas* pNextDatas = pDatas->pNext;
+            if (pDatas->apData[0])
+                PS2glLiberator((void*)pDatas->apData[0]);
+            if (pDatas->apData[1])
+                PS2glLiberator((void*)pDatas->apData[1]);
+            if (pDatas->apData[2])
+                PS2glLiberator((void*)pDatas->apData[2]);
+            PS2glLiberator(pDatas);
+            pDatas = pNextDatas;
+        }
+        while (pPrimBuf)
+        {
+            pNext = pPrimBuf->pNext;
+            if (pPrimBuf->pCode)
+                PS2glLiberator((void*)pPrimBuf->pCode);
+            if (pPrimBuf->pData)
+                PS2glLiberator(pPrimBuf->pData);
+            PS2glLiberator(pPrimBuf);
+            pPrimBuf = pNext;
+        }
+        PS2glLiberator(pDataOfList);
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 251–269 */
+/* addr: 0x001547d0  size: 156 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 251
+ *   +0x0010 -> line 252
+ *   +0x0020 -> line 253
+ *   +0x002c -> line 254
+ *   +0x0040 -> line 257
+ *   +0x004c -> line 258
+ *   +0x0050 -> line 261
+ *   +0x0054 -> line 258
+ *   +0x0058 -> line 259
+ *   +0x005c -> line 260
+ *   +0x0060 -> line 261
+ *   +0x0064 -> line 262
+ *   +0x006c -> line 263
+ *   +0x0078 -> line 264
+ *   +0x0080 -> line 266
+ *   +0x0084 -> line 268
+ *   +0x0088 -> line 269
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* PS2glListSaveParamSpace(int cbParam)
+{
+    tagGLlistdatas* pDatas;
+    tagGLlistdatas* pCurDatas;
+    void* pBuf;
+
+    pBuf = PS2glAllocator(cbParam);
+    pDatas = g_PS2glContext.pCurListData->pDatas;
+    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
+    {
+        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
+        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
+        pCurDatas->apData[0] = (int)pBuf;
+        pCurDatas->pNext = pDatas;
+        g_PS2glContext.pCurListData->pDatas = pCurDatas;
+    }
+    else if (pDatas->apData[1] == 0)
+    {
+        pDatas->apData[1] = (int)pBuf;
+    }
+    else
+    {
+        pDatas->apData[2] = (int)pBuf;
+    }
+    return pBuf;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 272–291 */
+/* addr: 0x00154710  size: 188 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 272
+ *   +0x001c -> line 273
+ *   +0x002c -> line 274
+ *   +0x0034 -> line 275
+ *   +0x003c -> line 274
+ *   +0x0040 -> line 275
+ *   +0x0048 -> line 276
+ *   +0x005c -> line 279
+ *   +0x0068 -> line 280
+ *   +0x006c -> line 283
+ *   +0x0070 -> line 280
+ *   +0x0074 -> line 281
+ *   +0x0078 -> line 282
+ *   +0x007c -> line 283
+ *   +0x0080 -> line 284
+ *   +0x0088 -> line 285
+ *   +0x0094 -> line 286
+ *   +0x009c -> line 288
+ *   +0x00a0 -> line 290
+ *   +0x00a4 -> line 291
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void* PS2glListSaveParam(void* pParam, int cbParam)
+{
+    tagGLlistdatas* pDatas;
+    tagGLlistdatas* pCurDatas;
+    void* pBuf;
+
+    pBuf = PS2glAllocator(cbParam);
+    pDatas = g_PS2glContext.pCurListData->pDatas;
+    memcpy(pBuf, pParam, cbParam);
+    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
+    {
+        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
+        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
+        pCurDatas->apData[0] = (int)pBuf;
+        pCurDatas->pNext = pDatas;
+        g_PS2glContext.pCurListData->pDatas = pCurDatas;
+    }
+    else if (pDatas->apData[1] == 0)
+    {
+        pDatas->apData[1] = (int)pBuf;
+    }
+    else
+    {
+        pDatas->apData[2] = (int)pBuf;
+    }
+    return pBuf;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 294–328 */
+/* addr: 0x00154640  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 294
+ *   +0x0004 -> line 295
+ *   +0x0008 -> line 294
+ *   +0x0018 -> line 295
+ *   +0x001c -> line 300
+ *   +0x0020 -> line 301
+ *   +0x0024 -> line 302
+ *   +0x0030 -> line 305
+ *   +0x004c -> line 308
+ *   +0x0058 -> line 309
+ *   +0x0068 -> line 311
+ *   +0x006c -> line 312
+ *   +0x0074 -> line 315
+ *   +0x0078 -> line 316
+ *   +0x0088 -> line 318
+ *   +0x0090 -> line 319
+ *   +0x0094 -> line 320
+ *   +0x0098 -> line 322
+ *   +0x00a4 -> line 323
+ *   +0x00a8 -> line 325
+ *   +0x00b4 -> line 328
+ *   +0x00b8 -> line 327
+ *   +0x00bc -> line 328
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tagGLlistnode* PS2glListAllocNode(int cbParams)
+{
+    tagGLlistcalls* pCurCalls = g_PS2glContext.pCurListCalls;
+    tagGLlistnode* param0;
+    int cbNode;
+    int cbTotal;
+
+    cbNode = cbParams + 8;
+    cbParams -= cbNode;
+    cbTotal = (cbNode + 3) & ~3;
+    cbParams += cbTotal;
+    if ((pCurCalls == NULL) || (pCurCalls->cbCalls + cbTotal > 0x400))
+    {
+        pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
+        if (g_PS2glContext.pCurListCalls == NULL)
+        {
+            g_PS2glContext.pCurListData->pCalls = pCurCalls;
+        }
+        else
+        {
+            g_PS2glContext.pCurListCalls->pNext = pCurCalls;
+            g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
+        }
+        g_PS2glContext.pCurListCalls = pCurCalls;
+        pCurCalls->cbCalls = 0;
+        pCurCalls->pNext = 0;
+    }
+    cbNode = pCurCalls->cbCalls;
+    param0 = (tagGLlistnode*)((int)pCurCalls->aNodes + cbNode);
+    param0->cbParamCount = cbParams;
+    pCurCalls->cbCalls += cbTotal;
+    return param0;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 332–342 */
+/* addr: 0x00154590  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 332
+ *   +0x0004 -> line 333
+ *   +0x0008 -> line 332
+ *   +0x0020 -> line 333
+ *   +0x0030 -> line 335
+ *   +0x0038 -> line 338
+ *   +0x0050 -> line 339
+ *   +0x0068 -> line 340
+ *   +0x0080 -> line 341
+ *   +0x0084 -> line 340
+ *   +0x0088 -> line 341
+ *   +0x0098 -> line 342
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4])
+{
+    if (g_PS2glListVBuf.nCount >= 256)
+        PS2glListSaveVBuf(0);
+    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
+    *g_PS2glContext.pCurListTexUnit++ = texture;
+    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
+    g_PS2glListVBuf.nCount++;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 346–358 */
+/* addr: 0x001544e0  size: 164 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 346
+ *   +0x0004 -> line 347
+ *   +0x0008 -> line 346
+ *   +0x0018 -> line 347
+ *   +0x0028 -> line 349
+ *   +0x0030 -> line 352
+ *   +0x0048 -> line 354
+ *   +0x0060 -> line 356
+ *   +0x0078 -> line 357
+ *   +0x007c -> line 356
+ *   +0x0080 -> line 357
+ *   +0x0090 -> line 358
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glSaveListCall(unsigned int eCode, float (*pData)[4])
+{
+    if (g_PS2glListVBuf.nCount >= 256)
+        PS2glListSaveVBuf(0);
+    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
+    *g_PS2glContext.pCurListTexUnit++ = 0;
+    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
+    g_PS2glListVBuf.nCount++;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 361–387 */
+/* addr: 0x00154390  size: 328 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 361
+ *   +0x0004 -> line 362
+ *   +0x0008 -> line 361
+ *   +0x0014 -> line 362
+ *   +0x0030 -> line 364
+ *   +0x0040 -> line 365
+ *   +0x0050 -> line 367
+ *   +0x005c -> line 369
+ *   +0x0070 -> line 370
+ *   +0x0088 -> line 371
+ *   +0x00a0 -> line 372
+ *   +0x00bc -> line 374
+ *   +0x00d4 -> line 375
+ *   +0x00f0 -> line 378
+ *   +0x00fc -> line 381
+ *   +0x0100 -> line 382
+ *   +0x0104 -> line 381
+ *   +0x0108 -> line 382
+ *   +0x0114 -> line 383
+ *   +0x0124 -> line 385
+ *   +0x0134 -> line 387
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glListSaveVBuf(unsigned char EOP)
+{
+    tagGLprimbuf* pBuf;
+
+    if (g_PS2glContext.bInBeginEndPair && g_PS2glListVBuf.nCount)
+    {
+        pBuf = (tagGLprimbuf*)PS2glAllocator(sizeof(tagGLprimbuf));
+        memset(pBuf, 0, sizeof(tagGLprimbuf));
+        pBuf->nCount = g_PS2glListVBuf.nCount;
+        pBuf->pCode = (int)PS2glAllocator(g_PS2glListVBuf.nCount);
+        pBuf->pData = (float (*)[4])PS2glAllocator(g_PS2glListVBuf.nCount * 16);
+        memcpy((void*)pBuf->pCode, g_PS2glListVBuf.abCode, g_PS2glListVBuf.nCount);
+        memcpy(pBuf->pData, g_PS2glListVBuf.avData, g_PS2glListVBuf.nCount * 16);
+        pBuf->pTexUnit = (int)PS2glAllocator(g_PS2glListVBuf.nCount * 4);
+        memcpy((void*)pBuf->pTexUnit, g_PS2glListVBuf.aeTexUnit, g_PS2glListVBuf.nCount * 4);
+        PS2glAddPrimBuffer(pBuf, EOP);
+    }
+    g_PS2glListVBuf.nCount = 0;
+    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
+    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
+    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 412–422 */
+/* addr: 0x00154320  size: 108 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 421
+ *   +0x0008 -> line 412
+ *   +0x0010 -> line 413
+ *   +0x0018 -> line 414
+ *   +0x0020 -> line 415
+ *   +0x0028 -> line 417
+ *   +0x0030 -> line 418
+ *   +0x0038 -> line 412
+ *   +0x0040 -> line 413
+ *   +0x0048 -> line 414
+ *   +0x0050 -> line 415
+ *   +0x0058 -> line 417
+ *   +0x0060 -> line 418
+ *   +0x0064 -> line 422
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glResetPrimBuffer(void)
+{
+    g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
+    g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
+    g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
+    g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
+    g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
+    g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
+    g_PS2glContext.iBufCount = 0;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 453–552 */
+/* addr: 0x001540f0  size: 552 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 453
+ *   +0x0004 -> line 462
+ *   +0x0008 -> line 453
+ *   +0x000c -> line 492
+ *   +0x0010 -> line 462
+ *   +0x0014 -> line 465
+ *   +0x0018 -> line 462
+ *   +0x001c -> line 465
+ *   +0x0020 -> line 483
+ *   +0x0024 -> line 474
+ *   +0x0030 -> line 466
+ *   +0x0034 -> line 474
+ *   +0x0038 -> line 466
+ *   +0x003c -> line 483
+ *   +0x0040 -> line 467
+ *   +0x0044 -> line 475
+ *   +0x0048 -> line 467
+ *   +0x004c -> line 484
+ *   +0x0050 -> line 468
+ *   +0x0054 -> line 476
+ *   +0x0058 -> line 468
+ *   +0x005c -> line 485
+ *   +0x0060 -> line 470
+ *   +0x0064 -> line 477
+ *   +0x0068 -> line 470
+ *   +0x006c -> line 486
+ *   +0x0070 -> line 471
+ *   +0x0074 -> line 479
+ *   +0x0078 -> line 471
+ *   +0x007c -> line 488
+ *   +0x0080 -> line 480
+ *   +0x0084 -> line 492
+ *   +0x0090 -> line 494
+ *   +0x0094 -> line 501
+ *   +0x0098 -> line 494
+ *   +0x009c -> line 495
+ *   +0x00a4 -> line 496
+ *   +0x00ac -> line 497
+ *   +0x00b4 -> line 498
+ *   +0x00bc -> line 499
+ *   +0x00c4 -> line 501
+ *   +0x00d4 -> line 503
+ *   +0x00dc -> line 504
+ *   +0x00e4 -> line 505
+ *   +0x00ec -> line 506
+ *   +0x00f4 -> line 507
+ *   +0x00fc -> line 508
+ *   +0x0100 -> line 509
+ *   +0x0108 -> line 512
+ *   +0x0110 -> line 513
+ *   +0x0118 -> line 514
+ *   +0x0120 -> line 515
+ *   +0x0128 -> line 516
+ *   +0x0130 -> line 517
+ *   +0x0138 -> line 519
+ *   +0x0140 -> line 520
+ *   +0x0148 -> line 521
+ *   +0x0150 -> line 522
+ *   +0x0158 -> line 523
+ *   +0x0160 -> line 524
+ *   +0x0168 -> line 528
+ *   +0x016c -> line 550
+ *   +0x0170 -> line 544
+ *   +0x0174 -> line 550
+ *   +0x0178 -> line 544
+ *   +0x0184 -> line 545
+ *   +0x0194 -> line 528
+ *   +0x0198 -> line 529
+ *   +0x01a0 -> line 530
+ *   +0x01a8 -> line 531
+ *   +0x01b0 -> line 532
+ *   +0x01b8 -> line 533
+ *   +0x01c0 -> line 545
+ *   +0x01c4 -> line 535
+ *   +0x01c8 -> line 544
+ *   +0x01cc -> line 535
+ *   +0x01d0 -> line 536
+ *   +0x01d8 -> line 537
+ *   +0x01e0 -> line 538
+ *   +0x01e8 -> line 539
+ *   +0x01f0 -> line 540
+ *   +0x01f8 -> line 545
+ *   +0x01fc -> line 550
+ *   +0x0208 -> line 551
+ *   +0x021c -> line 552
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glListAssembleQuads(void)
+{
+    float (*pV1)[4];
+    float (*param0)[4];
+    float (*pC1)[4];
+    float (*pT1)[4];
+    float (*pC1_b)[4];
+    float (*pT1_b)[4];
+    int iQuadCount;
+    int I;
+    float (*pV)[4];
+    float (*pN)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float (*pC_b)[4];
+    float (*pT_b)[4];
+
+    iQuadCount = g_PS2glContext.iBufCount >> 2;
+    pV = g_PS2glContext.pVBuf0;
+    pN = g_PS2glContext.pNBuf0;
+    pC = g_PS2glContext.pCBuf0;
+    pT = g_PS2glContext.pTBuf0;
+    pC_b = g_PS2glContext.pCBuf0_b;
+    pT_b = g_PS2glContext.pTBuf0_b;
+    pV1 = pV + iQuadCount * 6;
+    param0 = pN + iQuadCount * 6;
+    pC1 = pC + iQuadCount * 6;
+    pT1 = pT + iQuadCount * 6;
+    pC1_b = pC_b + iQuadCount * 6;
+    pT1_b = pT_b + iQuadCount * 6;
+    pV += g_PS2glContext.iBufCount;
+    pN += g_PS2glContext.iBufCount;
+    pC += g_PS2glContext.iBufCount;
+    pT += g_PS2glContext.iBufCount;
+    pC_b += g_PS2glContext.iBufCount;
+    pT_b += g_PS2glContext.iBufCount;
+    for (I = 0; I < iQuadCount; I++)
+    {
+        *(quad*)(pV1 - 1) = *(quad*)(pV - 1);
+        *(quad*)(pV1 - 2) = *(quad*)(pV - 2);
+        *(quad*)(pV1 - 4) = *(quad*)(pV - 1);
+        *(quad*)(pV1 - 3) = *(quad*)(pV - 3);
+        *(quad*)(pV1 - 5) = *(quad*)(pV - 3);
+        *(quad*)(pV1 - 6) = *(quad*)(pV - 4);
+        if (g_PS2glContext.nLightBits & 0x400)
+        {
+            *(quad*)(param0 - 1) = *(quad*)(pN - 1);
+            *(quad*)(param0 - 2) = *(quad*)(pN - 2);
+            *(quad*)(param0 - 4) = *(quad*)(pN - 1);
+            *(quad*)(param0 - 3) = *(quad*)(pN - 3);
+            *(quad*)(param0 - 5) = *(quad*)(pN - 3);
+            *(quad*)(param0 - 6) = *(quad*)(pN - 4);
+        }
+        else
+        {
+            *(quad*)(pC1 - 1) = *(quad*)(pC - 1);
+            *(quad*)(pC1 - 2) = *(quad*)(pC - 2);
+            *(quad*)(pC1 - 4) = *(quad*)(pC - 1);
+            *(quad*)(pC1 - 3) = *(quad*)(pC - 3);
+            *(quad*)(pC1 - 5) = *(quad*)(pC - 3);
+            *(quad*)(pC1 - 6) = *(quad*)(pC - 4);
+            *(quad*)(pC1_b - 1) = *(quad*)(pC_b - 1);
+            *(quad*)(pC1_b - 2) = *(quad*)(pC_b - 2);
+            *(quad*)(pC1_b - 4) = *(quad*)(pC_b - 1);
+            *(quad*)(pC1_b - 3) = *(quad*)(pC_b - 3);
+            *(quad*)(pC1_b - 5) = *(quad*)(pC_b - 3);
+            *(quad*)(pC1_b - 6) = *(quad*)(pC_b - 4);
+        }
+        *(quad*)(pT1 - 1) = *(quad*)(pT - 1);
+        *(quad*)(pT1 - 2) = *(quad*)(pT - 2);
+        *(quad*)(pT1 - 4) = *(quad*)(pT - 1);
+        *(quad*)(pT1 - 3) = *(quad*)(pT - 3);
+        *(quad*)(pT1 - 5) = *(quad*)(pT - 3);
+        *(quad*)(pT1 - 6) = *(quad*)(pT - 4);
+        *(quad*)(pT1_b - 1) = *(quad*)(pT_b - 1);
+        *(quad*)(pT1_b - 2) = *(quad*)(pT_b - 2);
+        *(quad*)(pT1_b - 4) = *(quad*)(pT_b - 1);
+        *(quad*)(pT1_b - 3) = *(quad*)(pT_b - 3);
+        *(quad*)(pT1_b - 5) = *(quad*)(pT_b - 3);
+        *(quad*)(pT1_b - 6) = *(quad*)(pT_b - 4);
+        pV1 -= 6;
+        param0 -= 6;
+        pC1 -= 6;
+        pT1 -= 6;
+        pC1_b -= 6;
+        pT1_b -= 6;
+        pV -= 4;
+        pN -= 4;
+        pC -= 4;
+        pT -= 4;
+        pC_b -= 4;
+        pT_b -= 4;
+    }
+    g_PS2glContext.iBufCount = iQuadCount * 6;
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 563–635 */
+/* addr: 0x00153e70  size: 628 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 563
+ *   +0x0008 -> line 565
+ *   +0x000c -> line 570
+ *   +0x0010 -> line 566
+ *   +0x0014 -> line 570
+ *   +0x0018 -> line 567
+ *   +0x001c -> line 565
+ *   +0x0020 -> line 566
+ *   +0x0024 -> line 567
+ *   +0x0028 -> line 570
+ *   +0x0030 -> line 572
+ *   +0x0034 -> line 573
+ *   +0x0044 -> line 574
+ *   +0x0050 -> line 575
+ *   +0x0060 -> line 576
+ *   +0x0068 -> line 577
+ *   +0x006c -> line 578
+ *   +0x007c -> line 579
+ *   +0x0088 -> line 580
+ *   +0x0098 -> line 581
+ *   +0x00a0 -> line 582
+ *   +0x00a4 -> line 583
+ *   +0x00b4 -> line 584
+ *   +0x00c0 -> line 585
+ *   +0x00d0 -> line 586
+ *   +0x00d8 -> line 588
+ *   +0x00e8 -> line 589
+ *   +0x00f0 -> line 592
+ *   +0x00fc -> line 598
+ *   +0x0100 -> line 593
+ *   +0x0104 -> line 598
+ *   +0x0108 -> line 594
+ *   +0x010c -> line 595
+ *   +0x0110 -> line 592
+ *   +0x0114 -> line 596
+ *   +0x0118 -> line 593
+ *   +0x011c -> line 595
+ *   +0x0120 -> line 594
+ *   +0x0124 -> line 593
+ *   +0x0128 -> line 594
+ *   +0x012c -> line 598
+ *   +0x0134 -> line 600
+ *   +0x0138 -> line 601
+ *   +0x013c -> line 600
+ *   +0x0140 -> line 601
+ *   +0x0144 -> line 602
+ *   +0x0154 -> line 603
+ *   +0x0160 -> line 604
+ *   +0x0170 -> line 605
+ *   +0x0178 -> line 606
+ *   +0x0180 -> line 607
+ *   +0x0190 -> line 608
+ *   +0x0198 -> line 609
+ *   +0x01a8 -> line 610
+ *   +0x01b0 -> line 611
+ *   +0x01b8 -> line 612
+ *   +0x01c8 -> line 613
+ *   +0x01d0 -> line 614
+ *   +0x01e0 -> line 615
+ *   +0x01e8 -> line 617
+ *   +0x01f8 -> line 619
+ *   +0x020c -> line 620
+ *   +0x0214 -> line 621
+ *   +0x0218 -> line 622
+ *   +0x0220 -> line 624
+ *   +0x0224 -> line 625
+ *   +0x0228 -> line 626
+ *   +0x022c -> line 627
+ *   +0x0230 -> line 628
+ *   +0x0234 -> line 629
+ *   +0x0238 -> line 631
+ *   +0x0240 -> line 634
+ *   +0x024c -> line 632
+ *   +0x0250 -> line 633
+ *   +0x0254 -> line 632
+ *   +0x0258 -> line 633
+ *   +0x025c -> line 634
+ *   +0x026c -> line 635
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ)
+{
+    int i;
+    float fNX;
+    float fPX;
+    float fNY;
+    float fPY;
+    float fNZ;
+    float fPZ;
+    float fTemp;
+    float fQ;
+    float fWidth;
+    float fHeight;
+    float fDepth;
+
+    if (!bDivQ)
+    {
+        fPX = (*pV)[0];
+        fPY = (*pV)[1];
+        fPZ = (*pV)[2];
+        fNX = fPX;
+        fNY = fPY;
+        fNZ = fPZ;
+        pV++;
+        for (i = 1; i < iCount; i++)
+        {
+            fTemp = (*pV)[0];
+            if (fTemp < fNX)
+                fNX = fTemp;
+            else if (fTemp > fPX)
+                fPX = fTemp;
+            fTemp = (*pV)[1];
+            if (fTemp < fNY)
+                fNY = fTemp;
+            else if (fTemp > fPY)
+                fPY = fTemp;
+            fTemp = (*pV)[2];
+            if (fTemp < fNZ)
+                fNZ = fTemp;
+            else if (fTemp > fPZ)
+                fPZ = fTemp;
+            pV++;
+        }
+    }
+    else
+    {
+        fQ = 1.0f / (*pV)[3];
+        fPX = (*pV)[0] * fQ;
+        fPY = (*pV)[1] * fQ;
+        fPZ = (*pV)[2] * fQ;
+        fNX = fPX;
+        fNY = fPY;
+        fNZ = fPZ;
+        pV++;
+        for (i = 1; i < iCount; i++)
+        {
+            fQ = 1.0f / (*pV)[3];
+            fTemp = (*pV)[0] * fQ;
+            if (fTemp < fNX)
+                fNX = fTemp;
+            else if (fTemp > fPX)
+                fPX = fTemp;
+            fTemp = (*pV)[1] * fQ;
+            if (fTemp < fNY)
+                fNY = fTemp;
+            else if (fTemp > fPY)
+                fPY = fTemp;
+            fTemp = (*pV)[2] * fQ;
+            if (fTemp < fNZ)
+                fNZ = fTemp;
+            else if (fTemp > fPZ)
+                fPZ = fTemp;
+            pV++;
+        }
+    }
+    fWidth = 0.5f * (fPX - fNX);
+    fHeight = 0.5f * (fPY - fNY);
+    fDepth = 0.5f * (fPZ - fNZ);
+    if (pBB)
+    {
+        pBB[0] = fNX;
+        pBB[1] = fPX;
+        pBB[2] = fNY;
+        pBB[3] = fPY;
+        pBB[4] = fNZ;
+        pBB[5] = fPZ;
+    }
+    pfvBS[0] = fNX + fWidth;
+    pfvBS[1] = fNY + fHeight;
+    pfvBS[2] = fNZ + fDepth;
+    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 641–665 */
+/* addr: 0x00153dd0  size: 148 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 641
+ *   +0x0008 -> line 645
+ *   +0x0020 -> line 646
+ *   +0x0028 -> line 649
+ *   +0x0040 -> line 650
+ *   +0x0048 -> line 653
+ *   +0x0050 -> line 651
+ *   +0x0054 -> line 653
+ *   +0x005c -> line 654
+ *   +0x0064 -> line 659
+ *   +0x0068 -> line 661
+ *   +0x006c -> line 659
+ *   +0x0070 -> line 661
+ *   +0x0074 -> line 659
+ *   +0x0078 -> line 661
+ *   +0x008c -> line 665
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glMergeBB(float* pDstBB, float* pSrcBB)
+{
+    int i;
+
+    if (pSrcBB)
+    {
+        for (i = 0; i < 3; i++, pDstBB += 2)
+        {
+            if (pDstBB[0] > pSrcBB[0])
+                pDstBB[0] = pSrcBB[0];
+            if (pDstBB[1] < pSrcBB[1])
+                pDstBB[1] = pSrcBB[1];
+            pSrcBB += 2;
+        }
+    }
+    else
+    {
+        pDstBB[0] = 16777215.0f;
+        /* The retail line table gives the last five stores one source line;
+           keeping them together reproduces its DWARF line entries. */
+        pDstBB[1] = -16777215.0f; pDstBB[2] = 16777215.0f; pDstBB[3] = -16777215.0f; pDstBB[4] = 16777215.0f; pDstBB[5] = -16777215.0f;
+    }
+}
+
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 671–678 */
+/* addr: 0x00153d50  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 671
+ *   +0x000c -> line 673
+ *   +0x0014 -> line 671
+ *   +0x0018 -> line 672
+ *   +0x0020 -> line 671
+ *   +0x0024 -> line 673
+ *   +0x0028 -> line 671
+ *   +0x002c -> line 673
+ *   +0x0030 -> line 674
+ *   +0x0034 -> line 672
+ *   +0x003c -> line 674
+ *   +0x0040 -> line 677
+ *   +0x004c -> line 675
+ *   +0x0050 -> line 677
+ *   +0x0054 -> line 675
+ *   +0x005c -> line 676
+ *   +0x0068 -> line 677
+ *   +0x0074 -> line 678
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
+{
+    float* pfFirst;
+    float fHeight;
+    float fDepth;
+    float fWidth;
+
+    /* Not original source, needs cleaning up: found by the permuter. Reading
+       pBB[0] through a pointer local swaps the f5/f6 temporaries as retail has them. */
+    fWidth = 0.5f * (pBB[1] - (*(pfFirst = &pBB[0])));
+    fHeight = 0.5f * (pBB[3] - pBB[2]);
+    fDepth = 0.5f * (pBB[5] - pBB[4]);
+    pfvBS[0] = pBB[0] + fWidth;
+    pfvBS[1] = pBB[2] + fHeight;
+    pfvBS[2] = pBB[4] + fDepth;
+    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
+}
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 686–1339 */
 /* addr: 0x001526c0  size: 5776 bytes */
@@ -2974,1044 +3346,6 @@ void PS2glMergeBB(float* pDstBB, float* pSrcBB);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 671–678 */
-/* addr: 0x00153d50  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 671
- *   +0x000c -> line 673
- *   +0x0014 -> line 671
- *   +0x0018 -> line 672
- *   +0x0020 -> line 671
- *   +0x0024 -> line 673
- *   +0x0028 -> line 671
- *   +0x002c -> line 673
- *   +0x0030 -> line 674
- *   +0x0034 -> line 672
- *   +0x003c -> line 674
- *   +0x0040 -> line 677
- *   +0x004c -> line 675
- *   +0x0050 -> line 677
- *   +0x0054 -> line 675
- *   +0x005c -> line 676
- *   +0x0068 -> line 677
- *   +0x0074 -> line 678
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
-inline float PS2gl_xSqrt(float x)
-{
-    float r;
-    asm { sqrt.s r, x }
-    return r;
-}
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 641–665 */
-/* addr: 0x00153dd0  size: 148 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 641
- *   +0x0008 -> line 645
- *   +0x0020 -> line 646
- *   +0x0028 -> line 649
- *   +0x0040 -> line 650
- *   +0x0048 -> line 653
- *   +0x0050 -> line 651
- *   +0x0054 -> line 653
- *   +0x005c -> line 654
- *   +0x0064 -> line 659
- *   +0x0068 -> line 661
- *   +0x006c -> line 659
- *   +0x0070 -> line 661
- *   +0x0074 -> line 659
- *   +0x0078 -> line 661
- *   +0x008c -> line 665
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 563–635 */
-/* addr: 0x00153e70  size: 628 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 563
- *   +0x0008 -> line 565
- *   +0x000c -> line 570
- *   +0x0010 -> line 566
- *   +0x0014 -> line 570
- *   +0x0018 -> line 567
- *   +0x001c -> line 565
- *   +0x0020 -> line 566
- *   +0x0024 -> line 567
- *   +0x0028 -> line 570
- *   +0x0030 -> line 572
- *   +0x0034 -> line 573
- *   +0x0044 -> line 574
- *   +0x0050 -> line 575
- *   +0x0060 -> line 576
- *   +0x0068 -> line 577
- *   +0x006c -> line 578
- *   +0x007c -> line 579
- *   +0x0088 -> line 580
- *   +0x0098 -> line 581
- *   +0x00a0 -> line 582
- *   +0x00a4 -> line 583
- *   +0x00b4 -> line 584
- *   +0x00c0 -> line 585
- *   +0x00d0 -> line 586
- *   +0x00d8 -> line 588
- *   +0x00e8 -> line 589
- *   +0x00f0 -> line 592
- *   +0x00fc -> line 598
- *   +0x0100 -> line 593
- *   +0x0104 -> line 598
- *   +0x0108 -> line 594
- *   +0x010c -> line 595
- *   +0x0110 -> line 592
- *   +0x0114 -> line 596
- *   +0x0118 -> line 593
- *   +0x011c -> line 595
- *   +0x0120 -> line 594
- *   +0x0124 -> line 593
- *   +0x0128 -> line 594
- *   +0x012c -> line 598
- *   +0x0134 -> line 600
- *   +0x0138 -> line 601
- *   +0x013c -> line 600
- *   +0x0140 -> line 601
- *   +0x0144 -> line 602
- *   +0x0154 -> line 603
- *   +0x0160 -> line 604
- *   +0x0170 -> line 605
- *   +0x0178 -> line 606
- *   +0x0180 -> line 607
- *   +0x0190 -> line 608
- *   +0x0198 -> line 609
- *   +0x01a8 -> line 610
- *   +0x01b0 -> line 611
- *   +0x01b8 -> line 612
- *   +0x01c8 -> line 613
- *   +0x01d0 -> line 614
- *   +0x01e0 -> line 615
- *   +0x01e8 -> line 617
- *   +0x01f8 -> line 619
- *   +0x020c -> line 620
- *   +0x0214 -> line 621
- *   +0x0218 -> line 622
- *   +0x0220 -> line 624
- *   +0x0224 -> line 625
- *   +0x0228 -> line 626
- *   +0x022c -> line 627
- *   +0x0230 -> line 628
- *   +0x0234 -> line 629
- *   +0x0238 -> line 631
- *   +0x0240 -> line 634
- *   +0x024c -> line 632
- *   +0x0250 -> line 633
- *   +0x0254 -> line 632
- *   +0x0258 -> line 633
- *   +0x025c -> line 634
- *   +0x026c -> line 635
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 453–552 */
-/* addr: 0x001540f0  size: 552 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 453
- *   +0x0004 -> line 462
- *   +0x0008 -> line 453
- *   +0x000c -> line 492
- *   +0x0010 -> line 462
- *   +0x0014 -> line 465
- *   +0x0018 -> line 462
- *   +0x001c -> line 465
- *   +0x0020 -> line 483
- *   +0x0024 -> line 474
- *   +0x0030 -> line 466
- *   +0x0034 -> line 474
- *   +0x0038 -> line 466
- *   +0x003c -> line 483
- *   +0x0040 -> line 467
- *   +0x0044 -> line 475
- *   +0x0048 -> line 467
- *   +0x004c -> line 484
- *   +0x0050 -> line 468
- *   +0x0054 -> line 476
- *   +0x0058 -> line 468
- *   +0x005c -> line 485
- *   +0x0060 -> line 470
- *   +0x0064 -> line 477
- *   +0x0068 -> line 470
- *   +0x006c -> line 486
- *   +0x0070 -> line 471
- *   +0x0074 -> line 479
- *   +0x0078 -> line 471
- *   +0x007c -> line 488
- *   +0x0080 -> line 480
- *   +0x0084 -> line 492
- *   +0x0090 -> line 494
- *   +0x0094 -> line 501
- *   +0x0098 -> line 494
- *   +0x009c -> line 495
- *   +0x00a4 -> line 496
- *   +0x00ac -> line 497
- *   +0x00b4 -> line 498
- *   +0x00bc -> line 499
- *   +0x00c4 -> line 501
- *   +0x00d4 -> line 503
- *   +0x00dc -> line 504
- *   +0x00e4 -> line 505
- *   +0x00ec -> line 506
- *   +0x00f4 -> line 507
- *   +0x00fc -> line 508
- *   +0x0100 -> line 509
- *   +0x0108 -> line 512
- *   +0x0110 -> line 513
- *   +0x0118 -> line 514
- *   +0x0120 -> line 515
- *   +0x0128 -> line 516
- *   +0x0130 -> line 517
- *   +0x0138 -> line 519
- *   +0x0140 -> line 520
- *   +0x0148 -> line 521
- *   +0x0150 -> line 522
- *   +0x0158 -> line 523
- *   +0x0160 -> line 524
- *   +0x0168 -> line 528
- *   +0x016c -> line 550
- *   +0x0170 -> line 544
- *   +0x0174 -> line 550
- *   +0x0178 -> line 544
- *   +0x0184 -> line 545
- *   +0x0194 -> line 528
- *   +0x0198 -> line 529
- *   +0x01a0 -> line 530
- *   +0x01a8 -> line 531
- *   +0x01b0 -> line 532
- *   +0x01b8 -> line 533
- *   +0x01c0 -> line 545
- *   +0x01c4 -> line 535
- *   +0x01c8 -> line 544
- *   +0x01cc -> line 535
- *   +0x01d0 -> line 536
- *   +0x01d8 -> line 537
- *   +0x01e0 -> line 538
- *   +0x01e8 -> line 539
- *   +0x01f0 -> line 540
- *   +0x01f8 -> line 545
- *   +0x01fc -> line 550
- *   +0x0208 -> line 551
- *   +0x021c -> line 552
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 412–422 */
-/* addr: 0x00154320  size: 108 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 421
- *   +0x0008 -> line 412
- *   +0x0010 -> line 413
- *   +0x0018 -> line 414
- *   +0x0020 -> line 415
- *   +0x0028 -> line 417
- *   +0x0030 -> line 418
- *   +0x0038 -> line 412
- *   +0x0040 -> line 413
- *   +0x0048 -> line 414
- *   +0x0050 -> line 415
- *   +0x0058 -> line 417
- *   +0x0060 -> line 418
- *   +0x0064 -> line 422
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 361–387 */
-/* addr: 0x00154390  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 361
- *   +0x0004 -> line 362
- *   +0x0008 -> line 361
- *   +0x0014 -> line 362
- *   +0x0030 -> line 364
- *   +0x0040 -> line 365
- *   +0x0050 -> line 367
- *   +0x005c -> line 369
- *   +0x0070 -> line 370
- *   +0x0088 -> line 371
- *   +0x00a0 -> line 372
- *   +0x00bc -> line 374
- *   +0x00d4 -> line 375
- *   +0x00f0 -> line 378
- *   +0x00fc -> line 381
- *   +0x0100 -> line 382
- *   +0x0104 -> line 381
- *   +0x0108 -> line 382
- *   +0x0114 -> line 383
- *   +0x0124 -> line 385
- *   +0x0134 -> line 387
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 346–358 */
-/* addr: 0x001544e0  size: 164 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 346
- *   +0x0004 -> line 347
- *   +0x0008 -> line 346
- *   +0x0018 -> line 347
- *   +0x0028 -> line 349
- *   +0x0030 -> line 352
- *   +0x0048 -> line 354
- *   +0x0060 -> line 356
- *   +0x0078 -> line 357
- *   +0x007c -> line 356
- *   +0x0080 -> line 357
- *   +0x0090 -> line 358
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 332–342 */
-/* addr: 0x00154590  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 332
- *   +0x0004 -> line 333
- *   +0x0008 -> line 332
- *   +0x0020 -> line 333
- *   +0x0030 -> line 335
- *   +0x0038 -> line 338
- *   +0x0050 -> line 339
- *   +0x0068 -> line 340
- *   +0x0080 -> line 341
- *   +0x0084 -> line 340
- *   +0x0088 -> line 341
- *   +0x0098 -> line 342
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 294–328 */
-/* addr: 0x00154640  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 294
- *   +0x0004 -> line 295
- *   +0x0008 -> line 294
- *   +0x0018 -> line 295
- *   +0x001c -> line 300
- *   +0x0020 -> line 301
- *   +0x0024 -> line 302
- *   +0x0030 -> line 305
- *   +0x004c -> line 308
- *   +0x0058 -> line 309
- *   +0x0068 -> line 311
- *   +0x006c -> line 312
- *   +0x0074 -> line 315
- *   +0x0078 -> line 316
- *   +0x0088 -> line 318
- *   +0x0090 -> line 319
- *   +0x0094 -> line 320
- *   +0x0098 -> line 322
- *   +0x00a4 -> line 323
- *   +0x00a8 -> line 325
- *   +0x00b4 -> line 328
- *   +0x00b8 -> line 327
- *   +0x00bc -> line 328
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 272–291 */
-/* addr: 0x00154710  size: 188 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 272
- *   +0x001c -> line 273
- *   +0x002c -> line 274
- *   +0x0034 -> line 275
- *   +0x003c -> line 274
- *   +0x0040 -> line 275
- *   +0x0048 -> line 276
- *   +0x005c -> line 279
- *   +0x0068 -> line 280
- *   +0x006c -> line 283
- *   +0x0070 -> line 280
- *   +0x0074 -> line 281
- *   +0x0078 -> line 282
- *   +0x007c -> line 283
- *   +0x0080 -> line 284
- *   +0x0088 -> line 285
- *   +0x0094 -> line 286
- *   +0x009c -> line 288
- *   +0x00a0 -> line 290
- *   +0x00a4 -> line 291
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 251–269 */
-/* addr: 0x001547d0  size: 156 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 251
- *   +0x0010 -> line 252
- *   +0x0020 -> line 253
- *   +0x002c -> line 254
- *   +0x0040 -> line 257
- *   +0x004c -> line 258
- *   +0x0050 -> line 261
- *   +0x0054 -> line 258
- *   +0x0058 -> line 259
- *   +0x005c -> line 260
- *   +0x0060 -> line 261
- *   +0x0064 -> line 262
- *   +0x006c -> line 263
- *   +0x0078 -> line 264
- *   +0x0080 -> line 266
- *   +0x0084 -> line 268
- *   +0x0088 -> line 269
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 178–248 */
-/* addr: 0x00154870  size: 372 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 178
- *   +0x001c -> line 183
- *   +0x0024 -> line 188
- *   +0x0028 -> line 186
- *   +0x002c -> line 187
- *   +0x0030 -> line 188
- *   +0x003c -> line 190
- *   +0x0048 -> line 191
- *   +0x004c -> line 192
- *   +0x0058 -> line 194
- *   +0x0064 -> line 195
- *   +0x0068 -> line 209
- *   +0x0070 -> line 212
- *   +0x0074 -> line 211
- *   +0x0078 -> line 212
- *   +0x0080 -> line 213
- *   +0x0084 -> line 214
- *   +0x0090 -> line 217
- *   +0x0098 -> line 220
- *   +0x00b0 -> line 221
- *   +0x00c8 -> line 222
- *   +0x00e0 -> line 223
- *   +0x00ec -> line 225
- *   +0x00f8 -> line 228
- *   +0x0100 -> line 242
- *   +0x0118 -> line 243
- *   +0x0130 -> line 244
- *   +0x013c -> line 246
- *   +0x0148 -> line 247
- *   +0x0154 -> line 248
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 101–175 */
-/* addr: 0x001549f0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 101
- *   +0x0014 -> line 106
- *   +0x001c -> line 123
- *   +0x0020 -> line 128
- *   +0x0028 -> line 135
- *   +0x0034 -> line 136
- *   +0x0038 -> line 137
- *   +0x0048 -> line 153
- *   +0x0050 -> line 157
- *   +0x005c -> line 162
- *   +0x0068 -> line 163
- *   +0x006c -> line 164
- *   +0x0070 -> line 165
- *   +0x007c -> line 170
- *   +0x0088 -> line 171
- *   +0x008c -> line 172
- *   +0x0090 -> line 174
- *   +0x0098 -> line 175
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 56–98 */
-/* addr: 0x00154aa0  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 56
- *   +0x0014 -> line 61
- *   +0x0024 -> line 62
- *   +0x0034 -> line 64
- *   +0x003c -> line 70
- *   +0x0040 -> line 68
- *   +0x0044 -> line 72
- *   +0x0050 -> line 76
- *   +0x0054 -> line 77
- *   +0x005c -> line 79
- *   +0x006c -> line 80
- *   +0x0070 -> line 83
- *   +0x0084 -> line 84
- *   +0x0088 -> line 87
- *   +0x008c -> line 85
- *   +0x0090 -> line 83
- *   +0x0094 -> line 86
- *   +0x0098 -> line 87
- *   +0x00a4 -> line 89
- *   +0x00b4 -> line 90
- *   +0x00b8 -> line 91
- *   +0x00bc -> line 93
- *   +0x00cc -> line 95
- *   +0x00d4 -> line 98
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 30–53 */
-/* addr: 0x00154b90  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 31
- *   +0x0004 -> line 30
- *   +0x0008 -> line 31
- *   +0x000c -> line 30
- *   +0x0010 -> line 38
- *   +0x0014 -> line 40
- *   +0x0020 -> line 41
- *   +0x0028 -> line 42
- *   +0x0038 -> line 44
- *   +0x0040 -> line 46
- *   +0x0048 -> line 47
- *   +0x0060 -> line 48
- *   +0x006c -> line 49
- *   +0x0070 -> line 50
- *   +0x0078 -> line 52
- *   +0x007c -> line 53
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-tagListData** PS2glSearchList(unsigned int list)
-{
-    tagListNodeSingle* pSingleIndex;
-    int iOffset;
-    tagListNode* pNode;
-    int I;
-
-    pNode = g_PS2glContext.ListPool.pFirstNode;
-    pSingleIndex = g_PS2glContext.ListPool.aSingleIndex;
-    for (I = 0; I < 64; I++, pSingleIndex++)
-    {
-        if (pSingleIndex->nIndex == list)
-            return &pSingleIndex->pData;
-    }
-    while (pNode)
-    {
-        iOffset = list - pNode->nIndex;
-        if ((iOffset >= 0) && (iOffset < pNode->iSize))
-            return (tagListData**)&pNode->apData[iOffset];
-        pNode = pNode->pNext;
-    }
-    return NULL;
-}
-
-tagListData** PS2glAddLists(unsigned int list, int range)
-{
-    tagListNode* pNode;
-    tagListNodeSingle* pSingleIndex;
-    int I;
-
-    if (!list)
-        return NULL;
-    if (range <= 0)
-        return NULL;
-    if (range == 1)
-    {
-        for (I = 0, pSingleIndex = g_PS2glContext.ListPool.aSingleIndex; I < 64; I++, pSingleIndex++)
-        {
-            if (!pSingleIndex->nIndex)
-            {
-                pSingleIndex->nIndex = list;
-                return &pSingleIndex->pData;
-            }
-        }
-    }
-    pNode = (tagListNode*)PS2glAllocator(sizeof(tagListNode) + (range - 1) * sizeof(int));
-    pNode->iSize = range;
-    pNode->nIndex = list;
-    pNode->pNext = NULL;
-    memset(pNode->apData, 0, range * sizeof(int));
-    if (g_PS2glContext.ListPool.pLastNode)
-        g_PS2glContext.ListPool.pLastNode->pNext = pNode;
-    g_PS2glContext.ListPool.pLastNode = pNode;
-    if (!g_PS2glContext.ListPool.pFirstNode)
-        g_PS2glContext.ListPool.pFirstNode = pNode;
-    return (tagListData**)pNode->apData;
-}
-
-void PS2glFreeListDataPartially(tagListData* pDataOfList)
-{
-    tagGLprimbuf* pPrimBuf;
-    tagGLprimbuf* pNext;
-    tagGLlistcalls* pCalls;
-
-    if (pDataOfList)
-    {
-        pCalls = pDataOfList->pCalls;
-        pPrimBuf = pDataOfList->pPrimBufHead;
-        while (pCalls)
-        {
-            tagGLlistcalls* pNextCalls = pCalls->pNext;
-            PS2glLiberator(pCalls);
-            pCalls = pNextCalls;
-        }
-        pDataOfList->pCalls = NULL;
-        while (pPrimBuf)
-        {
-            pNext = pPrimBuf->pNext;
-            if (pPrimBuf->pCode)
-            {
-                PS2glLiberator((void*)pPrimBuf->pCode);
-                pPrimBuf->pCode = 0;
-            }
-            if (pPrimBuf->pData)
-            {
-                PS2glLiberator(pPrimBuf->pData);
-                pPrimBuf->pData = NULL;
-            }
-            pPrimBuf = pNext;
-        }
-    }
-}
-
-void PS2glFreeListData(tagListData* pDataOfList)
-{
-    tagGLprimbuf* pNext;
-    tagGLlistdatas* pDatas;
-    tagGLprimbuf* pPrimBuf;
-    tagGLlistcalls* pCalls;
-
-    if (pDataOfList)
-    {
-        pCalls = pDataOfList->pCalls;
-        pDatas = pDataOfList->pDatas;
-        pPrimBuf = pDataOfList->pPrimBufHead;
-        if ((unsigned int)pDataOfList->pDmaBuffer > 1)
-        {
-            PS2glLiberator(pDataOfList->pDmaBuffer);
-            pDataOfList->pDmaBuffer = NULL;
-            if (pDataOfList->pSDLIndices)
-            {
-                PS2glLiberator((void*)pDataOfList->pSDLIndices);
-                pDataOfList->pSDLIndices = 0;
-            }
-        }
-        while (pCalls)
-        {
-            tagGLlistcalls* pNextCalls = pCalls->pNext;
-            PS2glLiberator(pCalls);
-            pCalls = pNextCalls;
-        }
-        while (pDatas)
-        {
-            tagGLlistdatas* pNextDatas = pDatas->pNext;
-            if (pDatas->apData[0])
-                PS2glLiberator((void*)pDatas->apData[0]);
-            if (pDatas->apData[1])
-                PS2glLiberator((void*)pDatas->apData[1]);
-            if (pDatas->apData[2])
-                PS2glLiberator((void*)pDatas->apData[2]);
-            PS2glLiberator(pDatas);
-            pDatas = pNextDatas;
-        }
-        while (pPrimBuf)
-        {
-            pNext = pPrimBuf->pNext;
-            if (pPrimBuf->pCode)
-                PS2glLiberator((void*)pPrimBuf->pCode);
-            if (pPrimBuf->pData)
-                PS2glLiberator(pPrimBuf->pData);
-            PS2glLiberator(pPrimBuf);
-            pPrimBuf = pNext;
-        }
-        PS2glLiberator(pDataOfList);
-    }
-}
-
-void* PS2glListSaveParamSpace(int cbParam)
-{
-    tagGLlistdatas* pDatas;
-    tagGLlistdatas* pCurDatas;
-    void* pBuf;
-
-    pBuf = PS2glAllocator(cbParam);
-    pDatas = g_PS2glContext.pCurListData->pDatas;
-    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
-    {
-        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
-        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
-        pCurDatas->apData[0] = (int)pBuf;
-        pCurDatas->pNext = pDatas;
-        g_PS2glContext.pCurListData->pDatas = pCurDatas;
-    }
-    else if (pDatas->apData[1] == 0)
-    {
-        pDatas->apData[1] = (int)pBuf;
-    }
-    else
-    {
-        pDatas->apData[2] = (int)pBuf;
-    }
-    return pBuf;
-}
-
-void* PS2glListSaveParam(void* pParam, int cbParam)
-{
-    tagGLlistdatas* pDatas;
-    tagGLlistdatas* pCurDatas;
-    void* pBuf;
-
-    pBuf = PS2glAllocator(cbParam);
-    pDatas = g_PS2glContext.pCurListData->pDatas;
-    memcpy(pBuf, pParam, cbParam);
-    if ((pDatas == NULL) || (pDatas->apData[2] != 0))
-    {
-        pCurDatas = (tagGLlistdatas*)PS2glAllocator(16);
-        pCurDatas->apData[1] = pCurDatas->apData[2] = 0;
-        pCurDatas->apData[0] = (int)pBuf;
-        pCurDatas->pNext = pDatas;
-        g_PS2glContext.pCurListData->pDatas = pCurDatas;
-    }
-    else if (pDatas->apData[1] == 0)
-    {
-        pDatas->apData[1] = (int)pBuf;
-    }
-    else
-    {
-        pDatas->apData[2] = (int)pBuf;
-    }
-    return pBuf;
-}
-
-tagGLlistnode* PS2glListAllocNode(int cbParams)
-{
-    tagGLlistcalls* pCurCalls = g_PS2glContext.pCurListCalls;
-    tagGLlistnode* param0;
-    int cbNode;
-    int cbTotal;
-
-    cbNode = cbParams + 8;
-    cbParams -= cbNode;
-    cbTotal = (cbNode + 3) & ~3;
-    cbParams += cbTotal;
-    if ((pCurCalls == NULL) || (pCurCalls->cbCalls + cbTotal > 0x400))
-    {
-        pCurCalls = (tagGLlistcalls*)PS2glAllocator(0x408);
-        if (g_PS2glContext.pCurListCalls == NULL)
-        {
-            g_PS2glContext.pCurListData->pCalls = pCurCalls;
-        }
-        else
-        {
-            g_PS2glContext.pCurListCalls->pNext = pCurCalls;
-            g_PS2glContext.pPreListCalls = g_PS2glContext.pCurListCalls;
-        }
-        g_PS2glContext.pCurListCalls = pCurCalls;
-        pCurCalls->cbCalls = 0;
-        pCurCalls->pNext = 0;
-    }
-    cbNode = pCurCalls->cbCalls;
-    param0 = (tagGLlistnode*)((int)pCurCalls->aNodes + cbNode);
-    param0->cbParamCount = cbParams;
-    pCurCalls->cbCalls += cbTotal;
-    return param0;
-}
-
-void PS2glSaveListCallMultiTex(unsigned int eCode, unsigned int texture, float (*pData)[4])
-{
-    if (g_PS2glListVBuf.nCount >= 256)
-        PS2glListSaveVBuf(0);
-    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
-    *g_PS2glContext.pCurListTexUnit++ = texture;
-    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
-    g_PS2glListVBuf.nCount++;
-}
-
-void PS2glSaveListCall(unsigned int eCode, float (*pData)[4])
-{
-    if (g_PS2glListVBuf.nCount >= 256)
-        PS2glListSaveVBuf(0);
-    *g_PS2glContext.pCurListVCode++ = (unsigned char)eCode;
-    *g_PS2glContext.pCurListTexUnit++ = 0;
-    *(quad*)g_PS2glContext.pCurListVData++ = *(quad*)pData;
-    g_PS2glListVBuf.nCount++;
-}
-
-void PS2glListSaveVBuf(unsigned char EOP)
-{
-    tagGLprimbuf* pBuf;
-
-    if (g_PS2glContext.bInBeginEndPair && g_PS2glListVBuf.nCount)
-    {
-        pBuf = (tagGLprimbuf*)PS2glAllocator(sizeof(tagGLprimbuf));
-        memset(pBuf, 0, sizeof(tagGLprimbuf));
-        pBuf->nCount = g_PS2glListVBuf.nCount;
-        pBuf->pCode = (int)PS2glAllocator(g_PS2glListVBuf.nCount);
-        pBuf->pData = (float (*)[4])PS2glAllocator(g_PS2glListVBuf.nCount * 16);
-        memcpy((void*)pBuf->pCode, g_PS2glListVBuf.abCode, g_PS2glListVBuf.nCount);
-        memcpy(pBuf->pData, g_PS2glListVBuf.avData, g_PS2glListVBuf.nCount * 16);
-        pBuf->pTexUnit = (int)PS2glAllocator(g_PS2glListVBuf.nCount * 4);
-        memcpy((void*)pBuf->pTexUnit, g_PS2glListVBuf.aeTexUnit, g_PS2glListVBuf.nCount * 4);
-        PS2glAddPrimBuffer(pBuf, EOP);
-    }
-    g_PS2glListVBuf.nCount = 0;
-    g_PS2glContext.pCurListVCode = g_PS2glListVBuf.abCode;
-    g_PS2glContext.pCurListVData = g_PS2glListVBuf.avData;
-    g_PS2glContext.pCurListTexUnit = (int*)g_PS2glListVBuf.aeTexUnit;
-}
-
-void PS2glResetPrimBuffer(void)
-{
-    g_PS2glContext.pVBuf = g_PS2glContext.pVBuf0;
-    g_PS2glContext.pNBuf = g_PS2glContext.pNBuf0;
-    g_PS2glContext.pCBuf = g_PS2glContext.pCBuf0;
-    g_PS2glContext.pTBuf = g_PS2glContext.pTBuf0;
-    g_PS2glContext.pCBuf_b = g_PS2glContext.pCBuf0_b;
-    g_PS2glContext.pTBuf_b = g_PS2glContext.pTBuf0_b;
-    g_PS2glContext.iBufCount = 0;
-}
-
-void PS2glListAssembleQuads(void)
-{
-    float (*pV1)[4];
-    float (*param0)[4];
-    float (*pC1)[4];
-    float (*pT1)[4];
-    float (*pC1_b)[4];
-    float (*pT1_b)[4];
-    int iQuadCount;
-    int I;
-    float (*pV)[4];
-    float (*pN)[4];
-    float (*pC)[4];
-    float (*pT)[4];
-    float (*pC_b)[4];
-    float (*pT_b)[4];
-
-    iQuadCount = g_PS2glContext.iBufCount >> 2;
-    pV = g_PS2glContext.pVBuf0;
-    pN = g_PS2glContext.pNBuf0;
-    pC = g_PS2glContext.pCBuf0;
-    pT = g_PS2glContext.pTBuf0;
-    pC_b = g_PS2glContext.pCBuf0_b;
-    pT_b = g_PS2glContext.pTBuf0_b;
-    pV1 = pV + iQuadCount * 6;
-    param0 = pN + iQuadCount * 6;
-    pC1 = pC + iQuadCount * 6;
-    pT1 = pT + iQuadCount * 6;
-    pC1_b = pC_b + iQuadCount * 6;
-    pT1_b = pT_b + iQuadCount * 6;
-    pV += g_PS2glContext.iBufCount;
-    pN += g_PS2glContext.iBufCount;
-    pC += g_PS2glContext.iBufCount;
-    pT += g_PS2glContext.iBufCount;
-    pC_b += g_PS2glContext.iBufCount;
-    pT_b += g_PS2glContext.iBufCount;
-    for (I = 0; I < iQuadCount; I++)
-    {
-        *(quad*)(pV1 - 1) = *(quad*)(pV - 1);
-        *(quad*)(pV1 - 2) = *(quad*)(pV - 2);
-        *(quad*)(pV1 - 4) = *(quad*)(pV - 1);
-        *(quad*)(pV1 - 3) = *(quad*)(pV - 3);
-        *(quad*)(pV1 - 5) = *(quad*)(pV - 3);
-        *(quad*)(pV1 - 6) = *(quad*)(pV - 4);
-        if (g_PS2glContext.nLightBits & 0x400)
-        {
-            *(quad*)(param0 - 1) = *(quad*)(pN - 1);
-            *(quad*)(param0 - 2) = *(quad*)(pN - 2);
-            *(quad*)(param0 - 4) = *(quad*)(pN - 1);
-            *(quad*)(param0 - 3) = *(quad*)(pN - 3);
-            *(quad*)(param0 - 5) = *(quad*)(pN - 3);
-            *(quad*)(param0 - 6) = *(quad*)(pN - 4);
-        }
-        else
-        {
-            *(quad*)(pC1 - 1) = *(quad*)(pC - 1);
-            *(quad*)(pC1 - 2) = *(quad*)(pC - 2);
-            *(quad*)(pC1 - 4) = *(quad*)(pC - 1);
-            *(quad*)(pC1 - 3) = *(quad*)(pC - 3);
-            *(quad*)(pC1 - 5) = *(quad*)(pC - 3);
-            *(quad*)(pC1 - 6) = *(quad*)(pC - 4);
-            *(quad*)(pC1_b - 1) = *(quad*)(pC_b - 1);
-            *(quad*)(pC1_b - 2) = *(quad*)(pC_b - 2);
-            *(quad*)(pC1_b - 4) = *(quad*)(pC_b - 1);
-            *(quad*)(pC1_b - 3) = *(quad*)(pC_b - 3);
-            *(quad*)(pC1_b - 5) = *(quad*)(pC_b - 3);
-            *(quad*)(pC1_b - 6) = *(quad*)(pC_b - 4);
-        }
-        *(quad*)(pT1 - 1) = *(quad*)(pT - 1);
-        *(quad*)(pT1 - 2) = *(quad*)(pT - 2);
-        *(quad*)(pT1 - 4) = *(quad*)(pT - 1);
-        *(quad*)(pT1 - 3) = *(quad*)(pT - 3);
-        *(quad*)(pT1 - 5) = *(quad*)(pT - 3);
-        *(quad*)(pT1 - 6) = *(quad*)(pT - 4);
-        *(quad*)(pT1_b - 1) = *(quad*)(pT_b - 1);
-        *(quad*)(pT1_b - 2) = *(quad*)(pT_b - 2);
-        *(quad*)(pT1_b - 4) = *(quad*)(pT_b - 1);
-        *(quad*)(pT1_b - 3) = *(quad*)(pT_b - 3);
-        *(quad*)(pT1_b - 5) = *(quad*)(pT_b - 3);
-        *(quad*)(pT1_b - 6) = *(quad*)(pT_b - 4);
-        pV1 -= 6;
-        param0 -= 6;
-        pC1 -= 6;
-        pT1 -= 6;
-        pC1_b -= 6;
-        pT1_b -= 6;
-        pV -= 4;
-        pN -= 4;
-        pC -= 4;
-        pT -= 4;
-        pC_b -= 4;
-        pT_b -= 4;
-    }
-    g_PS2glContext.iBufCount = iQuadCount * 6;
-}
-
-void PS2glComputeBS(float* pfvBS, float (*pV)[4], int iCount, float* pBB, unsigned char bDivQ)
-{
-    int i;
-    float fNX;
-    float fPX;
-    float fNY;
-    float fPY;
-    float fNZ;
-    float fPZ;
-    float fTemp;
-    float fQ;
-    float fWidth;
-    float fHeight;
-    float fDepth;
-
-    if (!bDivQ)
-    {
-        fPX = (*pV)[0];
-        fPY = (*pV)[1];
-        fPZ = (*pV)[2];
-        fNX = fPX;
-        fNY = fPY;
-        fNZ = fPZ;
-        pV++;
-        for (i = 1; i < iCount; i++)
-        {
-            fTemp = (*pV)[0];
-            if (fTemp < fNX)
-                fNX = fTemp;
-            else if (fTemp > fPX)
-                fPX = fTemp;
-            fTemp = (*pV)[1];
-            if (fTemp < fNY)
-                fNY = fTemp;
-            else if (fTemp > fPY)
-                fPY = fTemp;
-            fTemp = (*pV)[2];
-            if (fTemp < fNZ)
-                fNZ = fTemp;
-            else if (fTemp > fPZ)
-                fPZ = fTemp;
-            pV++;
-        }
-    }
-    else
-    {
-        fQ = 1.0f / (*pV)[3];
-        fPX = (*pV)[0] * fQ;
-        fPY = (*pV)[1] * fQ;
-        fPZ = (*pV)[2] * fQ;
-        fNX = fPX;
-        fNY = fPY;
-        fNZ = fPZ;
-        pV++;
-        for (i = 1; i < iCount; i++)
-        {
-            fQ = 1.0f / (*pV)[3];
-            fTemp = (*pV)[0] * fQ;
-            if (fTemp < fNX)
-                fNX = fTemp;
-            else if (fTemp > fPX)
-                fPX = fTemp;
-            fTemp = (*pV)[1] * fQ;
-            if (fTemp < fNY)
-                fNY = fTemp;
-            else if (fTemp > fPY)
-                fPY = fTemp;
-            fTemp = (*pV)[2] * fQ;
-            if (fTemp < fNZ)
-                fNZ = fTemp;
-            else if (fTemp > fPZ)
-                fPZ = fTemp;
-            pV++;
-        }
-    }
-    fWidth = 0.5f * (fPX - fNX);
-    fHeight = 0.5f * (fPY - fNY);
-    fDepth = 0.5f * (fPZ - fNZ);
-    if (pBB)
-    {
-        pBB[0] = fNX;
-        pBB[1] = fPX;
-        pBB[2] = fNY;
-        pBB[3] = fPY;
-        pBB[4] = fNZ;
-        pBB[5] = fPZ;
-    }
-    pfvBS[0] = fNX + fWidth;
-    pfvBS[1] = fNY + fHeight;
-    pfvBS[2] = fNZ + fDepth;
-    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
-}
-
-void PS2glMergeBB(float* pDstBB, float* pSrcBB)
-{
-    int i;
-
-    if (pSrcBB)
-    {
-        for (i = 0; i < 3; i++, pDstBB += 2)
-        {
-            if (pDstBB[0] > pSrcBB[0])
-                pDstBB[0] = pSrcBB[0];
-            if (pDstBB[1] < pSrcBB[1])
-                pDstBB[1] = pSrcBB[1];
-            pSrcBB += 2;
-        }
-    }
-    else
-    {
-        pDstBB[0] = 16777215.0f;
-        /* The retail line table gives the last five stores one source line;
-           keeping them together reproduces its DWARF line entries. */
-        pDstBB[1] = -16777215.0f; pDstBB[2] = 16777215.0f; pDstBB[3] = -16777215.0f; pDstBB[4] = 16777215.0f; pDstBB[5] = -16777215.0f;
-    }
-}
-
-void PS2glComputeBSfromBB(float* pfvBS, float* pBB)
-{
-    float* pfFirst;
-    float fHeight;
-    float fDepth;
-    float fWidth;
-
-    /* Not original source, needs cleaning up: found by the permuter. Reading
-       pBB[0] through a pointer local swaps the f5/f6 temporaries as retail has them. */
-    fWidth = 0.5f * (pBB[1] - (*(pfFirst = &pBB[0])));
-    fHeight = 0.5f * (pBB[3] - pBB[2]);
-    fDepth = 0.5f * (pBB[5] - pBB[4]);
-    pfvBS[0] = pBB[0] + fWidth;
-    pfvBS[1] = pBB[2] + fHeight;
-    pfvBS[2] = pBB[4] + fDepth;
-    pfvBS[3] = PS2gl_xSqrt(g_fBSMultiplicator * (fWidth * fWidth + fHeight * fHeight + fDepth * fDepth));
-}
-
 void PS2glListSaveBuffer(unsigned char EOP)
 {
     unsigned int cbPartSize;
@@ -4518,6 +3852,26 @@ void PS2glListSaveBuffer(unsigned char EOP)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1446–1480 */
+/* addr: 0x00152630  size: 136 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1446
+ *   +0x0004 -> line 1447
+ *   +0x0014 -> line 1450
+ *   +0x001c -> line 1453
+ *   +0x0030 -> line 1454
+ *   +0x0038 -> line 1456
+ *   +0x0044 -> line 1457
+ *   +0x004c -> line 1460
+ *   +0x0050 -> line 1462
+ *   +0x0060 -> line 1466
+ *   +0x0068 -> line 1469
+ *   +0x006c -> line 1475
+ *   +0x0074 -> line 1478
+ *   +0x0080 -> line 1480
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
 {
     pBuf->bEOP = EOP;
@@ -4546,6 +3900,28 @@ void PS2glAddPrimBuffer(tagGLprimbuf* pBuf, unsigned char EOP)
         g_PS2glContext.pCurListData->pPrimBufTail = pBuf;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1498–1528 */
+/* addr: 0x00152590  size: 160 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1498
+ *   +0x0004 -> line 1505
+ *   +0x000c -> line 1511
+ *   +0x0024 -> line 1507
+ *   +0x0028 -> line 1511
+ *   +0x0030 -> line 1513
+ *   +0x003c -> line 1515
+ *   +0x0058 -> line 1518
+ *   +0x005c -> line 1519
+ *   +0x0060 -> line 1520
+ *   +0x0064 -> line 1521
+ *   +0x0068 -> line 1522
+ *   +0x006c -> line 1523
+ *   +0x0088 -> line 1524
+ *   +0x008c -> line 1525
+ *   +0x0098 -> line 1528
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PS2glCountListObject(tagListData* pData)
 {
     tagGLlistcalls* pCalls;
@@ -4583,6 +3959,30 @@ int PS2glCountListObject(tagListData* pData)
     return iCount;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1531–1570 */
+/* addr: 0x001524d0  size: 192 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1531
+ *   +0x0004 -> line 1547
+ *   +0x0008 -> line 1531
+ *   +0x000c -> line 1547
+ *   +0x0010 -> line 1531
+ *   +0x001c -> line 1540
+ *   +0x0020 -> line 1549
+ *   +0x0028 -> line 1551
+ *   +0x002c -> line 1555
+ *   +0x0038 -> line 1557
+ *   +0x0068 -> line 1561
+ *   +0x0070 -> line 1562
+ *   +0x0074 -> line 1563
+ *   +0x0078 -> line 1564
+ *   +0x0090 -> line 1566
+ *   +0x0094 -> line 1567
+ *   +0x00a0 -> line 1569
+ *   +0x00a8 -> line 1570
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glExecuteListData(tagListData* pData)
 {
     unsigned int cbNode;
@@ -4608,16 +4008,49 @@ void PS2glExecuteListData(tagListData* pData)
     g_PS2glContext.bInDisplayListExecution = 0;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1578–1579 */
+/* addr: 0x001524c0  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1578
+ *   +0x0004 -> line 1579
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glListBase(unsigned int base)
 {
     g_PS2glContext.uiListBase = base;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1582–1584 */
+/* addr: 0x001524a0  size: 32 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1582
+ *   +0x0008 -> line 1583
+ *   +0x0010 -> line 1584
+ *   +0x0014 -> line 1583
+ *   +0x0018 -> line 1584
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char impPS2glIsList(unsigned int list)
 {
     return PS2glSearchList(list) != 0;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1596–1601 */
+/* addr: 0x00152440  size: 96 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1596
+ *   +0x0004 -> line 1597
+ *   +0x0008 -> line 1596
+ *   +0x0018 -> line 1597
+ *   +0x001c -> line 1598
+ *   +0x0038 -> line 1600
+ *   +0x003c -> line 1599
+ *   +0x004c -> line 1601
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int impPS2glGenLists(int range)
 {
     unsigned int nIndex;
@@ -4629,6 +4062,70 @@ unsigned int impPS2glGenLists(int range)
     return nIndex;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1604–1695 */
+/* addr: 0x001521e0  size: 600 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1604
+ *   +0x0004 -> line 1606
+ *   +0x0008 -> line 1604
+ *   +0x0024 -> line 1605
+ *   +0x0028 -> line 1604
+ *   +0x002c -> line 1605
+ *   +0x0030 -> line 1604
+ *   +0x0034 -> line 1607
+ *   +0x0038 -> line 1606
+ *   +0x003c -> line 1610
+ *   +0x0044 -> line 1612
+ *   +0x0050 -> line 1614
+ *   +0x0054 -> line 1616
+ *   +0x0060 -> line 1618
+ *   +0x0068 -> line 1619
+ *   +0x006c -> line 1621
+ *   +0x0074 -> line 1623
+ *   +0x0084 -> line 1624
+ *   +0x0088 -> line 1626
+ *   +0x0090 -> line 1628
+ *   +0x00b4 -> line 1633
+ *   +0x00b8 -> line 1631
+ *   +0x00bc -> line 1632
+ *   +0x00c8 -> line 1633
+ *   +0x00d4 -> line 1634
+ *   +0x00e4 -> line 1635
+ *   +0x00e8 -> line 1637
+ *   +0x00f0 -> line 1639
+ *   +0x0100 -> line 1642
+ *   +0x0108 -> line 1644
+ *   +0x010c -> line 1645
+ *   +0x0110 -> line 1646
+ *   +0x0118 -> line 1645
+ *   +0x0120 -> line 1646
+ *   +0x012c -> line 1647
+ *   +0x0130 -> line 1649
+ *   +0x013c -> line 1652
+ *   +0x0140 -> line 1653
+ *   +0x0158 -> line 1656
+ *   +0x0160 -> line 1657
+ *   +0x0180 -> line 1659
+ *   +0x018c -> line 1663
+ *   +0x0190 -> line 1664
+ *   +0x0198 -> line 1665
+ *   +0x01b8 -> line 1666
+ *   +0x01c0 -> line 1669
+ *   +0x01cc -> line 1672
+ *   +0x01d4 -> line 1675
+ *   +0x01dc -> line 1677
+ *   +0x01ec -> line 1680
+ *   +0x01f4 -> line 1683
+ *   +0x0200 -> line 1685
+ *   +0x020c -> line 1688
+ *   +0x0218 -> line 1690
+ *   +0x0220 -> line 1692
+ *   +0x0224 -> line 1693
+ *   +0x0228 -> line 1694
+ *   +0x0230 -> line 1695
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glDeleteLists(unsigned int list, int range)
 {
     tagListNodeSingle* pSingleIndex;
@@ -4721,6 +4218,21 @@ void impPS2glDeleteLists(unsigned int list, int range)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1702–1718 */
+/* addr: 0x00152180  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1702
+ *   +0x0004 -> line 1708
+ *   +0x0008 -> line 1702
+ *   +0x0010 -> line 1703
+ *   +0x0018 -> line 1710
+ *   +0x0024 -> line 1712
+ *   +0x002c -> line 1715
+ *   +0x0034 -> line 1717
+ *   +0x0044 -> line 1718
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glPartialDeleteLists(unsigned int list)
 {
     int I;
@@ -4738,6 +4250,77 @@ void impPS2glPartialDeleteLists(unsigned int list)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1722–1783 */
+/* addr: 0x00151fb0  size: 464 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1722
+ *   +0x0018 -> line 1723
+ *   +0x0020 -> line 1727
+ *   +0x0024 -> line 1723
+ *   +0x0028 -> line 1727
+ *   +0x0038 -> line 1728
+ *   +0x0040 -> line 1730
+ *   +0x0048 -> line 1732
+ *   +0x0058 -> line 1735
+ *   +0x0064 -> line 1736
+ *   +0x006c -> line 1738
+ *   +0x007c -> line 1739
+ *   +0x0080 -> line 1738
+ *   +0x0084 -> line 1739
+ *   +0x0090 -> line 1743
+ *   +0x0094 -> line 1751
+ *   +0x0098 -> line 1743
+ *   +0x009c -> line 1751
+ *   +0x00a0 -> line 1744
+ *   +0x00a4 -> line 1751
+ *   +0x00a8 -> line 1744
+ *   +0x00ac -> line 1751
+ *   +0x00b0 -> line 1745
+ *   +0x00b4 -> line 1755
+ *   +0x00b8 -> line 1745
+ *   +0x00bc -> line 1751
+ *   +0x00c8 -> line 1755
+ *   +0x00cc -> line 1757
+ *   +0x00d8 -> line 1751
+ *   +0x00e0 -> line 1755
+ *   +0x00e8 -> line 1757
+ *   +0x00f0 -> line 1751
+ *   +0x00f4 -> line 1757
+ *   +0x00f8 -> line 1751
+ *   +0x00fc -> line 1757
+ *   +0x0104 -> line 1763
+ *   +0x0108 -> line 1751
+ *   +0x010c -> line 1755
+ *   +0x0114 -> line 1757
+ *   +0x0124 -> line 1759
+ *   +0x0128 -> line 1763
+ *   +0x0138 -> line 1764
+ *   +0x0140 -> line 1771
+ *   +0x0144 -> line 1765
+ *   +0x0148 -> line 1772
+ *   +0x014c -> line 1774
+ *   +0x0150 -> line 1771
+ *   +0x0154 -> line 1772
+ *   +0x0158 -> line 1774
+ *   +0x015c -> line 1777
+ *   +0x0160 -> line 1765
+ *   +0x0164 -> line 1766
+ *   +0x0170 -> line 1767
+ *   +0x017c -> line 1771
+ *   +0x0184 -> line 1772
+ *   +0x018c -> line 1774
+ *   +0x0194 -> line 1770
+ *   +0x019c -> line 1777
+ *   +0x01a0 -> line 1779
+ *   +0x01a4 -> line 1782
+ *   +0x01a8 -> line 1779
+ *   +0x01ac -> line 1782
+ *   +0x01b0 -> line 1779
+ *   +0x01b4 -> line 1782
+ *   +0x01b8 -> line 1783
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glNewList(unsigned int list, unsigned int mode)
 {
     tagListData* pData;
@@ -4780,6 +4363,120 @@ void impPS2glNewList(unsigned int list, unsigned int mode)
     g_PS2glContext.bFinalCompile = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1789–1966 */
+/* addr: 0x00151b20  size: 1168 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1789
+ *   +0x0004 -> line 1791
+ *   +0x0008 -> line 1789
+ *   +0x0020 -> line 1791
+ *   +0x0024 -> line 1799
+ *   +0x0028 -> line 1792
+ *   +0x002c -> line 1791
+ *   +0x0034 -> line 1799
+ *   +0x003c -> line 1802
+ *   +0x0044 -> line 1805
+ *   +0x0058 -> line 1806
+ *   +0x0060 -> line 1808
+ *   +0x0068 -> line 1812
+ *   +0x0074 -> line 1813
+ *   +0x007c -> line 1814
+ *   +0x008c -> line 1815
+ *   +0x0094 -> line 1817
+ *   +0x00a4 -> line 1820
+ *   +0x00b0 -> line 1821
+ *   +0x00b4 -> line 1820
+ *   +0x00b8 -> line 1821
+ *   +0x00bc -> line 1820
+ *   +0x00c0 -> line 1821
+ *   +0x00c4 -> line 1820
+ *   +0x00c8 -> line 1821
+ *   +0x00d0 -> line 1826
+ *   +0x00d4 -> line 1821
+ *   +0x00d8 -> line 1826
+ *   +0x00dc -> line 1829
+ *   +0x00e0 -> line 1830
+ *   +0x00e4 -> line 1835
+ *   +0x00e8 -> line 1830
+ *   +0x00f0 -> line 1829
+ *   +0x00f4 -> line 1830
+ *   +0x00f8 -> line 1835
+ *   +0x0100 -> line 1836
+ *   +0x0108 -> line 1838
+ *   +0x0130 -> line 1849
+ *   +0x0140 -> line 1851
+ *   +0x0160 -> line 1853
+ *   +0x0168 -> line 1851
+ *   +0x0188 -> line 1854
+ *   +0x01a0 -> line 1855
+ *   +0x01b8 -> line 1857
+ *   +0x01d0 -> line 1858
+ *   +0x01fc -> line 1860
+ *   +0x0204 -> line 1861
+ *   +0x0274 -> line 1883
+ *   +0x0278 -> line 1886
+ *   +0x0280 -> line 1893
+ *   +0x0284 -> line 1887
+ *   +0x0288 -> line 1894
+ *   +0x028c -> line 1887
+ *   +0x0294 -> line 1889
+ *   +0x029c -> line 1890
+ *   +0x02a4 -> line 1893
+ *   +0x02b4 -> line 1894
+ *   +0x02bc -> line 1895
+ *   +0x02c0 -> line 1907
+ *   +0x02c4 -> line 1895
+ *   +0x02c8 -> line 1907
+ *   +0x02cc -> line 1904
+ *   +0x02d0 -> line 1907
+ *   +0x02d8 -> line 1906
+ *   +0x02dc -> line 1907
+ *   +0x02e0 -> line 1904
+ *   +0x02e8 -> line 1906
+ *   +0x02ec -> line 1907
+ *   +0x02fc -> line 1908
+ *   +0x030c -> line 1909
+ *   +0x031c -> line 1914
+ *   +0x0320 -> line 1911
+ *   +0x0324 -> line 1912
+ *   +0x0328 -> line 1913
+ *   +0x032c -> line 1914
+ *   +0x0330 -> line 1915
+ *   +0x0338 -> line 1916
+ *   +0x0340 -> line 1924
+ *   +0x0358 -> line 1926
+ *   +0x0378 -> line 1928
+ *   +0x039c -> line 1934
+ *   +0x03a0 -> line 1932
+ *   +0x03a4 -> line 1934
+ *   +0x03b0 -> line 1936
+ *   +0x03b8 -> line 1938
+ *   +0x03bc -> line 1939
+ *   +0x03d0 -> line 1940
+ *   +0x03dc -> line 1942
+ *   +0x03e0 -> line 1941
+ *   +0x03e4 -> line 1942
+ *   +0x03ec -> line 1944
+ *   +0x03f0 -> line 1946
+ *   +0x03f4 -> line 1944
+ *   +0x03fc -> line 1945
+ *   +0x0400 -> line 1946
+ *   +0x0410 -> line 1947
+ *   +0x041c -> line 1948
+ *   +0x0428 -> line 1949
+ *   +0x0430 -> line 1952
+ *   +0x0438 -> line 1956
+ *   +0x0440 -> line 1958
+ *   +0x0450 -> line 1959
+ *   +0x0458 -> line 1962
+ *   +0x045c -> line 1961
+ *   +0x0460 -> line 1962
+ *   +0x0464 -> line 1965
+ *   +0x0468 -> line 1963
+ *   +0x0470 -> line 1966
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int PS2glComposeStaticDisplayList(tagListData* pListData)
 {
     int i;
@@ -4897,6 +4594,43 @@ int PS2glComposeStaticDisplayList(tagListData* pListData)
     return 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 1971–2023 */
+/* addr: 0x001519e0  size: 316 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1971
+ *   +0x0004 -> line 1973
+ *   +0x0008 -> line 1971
+ *   +0x000c -> line 1973
+ *   +0x0018 -> line 1975
+ *   +0x0024 -> line 1976
+ *   +0x002c -> line 1979
+ *   +0x0030 -> line 1980
+ *   +0x0048 -> line 1983
+ *   +0x0054 -> line 1989
+ *   +0x005c -> line 1990
+ *   +0x006c -> line 1992
+ *   +0x0078 -> line 1995
+ *   +0x007c -> line 1998
+ *   +0x009c -> line 2002
+ *   +0x00a4 -> line 2003
+ *   +0x00ac -> line 2009
+ *   +0x00b0 -> line 2006
+ *   +0x00b4 -> line 2009
+ *   +0x00b8 -> line 2006
+ *   +0x00bc -> line 2011
+ *   +0x00c0 -> line 2006
+ *   +0x00c4 -> line 2011
+ *   +0x00e0 -> line 2014
+ *   +0x00ec -> line 2015
+ *   +0x00fc -> line 2017
+ *   +0x0104 -> line 2018
+ *   +0x010c -> line 2019
+ *   +0x0120 -> line 2020
+ *   +0x0128 -> line 2022
+ *   +0x0130 -> line 2023
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glEndList(void)
 {
     tagGLlistcalls* pCalls;
@@ -4937,6 +4671,47 @@ void impPS2glEndList(void)
     g_PS2glContext.pCurListData = NULL;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2026–2102 */
+/* addr: 0x00151880  size: 348 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2026
+ *   +0x001c -> line 2030
+ *   +0x0024 -> line 2062
+ *   +0x0034 -> line 2064
+ *   +0x003c -> line 2067
+ *   +0x0050 -> line 2069
+ *   +0x005c -> line 2071
+ *   +0x0064 -> line 2074
+ *   +0x0068 -> line 2075
+ *   +0x0070 -> line 2076
+ *   +0x0078 -> line 2078
+ *   +0x008c -> line 2079
+ *   +0x009c -> line 2080
+ *   +0x00a0 -> line 2081
+ *   +0x00a4 -> line 2082
+ *   +0x00ac -> line 2085
+ *   +0x00b0 -> line 2088
+ *   +0x00b4 -> line 2085
+ *   +0x00b8 -> line 2088
+ *   +0x00c8 -> line 2089
+ *   +0x00d8 -> line 2092
+ *   +0x00dc -> line 2090
+ *   +0x00e4 -> line 2093
+ *   +0x00e8 -> line 2092
+ *   +0x00ec -> line 2090
+ *   +0x00f0 -> line 2093
+ *   +0x00fc -> line 2094
+ *   +0x010c -> line 2095
+ *   +0x0110 -> line 2096
+ *   +0x0118 -> line 2098
+ *   +0x011c -> line 2100
+ *   +0x0120 -> line 2098
+ *   +0x0128 -> line 2099
+ *   +0x012c -> line 2100
+ *   +0x0140 -> line 2102
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glSDLInstancing(unsigned int* pIDs)
 {
     unsigned int uiRealSize;
@@ -4981,6 +4756,34 @@ void PS2glSDLInstancing(unsigned int* pIDs)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2106–2137 */
+/* addr: 0x00151710  size: 360 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2106
+ *   +0x0004 -> line 2111
+ *   +0x0008 -> line 2106
+ *   +0x0010 -> line 2111
+ *   +0x0014 -> line 2108
+ *   +0x0018 -> line 2111
+ *   +0x0020 -> line 2112
+ *   +0x0028 -> line 2116
+ *   +0x0044 -> line 2118
+ *   +0x004c -> line 2116
+ *   +0x006c -> line 2119
+ *   +0x007c -> line 2120
+ *   +0x0090 -> line 2122
+ *   +0x00a0 -> line 2123
+ *   +0x00c8 -> line 2125
+ *   +0x00d0 -> line 2126
+ *   +0x0130 -> line 2129
+ *   +0x013c -> line 2130
+ *   +0x0140 -> line 2129
+ *   +0x0148 -> line 2130
+ *   +0x0154 -> line 2135
+ *   +0x0158 -> line 2137
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glReinitAfterSDLs(void)
 {
     int i;
@@ -5007,6 +4810,81 @@ void PS2glReinitAfterSDLs(void)
     pctx->bTexCubeChanged = 1;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2140–2248 */
+/* addr: 0x00151330  size: 992 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2140
+ *   +0x0018 -> line 2144
+ *   +0x001c -> line 2142
+ *   +0x0020 -> line 2144
+ *   +0x002c -> line 2147
+ *   +0x003c -> line 2149
+ *   +0x004c -> line 2151
+ *   +0x0050 -> line 2152
+ *   +0x0058 -> line 2153
+ *   +0x0060 -> line 2154
+ *   +0x0068 -> line 2157
+ *   +0x0080 -> line 2159
+ *   +0x009c -> line 2160
+ *   +0x00ac -> line 2162
+ *   +0x00c4 -> line 2163
+ *   +0x00d4 -> line 2164
+ *   +0x00ec -> line 2165
+ *   +0x00f8 -> line 2167
+ *   +0x0104 -> line 2168
+ *   +0x0120 -> line 2169
+ *   +0x0130 -> line 2170
+ *   +0x0148 -> line 2171
+ *   +0x0154 -> line 2172
+ *   +0x0160 -> line 2181
+ *   +0x0170 -> line 2183
+ *   +0x0180 -> line 2184
+ *   +0x0188 -> line 2185
+ *   +0x0190 -> line 2188
+ *   +0x019c -> line 2189
+ *   +0x01a4 -> line 2191
+ *   +0x01b0 -> line 2195
+ *   +0x01c4 -> line 2197
+ *   +0x01d4 -> line 2198
+ *   +0x01dc -> line 2199
+ *   +0x01e0 -> line 2201
+ *   +0x01e4 -> line 2199
+ *   +0x01ec -> line 2200
+ *   +0x01f0 -> line 2201
+ *   +0x01f4 -> line 2202
+ *   +0x01fc -> line 2203
+ *   +0x0204 -> line 2205
+ *   +0x0208 -> line 2206
+ *   +0x0210 -> line 2209
+ *   +0x021c -> line 2211
+ *   +0x0220 -> line 2213
+ *   +0x0234 -> line 2214
+ *   +0x023c -> line 2215
+ *   +0x024c -> line 2216
+ *   +0x0250 -> line 2217
+ *   +0x0254 -> line 2216
+ *   +0x0258 -> line 2217
+ *   +0x0264 -> line 2221
+ *   +0x0274 -> line 2222
+ *   +0x0288 -> line 2224
+ *   +0x0298 -> line 2227
+ *   +0x02b4 -> line 2229
+ *   +0x02bc -> line 2227
+ *   +0x02dc -> line 2230
+ *   +0x02ec -> line 2231
+ *   +0x0300 -> line 2233
+ *   +0x0310 -> line 2234
+ *   +0x0338 -> line 2236
+ *   +0x0340 -> line 2237
+ *   +0x03a0 -> line 2240
+ *   +0x03ac -> line 2241
+ *   +0x03b0 -> line 2240
+ *   +0x03b8 -> line 2241
+ *   +0x03c4 -> line 2246
+ *   +0x03c8 -> line 2248
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2glCallSDL(tagListData* pListData)
 {
     _sceDmaTag* pDmaTag;
@@ -5115,6 +4993,70 @@ void PS2glCallSDL(tagListData* pListData)
     }
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2251–2358 */
+/* addr: 0x00151130  size: 512 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2251
+ *   +0x001c -> line 2254
+ *   +0x0028 -> line 2256
+ *   +0x0030 -> line 2258
+ *   +0x0034 -> line 2259
+ *   +0x0040 -> line 2260
+ *   +0x0048 -> line 2263
+ *   +0x0050 -> line 2265
+ *   +0x0054 -> line 2267
+ *   +0x005c -> line 2272
+ *   +0x0060 -> line 2274
+ *   +0x0064 -> line 2272
+ *   +0x0068 -> line 2276
+ *   +0x006c -> line 2273
+ *   +0x0070 -> line 2279
+ *   +0x0074 -> line 2270
+ *   +0x0078 -> line 2280
+ *   +0x007c -> line 2277
+ *   +0x0080 -> line 2280
+ *   +0x008c -> line 2282
+ *   +0x0090 -> line 2283
+ *   +0x009c -> line 2285
+ *   +0x00a4 -> line 2287
+ *   +0x00a8 -> line 2289
+ *   +0x00ac -> line 2290
+ *   +0x00c0 -> line 2292
+ *   +0x00c8 -> line 2303
+ *   +0x00d0 -> line 2304
+ *   +0x00d4 -> line 2306
+ *   +0x00d8 -> line 2307
+ *   +0x00e4 -> line 2308
+ *   +0x00ec -> line 2311
+ *   +0x00fc -> line 2314
+ *   +0x0108 -> line 2315
+ *   +0x0110 -> line 2316
+ *   +0x011c -> line 2317
+ *   +0x0124 -> line 2320
+ *   +0x012c -> line 2321
+ *   +0x013c -> line 2324
+ *   +0x0144 -> line 2325
+ *   +0x014c -> line 2326
+ *   +0x0158 -> line 2327
+ *   +0x0160 -> line 2331
+ *   +0x0170 -> line 2334
+ *   +0x0174 -> line 2336
+ *   +0x017c -> line 2337
+ *   +0x0188 -> line 2340
+ *   +0x018c -> line 2341
+ *   +0x0190 -> line 2343
+ *   +0x01a0 -> line 2346
+ *   +0x01ac -> line 2347
+ *   +0x01b4 -> line 2348
+ *   +0x01c0 -> line 2349
+ *   +0x01c8 -> line 2350
+ *   +0x01d0 -> line 2351
+ *   +0x01d8 -> line 2352
+ *   +0x01e4 -> line 2353
+ *   +0x01e8 -> line 2358
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params)
 {
     unsigned int uiReturn;
@@ -5220,6 +5162,19 @@ unsigned int PS2glSDLModificationHelper(unsigned int pname, unsigned int* params
     return uiReturn;
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2363–2387 */
+/* addr: 0x001510e0  size: 68 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2363
+ *   +0x0008 -> line 2364
+ *   +0x0010 -> line 2381
+ *   +0x0014 -> line 2383
+ *   +0x0020 -> line 2384
+ *   +0x0030 -> line 2386
+ *   +0x0038 -> line 2387
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glCallList(unsigned int list)
 {
     tagListData** ppListData;
@@ -5233,6 +5188,28 @@ void impPS2glCallList(unsigned int list)
         PS2glExecuteListData(pListData);
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Lists.c lines 2390–2412 */
+/* addr: 0x00150f60  size: 384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2390
+ *   +0x0018 -> line 2395
+ *   +0x001c -> line 2390
+ *   +0x002c -> line 2392
+ *   +0x0030 -> line 2395
+ *   +0x0038 -> line 2397
+ *   +0x0060 -> line 2400
+ *   +0x006c -> line 2402
+ *   +0x007c -> line 2403
+ *   +0x00d4 -> line 2404
+ *   +0x00e8 -> line 2405
+ *   +0x00f8 -> line 2406
+ *   +0x0108 -> line 2408
+ *   +0x0118 -> line 2410
+ *   +0x0150 -> line 2411
+ *   +0x0160 -> line 2412
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glCallLists(int n, unsigned int type, void* lists)
 {
     int I;

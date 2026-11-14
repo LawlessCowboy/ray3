@@ -262,36 +262,6 @@ void MAT_fn_vInvert(MAT_tdstTransformation_* pDest, MAT_tdstTransformation_* pSo
 void MAT_fn_vCompose(MAT_tdstTransformation_* pDest, MAT_tdstTransformation_* pA, MAT_tdstTransformation_* pB);
 float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* p_stTransform);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 477–502 */
-/* addr: 0x0024ccb0  size: 432 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 477
- *   +0x0004 -> line 486
- *   +0x0008 -> line 477
- *   +0x000c -> line 479
- *   +0x0010 -> line 477
- *   +0x0014 -> line 486
- *   +0x0018 -> line 477
- *   +0x0020 -> line 479
- *   +0x0024 -> line 482
- *   +0x002c -> line 483
- *   +0x0034 -> line 485
- *   +0x003c -> line 486
- *   +0x0044 -> line 487
- *   +0x0048 -> line 480
- *   +0x004c -> line 487
- *   +0x0050 -> line 488
- *   +0x0058 -> line 481
- *   +0x0060 -> line 484
- *   +0x0068 -> line 480
- *   +0x006c -> line 491
- *   +0x00ac -> line 498
- *   +0x00b4 -> line 501
- *   +0x0198 -> line 502
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale);
@@ -299,38 +269,94 @@ void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* 
 unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale, unsigned char _bHasABoxBoundingVolume);
 float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 350–406 */
-/* addr: 0x0024ce60  size: 372 bytes */
+/* Retail loads each radius before the scale call, which MWCC only does
+ * for an inline accessor. */
+inline float GEO_fn_xGetBoundingSphereRadius(COL_tdstBoundingSphere_* p_stSphere)
+{
+    return p_stSphere->xRadius;
+}
+
+/* R5900 accumulator ops have no C form under the baseline. */
+inline float MTH4D_xSqrVector3(MTH4D_tdstVector_* p_stV)
+{
+    float xX, xY, xZ, xResult;
+
+    xZ = p_stV->xZ; xY = p_stV->xY; xX = p_stV->xX;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xResult, xZ, xZ }
+    return xResult;
+}
+
+#define M_MAX(a, b) (((a) > (b)) ? (a) : (b))
+
+float PS2SQRTF(float x);
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 114–167 */
+/* addr: 0x0024d180  size: 352 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 350
- *   +0x0010 -> line 356
- *   +0x0018 -> line 357
- *   +0x0020 -> line 358
- *   +0x0028 -> line 359
- *   +0x0030 -> line 360
- *   +0x0038 -> line 365
- *   +0x0044 -> line 368
- *   +0x0054 -> line 373
- *   +0x0064 -> line 378
- *   +0x00e4 -> line 380
- *   +0x00ec -> line 384
- *   +0x00f0 -> line 381
- *   +0x00f4 -> line 382
- *   +0x00f8 -> line 383
- *   +0x00fc -> line 384
- *   +0x0100 -> line 380
- *   +0x0108 -> line 381
- *   +0x0114 -> line 382
- *   +0x0120 -> line 383
- *   +0x012c -> line 384
- *   +0x0138 -> line 390
- *   +0x0144 -> line 397
- *   +0x0150 -> line 400
- *   +0x0158 -> line 403
- *   +0x0164 -> line 406
+ *   +0x0000 -> line 114
+ *   +0x0008 -> line 121
+ *   +0x0030 -> line 126
+ *   +0x0038 -> line 127
+ *   +0x0040 -> line 131
+ *   +0x0048 -> line 140
+ *   +0x006c -> line 141
+ *   +0x008c -> line 143
+ *   +0x0094 -> line 151
+ *   +0x0098 -> line 147
+ *   +0x009c -> line 151
+ *   +0x00f4 -> line 154
+ *   +0x0130 -> line 157
+ *   +0x0138 -> line 158
+ *   +0x0144 -> line 159
+ *   +0x014c -> line 163
+ *   +0x0154 -> line 167
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform)
+{
+    MTH4D_tdstVector_* p_stScale;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    float xMax;
+
+    switch (_hTransform->eType)
+    {
+    case MAT_eTransform_Identity:
+    case MAT_eTransform_Translation:
+    case MAT_eTransform_Rotation:
+        return 1.0f;
+
+    case MAT_eTransform_Zoom:
+    case MAT_eTransform_RotationZoom:
+        xMax = _hTransform->stScaleVector.xX;
+        break;
+
+    case MAT_eTransform_Scale:
+    case MAT_eTransform_RotationScale:
+        p_stScale = &_hTransform->stScaleVector;
+        xMax = M_MAX(p_stScale->xX, p_stScale->xY);
+        xMax = M_MAX(xMax, p_stScale->xZ);
+        break;
+
+    case MAT_eTransform_ComplexRotationScale:
+        p_stMatrix = &_hTransform->stTransformMatrix;
+        xMax = M_MAX(MTH4D_xSqrVector3(&p_stMatrix->stCol_0), MTH4D_xSqrVector3(&p_stMatrix->stCol_1));
+        xMax = M_MAX(xMax, MTH4D_xSqrVector3(&p_stMatrix->stCol_2));
+        xMax = PS2SQRTF(xMax);
+        return 1.4142135f * xMax;
+
+    default:
+        xMax = 1.0f;
+        break;
+    }
+    return xMax;
+}
+
+/* The debug record lists six parameters, but both callers (GAM/Collisio.c)
+ * pass a seventh in t2 and this body tests t2: the unused sixth parameter is
+ * omitted from the debug record. */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 180–309 */
 /* addr: 0x0024cfe0  size: 412 bytes */
@@ -393,94 +419,6 @@ float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-/* Retail loads each radius before the scale call, which MWCC only does
- * for an inline accessor. */
-inline float GEO_fn_xGetBoundingSphereRadius(COL_tdstBoundingSphere_* p_stSphere)
-{
-    return p_stSphere->xRadius;
-}
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 114–167 */
-/* addr: 0x0024d180  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 114
- *   +0x0008 -> line 121
- *   +0x0030 -> line 126
- *   +0x0038 -> line 127
- *   +0x0040 -> line 131
- *   +0x0048 -> line 140
- *   +0x006c -> line 141
- *   +0x008c -> line 143
- *   +0x0094 -> line 151
- *   +0x0098 -> line 147
- *   +0x009c -> line 151
- *   +0x00f4 -> line 154
- *   +0x0130 -> line 157
- *   +0x0138 -> line 158
- *   +0x0144 -> line 159
- *   +0x014c -> line 163
- *   +0x0154 -> line 167
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-/* R5900 accumulator ops have no C form under the baseline. */
-inline float MTH4D_xSqrVector3(MTH4D_tdstVector_* p_stV)
-{
-    float xX, xY, xZ, xResult;
-
-    xZ = p_stV->xZ; xY = p_stV->xY; xX = p_stV->xX;
-    asm { mula.s xX, xX }
-    asm { madda.s xY, xY }
-    asm { madd.s xResult, xZ, xZ }
-    return xResult;
-}
-
-#define M_MAX(a, b) (((a) > (b)) ? (a) : (b))
-
-float PS2SQRTF(float x);
-
-float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform)
-{
-    MTH4D_tdstVector_* p_stScale;
-    MTH4D_tdstMatrix_* p_stMatrix;
-    float xMax;
-
-    switch (_hTransform->eType)
-    {
-    case MAT_eTransform_Identity:
-    case MAT_eTransform_Translation:
-    case MAT_eTransform_Rotation:
-        return 1.0f;
-
-    case MAT_eTransform_Zoom:
-    case MAT_eTransform_RotationZoom:
-        xMax = _hTransform->stScaleVector.xX;
-        break;
-
-    case MAT_eTransform_Scale:
-    case MAT_eTransform_RotationScale:
-        p_stScale = &_hTransform->stScaleVector;
-        xMax = M_MAX(p_stScale->xX, p_stScale->xY);
-        xMax = M_MAX(xMax, p_stScale->xZ);
-        break;
-
-    case MAT_eTransform_ComplexRotationScale:
-        p_stMatrix = &_hTransform->stTransformMatrix;
-        xMax = M_MAX(MTH4D_xSqrVector3(&p_stMatrix->stCol_0), MTH4D_xSqrVector3(&p_stMatrix->stCol_1));
-        xMax = M_MAX(xMax, MTH4D_xSqrVector3(&p_stMatrix->stCol_2));
-        xMax = PS2SQRTF(xMax);
-        return 1.4142135f * xMax;
-
-    default:
-        xMax = 1.0f;
-        break;
-    }
-    return xMax;
-}
-
-/* The debug record lists six parameters, but both callers (GAM/Collisio.c)
- * pass a seventh in t2 and this body tests t2: the unused sixth parameter is
- * omitted from the debug record. */
 unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale, unsigned char _bHasABoxBoundingVolume)
 {
     float fGap;
@@ -576,6 +514,38 @@ unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoun
     return (*(unsigned int*)0x70000000 & 0x80000000) != 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 350–406 */
+/* addr: 0x0024ce60  size: 372 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 350
+ *   +0x0010 -> line 356
+ *   +0x0018 -> line 357
+ *   +0x0020 -> line 358
+ *   +0x0028 -> line 359
+ *   +0x0030 -> line 360
+ *   +0x0038 -> line 365
+ *   +0x0044 -> line 368
+ *   +0x0054 -> line 373
+ *   +0x0064 -> line 378
+ *   +0x00e4 -> line 380
+ *   +0x00ec -> line 384
+ *   +0x00f0 -> line 381
+ *   +0x00f4 -> line 382
+ *   +0x00f8 -> line 383
+ *   +0x00fc -> line 384
+ *   +0x0100 -> line 380
+ *   +0x0108 -> line 381
+ *   +0x0114 -> line 382
+ *   +0x0120 -> line 383
+ *   +0x012c -> line 384
+ *   +0x0138 -> line 390
+ *   +0x0144 -> line 397
+ *   +0x0150 -> line 400
+ *   +0x0158 -> line 403
+ *   +0x0164 -> line 406
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV)
 {
     short sType;
@@ -627,6 +597,35 @@ void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* 
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 477–502 */
+/* addr: 0x0024ccb0  size: 432 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 477
+ *   +0x0004 -> line 486
+ *   +0x0008 -> line 477
+ *   +0x000c -> line 479
+ *   +0x0010 -> line 477
+ *   +0x0014 -> line 486
+ *   +0x0018 -> line 477
+ *   +0x0020 -> line 479
+ *   +0x0024 -> line 482
+ *   +0x002c -> line 483
+ *   +0x0034 -> line 485
+ *   +0x003c -> line 486
+ *   +0x0044 -> line 487
+ *   +0x0048 -> line 480
+ *   +0x004c -> line 487
+ *   +0x0050 -> line 488
+ *   +0x0058 -> line 481
+ *   +0x0060 -> line 484
+ *   +0x0068 -> line 480
+ *   +0x006c -> line 491
+ *   +0x00ac -> line 498
+ *   +0x00b4 -> line 501
+ *   +0x0198 -> line 502
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale)
 {
     /* TODO: decompile from asm/... */

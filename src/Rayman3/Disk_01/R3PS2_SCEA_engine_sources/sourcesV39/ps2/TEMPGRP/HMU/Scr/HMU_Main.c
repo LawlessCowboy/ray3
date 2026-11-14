@@ -18,8 +18,6 @@ unsigned char g_ucHMUModuleId;
 /* aggregate */ int HMU_g_stMemoryStructure;
 tdstBlockInfo_ g_a_stHMUBlocksInfo[9];
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Main.c lines 197–241 */
-/* addr: 0x002ed560  size: 452 bytes */
 /* Debug signature rejected: type-record data leaked into it. */
 typedef struct {
     unsigned DIR : 1;
@@ -50,6 +48,8 @@ int sceGsSyncPath(int mode, unsigned short timeout);
 void FlushCache(int operation);
 void InvalidDCache(void* start, void* end);
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\HMU\Scr\HMU_Main.c lines 197–241 */
+/* addr: 0x002ed560  size: 452 bytes */
 void GLI_vGsStoreFrameBufferInto128x128x16__FPUssiis(unsigned short* _DestinationBuffer, short vram, int WIDTH, int HEIGHT, short CurrentPSM)
 {
     sceGsStoreImage StoreImage;

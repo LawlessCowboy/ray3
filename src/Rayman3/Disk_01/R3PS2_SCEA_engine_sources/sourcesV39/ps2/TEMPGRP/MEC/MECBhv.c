@@ -1027,23 +1027,6 @@ extern unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupO
 extern float ceilf(float xValue);
 void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 64–91 */
-/* addr: 0x003053d0  size: 312 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 64
- *   +0x0020 -> line 75
- *   +0x0044 -> line 78
- *   +0x0048 -> line 75
- *   +0x004c -> line 78
- *   +0x006c -> line 79
- *   +0x00b0 -> line 84
- *   +0x00d4 -> line 86
- *   +0x0110 -> line 87
- *   +0x0114 -> line 91
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 int MEC_fn_lComputeCall(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT, float xCoef);
@@ -1056,218 +1039,670 @@ void MEC_fn_vBaseObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperOb
 void MEC_fn_vOrient(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
 void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* pstMove, MTH3D_tdstVector_* pstGroundNormal, MTH3D_tdstVector_* pstWallNormal, unsigned char bAngleLimit, float xDT);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 2300–2605 */
-/* addr: 0x00305510  size: 4012 bytes */
+void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove,
+                                    DNM_stDynamics* p_stDynamic,
+                                    MTH3D_tdstVector_* pstMove,
+                                    MTH3D_tdstVector_* pstGroundNormal,
+                                    MTH3D_tdstVector_* pstWallNormal,
+                                    unsigned char bAngleLimit,
+                                    float xDT);
+void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT);
+void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic,
+                                 HIE_tdstSuperObject_* hSupObj,
+                                 int lObstacle,
+                                 DNM_stMecObstacle* a_stObstacle,
+                                 float xDT);
+void MTH4D_fn_vCopy3DTo4DVector(MTH4D_tdstVector_* p_stDestination,
+                                MTH3D_tdstVector_* p_stSource);
+
+inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
+inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
+inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } return _r; }
+inline float MTH_xSqr2(float _x, float _y) { float _r; asm { mula.s _x, _x } asm { madd.s _r, _y, _y } return _r; }
+inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
+#define MTH3D_M_bIsNullVectorWithEps(_p, _eps) ((MTH_xAbs((_p)->xX) < (_eps)) && (MTH_xAbs((_p)->xY) < (_eps)) && (MTH_xAbs((_p)->xZ) < (_eps)))
+#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
+#define DNM_M_vSetEndFlags(_p, _ulValue) { unsigned int _ulFlags = (_ulValue); (_p)->m_tdstDynamicsBaseBlock.ulEndFlags = _ulFlags; (_p)->m_tdstDynamicsBaseBlock.ulEndFlags = _ulFlags; }
+#define MAT_M_vSetTranslation(_hMatrix, _p_stTrans) { if (((volatile MAT_tdstTransformation_*)(_hMatrix))->eType == MAT_eTransform_Identity) ((volatile MAT_tdstTransformation_*)(_hMatrix))->eType = MAT_eTransform_Translation; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xX = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xX; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xY = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xY; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xZ = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xZ; ((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xW = 1.0f; }
+#pragma optimize_for_size off
+unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuperObj);
+int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
+int MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
+unsigned char MEC_fn_bMainActor(HIE_tdstSuperObject_* hSupObj);
+unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
+HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj);
+void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle);
+void MEC_fn_vDeleteBaseBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic);
+void MEC_fn_vDeleteNullTranslationObstacle(int lObstacle, DNM_stMecObstacle* a_stObstacle);
+void MEC_fn_vDeleteUnderGroundWall(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stGroundObstacle);
+void MEC_fn_vDeleteWallEdge(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic);
+void MEC_fn_vEdgeAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stMecObstacle* p_stGround);
+void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle);
+unsigned char MEC_fn_bCollision(int* p_lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* p_stSupObj, MAT_tdstTransformation_* p_stStartPosition, MAT_tdstTransformation_* p_stEndPosition, unsigned char bBackFace);
+float MEC_fn_xGetSlide(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
+
+#pragma optimize_for_size reset
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 479–527 */
+/* addr: 0x0030b340  size: 1224 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2300
- *   +0x0034 -> line 2352
- *   +0x0038 -> line 2300
- *   +0x0058 -> line 2345
- *   +0x005c -> line 2354
- *   +0x0064 -> line 2307
- *   +0x0068 -> line 2345
- *   +0x006c -> line 2328
- *   +0x0070 -> line 2345
- *   +0x0074 -> line 2329
- *   +0x0078 -> line 2335
- *   +0x007c -> line 2341
- *   +0x0080 -> line 2354
- *   +0x0098 -> line 2357
- *   +0x009c -> line 2356
- *   +0x00a0 -> line 2357
- *   +0x00a4 -> line 2358
- *   +0x00a8 -> line 2357
- *   +0x00d0 -> line 2358
- *   +0x0100 -> line 2362
- *   +0x0138 -> line 2364
- *   +0x013c -> line 2366
- *   +0x015c -> line 2367
- *   +0x0160 -> line 2372
- *   +0x0164 -> line 2367
- *   +0x0168 -> line 2370
- *   +0x016c -> line 2368
- *   +0x0170 -> line 2371
- *   +0x0174 -> line 2372
- *   +0x0178 -> line 2373
- *   +0x017c -> line 2372
- *   +0x0180 -> line 2375
- *   +0x0190 -> line 2377
- *   +0x0198 -> line 2378
- *   +0x01ac -> line 2380
- *   +0x01bc -> line 2382
- *   +0x01c0 -> line 2383
- *   +0x01c4 -> line 2385
- *   +0x01c8 -> line 2383
- *   +0x01cc -> line 2386
- *   +0x01e8 -> line 2388
- *   +0x01f0 -> line 2393
- *   +0x0208 -> line 2395
- *   +0x0218 -> line 2396
- *   +0x022c -> line 2397
- *   +0x0234 -> line 2402
- *   +0x0238 -> line 2401
- *   +0x023c -> line 2402
- *   +0x0248 -> line 2406
- *   +0x025c -> line 2408
- *   +0x0260 -> line 2409
- *   +0x0264 -> line 2410
- *   +0x0268 -> line 2409
- *   +0x026c -> line 2411
- *   +0x0288 -> line 2413
- *   +0x029c -> line 2417
- *   +0x02d0 -> line 2418
- *   +0x02d8 -> line 2420
- *   +0x02ec -> line 2422
- *   +0x0354 -> line 2424
- *   +0x035c -> line 2425
- *   +0x0360 -> line 2428
- *   +0x0384 -> line 2429
- *   +0x0390 -> line 2431
- *   +0x039c -> line 2433
- *   +0x03ac -> line 2435
- *   +0x03b4 -> line 2438
- *   +0x03d0 -> line 2439
- *   +0x03d4 -> line 2441
- *   +0x03e4 -> line 2442
- *   +0x03e8 -> line 2444
- *   +0x03fc -> line 2446
- *   +0x0404 -> line 2447
- *   +0x040c -> line 2451
- *   +0x0418 -> line 2453
- *   +0x0420 -> line 2454
- *   +0x0434 -> line 2455
- *   +0x046c -> line 2456
- *   +0x0480 -> line 2458
- *   +0x04c4 -> line 2459
- *   +0x052c -> line 2461
- *   +0x0530 -> line 2464
- *   +0x0540 -> line 2465
- *   +0x054c -> line 2468
- *   +0x0560 -> line 2478
- *   +0x0570 -> line 2468
- *   +0x0574 -> line 2478
- *   +0x058c -> line 2479
- *   +0x059c -> line 2482
- *   +0x05b0 -> line 2483
- *   +0x05dc -> line 2484
- *   +0x05ec -> line 2489
- *   +0x05f0 -> line 2488
- *   +0x05f4 -> line 2489
- *   +0x05f8 -> line 2484
- *   +0x05fc -> line 2489
- *   +0x060c -> line 2484
- *   +0x0610 -> line 2488
- *   +0x0614 -> line 2489
- *   +0x0620 -> line 2488
- *   +0x0624 -> line 2490
- *   +0x063c -> line 2491
- *   +0x0648 -> line 2492
- *   +0x069c -> line 2493
- *   +0x0740 -> line 2495
- *   +0x0748 -> line 2497
- *   +0x0760 -> line 2498
- *   +0x0780 -> line 2500
- *   +0x07b4 -> line 2501
- *   +0x07bc -> line 2502
- *   +0x07c4 -> line 2509
- *   +0x07c8 -> line 2507
- *   +0x07cc -> line 2509
- *   +0x07e0 -> line 2511
- *   +0x0828 -> line 2513
- *   +0x0838 -> line 2515
- *   +0x0848 -> line 2516
- *   +0x084c -> line 2515
- *   +0x0850 -> line 2516
- *   +0x0860 -> line 2519
- *   +0x0864 -> line 2518
- *   +0x0868 -> line 2519
- *   +0x08dc -> line 2521
- *   +0x08f4 -> line 2522
- *   +0x0914 -> line 2524
- *   +0x0940 -> line 2525
- *   +0x0960 -> line 2527
- *   +0x0970 -> line 2528
- *   +0x09ac -> line 2530
- *   +0x09b8 -> line 2531
- *   +0x09c0 -> line 2533
- *   +0x09cc -> line 2535
- *   +0x09fc -> line 2542
- *   +0x0a20 -> line 2544
- *   +0x0a38 -> line 2546
- *   +0x0a50 -> line 2548
- *   +0x0a68 -> line 2549
- *   +0x0a6c -> line 2548
- *   +0x0a70 -> line 2550
- *   +0x0b10 -> line 2552
- *   +0x0b70 -> line 2553
- *   +0x0b94 -> line 2559
- *   +0x0b98 -> line 2562
- *   +0x0b9c -> line 2559
- *   +0x0ba0 -> line 2562
- *   +0x0ba4 -> line 2563
- *   +0x0ba8 -> line 2561
- *   +0x0bac -> line 2559
- *   +0x0bd4 -> line 2561
- *   +0x0bf4 -> line 2562
- *   +0x0c18 -> line 2563
- *   +0x0c3c -> line 2565
- *   +0x0c40 -> line 2563
- *   +0x0c58 -> line 2565
- *   +0x0cbc -> line 2567
- *   +0x0cd4 -> line 2569
- *   +0x0d08 -> line 2571
- *   +0x0d30 -> line 2573
- *   +0x0d38 -> line 2575
- *   +0x0dc0 -> line 2577
- *   +0x0df0 -> line 2578
- *   +0x0e64 -> line 2580
- *   +0x0ea0 -> line 2581
- *   +0x0ec4 -> line 2584
- *   +0x0ed8 -> line 2587
- *   +0x0ee4 -> line 2588
- *   +0x0eec -> line 2593
- *   +0x0f04 -> line 2595
- *   +0x0f14 -> line 2597
- *   +0x0f24 -> line 2598
- *   +0x0f28 -> line 2597
- *   +0x0f2c -> line 2598
- *   +0x0f3c -> line 2600
- *   +0x0f40 -> line 2601
- *   +0x0f44 -> line 2600
- *   +0x0f48 -> line 2601
- *   +0x0f4c -> line 2600
- *   +0x0f54 -> line 2601
- *   +0x0f5c -> line 2605
+ *   +0x0000 -> line 479
+ *   +0x000c -> line 486
+ *   +0x00ac -> line 488
+ *   +0x00b4 -> line 489
+ *   +0x00bc -> line 493
+ *   +0x00c0 -> line 492
+ *   +0x00c4 -> line 493
+ *   +0x0104 -> line 495
+ *   +0x01a4 -> line 497
+ *   +0x01ac -> line 498
+ *   +0x01b4 -> line 502
+ *   +0x0214 -> line 503
+ *   +0x0230 -> line 505
+ *   +0x0248 -> line 507
+ *   +0x02cc -> line 508
+ *   +0x0340 -> line 510
+ *   +0x034c -> line 512
+ *   +0x0368 -> line 514
+ *   +0x03cc -> line 515
+ *   +0x03ec -> line 516
+ *   +0x0414 -> line 521
+ *   +0x042c -> line 523
+ *   +0x0478 -> line 526
+ *   +0x047c -> line 523
+ *   +0x048c -> line 524
+ *   +0x04b4 -> line 526
+ *   +0x04bc -> line 527
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 2273–2297 */
-/* addr: 0x003064c0  size: 416 bytes */
+void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* pstMove, MTH3D_tdstVector_* pstGroundNormal, MTH3D_tdstVector_* pstWallNormal, unsigned char bAngleLimit, float xDT)
+{
+    float xNorm;
+    float xFactor;
+    MAT_tdstTransformation_* hCurrentMatrix;
+    MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_ stDirection;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 723–752 */
+/* addr: 0x0030b150  size: 496 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2273
- *   +0x0008 -> line 2281
- *   +0x0048 -> line 2288
- *   +0x004c -> line 2283
- *   +0x0050 -> line 2288
- *   +0x0054 -> line 2287
- *   +0x0058 -> line 2288
- *   +0x0068 -> line 2290
- *   +0x0070 -> line 2288
- *   +0x007c -> line 2290
- *   +0x0088 -> line 2291
- *   +0x00f8 -> line 2292
- *   +0x0104 -> line 2295
- *   +0x0108 -> line 2292
- *   +0x0128 -> line 2293
- *   +0x0138 -> line 2295
- *   +0x0144 -> line 2293
- *   +0x014c -> line 2295
- *   +0x018c -> line 2296
- *   +0x0194 -> line 2297
+ *   +0x0000 -> line 723
+ *   +0x0020 -> line 729
+ *   +0x0028 -> line 734
+ *   +0x0034 -> line 735
+ *   +0x0040 -> line 737
+ *   +0x0044 -> line 735
+ *   +0x0054 -> line 738
+ *   +0x005c -> line 735
+ *   +0x0064 -> line 737
+ *   +0x006c -> line 735
+ *   +0x0070 -> line 737
+ *   +0x0078 -> line 738
+ *   +0x007c -> line 735
+ *   +0x0080 -> line 737
+ *   +0x0084 -> line 738
+ *   +0x00b8 -> line 739
+ *   +0x0114 -> line 740
+ *   +0x0140 -> line 742
+ *   +0x0144 -> line 740
+ *   +0x0148 -> line 742
+ *   +0x0158 -> line 744
+ *   +0x0160 -> line 742
+ *   +0x0184 -> line 743
+ *   +0x01a4 -> line 744
+ *   +0x01ac -> line 745
+ *   +0x01c8 -> line 751
+ *   +0x01d4 -> line 752
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void MEC_fn_vOrient(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
+{
+    float xNorm;
+    MTH3D_tdstVector_ stZ;
+    MTH3D_tdstVector_ stY;
+    MTH3D_tdstVector_ stX;
+    MTH3D_tdstVector_ stVector;
+    MAT_tdstTransformation_* hCurrentMatrix;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 757–787 */
+/* addr: 0x0030aff0  size: 344 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 757
+ *   +0x0020 -> line 769
+ *   +0x0024 -> line 770
+ *   +0x0038 -> line 772
+ *   +0x0050 -> line 775
+ *   +0x0054 -> line 774
+ *   +0x0058 -> line 775
+ *   +0x005c -> line 776
+ *   +0x0060 -> line 775
+ *   +0x0088 -> line 776
+ *   +0x00b8 -> line 780
+ *   +0x00f0 -> line 782
+ *   +0x0104 -> line 783
+ *   +0x011c -> line 784
+ *   +0x0124 -> line 786
+ *   +0x013c -> line 787
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vBaseObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
+{
+    MAT_tdstTransformation_ stInitialMatrix;
+    MAT_tdstTransformation_* hInitialMatrix;
+    MAT_tdstTransformation_* hCurrentMatrix;
+    int lObstacle;
+    unsigned int ulFlags;
+
+    hInitialMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x10;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    if (fn_ucCollSetGetCollComputeFrequencySO(hSupObj) > 1) {
+        stInitialMatrix = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
+        if (stInitialMatrix.eType == MAT_eTransform_Identity) {
+            stInitialMatrix.eType = MAT_eTransform_Translation;
+        }
+        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xX = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xX;
+        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xY = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xY;
+        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xZ = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xZ;
+        stInitialMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
+    }
+    if (MEC_fn_bCollision(&lObstacle,
+                          g_a_stObstacle,
+                          p_stDynamic,
+                          hSupObj,
+                          NULL,
+                          hCurrentMatrix,
+                          (unsigned char)((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x00400000) ? 1 : 0))) {
+        MEC_fn_vEdgeAnalysis(p_stDynamic, lObstacle, g_a_stObstacle, NULL);
+        MEC_fn_vCollideBaseMechanic(p_stDynamic, hSupObj, lObstacle, g_a_stObstacle, xDT);
+    } else {
+        ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFF0000;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 792–1067 */
+/* addr: 0x00309f80  size: 4200 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 792
+ *   +0x0008 -> line 819
+ *   +0x000c -> line 792
+ *   +0x0010 -> line 818
+ *   +0x0014 -> line 792
+ *   +0x0030 -> line 832
+ *   +0x0034 -> line 792
+ *   +0x0038 -> line 833
+ *   +0x003c -> line 792
+ *   +0x0040 -> line 840
+ *   +0x0044 -> line 792
+ *   +0x0048 -> line 841
+ *   +0x0050 -> line 796
+ *   +0x0054 -> line 834
+ *   +0x0058 -> line 797
+ *   +0x005c -> line 822
+ *   +0x0060 -> line 840
+ *   +0x0064 -> line 834
+ *   +0x0070 -> line 837
+ *   +0x00a0 -> line 838
+ *   +0x00d0 -> line 842
+ *   +0x0108 -> line 845
+ *   +0x0114 -> line 846
+ *   +0x0124 -> line 849
+ *   +0x015c -> line 850
+ *   +0x0164 -> line 851
+ *   +0x016c -> line 854
+ *   +0x018c -> line 856
+ *   +0x0190 -> line 854
+ *   +0x0194 -> line 856
+ *   +0x0198 -> line 854
+ *   +0x019c -> line 856
+ *   +0x01b8 -> line 860
+ *   +0x01c0 -> line 861
+ *   +0x01c8 -> line 863
+ *   +0x01cc -> line 865
+ *   +0x01d4 -> line 868
+ *   +0x01d8 -> line 872
+ *   +0x0208 -> line 874
+ *   +0x020c -> line 873
+ *   +0x0210 -> line 877
+ *   +0x0218 -> line 879
+ *   +0x021c -> line 873
+ *   +0x0230 -> line 874
+ *   +0x0254 -> line 877
+ *   +0x0258 -> line 878
+ *   +0x025c -> line 877
+ *   +0x027c -> line 878
+ *   +0x02b0 -> line 879
+ *   +0x02c8 -> line 881
+ *   +0x02d0 -> line 879
+ *   +0x02dc -> line 884
+ *   +0x02e0 -> line 879
+ *   +0x02f8 -> line 883
+ *   +0x02fc -> line 882
+ *   +0x0320 -> line 883
+ *   +0x0354 -> line 884
+ *   +0x0370 -> line 892
+ *   +0x0380 -> line 887
+ *   +0x0384 -> line 884
+ *   +0x039c -> line 892
+ *   +0x03b0 -> line 894
+ *   +0x03c4 -> line 897
+ *   +0x03d0 -> line 899
+ *   +0x03dc -> line 900
+ *   +0x03f0 -> line 902
+ *   +0x046c -> line 904
+ *   +0x0474 -> line 905
+ *   +0x0478 -> line 906
+ *   +0x04a0 -> line 907
+ *   +0x04b4 -> line 910
+ *   +0x04e8 -> line 912
+ *   +0x04f0 -> line 914
+ *   +0x04f4 -> line 915
+ *   +0x04f8 -> line 918
+ *   +0x0520 -> line 920
+ *   +0x0528 -> line 921
+ *   +0x053c -> line 923
+ *   +0x05a0 -> line 929
+ *   +0x05c4 -> line 930
+ *   +0x05d4 -> line 932
+ *   +0x060c -> line 933
+ *   +0x0634 -> line 934
+ *   +0x0644 -> line 935
+ *   +0x064c -> line 939
+ *   +0x0668 -> line 941
+ *   +0x0684 -> line 944
+ *   +0x069c -> line 947
+ *   +0x06e0 -> line 949
+ *   +0x06f8 -> line 951
+ *   +0x0700 -> line 953
+ *   +0x0714 -> line 955
+ *   +0x074c -> line 956
+ *   +0x07cc -> line 957
+ *   +0x07dc -> line 959
+ *   +0x07f0 -> line 961
+ *   +0x0818 -> line 964
+ *   +0x083c -> line 965
+ *   +0x085c -> line 969
+ *   +0x0860 -> line 965
+ *   +0x0878 -> line 966
+ *   +0x0884 -> line 969
+ *   +0x0898 -> line 970
+ *   +0x08a4 -> line 971
+ *   +0x08ac -> line 976
+ *   +0x08b4 -> line 978
+ *   +0x08bc -> line 980
+ *   +0x08c4 -> line 981
+ *   +0x08c8 -> line 980
+ *   +0x0900 -> line 981
+ *   +0x0930 -> line 982
+ *   +0x0938 -> line 986
+ *   +0x097c -> line 988
+ *   +0x0994 -> line 989
+ *   +0x09e8 -> line 993
+ *   +0x09ec -> line 989
+ *   +0x0a04 -> line 991
+ *   +0x0a44 -> line 992
+ *   +0x0a84 -> line 993
+ *   +0x0ac0 -> line 994
+ *   +0x0ac8 -> line 997
+ *   +0x0b00 -> line 1000
+ *   +0x0b20 -> line 1003
+ *   +0x0bc4 -> line 1005
+ *   +0x0bd4 -> line 1006
+ *   +0x0be0 -> line 1007
+ *   +0x0be8 -> line 1009
+ *   +0x0c1c -> line 1011
+ *   +0x0c24 -> line 1014
+ *   +0x0c2c -> line 1017
+ *   +0x0c60 -> line 1019
+ *   +0x0c78 -> line 1020
+ *   +0x0ccc -> line 1023
+ *   +0x0cd0 -> line 1020
+ *   +0x0ce8 -> line 1021
+ *   +0x0d28 -> line 1022
+ *   +0x0d68 -> line 1023
+ *   +0x0da4 -> line 1024
+ *   +0x0dac -> line 1027
+ *   +0x0de4 -> line 1029
+ *   +0x0e04 -> line 1031
+ *   +0x0ea8 -> line 1033
+ *   +0x0eb8 -> line 1034
+ *   +0x0ec4 -> line 1035
+ *   +0x0ecc -> line 1037
+ *   +0x0f00 -> line 1038
+ *   +0x0f08 -> line 1041
+ *   +0x0f0c -> line 1043
+ *   +0x0f10 -> line 1041
+ *   +0x0f3c -> line 1042
+ *   +0x0f48 -> line 1043
+ *   +0x0f6c -> line 1046
+ *   +0x0f84 -> line 1047
+ *   +0x0f90 -> line 1048
+ *   +0x0f98 -> line 1052
+ *   +0x0fa4 -> line 1053
+ *   +0x0fac -> line 1058
+ *   +0x0fb0 -> line 1060
+ *   +0x0fb4 -> line 1058
+ *   +0x0fe0 -> line 1059
+ *   +0x0fec -> line 1060
+ *   +0x1010 -> line 1063
+ *   +0x1028 -> line 1064
+ *   +0x1034 -> line 1067
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vGiObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
+{
+    MAT_tdstTransformation_* hPreviousMatrix;
+    MAT_tdstTransformation_* hCurrentMatrix;
+    MAT_tdstTransformation_* p_stPOS_UpPosition;
+    MAT_tdstTransformation_* p_stPOS_DownPosition;
+    MAT_tdstTransformation_ a2_stPosition[2];
+    DNM_stObstacle* p_stPreviousCeilObstacle;
+    DNM_stMecObstacle* p_stSlideObstacle;
+    DNM_stMecObstacle* p_stGiObstacle;
+    DNM_stMecObstacle* p_stTmpObstacle;
+    MTH3D_tdstVector_ stAdjustVector;
+    MTH3D_tdstVector_ stVerticalVector;
+    MTH3D_tdstVector_ stSlideMove;
+    MTH3D_tdstVector_ stMove;
+    MTH3D_tdstVector_ stTmpVector;
+    MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_* p_stGiContact;
+    MTH3D_tdstVector_* p_stGiNormal;
+    float xNormalMove;
+    unsigned char bGiFace;
+    int lFace;
+    int lCounter1;
+    int lCounter;
+    int lObstacle;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 1076–1458 */
+/* addr: 0x00308830  size: 5960 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1076
+ *   +0x0004 -> line 1115
+ *   +0x0008 -> line 1076
+ *   +0x000c -> line 1115
+ *   +0x0010 -> line 1076
+ *   +0x0018 -> line 1079
+ *   +0x001c -> line 1076
+ *   +0x0034 -> line 1112
+ *   +0x0038 -> line 1076
+ *   +0x0044 -> line 1111
+ *   +0x0048 -> line 1076
+ *   +0x0054 -> line 1115
+ *   +0x0058 -> line 1087
+ *   +0x005c -> line 1115
+ *   +0x0064 -> line 1126
+ *   +0x0068 -> line 1125
+ *   +0x006c -> line 1126
+ *   +0x0070 -> line 1130
+ *   +0x0088 -> line 1133
+ *   +0x00c8 -> line 1134
+ *   +0x00d4 -> line 1142
+ *   +0x00d8 -> line 1138
+ *   +0x00e8 -> line 1142
+ *   +0x00ec -> line 1145
+ *   +0x00f8 -> line 1138
+ *   +0x0118 -> line 1139
+ *   +0x0148 -> line 1143
+ *   +0x0188 -> line 1145
+ *   +0x0224 -> line 1146
+ *   +0x0240 -> line 1152
+ *   +0x024c -> line 1153
+ *   +0x025c -> line 1156
+ *   +0x0294 -> line 1157
+ *   +0x029c -> line 1158
+ *   +0x02a4 -> line 1162
+ *   +0x02b0 -> line 1163
+ *   +0x02f4 -> line 1164
+ *   +0x0300 -> line 1166
+ *   +0x0304 -> line 1164
+ *   +0x0324 -> line 1166
+ *   +0x0330 -> line 1167
+ *   +0x0354 -> line 1169
+ *   +0x03f8 -> line 1170
+ *   +0x0478 -> line 1172
+ *   +0x0484 -> line 1174
+ *   +0x04ac -> line 1175
+ *   +0x04cc -> line 1177
+ *   +0x04f0 -> line 1180
+ *   +0x0500 -> line 1183
+ *   +0x0504 -> line 1180
+ *   +0x0524 -> line 1181
+ *   +0x0528 -> line 1180
+ *   +0x0530 -> line 1181
+ *   +0x0558 -> line 1182
+ *   +0x0590 -> line 1183
+ *   +0x05a8 -> line 1185
+ *   +0x05b0 -> line 1183
+ *   +0x05bc -> line 1188
+ *   +0x05c0 -> line 1183
+ *   +0x05d8 -> line 1186
+ *   +0x0604 -> line 1187
+ *   +0x0608 -> line 1186
+ *   +0x0610 -> line 1187
+ *   +0x0644 -> line 1188
+ *   +0x065c -> line 1196
+ *   +0x0664 -> line 1188
+ *   +0x0668 -> line 1193
+ *   +0x066c -> line 1196
+ *   +0x067c -> line 1190
+ *   +0x0680 -> line 1188
+ *   +0x0698 -> line 1196
+ *   +0x06ac -> line 1199
+ *   +0x06c0 -> line 1202
+ *   +0x06cc -> line 1204
+ *   +0x06d4 -> line 1205
+ *   +0x06e8 -> line 1207
+ *   +0x0764 -> line 1208
+ *   +0x076c -> line 1210
+ *   +0x0788 -> line 1213
+ *   +0x0794 -> line 1215
+ *   +0x079c -> line 1216
+ *   +0x07b0 -> line 1218
+ *   +0x07c4 -> line 1221
+ *   +0x07e4 -> line 1224
+ *   +0x0808 -> line 1226
+ *   +0x0810 -> line 1229
+ *   +0x0824 -> line 1228
+ *   +0x0828 -> line 1229
+ *   +0x083c -> line 1231
+ *   +0x0844 -> line 1232
+ *   +0x0858 -> line 1234
+ *   +0x087c -> line 1235
+ *   +0x088c -> line 1237
+ *   +0x08c4 -> line 1238
+ *   +0x08ec -> line 1239
+ *   +0x08fc -> line 1241
+ *   +0x0920 -> line 1243
+ *   +0x0984 -> line 1249
+ *   +0x0988 -> line 1252
+ *   +0x0990 -> line 1253
+ *   +0x09a0 -> line 1255
+ *   +0x09a4 -> line 1256
+ *   +0x09ac -> line 1261
+ *   +0x09c4 -> line 1262
+ *   +0x09c8 -> line 1265
+ *   +0x0a4c -> line 1273
+ *   +0x0a70 -> line 1274
+ *   +0x0a88 -> line 1275
+ *   +0x0a8c -> line 1279
+ *   +0x0aec -> line 1287
+ *   +0x0af8 -> line 1289
+ *   +0x0b00 -> line 1290
+ *   +0x0b14 -> line 1292
+ *   +0x0b60 -> line 1298
+ *   +0x0b78 -> line 1301
+ *   +0x0b7c -> line 1298
+ *   +0x0b84 -> line 1300
+ *   +0x0b88 -> line 1301
+ *   +0x0b8c -> line 1298
+ *   +0x0ba4 -> line 1299
+ *   +0x0bb0 -> line 1300
+ *   +0x0bc0 -> line 1301
+ *   +0x0bd0 -> line 1302
+ *   +0x0bdc -> line 1305
+ *   +0x0bf0 -> line 1308
+ *   +0x0c08 -> line 1311
+ *   +0x0c20 -> line 1314
+ *   +0x0c28 -> line 1316
+ *   +0x0c3c -> line 1318
+ *   +0x0c44 -> line 1320
+ *   +0x0c6c -> line 1322
+ *   +0x0c74 -> line 1323
+ *   +0x0c78 -> line 1322
+ *   +0x0cb0 -> line 1323
+ *   +0x0ce0 -> line 1324
+ *   +0x0ce8 -> line 1328
+ *   +0x0cf4 -> line 1330
+ *   +0x0cfc -> line 1331
+ *   +0x0d10 -> line 1333
+ *   +0x0d4c -> line 1334
+ *   +0x0d54 -> line 1336
+ *   +0x0d70 -> line 1338
+ *   +0x0d78 -> line 1340
+ *   +0x0d80 -> line 1341
+ *   +0x0d84 -> line 1340
+ *   +0x0dbc -> line 1341
+ *   +0x0dec -> line 1343
+ *   +0x0df4 -> line 1346
+ *   +0x0dfc -> line 1347
+ *   +0x0e00 -> line 1346
+ *   +0x0e38 -> line 1347
+ *   +0x0e68 -> line 1350
+ *   +0x0e70 -> line 1353
+ *   +0x0ecc -> line 1355
+ *   +0x0ee4 -> line 1357
+ *   +0x0f10 -> line 1358
+ *   +0x0f18 -> line 1362
+ *   +0x0f20 -> line 1358
+ *   +0x0f40 -> line 1359
+ *   +0x0f78 -> line 1360
+ *   +0x0fa8 -> line 1362
+ *   +0x0fdc -> line 1363
+ *   +0x0fe0 -> line 1362
+ *   +0x0fe4 -> line 1363
+ *   +0x1018 -> line 1364
+ *   +0x105c -> line 1366
+ *   +0x1064 -> line 1369
+ *   +0x107c -> line 1371
+ *   +0x1098 -> line 1374
+ *   +0x109c -> line 1371
+ *   +0x10a8 -> line 1374
+ *   +0x10c0 -> line 1371
+ *   +0x10dc -> line 1374
+ *   +0x10e4 -> line 1376
+ *   +0x1114 -> line 1379
+ *   +0x11b8 -> line 1381
+ *   +0x11c8 -> line 1382
+ *   +0x11d4 -> line 1383
+ *   +0x11dc -> line 1386
+ *   +0x1210 -> line 1388
+ *   +0x1218 -> line 1391
+ *   +0x1220 -> line 1393
+ *   +0x1238 -> line 1395
+ *   +0x124c -> line 1399
+ *   +0x1250 -> line 1395
+ *   +0x1278 -> line 1396
+ *   +0x127c -> line 1395
+ *   +0x1280 -> line 1396
+ *   +0x12b4 -> line 1397
+ *   +0x12fc -> line 1399
+ *   +0x1314 -> line 1401
+ *   +0x1318 -> line 1399
+ *   +0x1324 -> line 1401
+ *   +0x133c -> line 1399
+ *   +0x1358 -> line 1401
+ *   +0x1360 -> line 1403
+ *   +0x1390 -> line 1404
+ *   +0x13a8 -> line 1407
+ *   +0x13e0 -> line 1408
+ *   +0x13e8 -> line 1409
+ *   +0x13f0 -> line 1412
+ *   +0x147c -> line 1414
+ *   +0x148c -> line 1415
+ *   +0x1498 -> line 1416
+ *   +0x14a0 -> line 1419
+ *   +0x14d4 -> line 1420
+ *   +0x14dc -> line 1423
+ *   +0x14e0 -> line 1425
+ *   +0x14e4 -> line 1428
+ *   +0x14e8 -> line 1423
+ *   +0x151c -> line 1424
+ *   +0x1528 -> line 1425
+ *   +0x1538 -> line 1428
+ *   +0x154c -> line 1429
+ *   +0x1558 -> line 1430
+ *   +0x1560 -> line 1435
+ *   +0x1590 -> line 1438
+ *   +0x1594 -> line 1439
+ *   +0x1598 -> line 1438
+ *   +0x159c -> line 1439
+ *   +0x15a4 -> line 1437
+ *   +0x15a8 -> line 1438
+ *   +0x15d8 -> line 1439
+ *   +0x1674 -> line 1440
+ *   +0x167c -> line 1443
+ *   +0x1688 -> line 1444
+ *   +0x1690 -> line 1449
+ *   +0x1694 -> line 1451
+ *   +0x1698 -> line 1454
+ *   +0x169c -> line 1449
+ *   +0x16d0 -> line 1450
+ *   +0x16dc -> line 1451
+ *   +0x16ec -> line 1454
+ *   +0x1700 -> line 1455
+ *   +0x170c -> line 1458
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void MEC_fn_vClimbObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
+{
+    float xNorm;
+    MAT_tdstTransformation_* hPreviousMatrix;
+    MAT_tdstTransformation_* hCurrentMatrix;
+    MAT_tdstTransformation_* p_stPOS_FrontPosition;
+    MAT_tdstTransformation_* p_stPOS_BackPosition;
+    MAT_tdstTransformation_ a2_stPosition[2];
+    DNM_stMecObstacle* p_stGroundObstacle;
+    DNM_stMecObstacle* p_stSlideObstacle;
+    DNM_stMecObstacle* p_stClimbObstacle;
+    DNM_stMecObstacle* p_stTmpObstacle;
+    MTH3D_tdstVector_ stTmpVector;
+    MTH3D_tdstVector_ stNormTangentMove;
+    MTH3D_tdstVector_ stSafeTranslation;
+    MTH3D_tdstVector_ stSlideMove;
+    MTH3D_tdstVector_ stTangentMove;
+    MTH3D_tdstVector_ stMove;
+    MTH3D_tdstVector_ stAdjustVector;
+    MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_* p_stNormal;
+    MTH3D_tdstVector_ stY;
+    float xDotProdMin;
+    float xSlope;
+    float xNormalMove;
+    unsigned char bStop;
+    int lCounter2;
+    int lCounter1;
+    int lCounter;
+    int lObstacle;
+    /* TODO: decompile from asm/... */
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 1550–2269 */
 /* addr: 0x00306660  size: 8644 bytes */
@@ -1637,675 +2072,6 @@ void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove, DNM_stDyna
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove,
-                                    DNM_stDynamics* p_stDynamic,
-                                    MTH3D_tdstVector_* pstMove,
-                                    MTH3D_tdstVector_* pstGroundNormal,
-                                    MTH3D_tdstVector_* pstWallNormal,
-                                    unsigned char bAngleLimit,
-                                    float xDT);
-void MEC_fn_vComputeSpeed(DNM_stDynamics* p_stDynamic, float xDT);
-void MEC_fn_vCollideBaseMechanic(DNM_stDynamics* p_stDynamic,
-                                 HIE_tdstSuperObject_* hSupObj,
-                                 int lObstacle,
-                                 DNM_stMecObstacle* a_stObstacle,
-                                 float xDT);
-void MTH4D_fn_vCopy3DTo4DVector(MTH4D_tdstVector_* p_stDestination,
-                                MTH3D_tdstVector_* p_stSource);
-
-inline float MTH_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2) { float _r; asm { mula.s _x1, _x2 } asm { madda.s _y1, _y2 } asm { madd.s _r, _z1, _z2 } return _r; }
-inline float MTH_xSqr3(float _x, float _y, float _z) { float _r; asm { mula.s _x, _x } asm { madda.s _y, _y } asm { madd.s _r, _z, _z } return _r; }
-inline float MTH_xSqrt(float _x) { float _r; asm { sqrt.s _r, _x } return _r; }
-inline float MTH_xSqr2(float _x, float _y) { float _r; asm { mula.s _x, _x } asm { madd.s _r, _y, _y } return _r; }
-inline float MTH_xAbs(float _x) { float _r; asm { abs.s _r, _x } return _r; }
-#define MTH3D_M_bIsNullVectorWithEps(_p, _eps) ((MTH_xAbs((_p)->xX) < (_eps)) && (MTH_xAbs((_p)->xY) < (_eps)) && (MTH_xAbs((_p)->xZ) < (_eps)))
-#define MTH3D_M_vCopyVector(_d, _s) { *(int*)&(_d)->xX = *(int*)&(_s)->xX; *(int*)&(_d)->xY = *(int*)&(_s)->xY; *(int*)&(_d)->xZ = *(int*)&(_s)->xZ; }
-#define DNM_M_vSetEndFlags(_p, _ulValue) { unsigned int _ulFlags = (_ulValue); (_p)->m_tdstDynamicsBaseBlock.ulEndFlags = _ulFlags; (_p)->m_tdstDynamicsBaseBlock.ulEndFlags = _ulFlags; }
-#define MAT_M_vSetTranslation(_hMatrix, _p_stTrans) { if (((volatile MAT_tdstTransformation_*)(_hMatrix))->eType == MAT_eTransform_Identity) ((volatile MAT_tdstTransformation_*)(_hMatrix))->eType = MAT_eTransform_Translation; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xX = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xX; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xY = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xY; *(int*)&((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xZ = *(int*)&((MTH3D_tdstVector_*)(_p_stTrans))->xZ; ((volatile MAT_tdstTransformation_*)(_hMatrix))->stTransformMatrix.stCol_3.xW = 1.0f; }
-#pragma optimize_for_size off
-unsigned char fn_ucCollSetGetCollComputeFrequencySO(HIE_tdstSuperObject_* hSuperObj);
-int MEC_fn_bCeilObstacle(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
-int MEC_fn_bGroundNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
-unsigned char MEC_fn_bMainActor(HIE_tdstSuperObject_* hSupObj);
-unsigned char MEC_fn_bWallNormal(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal);
-HIE_tdstSuperObject_* MEC_fn_hGetFatherActor(HIE_tdstSuperObject_* hSupObj);
-void MEC_fn_vCrashAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle);
-void MEC_fn_vDeleteBaseBackFace(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic);
-void MEC_fn_vDeleteNullTranslationObstacle(int lObstacle, DNM_stMecObstacle* a_stObstacle);
-void MEC_fn_vDeleteUnderGroundWall(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stGroundObstacle);
-void MEC_fn_vDeleteWallEdge(int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic);
-void MEC_fn_vEdgeAnalysis(DNM_stDynamics* p_stDynamic, int lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stMecObstacle* p_stGround);
-void MEC_fn_vReportCollision(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, int lNbObstacle, DNM_stMecObstacle* a_stObstacle, int lObstacle);
-unsigned char MEC_fn_bCollision(int* p_lObstacle, DNM_stMecObstacle* p_stObstacle, DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* p_stSupObj, MAT_tdstTransformation_* p_stStartPosition, MAT_tdstTransformation_* p_stEndPosition, unsigned char bBackFace);
-float MEC_fn_xGetSlide(DNM_stDynamics* p_stDynamic, DNM_stMecObstacle* p_stObstacle);
-
-#pragma optimize_for_size reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 1076–1458 */
-/* addr: 0x00308830  size: 5960 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1076
- *   +0x0004 -> line 1115
- *   +0x0008 -> line 1076
- *   +0x000c -> line 1115
- *   +0x0010 -> line 1076
- *   +0x0018 -> line 1079
- *   +0x001c -> line 1076
- *   +0x0034 -> line 1112
- *   +0x0038 -> line 1076
- *   +0x0044 -> line 1111
- *   +0x0048 -> line 1076
- *   +0x0054 -> line 1115
- *   +0x0058 -> line 1087
- *   +0x005c -> line 1115
- *   +0x0064 -> line 1126
- *   +0x0068 -> line 1125
- *   +0x006c -> line 1126
- *   +0x0070 -> line 1130
- *   +0x0088 -> line 1133
- *   +0x00c8 -> line 1134
- *   +0x00d4 -> line 1142
- *   +0x00d8 -> line 1138
- *   +0x00e8 -> line 1142
- *   +0x00ec -> line 1145
- *   +0x00f8 -> line 1138
- *   +0x0118 -> line 1139
- *   +0x0148 -> line 1143
- *   +0x0188 -> line 1145
- *   +0x0224 -> line 1146
- *   +0x0240 -> line 1152
- *   +0x024c -> line 1153
- *   +0x025c -> line 1156
- *   +0x0294 -> line 1157
- *   +0x029c -> line 1158
- *   +0x02a4 -> line 1162
- *   +0x02b0 -> line 1163
- *   +0x02f4 -> line 1164
- *   +0x0300 -> line 1166
- *   +0x0304 -> line 1164
- *   +0x0324 -> line 1166
- *   +0x0330 -> line 1167
- *   +0x0354 -> line 1169
- *   +0x03f8 -> line 1170
- *   +0x0478 -> line 1172
- *   +0x0484 -> line 1174
- *   +0x04ac -> line 1175
- *   +0x04cc -> line 1177
- *   +0x04f0 -> line 1180
- *   +0x0500 -> line 1183
- *   +0x0504 -> line 1180
- *   +0x0524 -> line 1181
- *   +0x0528 -> line 1180
- *   +0x0530 -> line 1181
- *   +0x0558 -> line 1182
- *   +0x0590 -> line 1183
- *   +0x05a8 -> line 1185
- *   +0x05b0 -> line 1183
- *   +0x05bc -> line 1188
- *   +0x05c0 -> line 1183
- *   +0x05d8 -> line 1186
- *   +0x0604 -> line 1187
- *   +0x0608 -> line 1186
- *   +0x0610 -> line 1187
- *   +0x0644 -> line 1188
- *   +0x065c -> line 1196
- *   +0x0664 -> line 1188
- *   +0x0668 -> line 1193
- *   +0x066c -> line 1196
- *   +0x067c -> line 1190
- *   +0x0680 -> line 1188
- *   +0x0698 -> line 1196
- *   +0x06ac -> line 1199
- *   +0x06c0 -> line 1202
- *   +0x06cc -> line 1204
- *   +0x06d4 -> line 1205
- *   +0x06e8 -> line 1207
- *   +0x0764 -> line 1208
- *   +0x076c -> line 1210
- *   +0x0788 -> line 1213
- *   +0x0794 -> line 1215
- *   +0x079c -> line 1216
- *   +0x07b0 -> line 1218
- *   +0x07c4 -> line 1221
- *   +0x07e4 -> line 1224
- *   +0x0808 -> line 1226
- *   +0x0810 -> line 1229
- *   +0x0824 -> line 1228
- *   +0x0828 -> line 1229
- *   +0x083c -> line 1231
- *   +0x0844 -> line 1232
- *   +0x0858 -> line 1234
- *   +0x087c -> line 1235
- *   +0x088c -> line 1237
- *   +0x08c4 -> line 1238
- *   +0x08ec -> line 1239
- *   +0x08fc -> line 1241
- *   +0x0920 -> line 1243
- *   +0x0984 -> line 1249
- *   +0x0988 -> line 1252
- *   +0x0990 -> line 1253
- *   +0x09a0 -> line 1255
- *   +0x09a4 -> line 1256
- *   +0x09ac -> line 1261
- *   +0x09c4 -> line 1262
- *   +0x09c8 -> line 1265
- *   +0x0a4c -> line 1273
- *   +0x0a70 -> line 1274
- *   +0x0a88 -> line 1275
- *   +0x0a8c -> line 1279
- *   +0x0aec -> line 1287
- *   +0x0af8 -> line 1289
- *   +0x0b00 -> line 1290
- *   +0x0b14 -> line 1292
- *   +0x0b60 -> line 1298
- *   +0x0b78 -> line 1301
- *   +0x0b7c -> line 1298
- *   +0x0b84 -> line 1300
- *   +0x0b88 -> line 1301
- *   +0x0b8c -> line 1298
- *   +0x0ba4 -> line 1299
- *   +0x0bb0 -> line 1300
- *   +0x0bc0 -> line 1301
- *   +0x0bd0 -> line 1302
- *   +0x0bdc -> line 1305
- *   +0x0bf0 -> line 1308
- *   +0x0c08 -> line 1311
- *   +0x0c20 -> line 1314
- *   +0x0c28 -> line 1316
- *   +0x0c3c -> line 1318
- *   +0x0c44 -> line 1320
- *   +0x0c6c -> line 1322
- *   +0x0c74 -> line 1323
- *   +0x0c78 -> line 1322
- *   +0x0cb0 -> line 1323
- *   +0x0ce0 -> line 1324
- *   +0x0ce8 -> line 1328
- *   +0x0cf4 -> line 1330
- *   +0x0cfc -> line 1331
- *   +0x0d10 -> line 1333
- *   +0x0d4c -> line 1334
- *   +0x0d54 -> line 1336
- *   +0x0d70 -> line 1338
- *   +0x0d78 -> line 1340
- *   +0x0d80 -> line 1341
- *   +0x0d84 -> line 1340
- *   +0x0dbc -> line 1341
- *   +0x0dec -> line 1343
- *   +0x0df4 -> line 1346
- *   +0x0dfc -> line 1347
- *   +0x0e00 -> line 1346
- *   +0x0e38 -> line 1347
- *   +0x0e68 -> line 1350
- *   +0x0e70 -> line 1353
- *   +0x0ecc -> line 1355
- *   +0x0ee4 -> line 1357
- *   +0x0f10 -> line 1358
- *   +0x0f18 -> line 1362
- *   +0x0f20 -> line 1358
- *   +0x0f40 -> line 1359
- *   +0x0f78 -> line 1360
- *   +0x0fa8 -> line 1362
- *   +0x0fdc -> line 1363
- *   +0x0fe0 -> line 1362
- *   +0x0fe4 -> line 1363
- *   +0x1018 -> line 1364
- *   +0x105c -> line 1366
- *   +0x1064 -> line 1369
- *   +0x107c -> line 1371
- *   +0x1098 -> line 1374
- *   +0x109c -> line 1371
- *   +0x10a8 -> line 1374
- *   +0x10c0 -> line 1371
- *   +0x10dc -> line 1374
- *   +0x10e4 -> line 1376
- *   +0x1114 -> line 1379
- *   +0x11b8 -> line 1381
- *   +0x11c8 -> line 1382
- *   +0x11d4 -> line 1383
- *   +0x11dc -> line 1386
- *   +0x1210 -> line 1388
- *   +0x1218 -> line 1391
- *   +0x1220 -> line 1393
- *   +0x1238 -> line 1395
- *   +0x124c -> line 1399
- *   +0x1250 -> line 1395
- *   +0x1278 -> line 1396
- *   +0x127c -> line 1395
- *   +0x1280 -> line 1396
- *   +0x12b4 -> line 1397
- *   +0x12fc -> line 1399
- *   +0x1314 -> line 1401
- *   +0x1318 -> line 1399
- *   +0x1324 -> line 1401
- *   +0x133c -> line 1399
- *   +0x1358 -> line 1401
- *   +0x1360 -> line 1403
- *   +0x1390 -> line 1404
- *   +0x13a8 -> line 1407
- *   +0x13e0 -> line 1408
- *   +0x13e8 -> line 1409
- *   +0x13f0 -> line 1412
- *   +0x147c -> line 1414
- *   +0x148c -> line 1415
- *   +0x1498 -> line 1416
- *   +0x14a0 -> line 1419
- *   +0x14d4 -> line 1420
- *   +0x14dc -> line 1423
- *   +0x14e0 -> line 1425
- *   +0x14e4 -> line 1428
- *   +0x14e8 -> line 1423
- *   +0x151c -> line 1424
- *   +0x1528 -> line 1425
- *   +0x1538 -> line 1428
- *   +0x154c -> line 1429
- *   +0x1558 -> line 1430
- *   +0x1560 -> line 1435
- *   +0x1590 -> line 1438
- *   +0x1594 -> line 1439
- *   +0x1598 -> line 1438
- *   +0x159c -> line 1439
- *   +0x15a4 -> line 1437
- *   +0x15a8 -> line 1438
- *   +0x15d8 -> line 1439
- *   +0x1674 -> line 1440
- *   +0x167c -> line 1443
- *   +0x1688 -> line 1444
- *   +0x1690 -> line 1449
- *   +0x1694 -> line 1451
- *   +0x1698 -> line 1454
- *   +0x169c -> line 1449
- *   +0x16d0 -> line 1450
- *   +0x16dc -> line 1451
- *   +0x16ec -> line 1454
- *   +0x1700 -> line 1455
- *   +0x170c -> line 1458
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 792–1067 */
-/* addr: 0x00309f80  size: 4200 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 792
- *   +0x0008 -> line 819
- *   +0x000c -> line 792
- *   +0x0010 -> line 818
- *   +0x0014 -> line 792
- *   +0x0030 -> line 832
- *   +0x0034 -> line 792
- *   +0x0038 -> line 833
- *   +0x003c -> line 792
- *   +0x0040 -> line 840
- *   +0x0044 -> line 792
- *   +0x0048 -> line 841
- *   +0x0050 -> line 796
- *   +0x0054 -> line 834
- *   +0x0058 -> line 797
- *   +0x005c -> line 822
- *   +0x0060 -> line 840
- *   +0x0064 -> line 834
- *   +0x0070 -> line 837
- *   +0x00a0 -> line 838
- *   +0x00d0 -> line 842
- *   +0x0108 -> line 845
- *   +0x0114 -> line 846
- *   +0x0124 -> line 849
- *   +0x015c -> line 850
- *   +0x0164 -> line 851
- *   +0x016c -> line 854
- *   +0x018c -> line 856
- *   +0x0190 -> line 854
- *   +0x0194 -> line 856
- *   +0x0198 -> line 854
- *   +0x019c -> line 856
- *   +0x01b8 -> line 860
- *   +0x01c0 -> line 861
- *   +0x01c8 -> line 863
- *   +0x01cc -> line 865
- *   +0x01d4 -> line 868
- *   +0x01d8 -> line 872
- *   +0x0208 -> line 874
- *   +0x020c -> line 873
- *   +0x0210 -> line 877
- *   +0x0218 -> line 879
- *   +0x021c -> line 873
- *   +0x0230 -> line 874
- *   +0x0254 -> line 877
- *   +0x0258 -> line 878
- *   +0x025c -> line 877
- *   +0x027c -> line 878
- *   +0x02b0 -> line 879
- *   +0x02c8 -> line 881
- *   +0x02d0 -> line 879
- *   +0x02dc -> line 884
- *   +0x02e0 -> line 879
- *   +0x02f8 -> line 883
- *   +0x02fc -> line 882
- *   +0x0320 -> line 883
- *   +0x0354 -> line 884
- *   +0x0370 -> line 892
- *   +0x0380 -> line 887
- *   +0x0384 -> line 884
- *   +0x039c -> line 892
- *   +0x03b0 -> line 894
- *   +0x03c4 -> line 897
- *   +0x03d0 -> line 899
- *   +0x03dc -> line 900
- *   +0x03f0 -> line 902
- *   +0x046c -> line 904
- *   +0x0474 -> line 905
- *   +0x0478 -> line 906
- *   +0x04a0 -> line 907
- *   +0x04b4 -> line 910
- *   +0x04e8 -> line 912
- *   +0x04f0 -> line 914
- *   +0x04f4 -> line 915
- *   +0x04f8 -> line 918
- *   +0x0520 -> line 920
- *   +0x0528 -> line 921
- *   +0x053c -> line 923
- *   +0x05a0 -> line 929
- *   +0x05c4 -> line 930
- *   +0x05d4 -> line 932
- *   +0x060c -> line 933
- *   +0x0634 -> line 934
- *   +0x0644 -> line 935
- *   +0x064c -> line 939
- *   +0x0668 -> line 941
- *   +0x0684 -> line 944
- *   +0x069c -> line 947
- *   +0x06e0 -> line 949
- *   +0x06f8 -> line 951
- *   +0x0700 -> line 953
- *   +0x0714 -> line 955
- *   +0x074c -> line 956
- *   +0x07cc -> line 957
- *   +0x07dc -> line 959
- *   +0x07f0 -> line 961
- *   +0x0818 -> line 964
- *   +0x083c -> line 965
- *   +0x085c -> line 969
- *   +0x0860 -> line 965
- *   +0x0878 -> line 966
- *   +0x0884 -> line 969
- *   +0x0898 -> line 970
- *   +0x08a4 -> line 971
- *   +0x08ac -> line 976
- *   +0x08b4 -> line 978
- *   +0x08bc -> line 980
- *   +0x08c4 -> line 981
- *   +0x08c8 -> line 980
- *   +0x0900 -> line 981
- *   +0x0930 -> line 982
- *   +0x0938 -> line 986
- *   +0x097c -> line 988
- *   +0x0994 -> line 989
- *   +0x09e8 -> line 993
- *   +0x09ec -> line 989
- *   +0x0a04 -> line 991
- *   +0x0a44 -> line 992
- *   +0x0a84 -> line 993
- *   +0x0ac0 -> line 994
- *   +0x0ac8 -> line 997
- *   +0x0b00 -> line 1000
- *   +0x0b20 -> line 1003
- *   +0x0bc4 -> line 1005
- *   +0x0bd4 -> line 1006
- *   +0x0be0 -> line 1007
- *   +0x0be8 -> line 1009
- *   +0x0c1c -> line 1011
- *   +0x0c24 -> line 1014
- *   +0x0c2c -> line 1017
- *   +0x0c60 -> line 1019
- *   +0x0c78 -> line 1020
- *   +0x0ccc -> line 1023
- *   +0x0cd0 -> line 1020
- *   +0x0ce8 -> line 1021
- *   +0x0d28 -> line 1022
- *   +0x0d68 -> line 1023
- *   +0x0da4 -> line 1024
- *   +0x0dac -> line 1027
- *   +0x0de4 -> line 1029
- *   +0x0e04 -> line 1031
- *   +0x0ea8 -> line 1033
- *   +0x0eb8 -> line 1034
- *   +0x0ec4 -> line 1035
- *   +0x0ecc -> line 1037
- *   +0x0f00 -> line 1038
- *   +0x0f08 -> line 1041
- *   +0x0f0c -> line 1043
- *   +0x0f10 -> line 1041
- *   +0x0f3c -> line 1042
- *   +0x0f48 -> line 1043
- *   +0x0f6c -> line 1046
- *   +0x0f84 -> line 1047
- *   +0x0f90 -> line 1048
- *   +0x0f98 -> line 1052
- *   +0x0fa4 -> line 1053
- *   +0x0fac -> line 1058
- *   +0x0fb0 -> line 1060
- *   +0x0fb4 -> line 1058
- *   +0x0fe0 -> line 1059
- *   +0x0fec -> line 1060
- *   +0x1010 -> line 1063
- *   +0x1028 -> line 1064
- *   +0x1034 -> line 1067
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 757–787 */
-/* addr: 0x0030aff0  size: 344 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 757
- *   +0x0020 -> line 769
- *   +0x0024 -> line 770
- *   +0x0038 -> line 772
- *   +0x0050 -> line 775
- *   +0x0054 -> line 774
- *   +0x0058 -> line 775
- *   +0x005c -> line 776
- *   +0x0060 -> line 775
- *   +0x0088 -> line 776
- *   +0x00b8 -> line 780
- *   +0x00f0 -> line 782
- *   +0x0104 -> line 783
- *   +0x011c -> line 784
- *   +0x0124 -> line 786
- *   +0x013c -> line 787
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 723–752 */
-/* addr: 0x0030b150  size: 496 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 723
- *   +0x0020 -> line 729
- *   +0x0028 -> line 734
- *   +0x0034 -> line 735
- *   +0x0040 -> line 737
- *   +0x0044 -> line 735
- *   +0x0054 -> line 738
- *   +0x005c -> line 735
- *   +0x0064 -> line 737
- *   +0x006c -> line 735
- *   +0x0070 -> line 737
- *   +0x0078 -> line 738
- *   +0x007c -> line 735
- *   +0x0080 -> line 737
- *   +0x0084 -> line 738
- *   +0x00b8 -> line 739
- *   +0x0114 -> line 740
- *   +0x0140 -> line 742
- *   +0x0144 -> line 740
- *   +0x0148 -> line 742
- *   +0x0158 -> line 744
- *   +0x0160 -> line 742
- *   +0x0184 -> line 743
- *   +0x01a4 -> line 744
- *   +0x01ac -> line 745
- *   +0x01c8 -> line 751
- *   +0x01d4 -> line 752
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 479–527 */
-/* addr: 0x0030b340  size: 1224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 479
- *   +0x000c -> line 486
- *   +0x00ac -> line 488
- *   +0x00b4 -> line 489
- *   +0x00bc -> line 493
- *   +0x00c0 -> line 492
- *   +0x00c4 -> line 493
- *   +0x0104 -> line 495
- *   +0x01a4 -> line 497
- *   +0x01ac -> line 498
- *   +0x01b4 -> line 502
- *   +0x0214 -> line 503
- *   +0x0230 -> line 505
- *   +0x0248 -> line 507
- *   +0x02cc -> line 508
- *   +0x0340 -> line 510
- *   +0x034c -> line 512
- *   +0x0368 -> line 514
- *   +0x03cc -> line 515
- *   +0x03ec -> line 516
- *   +0x0414 -> line 521
- *   +0x042c -> line 523
- *   +0x0478 -> line 526
- *   +0x047c -> line 523
- *   +0x048c -> line 524
- *   +0x04b4 -> line 526
- *   +0x04bc -> line 527
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove, DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* pstMove, MTH3D_tdstVector_* pstGroundNormal, MTH3D_tdstVector_* pstWallNormal, unsigned char bAngleLimit, float xDT)
-{
-    float xNorm;
-    float xFactor;
-    MAT_tdstTransformation_* hCurrentMatrix;
-    MTH3D_tdstVector_ stVector;
-    MTH3D_tdstVector_ stDirection;
-    /* TODO: decompile from asm/... */
-}
-
-void MEC_fn_vOrient(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
-{
-    float xNorm;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stY;
-    MTH3D_tdstVector_ stX;
-    MTH3D_tdstVector_ stVector;
-    MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
-}
-
-void MEC_fn_vBaseObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
-{
-    MAT_tdstTransformation_ stInitialMatrix;
-    MAT_tdstTransformation_* hInitialMatrix;
-    MAT_tdstTransformation_* hCurrentMatrix;
-    int lObstacle;
-    unsigned int ulFlags;
-
-    hInitialMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
-    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
-    ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags | 0x10;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
-    p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
-    if (fn_ucCollSetGetCollComputeFrequencySO(hSupObj) > 1) {
-        stInitialMatrix = p_stDynamic->m_tdstDynamicsBaseBlock.m_stPreviousMatrix;
-        if (stInitialMatrix.eType == MAT_eTransform_Identity) {
-            stInitialMatrix.eType = MAT_eTransform_Translation;
-        }
-        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xX = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xX;
-        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xY = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xY;
-        *(int*)&stInitialMatrix.stTransformMatrix.stCol_3.xZ = *(int*)&p_stDynamic->m_tdstDynamicsAdvancedBlock.m_stCollisionTranslation.xZ;
-        stInitialMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
-    }
-    if (MEC_fn_bCollision(&lObstacle,
-                          g_a_stObstacle,
-                          p_stDynamic,
-                          hSupObj,
-                          NULL,
-                          hCurrentMatrix,
-                          (unsigned char)((p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0x00400000) ? 1 : 0))) {
-        MEC_fn_vEdgeAnalysis(p_stDynamic, lObstacle, g_a_stObstacle, NULL);
-        MEC_fn_vCollideBaseMechanic(p_stDynamic, hSupObj, lObstacle, g_a_stObstacle, xDT);
-    } else {
-        ulFlags = p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags & 0xFFFF0000;
-        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
-        p_stDynamic->m_tdstDynamicsBaseBlock.ulEndFlags = ulFlags;
-    }
-}
-
-void MEC_fn_vGiObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
-{
-    MAT_tdstTransformation_* hPreviousMatrix;
-    MAT_tdstTransformation_* hCurrentMatrix;
-    MAT_tdstTransformation_* p_stPOS_UpPosition;
-    MAT_tdstTransformation_* p_stPOS_DownPosition;
-    MAT_tdstTransformation_ a2_stPosition[2];
-    DNM_stObstacle* p_stPreviousCeilObstacle;
-    DNM_stMecObstacle* p_stSlideObstacle;
-    DNM_stMecObstacle* p_stGiObstacle;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    MTH3D_tdstVector_ stAdjustVector;
-    MTH3D_tdstVector_ stVerticalVector;
-    MTH3D_tdstVector_ stSlideMove;
-    MTH3D_tdstVector_ stMove;
-    MTH3D_tdstVector_ stTmpVector;
-    MTH3D_tdstVector_ stVector;
-    MTH3D_tdstVector_* p_stGiContact;
-    MTH3D_tdstVector_* p_stGiNormal;
-    float xNormalMove;
-    unsigned char bGiFace;
-    int lFace;
-    int lCounter1;
-    int lCounter;
-    int lObstacle;
-    /* TODO: decompile from asm/... */
-}
-
-void MEC_fn_vClimbObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
-{
-    float xNorm;
-    MAT_tdstTransformation_* hPreviousMatrix;
-    MAT_tdstTransformation_* hCurrentMatrix;
-    MAT_tdstTransformation_* p_stPOS_FrontPosition;
-    MAT_tdstTransformation_* p_stPOS_BackPosition;
-    MAT_tdstTransformation_ a2_stPosition[2];
-    DNM_stMecObstacle* p_stGroundObstacle;
-    DNM_stMecObstacle* p_stSlideObstacle;
-    DNM_stMecObstacle* p_stClimbObstacle;
-    DNM_stMecObstacle* p_stTmpObstacle;
-    MTH3D_tdstVector_ stTmpVector;
-    MTH3D_tdstVector_ stNormTangentMove;
-    MTH3D_tdstVector_ stSafeTranslation;
-    MTH3D_tdstVector_ stSlideMove;
-    MTH3D_tdstVector_ stTangentMove;
-    MTH3D_tdstVector_ stMove;
-    MTH3D_tdstVector_ stAdjustVector;
-    MTH3D_tdstVector_ stVector;
-    MTH3D_tdstVector_* p_stNormal;
-    MTH3D_tdstVector_ stY;
-    float xDotProdMin;
-    float xSlope;
-    float xNormalMove;
-    unsigned char bStop;
-    int lCounter2;
-    int lCounter1;
-    int lCounter;
-    int lObstacle;
-    /* TODO: decompile from asm/... */
-}
-
 #pragma optimize_for_size off
 void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
 {
@@ -2949,6 +2715,32 @@ void MEC_fn_vGroundObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuper
 }
 #pragma optimize_for_size reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 2273–2297 */
+/* addr: 0x003064c0  size: 416 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2273
+ *   +0x0008 -> line 2281
+ *   +0x0048 -> line 2288
+ *   +0x004c -> line 2283
+ *   +0x0050 -> line 2288
+ *   +0x0054 -> line 2287
+ *   +0x0058 -> line 2288
+ *   +0x0068 -> line 2290
+ *   +0x0070 -> line 2288
+ *   +0x007c -> line 2290
+ *   +0x0088 -> line 2291
+ *   +0x00f8 -> line 2292
+ *   +0x0104 -> line 2295
+ *   +0x0108 -> line 2292
+ *   +0x0128 -> line 2293
+ *   +0x0138 -> line 2295
+ *   +0x0144 -> line 2293
+ *   +0x014c -> line 2295
+ *   +0x018c -> line 2296
+ *   +0x0194 -> line 2297
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MEC_fn_vGroundGuess(DNM_stDynamics* p_stDynamic, float xDT)
 {
     float xNorm;
@@ -3004,6 +2796,191 @@ void MEC_fn_vGroundGuess(DNM_stDynamics* p_stDynamic, float xDT)
     MEC_fn_vComputeSpeed(p_stDynamic, xDT);
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 2300–2605 */
+/* addr: 0x00305510  size: 4012 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2300
+ *   +0x0034 -> line 2352
+ *   +0x0038 -> line 2300
+ *   +0x0058 -> line 2345
+ *   +0x005c -> line 2354
+ *   +0x0064 -> line 2307
+ *   +0x0068 -> line 2345
+ *   +0x006c -> line 2328
+ *   +0x0070 -> line 2345
+ *   +0x0074 -> line 2329
+ *   +0x0078 -> line 2335
+ *   +0x007c -> line 2341
+ *   +0x0080 -> line 2354
+ *   +0x0098 -> line 2357
+ *   +0x009c -> line 2356
+ *   +0x00a0 -> line 2357
+ *   +0x00a4 -> line 2358
+ *   +0x00a8 -> line 2357
+ *   +0x00d0 -> line 2358
+ *   +0x0100 -> line 2362
+ *   +0x0138 -> line 2364
+ *   +0x013c -> line 2366
+ *   +0x015c -> line 2367
+ *   +0x0160 -> line 2372
+ *   +0x0164 -> line 2367
+ *   +0x0168 -> line 2370
+ *   +0x016c -> line 2368
+ *   +0x0170 -> line 2371
+ *   +0x0174 -> line 2372
+ *   +0x0178 -> line 2373
+ *   +0x017c -> line 2372
+ *   +0x0180 -> line 2375
+ *   +0x0190 -> line 2377
+ *   +0x0198 -> line 2378
+ *   +0x01ac -> line 2380
+ *   +0x01bc -> line 2382
+ *   +0x01c0 -> line 2383
+ *   +0x01c4 -> line 2385
+ *   +0x01c8 -> line 2383
+ *   +0x01cc -> line 2386
+ *   +0x01e8 -> line 2388
+ *   +0x01f0 -> line 2393
+ *   +0x0208 -> line 2395
+ *   +0x0218 -> line 2396
+ *   +0x022c -> line 2397
+ *   +0x0234 -> line 2402
+ *   +0x0238 -> line 2401
+ *   +0x023c -> line 2402
+ *   +0x0248 -> line 2406
+ *   +0x025c -> line 2408
+ *   +0x0260 -> line 2409
+ *   +0x0264 -> line 2410
+ *   +0x0268 -> line 2409
+ *   +0x026c -> line 2411
+ *   +0x0288 -> line 2413
+ *   +0x029c -> line 2417
+ *   +0x02d0 -> line 2418
+ *   +0x02d8 -> line 2420
+ *   +0x02ec -> line 2422
+ *   +0x0354 -> line 2424
+ *   +0x035c -> line 2425
+ *   +0x0360 -> line 2428
+ *   +0x0384 -> line 2429
+ *   +0x0390 -> line 2431
+ *   +0x039c -> line 2433
+ *   +0x03ac -> line 2435
+ *   +0x03b4 -> line 2438
+ *   +0x03d0 -> line 2439
+ *   +0x03d4 -> line 2441
+ *   +0x03e4 -> line 2442
+ *   +0x03e8 -> line 2444
+ *   +0x03fc -> line 2446
+ *   +0x0404 -> line 2447
+ *   +0x040c -> line 2451
+ *   +0x0418 -> line 2453
+ *   +0x0420 -> line 2454
+ *   +0x0434 -> line 2455
+ *   +0x046c -> line 2456
+ *   +0x0480 -> line 2458
+ *   +0x04c4 -> line 2459
+ *   +0x052c -> line 2461
+ *   +0x0530 -> line 2464
+ *   +0x0540 -> line 2465
+ *   +0x054c -> line 2468
+ *   +0x0560 -> line 2478
+ *   +0x0570 -> line 2468
+ *   +0x0574 -> line 2478
+ *   +0x058c -> line 2479
+ *   +0x059c -> line 2482
+ *   +0x05b0 -> line 2483
+ *   +0x05dc -> line 2484
+ *   +0x05ec -> line 2489
+ *   +0x05f0 -> line 2488
+ *   +0x05f4 -> line 2489
+ *   +0x05f8 -> line 2484
+ *   +0x05fc -> line 2489
+ *   +0x060c -> line 2484
+ *   +0x0610 -> line 2488
+ *   +0x0614 -> line 2489
+ *   +0x0620 -> line 2488
+ *   +0x0624 -> line 2490
+ *   +0x063c -> line 2491
+ *   +0x0648 -> line 2492
+ *   +0x069c -> line 2493
+ *   +0x0740 -> line 2495
+ *   +0x0748 -> line 2497
+ *   +0x0760 -> line 2498
+ *   +0x0780 -> line 2500
+ *   +0x07b4 -> line 2501
+ *   +0x07bc -> line 2502
+ *   +0x07c4 -> line 2509
+ *   +0x07c8 -> line 2507
+ *   +0x07cc -> line 2509
+ *   +0x07e0 -> line 2511
+ *   +0x0828 -> line 2513
+ *   +0x0838 -> line 2515
+ *   +0x0848 -> line 2516
+ *   +0x084c -> line 2515
+ *   +0x0850 -> line 2516
+ *   +0x0860 -> line 2519
+ *   +0x0864 -> line 2518
+ *   +0x0868 -> line 2519
+ *   +0x08dc -> line 2521
+ *   +0x08f4 -> line 2522
+ *   +0x0914 -> line 2524
+ *   +0x0940 -> line 2525
+ *   +0x0960 -> line 2527
+ *   +0x0970 -> line 2528
+ *   +0x09ac -> line 2530
+ *   +0x09b8 -> line 2531
+ *   +0x09c0 -> line 2533
+ *   +0x09cc -> line 2535
+ *   +0x09fc -> line 2542
+ *   +0x0a20 -> line 2544
+ *   +0x0a38 -> line 2546
+ *   +0x0a50 -> line 2548
+ *   +0x0a68 -> line 2549
+ *   +0x0a6c -> line 2548
+ *   +0x0a70 -> line 2550
+ *   +0x0b10 -> line 2552
+ *   +0x0b70 -> line 2553
+ *   +0x0b94 -> line 2559
+ *   +0x0b98 -> line 2562
+ *   +0x0b9c -> line 2559
+ *   +0x0ba0 -> line 2562
+ *   +0x0ba4 -> line 2563
+ *   +0x0ba8 -> line 2561
+ *   +0x0bac -> line 2559
+ *   +0x0bd4 -> line 2561
+ *   +0x0bf4 -> line 2562
+ *   +0x0c18 -> line 2563
+ *   +0x0c3c -> line 2565
+ *   +0x0c40 -> line 2563
+ *   +0x0c58 -> line 2565
+ *   +0x0cbc -> line 2567
+ *   +0x0cd4 -> line 2569
+ *   +0x0d08 -> line 2571
+ *   +0x0d30 -> line 2573
+ *   +0x0d38 -> line 2575
+ *   +0x0dc0 -> line 2577
+ *   +0x0df0 -> line 2578
+ *   +0x0e64 -> line 2580
+ *   +0x0ea0 -> line 2581
+ *   +0x0ec4 -> line 2584
+ *   +0x0ed8 -> line 2587
+ *   +0x0ee4 -> line 2588
+ *   +0x0eec -> line 2593
+ *   +0x0f04 -> line 2595
+ *   +0x0f14 -> line 2597
+ *   +0x0f24 -> line 2598
+ *   +0x0f28 -> line 2597
+ *   +0x0f2c -> line 2598
+ *   +0x0f3c -> line 2600
+ *   +0x0f40 -> line 2601
+ *   +0x0f44 -> line 2600
+ *   +0x0f48 -> line 2601
+ *   +0x0f4c -> line 2600
+ *   +0x0f54 -> line 2601
+ *   +0x0f5c -> line 2605
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void MEC_fn_vSwimObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT)
 {
     float xNorm;
@@ -3039,6 +3016,22 @@ void MEC_fn_vSwimObstacleManagement(DNM_stDynamics* p_stDynamic, HIE_tdstSuperOb
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 64–91 */
+/* addr: 0x003053d0  size: 312 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 64
+ *   +0x0020 -> line 75
+ *   +0x0044 -> line 78
+ *   +0x0048 -> line 75
+ *   +0x004c -> line 78
+ *   +0x006c -> line 79
+ *   +0x00b0 -> line 84
+ *   +0x00d4 -> line 86
+ *   +0x0110 -> line 87
+ *   +0x0114 -> line 91
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int MEC_fn_lComputeCall(DNM_stDynamics* p_stDynamic, HIE_tdstSuperObject_* hSupObj, float xDT, float xCoef)
 {
     float xX;

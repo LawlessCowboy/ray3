@@ -871,23 +871,6 @@ void* (*PS2glAllocator)(unsigned int);
 void internalReadFastRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
 void internalPS2glDrawRgbaPixels(int x, int y, int width, int height, unsigned int format, unsigned int type, void* pixels);
 
-/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PushPopAttrib.c lines 69–86 */
-/* addr: 0x00167490  size: 384 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 69
- *   +0x0030 -> line 73
- *   +0x0048 -> line 74
- *   +0x0068 -> line 77
- *   +0x0084 -> line 78
- *   +0x00d8 -> line 79
- *   +0x00e0 -> line 81
- *   +0x00fc -> line 82
- *   +0x0150 -> line 85
- *   +0x015c -> line 86
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type);
@@ -1130,6 +1113,22 @@ void impPS2glPopAttrib(void)
     /* TODO: decompile from asm/... */
 }
 
+/* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PushPopAttrib.c lines 69–86 */
+/* addr: 0x00167490  size: 384 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 69
+ *   +0x0030 -> line 73
+ *   +0x0048 -> line 74
+ *   +0x0068 -> line 77
+ *   +0x0084 -> line 78
+ *   +0x00d8 -> line 79
+ *   +0x00e0 -> line 81
+ *   +0x00fc -> line 82
+ *   +0x0150 -> line 85
+ *   +0x015c -> line 86
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void impPS2glCopyPixels(int x, int y, int width, int height, unsigned int type)
 {
     void* pixels;

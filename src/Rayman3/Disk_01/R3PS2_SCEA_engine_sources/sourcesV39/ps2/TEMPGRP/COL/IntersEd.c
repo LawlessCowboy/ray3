@@ -266,59 +266,6 @@ struct COL_tdstParallelBox_ {
 short COL_g_xDepth;
 short COL_g_xSelectedDepth;
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersEd.c lines 509–573 */
-/* addr: 0x00255250  size: 916 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 509
- *   +0x0044 -> line 518
- *   +0x0054 -> line 519
- *   +0x005c -> line 521
- *   +0x0074 -> line 523
- *   +0x0078 -> line 521
- *   +0x007c -> line 523
- *   +0x0084 -> line 521
- *   +0x008c -> line 523
- *   +0x0098 -> line 524
- *   +0x00a4 -> line 525
- *   +0x00a8 -> line 526
- *   +0x00b0 -> line 529
- *   +0x00b4 -> line 526
- *   +0x00b8 -> line 529
- *   +0x00e8 -> line 532
- *   +0x00fc -> line 533
- *   +0x0118 -> line 535
- *   +0x011c -> line 538
- *   +0x0120 -> line 536
- *   +0x0124 -> line 538
- *   +0x0128 -> line 536
- *   +0x016c -> line 537
- *   +0x019c -> line 539
- *   +0x01bc -> line 540
- *   +0x01c4 -> line 544
- *   +0x01d8 -> line 545
- *   +0x01ec -> line 547
- *   +0x01f0 -> line 550
- *   +0x01f4 -> line 548
- *   +0x01f8 -> line 550
- *   +0x01fc -> line 548
- *   +0x0240 -> line 549
- *   +0x0270 -> line 551
- *   +0x0290 -> line 552
- *   +0x0298 -> line 557
- *   +0x02b4 -> line 559
- *   +0x02b8 -> line 563
- *   +0x02bc -> line 560
- *   +0x02c0 -> line 563
- *   +0x02c4 -> line 560
- *   +0x02c8 -> line 561
- *   +0x030c -> line 562
- *   +0x033c -> line 564
- *   +0x035c -> line 565
- *   +0x0364 -> line 572
- *   +0x0368 -> line 573
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 /* R5900 accumulator dot products and min.s/max.s have no C form under the
  * baseline (see Proj.c and DNMCame.c); scalar operands only. */
 #define MTH_DOT3_TO(_result, _ax, _ay, _az, _bx, _by, _bz) \
@@ -444,6 +391,59 @@ unsigned char INT_fn_bFastRejectIntersectSemiaxeWithSphere(MTH3D_tdstVector_* p_
     return 1;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\IntersEd.c lines 509–573 */
+/* addr: 0x00255250  size: 916 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 509
+ *   +0x0044 -> line 518
+ *   +0x0054 -> line 519
+ *   +0x005c -> line 521
+ *   +0x0074 -> line 523
+ *   +0x0078 -> line 521
+ *   +0x007c -> line 523
+ *   +0x0084 -> line 521
+ *   +0x008c -> line 523
+ *   +0x0098 -> line 524
+ *   +0x00a4 -> line 525
+ *   +0x00a8 -> line 526
+ *   +0x00b0 -> line 529
+ *   +0x00b4 -> line 526
+ *   +0x00b8 -> line 529
+ *   +0x00e8 -> line 532
+ *   +0x00fc -> line 533
+ *   +0x0118 -> line 535
+ *   +0x011c -> line 538
+ *   +0x0120 -> line 536
+ *   +0x0124 -> line 538
+ *   +0x0128 -> line 536
+ *   +0x016c -> line 537
+ *   +0x019c -> line 539
+ *   +0x01bc -> line 540
+ *   +0x01c4 -> line 544
+ *   +0x01d8 -> line 545
+ *   +0x01ec -> line 547
+ *   +0x01f0 -> line 550
+ *   +0x01f4 -> line 548
+ *   +0x01f8 -> line 550
+ *   +0x01fc -> line 548
+ *   +0x0240 -> line 549
+ *   +0x0270 -> line 551
+ *   +0x0290 -> line 552
+ *   +0x0298 -> line 557
+ *   +0x02b4 -> line 559
+ *   +0x02b8 -> line 563
+ *   +0x02bc -> line 560
+ *   +0x02c0 -> line 563
+ *   +0x02c4 -> line 560
+ *   +0x02c8 -> line 561
+ *   +0x030c -> line 562
+ *   +0x033c -> line 564
+ *   +0x035c -> line 565
+ *   +0x0364 -> line 572
+ *   +0x0368 -> line 573
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char INT_fn_bIntersectSemiAxeWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, unsigned char* bBack, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
 {
     float xInvR;

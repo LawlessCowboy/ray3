@@ -1652,73 +1652,10 @@ extern "C" unsigned int PS2MC_GetCurrentMessageAnswer(void);
 extern "C" void PS2MC_DisplayCurrentMessage(void);
 extern "C" void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _RequiredDataSize);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3746–3747 */
-/* addr: 0x00331e50  size: 20 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3746
- *   +0x000c -> line 3747
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3741–3742 */
-/* addr: 0x00331e70  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3741
- *   +0x0004 -> line 3742
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3736–3736 */
-/* addr: 0x00331e80  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3736
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma exceptions off
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3731–3731 */
-/* addr: 0x00331e90  size: 12 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3731
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 #pragma exceptions reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3726–3726 */
-/* addr: 0x00331ea0  size: 120 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3726
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3656–3689 */
-/* addr: 0x00331f20  size: 216 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3656
- *   +0x0004 -> line 3661
- *   +0x0008 -> line 3656
- *   +0x0014 -> line 3657
- *   +0x0018 -> line 3661
- *   +0x001c -> line 3663
- *   +0x0020 -> line 3665
- *   +0x002c -> line 3669
- *   +0x0030 -> line 3671
- *   +0x003c -> line 3672
- *   +0x0044 -> line 3675
- *   +0x0058 -> line 3676
- *   +0x0068 -> line 3679
- *   +0x0078 -> line 3681
- *   +0x007c -> line 3688
- *   +0x00c4 -> line 3689
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 extern "C" char* strstr(const char* _pString, const char* _pSubString);
 extern "C" char* Strcat(char* _pDest, const char* _pSource);
 extern "C" int sprintf(char* _pBuffer, const char* _pFormat, ...);
@@ -1726,41 +1663,6 @@ extern "C" void TXT_vAfficheSpecialWithTransparency(float _xAlpha, char* _pText,
 extern "C" unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
 extern "C" void IPT_fn_vReadInput(unsigned int ulCurrentTime);
 extern "C" int fn_bHasBeenPausedForController(void);
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3577–3643 */
-/* addr: 0x00332000  size: 444 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 3577
- *   +0x000c -> line 3581
- *   +0x0020 -> line 3582
- *   +0x0034 -> line 3584
- *   +0x004c -> line 3587
- *   +0x0070 -> line 3590
- *   +0x0088 -> line 3593
- *   +0x0090 -> line 3594
- *   +0x0098 -> line 3595
- *   +0x00b0 -> line 3598
- *   +0x00bc -> line 3602
- *   +0x00e0 -> line 3605
- *   +0x00f8 -> line 3608
- *   +0x0100 -> line 3609
- *   +0x0108 -> line 3610
- *   +0x0120 -> line 3613
- *   +0x012c -> line 3618
- *   +0x0138 -> line 3620
- *   +0x0140 -> line 3621
- *   +0x0148 -> line 3622
- *   +0x015c -> line 3624
- *   +0x0164 -> line 3629
- *   +0x0180 -> line 3631
- *   +0x0190 -> line 3632
- *   +0x019c -> line 3635
- *   +0x01a0 -> line 3637
- *   +0x01a8 -> line 3642
- *   +0x01ac -> line 3643
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3426–3490 */
 /* addr: 0x003321c0  size: 572 bytes */
@@ -1827,6 +1729,40 @@ void C_PS2MC_Message::Display(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3577–3643 */
+/* addr: 0x00332000  size: 444 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3577
+ *   +0x000c -> line 3581
+ *   +0x0020 -> line 3582
+ *   +0x0034 -> line 3584
+ *   +0x004c -> line 3587
+ *   +0x0070 -> line 3590
+ *   +0x0088 -> line 3593
+ *   +0x0090 -> line 3594
+ *   +0x0098 -> line 3595
+ *   +0x00b0 -> line 3598
+ *   +0x00bc -> line 3602
+ *   +0x00e0 -> line 3605
+ *   +0x00f8 -> line 3608
+ *   +0x0100 -> line 3609
+ *   +0x0108 -> line 3610
+ *   +0x0120 -> line 3613
+ *   +0x012c -> line 3618
+ *   +0x0138 -> line 3620
+ *   +0x0140 -> line 3621
+ *   +0x0148 -> line 3622
+ *   +0x015c -> line 3624
+ *   +0x0164 -> line 3629
+ *   +0x0180 -> line 3631
+ *   +0x0190 -> line 3632
+ *   +0x019c -> line 3635
+ *   +0x01a0 -> line 3637
+ *   +0x01a8 -> line 3642
+ *   +0x01ac -> line 3643
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned int C_PS2MC_Message::GetAnswer(void)
 {
     if (m_pCurrentMessage == NULL) { return 0; }
@@ -1872,6 +1808,28 @@ unsigned int C_PS2MC_Message::GetAnswer(void)
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3656–3689 */
+/* addr: 0x00331f20  size: 216 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3656
+ *   +0x0004 -> line 3661
+ *   +0x0008 -> line 3656
+ *   +0x0014 -> line 3657
+ *   +0x0018 -> line 3661
+ *   +0x001c -> line 3663
+ *   +0x0020 -> line 3665
+ *   +0x002c -> line 3669
+ *   +0x0030 -> line 3671
+ *   +0x003c -> line 3672
+ *   +0x0044 -> line 3675
+ *   +0x0058 -> line 3676
+ *   +0x0068 -> line 3679
+ *   +0x0078 -> line 3681
+ *   +0x007c -> line 3688
+ *   +0x00c4 -> line 3689
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void C_PS2MC_Message::CalculateMessagePosition(void)
 {
     int NbLines = 1;
@@ -1895,11 +1853,25 @@ void C_PS2MC_Message::CalculateMessagePosition(void)
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3726–3726 */
+/* addr: 0x00331ea0  size: 120 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3726
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _RequiredDataSize)
 {
     g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage; PS2MC_g_MessageHandler.m_iCurrentMessage = (unsigned char)_MessageID; PS2MC_g_MessageHandler.m_pCurrentMessage = &PS2MC_g_MessageTable[g_CurrentLanguage][(unsigned char)_MessageID]; PS2MC_g_MessageHandler.m_iCurrentChoice = PS2MC_g_MessageHandler.m_pCurrentMessage->iDefaultChoice; PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _RequiredDataSize; PS2MC_g_MessageHandler.CalculateMessagePosition();
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3731–3731 */
+/* addr: 0x00331e90  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3731
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma exceptions off
 void PS2MC_DisplayCurrentMessage(void)
 {
@@ -1907,6 +1879,13 @@ void PS2MC_DisplayCurrentMessage(void)
 }
 #pragma exceptions reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3736–3736 */
+/* addr: 0x00331e80  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3736
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 #pragma exceptions off
 unsigned int PS2MC_GetCurrentMessageAnswer(void)
 {
@@ -1914,11 +1893,27 @@ unsigned int PS2MC_GetCurrentMessageAnswer(void)
 }
 #pragma exceptions reset
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3741–3742 */
+/* addr: 0x00331e70  size: 12 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3741
+ *   +0x0004 -> line 3742
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_SetRequiredDataSizeForMessages(unsigned int _Size)
 {
     PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _Size;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3746–3747 */
+/* addr: 0x00331e50  size: 20 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 3746
+ *   +0x000c -> line 3747
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void PS2MC_RemoveCurrentMessage(void)
 {
     PS2MC_g_MessageHandler.m_pCurrentMessage = 0;

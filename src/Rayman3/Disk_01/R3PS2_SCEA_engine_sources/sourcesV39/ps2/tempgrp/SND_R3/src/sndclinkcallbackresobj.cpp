@@ -289,26 +289,6 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobj.cpp lines 49–67 */
-/* addr: 0x001c9830  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 49
- *   +0x0014 -> line 56
- *   +0x0024 -> line 58
- *   +0x002c -> line 60
- *   +0x003c -> line 62
- *   +0x0090 -> line 63
- *   +0x0098 -> line 62
- *   +0x00a4 -> line 63
- *   +0x00ac -> line 64
- *   +0x00b0 -> line 65
- *   +0x00dc -> line 67
- *   +0x00e0 -> line 66
- *   +0x00e4 -> line 67
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 
@@ -356,6 +336,25 @@ unsigned char CLinkCallbackResObj::mfn_bSynchroCallbackResObj(void)
     return b_Answer;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobj.cpp lines 49–67 */
+/* addr: 0x001c9830  size: 244 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 49
+ *   +0x0014 -> line 56
+ *   +0x0024 -> line 58
+ *   +0x002c -> line 60
+ *   +0x003c -> line 62
+ *   +0x0090 -> line 63
+ *   +0x0098 -> line 62
+ *   +0x00a4 -> line 63
+ *   +0x00ac -> line 64
+ *   +0x00b0 -> line 65
+ *   +0x00dc -> line 67
+ *   +0x00e0 -> line 66
+ *   +0x00e4 -> line 67
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char CLinkCallbackResObjCont::mfn_bSynchroCallbackInstance(void)
 {
     CLinkCallbackResObj* ro_LinkCallback;

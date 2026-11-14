@@ -3322,26 +3322,6 @@ static LinkActorType_* fn_p_SPO2Link(HIE_tdstSuperObject_* hSPO)
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2351–2382 */
-/* addr: 0x0023c860  size: 1348 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2351
- *   +0x0004 -> line 2356
- *   +0x0008 -> line 2351
- *   +0x001c -> line 2354
- *   +0x0020 -> line 2356
- *   +0x004c -> line 2358
- *   +0x0054 -> line 2359
- *   +0x0230 -> line 2360
- *   +0x0238 -> line 2362
- *   +0x0338 -> line 2363
- *   +0x0340 -> line 2366
- *   +0x034c -> line 2367
- *   +0x0528 -> line 2382
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void fn_DisplayLink(LinkActorType_* p_link, LinkDisplayMode_ displayMode);
@@ -3376,630 +3356,798 @@ tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstN
 tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2169–2174 */
-/* addr: 0x0023cdb0  size: 124 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2169
- *   +0x0008 -> line 2170
- *   +0x0018 -> line 2171
- *   +0x0030 -> line 2172
- *   +0x0070 -> line 2173
- *   +0x0074 -> line 2174
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2064–2150 */
-/* addr: 0x0023ce30  size: 1008 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2064
- *   +0x000c -> line 2068
- *   +0x0018 -> line 2069
- *   +0x004c -> line 2071
- *   +0x0050 -> line 2073
- *   +0x005c -> line 2074
- *   +0x0064 -> line 2075
- *   +0x0068 -> line 2076
- *   +0x006c -> line 2077
- *   +0x0070 -> line 2074
- *   +0x0078 -> line 2075
- *   +0x007c -> line 2076
- *   +0x0080 -> line 2077
- *   +0x0084 -> line 2078
- *   +0x0088 -> line 2074
- *   +0x0098 -> line 2075
- *   +0x009c -> line 2074
- *   +0x00a0 -> line 2076
- *   +0x00a4 -> line 2075
- *   +0x00a8 -> line 2077
- *   +0x00ac -> line 2076
- *   +0x00b4 -> line 2078
- *   +0x00bc -> line 2079
- *   +0x00d0 -> line 2081
- *   +0x0110 -> line 2083
- *   +0x0114 -> line 2084
- *   +0x0120 -> line 2083
- *   +0x0124 -> line 2084
- *   +0x0128 -> line 2083
- *   +0x0140 -> line 2084
- *   +0x0154 -> line 2086
- *   +0x015c -> line 2088
- *   +0x0160 -> line 2092
- *   +0x0164 -> line 2088
- *   +0x0168 -> line 2089
- *   +0x016c -> line 2090
- *   +0x0170 -> line 2091
- *   +0x0174 -> line 2095
- *   +0x0178 -> line 2093
- *   +0x017c -> line 2088
- *   +0x0180 -> line 2092
- *   +0x0184 -> line 2088
- *   +0x0188 -> line 2089
- *   +0x018c -> line 2093
- *   +0x0190 -> line 2088
- *   +0x0194 -> line 2093
- *   +0x0198 -> line 2088
- *   +0x01a0 -> line 2090
- *   +0x01a4 -> line 2091
- *   +0x01a8 -> line 2089
- *   +0x01ac -> line 2090
- *   +0x01b0 -> line 2091
- *   +0x01b8 -> line 2095
- *   +0x01c4 -> line 2092
- *   +0x01c8 -> line 2088
- *   +0x01d0 -> line 2089
- *   +0x01d4 -> line 2090
- *   +0x01dc -> line 2091
- *   +0x01e4 -> line 2092
- *   +0x01e8 -> line 2093
- *   +0x01ec -> line 2092
- *   +0x01f0 -> line 2095
- *   +0x01f8 -> line 2097
- *   +0x01fc -> line 2101
- *   +0x0200 -> line 2097
- *   +0x0204 -> line 2123
- *   +0x0208 -> line 2122
- *   +0x020c -> line 2097
- *   +0x0220 -> line 2098
- *   +0x0224 -> line 2099
- *   +0x022c -> line 2100
- *   +0x0230 -> line 2101
- *   +0x0270 -> line 2103
- *   +0x028c -> line 2107
- *   +0x02a8 -> line 2108
- *   +0x02ac -> line 2109
- *   +0x02b4 -> line 2110
- *   +0x02b8 -> line 2111
- *   +0x02f8 -> line 2113
- *   +0x0314 -> line 2116
- *   +0x0330 -> line 2117
- *   +0x0334 -> line 2118
- *   +0x033c -> line 2119
- *   +0x0340 -> line 2123
- *   +0x0344 -> line 2120
- *   +0x0384 -> line 2122
- *   +0x03a0 -> line 2123
- *   +0x03b8 -> line 2124
- *   +0x03e0 -> line 2150
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1970–2059 */
-/* addr: 0x0023d220  size: 1128 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1970
- *   +0x0014 -> line 1975
- *   +0x0018 -> line 1970
- *   +0x0020 -> line 1977
- *   +0x002c -> line 1979
- *   +0x0034 -> line 1981
- *   +0x0040 -> line 1986
- *   +0x0044 -> line 1988
- *   +0x004c -> line 1990
- *   +0x005c -> line 1991
- *   +0x0060 -> line 1992
- *   +0x0088 -> line 1996
- *   +0x0094 -> line 1997
- *   +0x00b8 -> line 1998
- *   +0x00f8 -> line 1999
- *   +0x016c -> line 2000
- *   +0x0184 -> line 2001
- *   +0x018c -> line 2002
- *   +0x0194 -> line 2004
- *   +0x0198 -> line 2006
- *   +0x01f8 -> line 2007
- *   +0x0200 -> line 2010
- *   +0x0204 -> line 2011
- *   +0x020c -> line 2010
- *   +0x0210 -> line 2011
- *   +0x0228 -> line 2012
- *   +0x0230 -> line 2016
- *   +0x0290 -> line 2017
- *   +0x0298 -> line 2021
- *   +0x029c -> line 2020
- *   +0x02a0 -> line 2021
- *   +0x02ac -> line 2022
- *   +0x02b0 -> line 2023
- *   +0x02c8 -> line 2024
- *   +0x0310 -> line 2027
- *   +0x0318 -> line 2031
- *   +0x0378 -> line 2032
- *   +0x0380 -> line 2035
- *   +0x0384 -> line 2036
- *   +0x038c -> line 2038
- *   +0x0390 -> line 2040
- *   +0x03a0 -> line 2046
- *   +0x03c0 -> line 2048
- *   +0x03e0 -> line 2050
- *   +0x03e8 -> line 2052
- *   +0x0408 -> line 2053
- *   +0x0438 -> line 2054
- *   +0x0444 -> line 2055
- *   +0x0448 -> line 2059
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1929–1957 */
-/* addr: 0x0023d690  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1929
- *   +0x0018 -> line 1942
- *   +0x0034 -> line 1945
- *   +0x008c -> line 1946
- *   +0x0094 -> line 1947
- *   +0x00a8 -> line 1948
- *   +0x00ac -> line 1949
- *   +0x00b4 -> line 1950
- *   +0x00bc -> line 1953
- *   +0x00c4 -> line 1956
- *   +0x00c8 -> line 1957
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1897–1925 */
-/* addr: 0x0023d770  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1897
- *   +0x0018 -> line 1910
- *   +0x0034 -> line 1913
- *   +0x008c -> line 1914
- *   +0x0094 -> line 1915
- *   +0x00a4 -> line 1917
- *   +0x00b0 -> line 1918
- *   +0x00cc -> line 1921
- *   +0x00d4 -> line 1924
- *   +0x00d8 -> line 1925
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1893–1893 */
-/* addr: 0x0023d860  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1893
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1818–1857 */
-/* addr: 0x0023d870  size: 624 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1824
- *   +0x0004 -> line 1818
- *   +0x0008 -> line 1824
- *   +0x0040 -> line 1826
- *   +0x0080 -> line 1828
- *   +0x0084 -> line 1830
- *   +0x008c -> line 1828
- *   +0x0090 -> line 1830
- *   +0x0098 -> line 1832
- *   +0x0114 -> line 1834
- *   +0x0124 -> line 1835
- *   +0x014c -> line 1836
- *   +0x0158 -> line 1837
- *   +0x015c -> line 1836
- *   +0x0168 -> line 1837
- *   +0x016c -> line 1836
- *   +0x0170 -> line 1837
- *   +0x0190 -> line 1839
- *   +0x019c -> line 1841
- *   +0x01b0 -> line 1843
- *   +0x01c8 -> line 1845
- *   +0x01d4 -> line 1849
- *   +0x01d8 -> line 1845
- *   +0x01dc -> line 1849
- *   +0x0218 -> line 1845
- *   +0x021c -> line 1847
- *   +0x0224 -> line 1849
- *   +0x0228 -> line 1847
- *   +0x022c -> line 1849
- *   +0x023c -> line 1847
- *   +0x0240 -> line 1849
- *   +0x024c -> line 1847
- *   +0x0250 -> line 1849
- *   +0x0254 -> line 1852
- *   +0x025c -> line 1853
- *   +0x0264 -> line 1856
- *   +0x0268 -> line 1857
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1773–1798 */
-/* addr: 0x0023dae0  size: 824 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1773
- *   +0x0018 -> line 1776
- *   +0x0054 -> line 1779
- *   +0x0098 -> line 1781
- *   +0x00a8 -> line 1782
- *   +0x00ac -> line 1781
- *   +0x00d4 -> line 1782
- *   +0x0134 -> line 1783
- *   +0x0180 -> line 1784
- *   +0x01bc -> line 1785
- *   +0x021c -> line 1786
- *   +0x0240 -> line 1788
- *   +0x0270 -> line 1789
- *   +0x02a0 -> line 1790
- *   +0x02c0 -> line 1791
- *   +0x02dc -> line 1792
- *   +0x02e4 -> line 1794
- *   +0x0318 -> line 1795
- *   +0x031c -> line 1798
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1628–1672 */
-/* addr: 0x0023de20  size: 928 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1628
- *   +0x0024 -> line 1634
- *   +0x0028 -> line 1628
- *   +0x002c -> line 1636
- *   +0x0030 -> line 1638
- *   +0x0040 -> line 1640
- *   +0x0048 -> line 1641
- *   +0x004c -> line 1642
- *   +0x0050 -> line 1641
- *   +0x0054 -> line 1642
- *   +0x0060 -> line 1643
- *   +0x0084 -> line 1644
- *   +0x00c0 -> line 1646
- *   +0x00c8 -> line 1647
- *   +0x00e0 -> line 1648
- *   +0x0100 -> line 1650
- *   +0x0108 -> line 1651
- *   +0x0120 -> line 1652
- *   +0x0124 -> line 1653
- *   +0x012c -> line 1654
- *   +0x0130 -> line 1657
- *   +0x015c -> line 1660
- *   +0x0160 -> line 1657
- *   +0x017c -> line 1658
- *   +0x0180 -> line 1664
- *   +0x0184 -> line 1657
- *   +0x0194 -> line 1664
- *   +0x019c -> line 1657
- *   +0x01a0 -> line 1658
- *   +0x01b0 -> line 1657
- *   +0x01b4 -> line 1658
- *   +0x01b8 -> line 1657
- *   +0x01bc -> line 1658
- *   +0x01c0 -> line 1657
- *   +0x01c4 -> line 1658
- *   +0x01d0 -> line 1660
- *   +0x01d4 -> line 1657
- *   +0x01d8 -> line 1658
- *   +0x01dc -> line 1660
- *   +0x01e4 -> line 1658
- *   +0x01e8 -> line 1660
- *   +0x01ec -> line 1661
- *   +0x01f0 -> line 1657
- *   +0x01f4 -> line 1660
- *   +0x01fc -> line 1661
- *   +0x0210 -> line 1657
- *   +0x0214 -> line 1661
- *   +0x0218 -> line 1657
- *   +0x021c -> line 1661
- *   +0x0220 -> line 1657
- *   +0x0224 -> line 1661
- *   +0x022c -> line 1657
- *   +0x0230 -> line 1661
- *   +0x023c -> line 1662
- *   +0x0240 -> line 1661
- *   +0x0248 -> line 1657
- *   +0x024c -> line 1662
- *   +0x025c -> line 1657
- *   +0x0260 -> line 1658
- *   +0x026c -> line 1662
- *   +0x027c -> line 1658
- *   +0x0280 -> line 1664
- *   +0x0284 -> line 1658
- *   +0x02b0 -> line 1660
- *   +0x02c8 -> line 1661
- *   +0x031c -> line 1662
- *   +0x033c -> line 1664
- *   +0x0344 -> line 1666
- *   +0x0374 -> line 1671
- *   +0x0378 -> line 1672
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1575–1613 */
-/* addr: 0x0023e1c0  size: 696 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1575
- *   +0x0004 -> line 1577
- *   +0x0008 -> line 1575
- *   +0x000c -> line 1576
- *   +0x0010 -> line 1575
- *   +0x0018 -> line 1576
- *   +0x001c -> line 1575
- *   +0x0020 -> line 1576
- *   +0x0024 -> line 1575
- *   +0x0028 -> line 1576
- *   +0x002c -> line 1575
- *   +0x0030 -> line 1576
- *   +0x0034 -> line 1575
- *   +0x0038 -> line 1576
- *   +0x003c -> line 1578
- *   +0x0040 -> line 1576
- *   +0x0044 -> line 1577
- *   +0x0050 -> line 1578
- *   +0x0054 -> line 1577
- *   +0x0058 -> line 1578
- *   +0x005c -> line 1577
- *   +0x0060 -> line 1578
- *   +0x0068 -> line 1577
- *   +0x006c -> line 1578
- *   +0x0074 -> line 1577
- *   +0x0078 -> line 1580
- *   +0x0080 -> line 1581
- *   +0x0088 -> line 1580
- *   +0x0098 -> line 1581
- *   +0x00a8 -> line 1580
- *   +0x00b4 -> line 1582
- *   +0x00b8 -> line 1581
- *   +0x00bc -> line 1582
- *   +0x00c0 -> line 1581
- *   +0x00c8 -> line 1582
- *   +0x00cc -> line 1585
- *   +0x00d8 -> line 1586
- *   +0x00e8 -> line 1587
- *   +0x00f4 -> line 1588
- *   +0x0100 -> line 1589
- *   +0x0110 -> line 1590
- *   +0x011c -> line 1592
- *   +0x0120 -> line 1594
- *   +0x0124 -> line 1592
- *   +0x0128 -> line 1594
- *   +0x0138 -> line 1595
- *   +0x0144 -> line 1596
- *   +0x0150 -> line 1597
- *   +0x0154 -> line 1596
- *   +0x015c -> line 1597
- *   +0x01a0 -> line 1598
- *   +0x01ac -> line 1605
- *   +0x01b0 -> line 1598
- *   +0x01e4 -> line 1602
- *   +0x01e8 -> line 1605
- *   +0x01ec -> line 1600
- *   +0x01f0 -> line 1603
- *   +0x01f4 -> line 1601
- *   +0x01f8 -> line 1602
- *   +0x01fc -> line 1603
- *   +0x0200 -> line 1602
- *   +0x0204 -> line 1600
- *   +0x0208 -> line 1602
- *   +0x020c -> line 1600
- *   +0x0210 -> line 1603
- *   +0x0214 -> line 1601
- *   +0x0218 -> line 1603
- *   +0x021c -> line 1605
- *   +0x0220 -> line 1601
- *   +0x0224 -> line 1605
- *   +0x0230 -> line 1602
- *   +0x0234 -> line 1603
- *   +0x0238 -> line 1605
- *   +0x0250 -> line 1602
- *   +0x0254 -> line 1603
- *   +0x0258 -> line 1605
- *   +0x028c -> line 1607
- *   +0x0294 -> line 1608
- *   +0x029c -> line 1610
- *   +0x02a4 -> line 1611
- *   +0x02ac -> line 1612
- *   +0x02b0 -> line 1613
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1538–1549 */
-/* addr: 0x0023e480  size: 140 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1538
- *   +0x0014 -> line 1542
- *   +0x0028 -> line 1543
- *   +0x0030 -> line 1544
- *   +0x0050 -> line 1546
- *   +0x005c -> line 1547
- *   +0x0074 -> line 1549
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1449–1525 */
-/* addr: 0x0023e510  size: 1916 bytes */
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 127–147 */
+/* addr: 0x00241990  size: 320 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1449
- *   +0x0004 -> line 1460
- *   +0x0008 -> line 1449
- *   +0x000c -> line 1460
- *   +0x0010 -> line 1449
- *   +0x0014 -> line 1460
- *   +0x0018 -> line 1449
- *   +0x001c -> line 1461
- *   +0x0020 -> line 1449
- *   +0x0024 -> line 1461
- *   +0x0028 -> line 1449
- *   +0x002c -> line 1461
- *   +0x0030 -> line 1449
- *   +0x0034 -> line 1460
- *   +0x0038 -> line 1449
- *   +0x003c -> line 1461
- *   +0x0040 -> line 1449
- *   +0x0044 -> line 1461
- *   +0x0048 -> line 1460
- *   +0x004c -> line 1449
- *   +0x0050 -> line 1460
- *   +0x0054 -> line 1461
- *   +0x005c -> line 1449
- *   +0x0060 -> line 1460
- *   +0x006c -> line 1457
- *   +0x0070 -> line 1462
- *   +0x0074 -> line 1461
- *   +0x0078 -> line 1462
- *   +0x007c -> line 1463
- *   +0x0080 -> line 1462
- *   +0x0084 -> line 1464
- *   +0x0088 -> line 1462
- *   +0x0098 -> line 1467
- *   +0x00dc -> line 1469
- *   +0x0114 -> line 1470
- *   +0x0174 -> line 1471
- *   +0x0198 -> line 1473
- *   +0x01c8 -> line 1475
- *   +0x0228 -> line 1476
- *   +0x024c -> line 1479
- *   +0x0250 -> line 1478
- *   +0x0254 -> line 1479
- *   +0x026c -> line 1480
- *   +0x0274 -> line 1481
- *   +0x0278 -> line 1480
- *   +0x027c -> line 1482
- *   +0x0280 -> line 1481
- *   +0x02a4 -> line 1483
- *   +0x02c4 -> line 1484
- *   +0x02cc -> line 1485
- *   +0x02d0 -> line 1484
- *   +0x02d4 -> line 1486
- *   +0x02d8 -> line 1485
- *   +0x0300 -> line 1489
- *   +0x0308 -> line 1490
- *   +0x030c -> line 1491
- *   +0x0310 -> line 1490
- *   +0x0314 -> line 1491
- *   +0x0318 -> line 1490
- *   +0x0340 -> line 1491
- *   +0x03a4 -> line 1492
- *   +0x03f0 -> line 1493
- *   +0x0408 -> line 1499
- *   +0x040c -> line 1500
- *   +0x0410 -> line 1499
- *   +0x0414 -> line 1500
- *   +0x0420 -> line 1499
- *   +0x0428 -> line 1500
- *   +0x0434 -> line 1499
- *   +0x0438 -> line 1500
- *   +0x0448 -> line 1499
- *   +0x046c -> line 1500
- *   +0x04c4 -> line 1502
- *   +0x0510 -> line 1504
- *   +0x0514 -> line 1508
- *   +0x0518 -> line 1504
- *   +0x051c -> line 1508
- *   +0x0524 -> line 1513
- *   +0x052c -> line 1517
- *   +0x0530 -> line 1504
- *   +0x0558 -> line 1505
- *   +0x0588 -> line 1506
- *   +0x05b8 -> line 1508
- *   +0x05dc -> line 1509
- *   +0x060c -> line 1512
- *   +0x0624 -> line 1513
- *   +0x0654 -> line 1515
- *   +0x0658 -> line 1514
- *   +0x0660 -> line 1515
- *   +0x0674 -> line 1514
- *   +0x067c -> line 1515
- *   +0x0690 -> line 1517
- *   +0x06e8 -> line 1519
- *   +0x0734 -> line 1520
- *   +0x074c -> line 1525
+ *   +0x0000 -> line 127
+ *   +0x0004 -> line 128
+ *   +0x0008 -> line 127
+ *   +0x000c -> line 133
+ *   +0x0010 -> line 127
+ *   +0x001c -> line 128
+ *   +0x0020 -> line 131
+ *   +0x0024 -> line 128
+ *   +0x002c -> line 131
+ *   +0x0030 -> line 128
+ *   +0x00d4 -> line 134
+ *   +0x0118 -> line 139
+ *   +0x011c -> line 136
+ *   +0x0120 -> line 139
+ *   +0x0124 -> line 145
+ *   +0x0128 -> line 139
+ *   +0x012c -> line 136
+ *   +0x0130 -> line 139
+ *   +0x0138 -> line 147
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1343–1387 */
-/* addr: 0x0023ec90  size: 856 bytes */
+tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    int k;
+
+    for (k = 0; k < 8; k++) {
+        linkStructure[k].p_GhostLinkSPO = 0;
+        linkStructure[k].p_LinkSPO = 0;
+        linkStructure[k].iLinkID = -1;
+    }
+    ui_BCPindexWrite = 0;
+    ui_BCPindexRead = 0;
+    for (k = 0; k < 1000; k++) {
+        a_NetBuffer[k].Time = 30000000;
+    }
+    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;
+    agoType = 21;
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 179–275 */
+/* addr: 0x00241540  size: 1096 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1351
- *   +0x0004 -> line 1343
- *   +0x0008 -> line 1351
- *   +0x000c -> line 1343
- *   +0x0010 -> line 1351
- *   +0x0014 -> line 1352
- *   +0x001c -> line 1351
- *   +0x0020 -> line 1352
- *   +0x0024 -> line 1351
- *   +0x0028 -> line 1352
- *   +0x002c -> line 1353
- *   +0x0030 -> line 1352
- *   +0x0034 -> line 1353
- *   +0x0038 -> line 1352
- *   +0x003c -> line 1351
- *   +0x0040 -> line 1352
- *   +0x0044 -> line 1343
- *   +0x0048 -> line 1357
- *   +0x004c -> line 1353
- *   +0x0050 -> line 1357
- *   +0x0054 -> line 1353
- *   +0x005c -> line 1357
- *   +0x0060 -> line 1353
- *   +0x0064 -> line 1357
- *   +0x0068 -> line 1353
- *   +0x006c -> line 1351
- *   +0x0070 -> line 1352
- *   +0x0074 -> line 1355
- *   +0x0078 -> line 1353
- *   +0x007c -> line 1357
- *   +0x00a4 -> line 1358
- *   +0x00dc -> line 1359
- *   +0x00e4 -> line 1361
- *   +0x013c -> line 1363
- *   +0x0160 -> line 1365
- *   +0x0184 -> line 1366
- *   +0x01bc -> line 1367
- *   +0x01c4 -> line 1369
- *   +0x021c -> line 1371
- *   +0x0234 -> line 1373
- *   +0x0254 -> line 1377
- *   +0x025c -> line 1379
- *   +0x0264 -> line 1380
- *   +0x027c -> line 1379
- *   +0x0280 -> line 1383
- *   +0x0284 -> line 1379
- *   +0x0290 -> line 1380
- *   +0x029c -> line 1379
- *   +0x02a0 -> line 1380
- *   +0x02ac -> line 1383
- *   +0x02b0 -> line 1379
- *   +0x02b4 -> line 1383
- *   +0x02b8 -> line 1379
- *   +0x02ec -> line 1380
- *   +0x033c -> line 1383
- *   +0x0344 -> line 1385
- *   +0x0348 -> line 1387
+ *   +0x0000 -> line 179
+ *   +0x002c -> line 188
+ *   +0x0030 -> line 179
+ *   +0x003c -> line 188
+ *   +0x009c -> line 190
+ *   +0x00a4 -> line 193
+ *   +0x00b4 -> line 194
+ *   +0x00c0 -> line 195
+ *   +0x00c4 -> line 194
+ *   +0x00c8 -> line 195
+ *   +0x00d8 -> line 196
+ *   +0x00e4 -> line 198
+ *   +0x00e8 -> line 196
+ *   +0x00ec -> line 198
+ *   +0x00fc -> line 199
+ *   +0x0108 -> line 200
+ *   +0x0118 -> line 202
+ *   +0x0120 -> line 201
+ *   +0x0128 -> line 202
+ *   +0x016c -> line 203
+ *   +0x0174 -> line 204
+ *   +0x017c -> line 207
+ *   +0x0184 -> line 208
+ *   +0x0188 -> line 212
+ *   +0x0194 -> line 213
+ *   +0x01a0 -> line 214
+ *   +0x01a8 -> line 213
+ *   +0x01ac -> line 214
+ *   +0x01b4 -> line 215
+ *   +0x01bc -> line 214
+ *   +0x01c4 -> line 215
+ *   +0x01d8 -> line 217
+ *   +0x01dc -> line 221
+ *   +0x01e0 -> line 217
+ *   +0x01e4 -> line 219
+ *   +0x01e8 -> line 217
+ *   +0x01ec -> line 225
+ *   +0x01f0 -> line 219
+ *   +0x01f4 -> line 221
+ *   +0x0204 -> line 227
+ *   +0x0208 -> line 229
+ *   +0x020c -> line 231
+ *   +0x0210 -> line 221
+ *   +0x0214 -> line 241
+ *   +0x0218 -> line 221
+ *   +0x021c -> line 244
+ *   +0x0220 -> line 221
+ *   +0x0230 -> line 235
+ *   +0x0234 -> line 221
+ *   +0x0240 -> line 233
+ *   +0x0244 -> line 221
+ *   +0x02b0 -> line 223
+ *   +0x02b4 -> line 225
+ *   +0x02b8 -> line 227
+ *   +0x02bc -> line 229
+ *   +0x02c0 -> line 231
+ *   +0x02c4 -> line 233
+ *   +0x02c8 -> line 235
+ *   +0x02cc -> line 237
+ *   +0x02d0 -> line 239
+ *   +0x02d4 -> line 241
+ *   +0x02e0 -> line 244
+ *   +0x02e8 -> line 247
+ *   +0x02f0 -> line 248
+ *   +0x0378 -> line 247
+ *   +0x0380 -> line 248
+ *   +0x03a8 -> line 250
+ *   +0x03ac -> line 256
+ *   +0x03b0 -> line 260
+ *   +0x03b4 -> line 266
+ *   +0x03b8 -> line 267
+ *   +0x03bc -> line 250
+ *   +0x03d0 -> line 251
+ *   +0x03e8 -> line 255
+ *   +0x03ec -> line 256
+ *   +0x03f8 -> line 258
+ *   +0x03fc -> line 260
+ *   +0x0400 -> line 266
+ *   +0x0404 -> line 267
+ *   +0x040c -> line 271
+ *   +0x0414 -> line 272
+ *   +0x0418 -> line 271
+ *   +0x041c -> line 275
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    unsigned short cp;
+    HIE_tdstSuperObject_* pRemoteSPOLink;
+    tdstGetSetParam_ stValue;
+    unsigned char k;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 282–292 */
+/* addr: 0x002414e0  size: 84 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 282
+ *   +0x0008 -> line 285
+ *   +0x000c -> line 282
+ *   +0x0010 -> line 285
+ *   +0x001c -> line 286
+ *   +0x0024 -> line 287
+ *   +0x0034 -> line 288
+ *   +0x003c -> line 289
+ *   +0x0044 -> line 292
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    tdstGetSetParam_ stValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    agoType = stValue.uDummy.uParam.lValue;
+    if (agoType < 0) agoType = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    agoXParam = stValue.uDummy.uParam.xValue;
+
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 320–469 */
+/* addr: 0x00240c10  size: 2248 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 320
+ *   +0x0004 -> line 326
+ *   +0x0008 -> line 320
+ *   +0x002c -> line 326
+ *   +0x007c -> line 327
+ *   +0x0084 -> line 329
+ *   +0x0088 -> line 331
+ *   +0x0090 -> line 337
+ *   +0x009c -> line 339
+ *   +0x00b8 -> line 341
+ *   +0x00d8 -> line 342
+ *   +0x00e4 -> line 345
+ *   +0x0100 -> line 347
+ *   +0x0120 -> line 348
+ *   +0x0128 -> line 350
+ *   +0x0130 -> line 351
+ *   +0x0134 -> line 352
+ *   +0x0138 -> line 355
+ *   +0x013c -> line 362
+ *   +0x0140 -> line 355
+ *   +0x0144 -> line 357
+ *   +0x0150 -> line 362
+ *   +0x0184 -> line 367
+ *   +0x024c -> line 369
+ *   +0x0258 -> line 371
+ *   +0x0264 -> line 372
+ *   +0x0340 -> line 374
+ *   +0x0348 -> line 375
+ *   +0x0380 -> line 376
+ *   +0x03b8 -> line 377
+ *   +0x040c -> line 384
+ *   +0x0414 -> line 387
+ *   +0x041c -> line 389
+ *   +0x0568 -> line 390
+ *   +0x0574 -> line 392
+ *   +0x057c -> line 394
+ *   +0x0584 -> line 395
+ *   +0x0588 -> line 394
+ *   +0x0608 -> line 395
+ *   +0x0614 -> line 396
+ *   +0x063c -> line 398
+ *   +0x0644 -> line 399
+ *   +0x064c -> line 401
+ *   +0x0688 -> line 402
+ *   +0x06a0 -> line 404
+ *   +0x06b0 -> line 405
+ *   +0x06b8 -> line 408
+ *   +0x06c8 -> line 411
+ *   +0x06d4 -> line 412
+ *   +0x06dc -> line 415
+ *   +0x06e8 -> line 416
+ *   +0x06ec -> line 415
+ *   +0x0724 -> line 416
+ *   +0x0734 -> line 417
+ *   +0x0738 -> line 418
+ *   +0x0748 -> line 419
+ *   +0x0750 -> line 420
+ *   +0x0758 -> line 421
+ *   +0x0760 -> line 424
+ *   +0x076c -> line 425
+ *   +0x0770 -> line 424
+ *   +0x07a8 -> line 425
+ *   +0x07b8 -> line 426
+ *   +0x07bc -> line 427
+ *   +0x07cc -> line 428
+ *   +0x07d4 -> line 429
+ *   +0x07dc -> line 434
+ *   +0x07ec -> line 435
+ *   +0x07f4 -> line 439
+ *   +0x0810 -> line 441
+ *   +0x081c -> line 442
+ *   +0x0824 -> line 443
+ *   +0x082c -> line 444
+ *   +0x0834 -> line 446
+ *   +0x083c -> line 449
+ *   +0x0844 -> line 451
+ *   +0x086c -> line 452
+ *   +0x0870 -> line 454
+ *   +0x0878 -> line 455
+ *   +0x087c -> line 459
+ *   +0x0884 -> line 460
+ *   +0x0888 -> line 459
+ *   +0x088c -> line 460
+ *   +0x0894 -> line 464
+ *   +0x089c -> line 465
+ *   +0x08a0 -> line 464
+ *   +0x08a4 -> line 469
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    LinkState_ OldState;
+    unsigned short cp;
+    unsigned char k;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 495–523 */
+/* addr: 0x00240b30  size: 220 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 495
+ *   +0x001c -> line 507
+ *   +0x0038 -> line 510
+ *   +0x008c -> line 511
+ *   +0x0094 -> line 513
+ *   +0x009c -> line 515
+ *   +0x00a0 -> line 516
+ *   +0x00a4 -> line 515
+ *   +0x00ac -> line 516
+ *   +0x00b4 -> line 520
+ *   +0x00bc -> line 521
+ *   +0x00c0 -> line 520
+ *   +0x00c4 -> line 523
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    LinkActorType_* p_link;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_link->State = 4;
+        fn_StateConstructor(p_link);
+        p_stValue->uDummy.uParam.lValue = 1;
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    } else {
+        p_stValue->uDummy.uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)6;
+        return p_stTree;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 546–568 */
+/* addr: 0x00240a60  size: 204 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 546
+ *   +0x001c -> line 557
+ *   +0x0038 -> line 560
+ *   +0x008c -> line 565
+ *   +0x00a8 -> line 567
+ *   +0x00ac -> line 565
+ *   +0x00b4 -> line 568
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    p_stValue->uDummy.uParam.ulValue = (unsigned short)(p_link ? p_link->ui_CutPointNb : 0);
+    p_stValue->eType = (tdeVariableType_)6;
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 591–618 */
+/* addr: 0x002408f0  size: 368 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 591
+ *   +0x001c -> line 603
+ *   +0x0038 -> line 606
+ *   +0x0048 -> line 607
+ *   +0x004c -> line 609
+ *   +0x0054 -> line 606
+ *   +0x0058 -> line 609
+ *   +0x00a4 -> line 610
+ *   +0x00ac -> line 611
+ *   +0x00c8 -> line 612
+ *   +0x00f8 -> line 613
+ *   +0x0124 -> line 614
+ *   +0x012c -> line 615
+ *   +0x0150 -> line 617
+ *   +0x0154 -> line 615
+ *   +0x0158 -> line 618
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdstGetSetParam_ stValue;
+    unsigned short i;
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+    i = stValue.uDummy.uParam.uwValue;
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        if (i < p_link->ui_CutPointNb && i >= 0) {
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xX;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xY;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xZ;
+            p_stValue->eType = (tdeVariableType_)0x15;
+        } else {
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
+            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
+        }
+        p_stValue->eType = (tdeVariableType_)0x15;
+    } else {
+        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
+        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
+        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
+        p_stValue->eType = (tdeVariableType_)0x15;
+    }
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 640–660 */
+/* addr: 0x00240800  size: 232 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 640
+ *   +0x0018 -> line 651
+ *   +0x0034 -> line 654
+ *   +0x008c -> line 655
+ *   +0x0094 -> line 656
+ *   +0x00a4 -> line 657
+ *   +0x00a8 -> line 656
+ *   +0x00ac -> line 657
+ *   +0x00cc -> line 659
+ *   +0x00d0 -> line 660
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        p_link->xGaugeSpeedFactor = (stValue.eType == 8) ? stValue.uDummy.uParam.xValue : (float)stValue.uDummy.uParam.lValue;
+    }
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 665–689 */
+/* addr: 0x002406e0  size: 276 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 665
+ *   +0x0018 -> line 677
+ *   +0x0034 -> line 680
+ *   +0x008c -> line 681
+ *   +0x0094 -> line 683
+ *   +0x00a8 -> line 684
+ *   +0x00d8 -> line 685
+ *   +0x00f8 -> line 688
+ *   +0x00fc -> line 689
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        p_link->xLaunchSpeed = (float)stValue.uDummy.uParam.ulValue;
+        if (p_link->xLaunchSpeed <= 0) p_link->xLaunchSpeed = 5.0f;
+    }
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 695–719 */
+/* addr: 0x002405f0  size: 236 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 695
+ *   +0x0018 -> line 707
+ *   +0x0034 -> line 710
+ *   +0x008c -> line 711
+ *   +0x0094 -> line 713
+ *   +0x00a4 -> line 714
+ *   +0x00a8 -> line 713
+ *   +0x00ac -> line 715
+ *   +0x00b4 -> line 714
+ *   +0x00b8 -> line 715
+ *   +0x00d0 -> line 718
+ *   +0x00d4 -> line 719
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    LinkActorType_* p_link;
+    tdstGetSetParam_ stValue;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        p_link->bStraightLink = stValue.uDummy.uParam.lValue;
+        p_link->xEnergy = p_link->bStraightLink ? 0 : 30;
+    }
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 725–744 */
+/* addr: 0x00240540  size: 176 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 725
+ *   +0x0014 -> line 736
+ *   +0x0030 -> line 739
+ *   +0x0084 -> line 740
+ *   +0x008c -> line 741
+ *   +0x0098 -> line 743
+ *   +0x009c -> line 744
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
+    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
+    if (p_link) {
+        p_link->State = 2;
+        fn_StateConstructor(p_link);
+    }
+    return p_stTree;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 749–810 */
+/* addr: 0x002401e0  size: 856 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 749
+ *   +0x0028 -> line 763
+ *   +0x0044 -> line 766
+ *   +0x004c -> line 768
+ *   +0x0050 -> line 766
+ *   +0x0058 -> line 768
+ *   +0x005c -> line 766
+ *   +0x0064 -> line 768
+ *   +0x00ac -> line 769
+ *   +0x00b4 -> line 771
+ *   +0x00c0 -> line 772
+ *   +0x00c4 -> line 771
+ *   +0x00c8 -> line 772
+ *   +0x00e4 -> line 773
+ *   +0x0104 -> line 775
+ *   +0x0114 -> line 776
+ *   +0x0188 -> line 777
+ *   +0x019c -> line 782
+ *   +0x01a0 -> line 777
+ *   +0x01ac -> line 782
+ *   +0x020c -> line 784
+ *   +0x0224 -> line 785
+ *   +0x0230 -> line 786
+ *   +0x0254 -> line 787
+ *   +0x0260 -> line 788
+ *   +0x0264 -> line 787
+ *   +0x026c -> line 788
+ *   +0x0284 -> line 791
+ *   +0x02a0 -> line 794
+ *   +0x02cc -> line 796
+ *   +0x02d4 -> line 797
+ *   +0x02dc -> line 798
+ *   +0x02f0 -> line 800
+ *   +0x02f8 -> line 803
+ *   +0x0300 -> line 804
+ *   +0x0310 -> line 808
+ *   +0x0318 -> line 809
+ *   +0x031c -> line 808
+ *   +0x0334 -> line 810
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    unsigned char cp;
+    MTH3D_tdstVector_ vDirection;
+    float xNorm;
+    float xSpeed;
+    tdstGetSetParam_ stValue;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 931–1004 */
+/* addr: 0x00240020  size: 440 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 931
+ *   +0x0004 -> line 941
+ *   +0x0008 -> line 931
+ *   +0x0010 -> line 941
+ *   +0x0050 -> line 943
+ *   +0x0054 -> line 946
+ *   +0x006c -> line 943
+ *   +0x0080 -> line 946
+ *   +0x0098 -> line 960
+ *   +0x00a0 -> line 963
+ *   +0x00ac -> line 964
+ *   +0x00c0 -> line 965
+ *   +0x00c8 -> line 968
+ *   +0x00cc -> line 969
+ *   +0x00d4 -> line 974
+ *   +0x00dc -> line 976
+ *   +0x00f4 -> line 977
+ *   +0x0104 -> line 979
+ *   +0x0108 -> line 978
+ *   +0x010c -> line 992
+ *   +0x0110 -> line 991
+ *   +0x0114 -> line 992
+ *   +0x0118 -> line 981
+ *   +0x011c -> line 979
+ *   +0x013c -> line 982
+ *   +0x0144 -> line 983
+ *   +0x0148 -> line 985
+ *   +0x014c -> line 986
+ *   +0x0154 -> line 987
+ *   +0x0158 -> line 989
+ *   +0x015c -> line 990
+ *   +0x0164 -> line 991
+ *   +0x0168 -> line 992
+ *   +0x0178 -> line 993
+ *   +0x0180 -> line 996
+ *   +0x0198 -> line 997
+ *   +0x01a0 -> line 998
+ *   +0x01a8 -> line 1004
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_StateConstructor(LinkActorType_* p_link)
+{
+    float xTemp;
+    MTH3D_tdstVector_* vPointCP_K;
+    MTH3D_tdstVector_* vPointK;
+    unsigned char cp_2;
+    unsigned char k;
+
+    switch (p_link->State) {
+    case LS_CheckCollision:
+        vPointK = &p_link->a_Cutpoint[1].Position;
+        *(int*)&vPointK->xX = *(int*)&p_link->a_Cutpoint[2].Position.xX;
+        *(int*)&vPointK->xY = *(int*)&p_link->a_Cutpoint[2].Position.xY;
+        *(int*)&vPointK->xZ = *(int*)&p_link->a_Cutpoint[2].Position.xZ;
+        AGO_vAddParticle(45, vPointK, vPointK, hVisualMaterial[p_link->ui_Material], 4.0f);
+        break;
+    case LS_Launch:
+        p_link->ulInitTime = p_link->ulPrevFrameTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xX;
+        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xY;
+        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xZ;
+        break;
+    case LS_Unlaunch:
+        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        break;
+    case LS_Destroying:
+        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        cp_2 = p_link->ui_CutPointNb / 2;
+        for (k = 0; k < cp_2; k++) {
+            vPointK = &p_link->a_Cutpoint[k].Position;
+            vPointCP_K = &p_link->a_Cutpoint[p_link->ui_CutPointNb - 1 - k].Position;
+            xTemp = vPointK->xX;
+            vPointK->xX = vPointCP_K->xX;
+            vPointCP_K->xX = xTemp;
+            xTemp = vPointK->xY;
+            vPointK->xY = vPointCP_K->xY;
+            vPointCP_K->xY = xTemp;
+            xTemp = vPointK->xZ;
+            vPointK->xZ = vPointCP_K->xZ;
+            vPointCP_K->xZ = xTemp;
+        }
+        break;
+    case LS_Sleep:
+        fn_NetSendEvent(p_link, (LinkNetEventType_)0x6a, 0, &vNullVector, 0.0f);
+        p_link->iLinkID = -1;
+        p_link->p_GhostLinkSPO = 0;
+        p_link->p_LinkSPO = 0;
+        break;
+    }
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1060–1071 */
+/* addr: 0x0023ffb0  size: 100 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1068
+ *   +0x0004 -> line 1060
+ *   +0x0008 -> line 1068
+ *   +0x000c -> line 1060
+ *   +0x002c -> line 1063
+ *   +0x0050 -> line 1066
+ *   +0x0054 -> line 1068
+ *   +0x0058 -> line 1069
+ *   +0x005c -> line 1071
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
+{
+    *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
+    *(int*)&g_stCollideParameterVector.xX = *(int*)&p_vDirection->xX; *(int*)&g_stCollideParameterVector.xY = *(int*)&p_vDirection->xY; *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_vDirection->xZ;
+    g_ulMode = ulMode;
+    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_hSuperObjectHit = 0;
+    fn_vComputeCollideResult(p_link->p_LinkSPO);
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1150–1199 */
+/* addr: 0x0023fc60  size: 836 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1150
+ *   +0x0014 -> line 1157
+ *   +0x0018 -> line 1150
+ *   +0x0044 -> line 1157
+ *   +0x0048 -> line 1162
+ *   +0x0058 -> line 1163
+ *   +0x0060 -> line 1164
+ *   +0x0090 -> line 1165
+ *   +0x00a8 -> line 1166
+ *   +0x00c0 -> line 1167
+ *   +0x00c8 -> line 1168
+ *   +0x00d0 -> line 1169
+ *   +0x00d8 -> line 1170
+ *   +0x0120 -> line 1171
+ *   +0x012c -> line 1172
+ *   +0x0130 -> line 1171
+ *   +0x0134 -> line 1172
+ *   +0x0158 -> line 1174
+ *   +0x0160 -> line 1175
+ *   +0x01ac -> line 1176
+ *   +0x01b8 -> line 1177
+ *   +0x01bc -> line 1176
+ *   +0x01c0 -> line 1177
+ *   +0x01e4 -> line 1180
+ *   +0x01ec -> line 1181
+ *   +0x020c -> line 1182
+ *   +0x0258 -> line 1183
+ *   +0x0288 -> line 1184
+ *   +0x02a0 -> line 1185
+ *   +0x02b8 -> line 1186
+ *   +0x02c4 -> line 1192
+ *   +0x02cc -> line 1193
+ *   +0x02e4 -> line 1194
+ *   +0x02fc -> line 1195
+ *   +0x0314 -> line 1199
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index)
+{
+    unsigned char bAddPoint;
+    unsigned char k;
+    unsigned char* uc_p_CutPointNb;
+    /* TODO: decompile from asm/... */
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1214–1236 */
+/* addr: 0x0023fae0  size: 380 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1214
+ *   +0x0018 -> line 1216
+ *   +0x0020 -> line 1214
+ *   +0x0028 -> line 1216
+ *   +0x002c -> line 1218
+ *   +0x0030 -> line 1214
+ *   +0x0034 -> line 1218
+ *   +0x003c -> line 1220
+ *   +0x0048 -> line 1221
+ *   +0x004c -> line 1223
+ *   +0x0050 -> line 1221
+ *   +0x0054 -> line 1223
+ *   +0x005c -> line 1224
+ *   +0x0084 -> line 1226
+ *   +0x0090 -> line 1227
+ *   +0x00a4 -> line 1228
+ *   +0x00f0 -> line 1232
+ *   +0x0158 -> line 1236
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd)
+{
+    unsigned char* p_uiCutPointNb;
+    int k;
+    int nDeletedCutPoints;
+
+    nDeletedCutPoints = uiEnd - uiStart + 1;
+
+    if (uiStart <= uiEnd)
+    {
+        p_uiCutPointNb = &p_link->ui_CutPointNb;
+        if (*p_uiCutPointNb > 0)
+        {
+            *p_uiCutPointNb -= nDeletedCutPoints;
+
+            for (k = uiStart; k <= uiEnd; k++)
+                fn_NetSendEvent(p_link, LNE_DeleteCP, k, &vNullVector, 0);
+
+            if (uiStart != *p_uiCutPointNb)
+            {
+                for (k = uiStart; k < *p_uiCutPointNb; k++)
+                    memcpy(&p_link->a_Cutpoint[k], &p_link->a_Cutpoint[nDeletedCutPoints + k], sizeof(LNK_CutPoint_));
+
+                p_link->a_Cutpoint[*p_uiCutPointNb].Position.xX = 0; p_link->a_Cutpoint[*p_uiCutPointNb].Position.xY = 0; p_link->a_Cutpoint[*p_uiCutPointNb].Position.xZ = 0;
+            }
+        }
+    }
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1254–1329 */
 /* addr: 0x0023eff0  size: 2800 bytes */
@@ -4143,792 +4291,6 @@ void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1214–1236 */
-/* addr: 0x0023fae0  size: 380 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1214
- *   +0x0018 -> line 1216
- *   +0x0020 -> line 1214
- *   +0x0028 -> line 1216
- *   +0x002c -> line 1218
- *   +0x0030 -> line 1214
- *   +0x0034 -> line 1218
- *   +0x003c -> line 1220
- *   +0x0048 -> line 1221
- *   +0x004c -> line 1223
- *   +0x0050 -> line 1221
- *   +0x0054 -> line 1223
- *   +0x005c -> line 1224
- *   +0x0084 -> line 1226
- *   +0x0090 -> line 1227
- *   +0x00a4 -> line 1228
- *   +0x00f0 -> line 1232
- *   +0x0158 -> line 1236
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1150–1199 */
-/* addr: 0x0023fc60  size: 836 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1150
- *   +0x0014 -> line 1157
- *   +0x0018 -> line 1150
- *   +0x0044 -> line 1157
- *   +0x0048 -> line 1162
- *   +0x0058 -> line 1163
- *   +0x0060 -> line 1164
- *   +0x0090 -> line 1165
- *   +0x00a8 -> line 1166
- *   +0x00c0 -> line 1167
- *   +0x00c8 -> line 1168
- *   +0x00d0 -> line 1169
- *   +0x00d8 -> line 1170
- *   +0x0120 -> line 1171
- *   +0x012c -> line 1172
- *   +0x0130 -> line 1171
- *   +0x0134 -> line 1172
- *   +0x0158 -> line 1174
- *   +0x0160 -> line 1175
- *   +0x01ac -> line 1176
- *   +0x01b8 -> line 1177
- *   +0x01bc -> line 1176
- *   +0x01c0 -> line 1177
- *   +0x01e4 -> line 1180
- *   +0x01ec -> line 1181
- *   +0x020c -> line 1182
- *   +0x0258 -> line 1183
- *   +0x0288 -> line 1184
- *   +0x02a0 -> line 1185
- *   +0x02b8 -> line 1186
- *   +0x02c4 -> line 1192
- *   +0x02cc -> line 1193
- *   +0x02e4 -> line 1194
- *   +0x02fc -> line 1195
- *   +0x0314 -> line 1199
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1060–1071 */
-/* addr: 0x0023ffb0  size: 100 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1068
- *   +0x0004 -> line 1060
- *   +0x0008 -> line 1068
- *   +0x000c -> line 1060
- *   +0x002c -> line 1063
- *   +0x0050 -> line 1066
- *   +0x0054 -> line 1068
- *   +0x0058 -> line 1069
- *   +0x005c -> line 1071
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 931–1004 */
-/* addr: 0x00240020  size: 440 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 931
- *   +0x0004 -> line 941
- *   +0x0008 -> line 931
- *   +0x0010 -> line 941
- *   +0x0050 -> line 943
- *   +0x0054 -> line 946
- *   +0x006c -> line 943
- *   +0x0080 -> line 946
- *   +0x0098 -> line 960
- *   +0x00a0 -> line 963
- *   +0x00ac -> line 964
- *   +0x00c0 -> line 965
- *   +0x00c8 -> line 968
- *   +0x00cc -> line 969
- *   +0x00d4 -> line 974
- *   +0x00dc -> line 976
- *   +0x00f4 -> line 977
- *   +0x0104 -> line 979
- *   +0x0108 -> line 978
- *   +0x010c -> line 992
- *   +0x0110 -> line 991
- *   +0x0114 -> line 992
- *   +0x0118 -> line 981
- *   +0x011c -> line 979
- *   +0x013c -> line 982
- *   +0x0144 -> line 983
- *   +0x0148 -> line 985
- *   +0x014c -> line 986
- *   +0x0154 -> line 987
- *   +0x0158 -> line 989
- *   +0x015c -> line 990
- *   +0x0164 -> line 991
- *   +0x0168 -> line 992
- *   +0x0178 -> line 993
- *   +0x0180 -> line 996
- *   +0x0198 -> line 997
- *   +0x01a0 -> line 998
- *   +0x01a8 -> line 1004
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 749–810 */
-/* addr: 0x002401e0  size: 856 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 749
- *   +0x0028 -> line 763
- *   +0x0044 -> line 766
- *   +0x004c -> line 768
- *   +0x0050 -> line 766
- *   +0x0058 -> line 768
- *   +0x005c -> line 766
- *   +0x0064 -> line 768
- *   +0x00ac -> line 769
- *   +0x00b4 -> line 771
- *   +0x00c0 -> line 772
- *   +0x00c4 -> line 771
- *   +0x00c8 -> line 772
- *   +0x00e4 -> line 773
- *   +0x0104 -> line 775
- *   +0x0114 -> line 776
- *   +0x0188 -> line 777
- *   +0x019c -> line 782
- *   +0x01a0 -> line 777
- *   +0x01ac -> line 782
- *   +0x020c -> line 784
- *   +0x0224 -> line 785
- *   +0x0230 -> line 786
- *   +0x0254 -> line 787
- *   +0x0260 -> line 788
- *   +0x0264 -> line 787
- *   +0x026c -> line 788
- *   +0x0284 -> line 791
- *   +0x02a0 -> line 794
- *   +0x02cc -> line 796
- *   +0x02d4 -> line 797
- *   +0x02dc -> line 798
- *   +0x02f0 -> line 800
- *   +0x02f8 -> line 803
- *   +0x0300 -> line 804
- *   +0x0310 -> line 808
- *   +0x0318 -> line 809
- *   +0x031c -> line 808
- *   +0x0334 -> line 810
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 725–744 */
-/* addr: 0x00240540  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 725
- *   +0x0014 -> line 736
- *   +0x0030 -> line 739
- *   +0x0084 -> line 740
- *   +0x008c -> line 741
- *   +0x0098 -> line 743
- *   +0x009c -> line 744
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 695–719 */
-/* addr: 0x002405f0  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 695
- *   +0x0018 -> line 707
- *   +0x0034 -> line 710
- *   +0x008c -> line 711
- *   +0x0094 -> line 713
- *   +0x00a4 -> line 714
- *   +0x00a8 -> line 713
- *   +0x00ac -> line 715
- *   +0x00b4 -> line 714
- *   +0x00b8 -> line 715
- *   +0x00d0 -> line 718
- *   +0x00d4 -> line 719
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 665–689 */
-/* addr: 0x002406e0  size: 276 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 665
- *   +0x0018 -> line 677
- *   +0x0034 -> line 680
- *   +0x008c -> line 681
- *   +0x0094 -> line 683
- *   +0x00a8 -> line 684
- *   +0x00d8 -> line 685
- *   +0x00f8 -> line 688
- *   +0x00fc -> line 689
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 640–660 */
-/* addr: 0x00240800  size: 232 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 640
- *   +0x0018 -> line 651
- *   +0x0034 -> line 654
- *   +0x008c -> line 655
- *   +0x0094 -> line 656
- *   +0x00a4 -> line 657
- *   +0x00a8 -> line 656
- *   +0x00ac -> line 657
- *   +0x00cc -> line 659
- *   +0x00d0 -> line 660
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 591–618 */
-/* addr: 0x002408f0  size: 368 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 591
- *   +0x001c -> line 603
- *   +0x0038 -> line 606
- *   +0x0048 -> line 607
- *   +0x004c -> line 609
- *   +0x0054 -> line 606
- *   +0x0058 -> line 609
- *   +0x00a4 -> line 610
- *   +0x00ac -> line 611
- *   +0x00c8 -> line 612
- *   +0x00f8 -> line 613
- *   +0x0124 -> line 614
- *   +0x012c -> line 615
- *   +0x0150 -> line 617
- *   +0x0154 -> line 615
- *   +0x0158 -> line 618
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 546–568 */
-/* addr: 0x00240a60  size: 204 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 546
- *   +0x001c -> line 557
- *   +0x0038 -> line 560
- *   +0x008c -> line 565
- *   +0x00a8 -> line 567
- *   +0x00ac -> line 565
- *   +0x00b4 -> line 568
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 495–523 */
-/* addr: 0x00240b30  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 495
- *   +0x001c -> line 507
- *   +0x0038 -> line 510
- *   +0x008c -> line 511
- *   +0x0094 -> line 513
- *   +0x009c -> line 515
- *   +0x00a0 -> line 516
- *   +0x00a4 -> line 515
- *   +0x00ac -> line 516
- *   +0x00b4 -> line 520
- *   +0x00bc -> line 521
- *   +0x00c0 -> line 520
- *   +0x00c4 -> line 523
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 320–469 */
-/* addr: 0x00240c10  size: 2248 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 320
- *   +0x0004 -> line 326
- *   +0x0008 -> line 320
- *   +0x002c -> line 326
- *   +0x007c -> line 327
- *   +0x0084 -> line 329
- *   +0x0088 -> line 331
- *   +0x0090 -> line 337
- *   +0x009c -> line 339
- *   +0x00b8 -> line 341
- *   +0x00d8 -> line 342
- *   +0x00e4 -> line 345
- *   +0x0100 -> line 347
- *   +0x0120 -> line 348
- *   +0x0128 -> line 350
- *   +0x0130 -> line 351
- *   +0x0134 -> line 352
- *   +0x0138 -> line 355
- *   +0x013c -> line 362
- *   +0x0140 -> line 355
- *   +0x0144 -> line 357
- *   +0x0150 -> line 362
- *   +0x0184 -> line 367
- *   +0x024c -> line 369
- *   +0x0258 -> line 371
- *   +0x0264 -> line 372
- *   +0x0340 -> line 374
- *   +0x0348 -> line 375
- *   +0x0380 -> line 376
- *   +0x03b8 -> line 377
- *   +0x040c -> line 384
- *   +0x0414 -> line 387
- *   +0x041c -> line 389
- *   +0x0568 -> line 390
- *   +0x0574 -> line 392
- *   +0x057c -> line 394
- *   +0x0584 -> line 395
- *   +0x0588 -> line 394
- *   +0x0608 -> line 395
- *   +0x0614 -> line 396
- *   +0x063c -> line 398
- *   +0x0644 -> line 399
- *   +0x064c -> line 401
- *   +0x0688 -> line 402
- *   +0x06a0 -> line 404
- *   +0x06b0 -> line 405
- *   +0x06b8 -> line 408
- *   +0x06c8 -> line 411
- *   +0x06d4 -> line 412
- *   +0x06dc -> line 415
- *   +0x06e8 -> line 416
- *   +0x06ec -> line 415
- *   +0x0724 -> line 416
- *   +0x0734 -> line 417
- *   +0x0738 -> line 418
- *   +0x0748 -> line 419
- *   +0x0750 -> line 420
- *   +0x0758 -> line 421
- *   +0x0760 -> line 424
- *   +0x076c -> line 425
- *   +0x0770 -> line 424
- *   +0x07a8 -> line 425
- *   +0x07b8 -> line 426
- *   +0x07bc -> line 427
- *   +0x07cc -> line 428
- *   +0x07d4 -> line 429
- *   +0x07dc -> line 434
- *   +0x07ec -> line 435
- *   +0x07f4 -> line 439
- *   +0x0810 -> line 441
- *   +0x081c -> line 442
- *   +0x0824 -> line 443
- *   +0x082c -> line 444
- *   +0x0834 -> line 446
- *   +0x083c -> line 449
- *   +0x0844 -> line 451
- *   +0x086c -> line 452
- *   +0x0870 -> line 454
- *   +0x0878 -> line 455
- *   +0x087c -> line 459
- *   +0x0884 -> line 460
- *   +0x0888 -> line 459
- *   +0x088c -> line 460
- *   +0x0894 -> line 464
- *   +0x089c -> line 465
- *   +0x08a0 -> line 464
- *   +0x08a4 -> line 469
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 282–292 */
-/* addr: 0x002414e0  size: 84 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 282
- *   +0x0008 -> line 285
- *   +0x000c -> line 282
- *   +0x0010 -> line 285
- *   +0x001c -> line 286
- *   +0x0024 -> line 287
- *   +0x0034 -> line 288
- *   +0x003c -> line 289
- *   +0x0044 -> line 292
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 179–275 */
-/* addr: 0x00241540  size: 1096 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 179
- *   +0x002c -> line 188
- *   +0x0030 -> line 179
- *   +0x003c -> line 188
- *   +0x009c -> line 190
- *   +0x00a4 -> line 193
- *   +0x00b4 -> line 194
- *   +0x00c0 -> line 195
- *   +0x00c4 -> line 194
- *   +0x00c8 -> line 195
- *   +0x00d8 -> line 196
- *   +0x00e4 -> line 198
- *   +0x00e8 -> line 196
- *   +0x00ec -> line 198
- *   +0x00fc -> line 199
- *   +0x0108 -> line 200
- *   +0x0118 -> line 202
- *   +0x0120 -> line 201
- *   +0x0128 -> line 202
- *   +0x016c -> line 203
- *   +0x0174 -> line 204
- *   +0x017c -> line 207
- *   +0x0184 -> line 208
- *   +0x0188 -> line 212
- *   +0x0194 -> line 213
- *   +0x01a0 -> line 214
- *   +0x01a8 -> line 213
- *   +0x01ac -> line 214
- *   +0x01b4 -> line 215
- *   +0x01bc -> line 214
- *   +0x01c4 -> line 215
- *   +0x01d8 -> line 217
- *   +0x01dc -> line 221
- *   +0x01e0 -> line 217
- *   +0x01e4 -> line 219
- *   +0x01e8 -> line 217
- *   +0x01ec -> line 225
- *   +0x01f0 -> line 219
- *   +0x01f4 -> line 221
- *   +0x0204 -> line 227
- *   +0x0208 -> line 229
- *   +0x020c -> line 231
- *   +0x0210 -> line 221
- *   +0x0214 -> line 241
- *   +0x0218 -> line 221
- *   +0x021c -> line 244
- *   +0x0220 -> line 221
- *   +0x0230 -> line 235
- *   +0x0234 -> line 221
- *   +0x0240 -> line 233
- *   +0x0244 -> line 221
- *   +0x02b0 -> line 223
- *   +0x02b4 -> line 225
- *   +0x02b8 -> line 227
- *   +0x02bc -> line 229
- *   +0x02c0 -> line 231
- *   +0x02c4 -> line 233
- *   +0x02c8 -> line 235
- *   +0x02cc -> line 237
- *   +0x02d0 -> line 239
- *   +0x02d4 -> line 241
- *   +0x02e0 -> line 244
- *   +0x02e8 -> line 247
- *   +0x02f0 -> line 248
- *   +0x0378 -> line 247
- *   +0x0380 -> line 248
- *   +0x03a8 -> line 250
- *   +0x03ac -> line 256
- *   +0x03b0 -> line 260
- *   +0x03b4 -> line 266
- *   +0x03b8 -> line 267
- *   +0x03bc -> line 250
- *   +0x03d0 -> line 251
- *   +0x03e8 -> line 255
- *   +0x03ec -> line 256
- *   +0x03f8 -> line 258
- *   +0x03fc -> line 260
- *   +0x0400 -> line 266
- *   +0x0404 -> line 267
- *   +0x040c -> line 271
- *   +0x0414 -> line 272
- *   +0x0418 -> line 271
- *   +0x041c -> line 275
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 127–147 */
-/* addr: 0x00241990  size: 320 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 127
- *   +0x0004 -> line 128
- *   +0x0008 -> line 127
- *   +0x000c -> line 133
- *   +0x0010 -> line 127
- *   +0x001c -> line 128
- *   +0x0020 -> line 131
- *   +0x0024 -> line 128
- *   +0x002c -> line 131
- *   +0x0030 -> line 128
- *   +0x00d4 -> line 134
- *   +0x0118 -> line 139
- *   +0x011c -> line 136
- *   +0x0120 -> line 139
- *   +0x0124 -> line 145
- *   +0x0128 -> line 139
- *   +0x012c -> line 136
- *   +0x0130 -> line 139
- *   +0x0138 -> line 147
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-tdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    int k;
-
-    for (k = 0; k < 8; k++) {
-        linkStructure[k].p_GhostLinkSPO = 0;
-        linkStructure[k].p_LinkSPO = 0;
-        linkStructure[k].iLinkID = -1;
-    }
-    ui_BCPindexWrite = 0;
-    ui_BCPindexRead = 0;
-    for (k = 0; k < 1000; k++) {
-        a_NetBuffer[k].Time = 30000000;
-    }
-    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;
-    agoType = 21;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    unsigned short cp;
-    HIE_tdstSuperObject_* pRemoteSPOLink;
-    tdstGetSetParam_ stValue;
-    unsigned char k;
-    /* TODO: decompile from asm/... */
-}
-
-tdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    tdstGetSetParam_ stValue;
-
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    agoType = stValue.uDummy.uParam.lValue;
-    if (agoType < 0) agoType = 0;
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    agoXParam = stValue.uDummy.uParam.xValue;
-
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    LinkState_ OldState;
-    unsigned short cp;
-    unsigned char k;
-    /* TODO: decompile from asm/... */
-}
-
-tdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    LinkActorType_* p_link;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_link->State = 4;
-        fn_StateConstructor(p_link);
-        p_stValue->uDummy.uParam.lValue = 1;
-        p_stValue->eType = (tdeVariableType_)6;
-        return p_stTree;
-    } else {
-        p_stValue->uDummy.uParam.lValue = 0;
-        p_stValue->eType = (tdeVariableType_)6;
-        return p_stTree;
-    }
-}
-
-tdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    LinkActorType_* p_link;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    p_stValue->uDummy.uParam.ulValue = (unsigned short)(p_link ? p_link->ui_CutPointNb : 0);
-    p_stValue->eType = (tdeVariableType_)6;
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstGetSetParam_ stValue;
-    unsigned short i;
-    LinkActorType_* p_link;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-    i = stValue.uDummy.uParam.uwValue;
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        if (i < p_link->ui_CutPointNb && i >= 0) {
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xX;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xY;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[i].Position)->xZ;
-            p_stValue->eType = (tdeVariableType_)0x15;
-        } else {
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
-            ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
-        }
-        p_stValue->eType = (tdeVariableType_)0x15;
-    } else {
-        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vNullVector)->xX;
-        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vNullVector)->xY;
-        ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vNullVector)->xZ;
-        p_stValue->eType = (tdeVariableType_)0x15;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        p_link->xGaugeSpeedFactor = (stValue.eType == 8) ? stValue.uDummy.uParam.xValue : (float)stValue.uDummy.uParam.lValue;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        p_link->xLaunchSpeed = (float)stValue.uDummy.uParam.ulValue;
-        if (p_link->xLaunchSpeed <= 0) p_link->xLaunchSpeed = 5.0f;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    LinkActorType_* p_link;
-    tdstGetSetParam_ stValue;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
-        p_link->bStraightLink = stValue.uDummy.uParam.lValue;
-        p_link->xEnergy = p_link->bStraightLink ? 0 : 30;
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    LinkActorType_* p_link;
-
-    fn_vGetUltraOperatorPerso(fn_ucGetProcedureUltraOperator(p_stTree[-1].uDummy.uId.eProcedureId), p_SuperObjPerso, &hNewSuperObjPerso);
-    p_link = fn_p_SPO2Link(hNewSuperObjPerso);
-    if (p_link) {
-        p_link->State = 2;
-        fn_StateConstructor(p_link);
-    }
-    return p_stTree;
-}
-
-tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
-{
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    unsigned char cp;
-    MTH3D_tdstVector_ vDirection;
-    float xNorm;
-    float xSpeed;
-    tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
-}
-
-void fn_StateConstructor(LinkActorType_* p_link)
-{
-    float xTemp;
-    MTH3D_tdstVector_* vPointCP_K;
-    MTH3D_tdstVector_* vPointK;
-    unsigned char cp_2;
-    unsigned char k;
-
-    switch (p_link->State) {
-    case LS_CheckCollision:
-        vPointK = &p_link->a_Cutpoint[1].Position;
-        *(int*)&vPointK->xX = *(int*)&p_link->a_Cutpoint[2].Position.xX;
-        *(int*)&vPointK->xY = *(int*)&p_link->a_Cutpoint[2].Position.xY;
-        *(int*)&vPointK->xZ = *(int*)&p_link->a_Cutpoint[2].Position.xZ;
-        AGO_vAddParticle(45, vPointK, vPointK, hVisualMaterial[p_link->ui_Material], 4.0f);
-        break;
-    case LS_Launch:
-        p_link->ulInitTime = p_link->ulPrevFrameTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xX = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xX;
-        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xY = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xY;
-        ((tdstRawVector*)&p_link->a_Cutpoint[2].Position)->xZ = ((tdstRawVector*)&p_link->a_Cutpoint[0].Position)->xZ;
-        break;
-    case LS_Unlaunch:
-        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        break;
-    case LS_Destroying:
-        p_link->ulInitTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-        cp_2 = p_link->ui_CutPointNb / 2;
-        for (k = 0; k < cp_2; k++) {
-            vPointK = &p_link->a_Cutpoint[k].Position;
-            vPointCP_K = &p_link->a_Cutpoint[p_link->ui_CutPointNb - 1 - k].Position;
-            xTemp = vPointK->xX;
-            vPointK->xX = vPointCP_K->xX;
-            vPointCP_K->xX = xTemp;
-            xTemp = vPointK->xY;
-            vPointK->xY = vPointCP_K->xY;
-            vPointCP_K->xY = xTemp;
-            xTemp = vPointK->xZ;
-            vPointK->xZ = vPointCP_K->xZ;
-            vPointCP_K->xZ = xTemp;
-        }
-        break;
-    case LS_Sleep:
-        fn_NetSendEvent(p_link, (LinkNetEventType_)0x6a, 0, &vNullVector, 0.0f);
-        p_link->iLinkID = -1;
-        p_link->p_GhostLinkSPO = 0;
-        p_link->p_LinkSPO = 0;
-        break;
-    }
-}
-
-void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
-{
-    *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
-    *(int*)&g_stCollideParameterVector.xX = *(int*)&p_vDirection->xX; *(int*)&g_stCollideParameterVector.xY = *(int*)&p_vDirection->xY; *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_vDirection->xZ;
-    g_ulMode = ulMode;
-    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
-    g_hSuperObjectHit = 0;
-    fn_vComputeCollideResult(p_link->p_LinkSPO);
-}
-
-void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index)
-{
-    unsigned char bAddPoint;
-    unsigned char k;
-    unsigned char* uc_p_CutPointNb;
-    /* TODO: decompile from asm/... */
-}
-
-void fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd)
-{
-    int nDeletedCutPoints;
-    int k;
-    unsigned char* p_uiCutPointNb;
-    /* TODO: decompile from asm/... */
-}
-
 void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
 {
     float xNorm;
@@ -4945,6 +4307,69 @@ void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1343–1387 */
+/* addr: 0x0023ec90  size: 856 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1351
+ *   +0x0004 -> line 1343
+ *   +0x0008 -> line 1351
+ *   +0x000c -> line 1343
+ *   +0x0010 -> line 1351
+ *   +0x0014 -> line 1352
+ *   +0x001c -> line 1351
+ *   +0x0020 -> line 1352
+ *   +0x0024 -> line 1351
+ *   +0x0028 -> line 1352
+ *   +0x002c -> line 1353
+ *   +0x0030 -> line 1352
+ *   +0x0034 -> line 1353
+ *   +0x0038 -> line 1352
+ *   +0x003c -> line 1351
+ *   +0x0040 -> line 1352
+ *   +0x0044 -> line 1343
+ *   +0x0048 -> line 1357
+ *   +0x004c -> line 1353
+ *   +0x0050 -> line 1357
+ *   +0x0054 -> line 1353
+ *   +0x005c -> line 1357
+ *   +0x0060 -> line 1353
+ *   +0x0064 -> line 1357
+ *   +0x0068 -> line 1353
+ *   +0x006c -> line 1351
+ *   +0x0070 -> line 1352
+ *   +0x0074 -> line 1355
+ *   +0x0078 -> line 1353
+ *   +0x007c -> line 1357
+ *   +0x00a4 -> line 1358
+ *   +0x00dc -> line 1359
+ *   +0x00e4 -> line 1361
+ *   +0x013c -> line 1363
+ *   +0x0160 -> line 1365
+ *   +0x0184 -> line 1366
+ *   +0x01bc -> line 1367
+ *   +0x01c4 -> line 1369
+ *   +0x021c -> line 1371
+ *   +0x0234 -> line 1373
+ *   +0x0254 -> line 1377
+ *   +0x025c -> line 1379
+ *   +0x0264 -> line 1380
+ *   +0x027c -> line 1379
+ *   +0x0280 -> line 1383
+ *   +0x0284 -> line 1379
+ *   +0x0290 -> line 1380
+ *   +0x029c -> line 1379
+ *   +0x02a0 -> line 1380
+ *   +0x02ac -> line 1383
+ *   +0x02b0 -> line 1379
+ *   +0x02b4 -> line 1383
+ *   +0x02b8 -> line 1379
+ *   +0x02ec -> line 1380
+ *   +0x033c -> line 1383
+ *   +0x0344 -> line 1385
+ *   +0x0348 -> line 1387
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
 {
     float xNorm;
@@ -4957,6 +4382,107 @@ int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1449–1525 */
+/* addr: 0x0023e510  size: 1916 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1449
+ *   +0x0004 -> line 1460
+ *   +0x0008 -> line 1449
+ *   +0x000c -> line 1460
+ *   +0x0010 -> line 1449
+ *   +0x0014 -> line 1460
+ *   +0x0018 -> line 1449
+ *   +0x001c -> line 1461
+ *   +0x0020 -> line 1449
+ *   +0x0024 -> line 1461
+ *   +0x0028 -> line 1449
+ *   +0x002c -> line 1461
+ *   +0x0030 -> line 1449
+ *   +0x0034 -> line 1460
+ *   +0x0038 -> line 1449
+ *   +0x003c -> line 1461
+ *   +0x0040 -> line 1449
+ *   +0x0044 -> line 1461
+ *   +0x0048 -> line 1460
+ *   +0x004c -> line 1449
+ *   +0x0050 -> line 1460
+ *   +0x0054 -> line 1461
+ *   +0x005c -> line 1449
+ *   +0x0060 -> line 1460
+ *   +0x006c -> line 1457
+ *   +0x0070 -> line 1462
+ *   +0x0074 -> line 1461
+ *   +0x0078 -> line 1462
+ *   +0x007c -> line 1463
+ *   +0x0080 -> line 1462
+ *   +0x0084 -> line 1464
+ *   +0x0088 -> line 1462
+ *   +0x0098 -> line 1467
+ *   +0x00dc -> line 1469
+ *   +0x0114 -> line 1470
+ *   +0x0174 -> line 1471
+ *   +0x0198 -> line 1473
+ *   +0x01c8 -> line 1475
+ *   +0x0228 -> line 1476
+ *   +0x024c -> line 1479
+ *   +0x0250 -> line 1478
+ *   +0x0254 -> line 1479
+ *   +0x026c -> line 1480
+ *   +0x0274 -> line 1481
+ *   +0x0278 -> line 1480
+ *   +0x027c -> line 1482
+ *   +0x0280 -> line 1481
+ *   +0x02a4 -> line 1483
+ *   +0x02c4 -> line 1484
+ *   +0x02cc -> line 1485
+ *   +0x02d0 -> line 1484
+ *   +0x02d4 -> line 1486
+ *   +0x02d8 -> line 1485
+ *   +0x0300 -> line 1489
+ *   +0x0308 -> line 1490
+ *   +0x030c -> line 1491
+ *   +0x0310 -> line 1490
+ *   +0x0314 -> line 1491
+ *   +0x0318 -> line 1490
+ *   +0x0340 -> line 1491
+ *   +0x03a4 -> line 1492
+ *   +0x03f0 -> line 1493
+ *   +0x0408 -> line 1499
+ *   +0x040c -> line 1500
+ *   +0x0410 -> line 1499
+ *   +0x0414 -> line 1500
+ *   +0x0420 -> line 1499
+ *   +0x0428 -> line 1500
+ *   +0x0434 -> line 1499
+ *   +0x0438 -> line 1500
+ *   +0x0448 -> line 1499
+ *   +0x046c -> line 1500
+ *   +0x04c4 -> line 1502
+ *   +0x0510 -> line 1504
+ *   +0x0514 -> line 1508
+ *   +0x0518 -> line 1504
+ *   +0x051c -> line 1508
+ *   +0x0524 -> line 1513
+ *   +0x052c -> line 1517
+ *   +0x0530 -> line 1504
+ *   +0x0558 -> line 1505
+ *   +0x0588 -> line 1506
+ *   +0x05b8 -> line 1508
+ *   +0x05dc -> line 1509
+ *   +0x060c -> line 1512
+ *   +0x0624 -> line 1513
+ *   +0x0654 -> line 1515
+ *   +0x0658 -> line 1514
+ *   +0x0660 -> line 1515
+ *   +0x0674 -> line 1514
+ *   +0x067c -> line 1515
+ *   +0x0690 -> line 1517
+ *   +0x06e8 -> line 1519
+ *   +0x0734 -> line 1520
+ *   +0x074c -> line 1525
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
 {
     float xNorm;
@@ -4973,6 +4499,19 @@ void fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1538–1549 */
+/* addr: 0x0023e480  size: 140 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1538
+ *   +0x0014 -> line 1542
+ *   +0x0028 -> line 1543
+ *   +0x0030 -> line 1544
+ *   +0x0050 -> line 1546
+ *   +0x005c -> line 1547
+ *   +0x0074 -> line 1549
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_Mechanics(LinkActorType_* p_link)
 {
     unsigned short k;
@@ -4989,21 +4528,243 @@ void fn_Mechanics(LinkActorType_* p_link)
     }
 }
 
-IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i)
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1575–1613 */
+/* addr: 0x0023e1c0  size: 696 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1575
+ *   +0x0004 -> line 1577
+ *   +0x0008 -> line 1575
+ *   +0x000c -> line 1576
+ *   +0x0010 -> line 1575
+ *   +0x0018 -> line 1576
+ *   +0x001c -> line 1575
+ *   +0x0020 -> line 1576
+ *   +0x0024 -> line 1575
+ *   +0x0028 -> line 1576
+ *   +0x002c -> line 1575
+ *   +0x0030 -> line 1576
+ *   +0x0034 -> line 1575
+ *   +0x0038 -> line 1576
+ *   +0x003c -> line 1578
+ *   +0x0040 -> line 1576
+ *   +0x0044 -> line 1577
+ *   +0x0050 -> line 1578
+ *   +0x0054 -> line 1577
+ *   +0x0058 -> line 1578
+ *   +0x005c -> line 1577
+ *   +0x0060 -> line 1578
+ *   +0x0068 -> line 1577
+ *   +0x006c -> line 1578
+ *   +0x0074 -> line 1577
+ *   +0x0078 -> line 1580
+ *   +0x0080 -> line 1581
+ *   +0x0088 -> line 1580
+ *   +0x0098 -> line 1581
+ *   +0x00a8 -> line 1580
+ *   +0x00b4 -> line 1582
+ *   +0x00b8 -> line 1581
+ *   +0x00bc -> line 1582
+ *   +0x00c0 -> line 1581
+ *   +0x00c8 -> line 1582
+ *   +0x00cc -> line 1585
+ *   +0x00d8 -> line 1586
+ *   +0x00e8 -> line 1587
+ *   +0x00f4 -> line 1588
+ *   +0x0100 -> line 1589
+ *   +0x0110 -> line 1590
+ *   +0x011c -> line 1592
+ *   +0x0120 -> line 1594
+ *   +0x0124 -> line 1592
+ *   +0x0128 -> line 1594
+ *   +0x0138 -> line 1595
+ *   +0x0144 -> line 1596
+ *   +0x0150 -> line 1597
+ *   +0x0154 -> line 1596
+ *   +0x015c -> line 1597
+ *   +0x01a0 -> line 1598
+ *   +0x01ac -> line 1605
+ *   +0x01b0 -> line 1598
+ *   +0x01e4 -> line 1602
+ *   +0x01e8 -> line 1605
+ *   +0x01ec -> line 1600
+ *   +0x01f0 -> line 1603
+ *   +0x01f4 -> line 1601
+ *   +0x01f8 -> line 1602
+ *   +0x01fc -> line 1603
+ *   +0x0200 -> line 1602
+ *   +0x0204 -> line 1600
+ *   +0x0208 -> line 1602
+ *   +0x020c -> line 1600
+ *   +0x0210 -> line 1603
+ *   +0x0214 -> line 1601
+ *   +0x0218 -> line 1603
+ *   +0x021c -> line 1605
+ *   +0x0220 -> line 1601
+ *   +0x0224 -> line 1605
+ *   +0x0230 -> line 1602
+ *   +0x0234 -> line 1603
+ *   +0x0238 -> line 1605
+ *   +0x0250 -> line 1602
+ *   +0x0254 -> line 1603
+ *   +0x0258 -> line 1605
+ *   +0x028c -> line 1607
+ *   +0x0294 -> line 1608
+ *   +0x029c -> line 1610
+ *   +0x02a4 -> line 1611
+ *   +0x02ac -> line 1612
+ *   +0x02b0 -> line 1613
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
+/* mula.s/madda.s/madd.s has no C form under MWCC; only those instructions
+   are asm. */
+inline float LNK_xDot3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
 {
-    float det;
-    float e;
-    float b;
-    float t;
-    float s;
-    MTH3D_tdstVector_* p3;
-    MTH3D_tdstVector_* p2;
-    MTH3D_tdstVector_* p1;
-    MTH3D_tdstVector_* p0;
-    IntersectionPoint_ DP;
-    /* TODO: decompile from asm/... */
+    float _r;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s _r, _z1, _z2 }
+    return _r;
 }
 
+
+IntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i)
+{
+    static IntersectionPoint_ DP;
+    MTH3D_tdstVector_* p0;
+    MTH3D_tdstVector_* p1;
+    MTH3D_tdstVector_* p2;
+    MTH3D_tdstVector_* p3;
+    float s;
+    float t;
+    float b;
+    float e;
+    float det;
+    MTH3D_tdstVector_ u, v, w;
+    float a, c, d, f;
+
+    p0 = &p_link->a_Cutpoint[k].Position;
+    p1 = &p_link->a_Cutpoint[k + 1].Position;
+    p2 = &p_link->a_Cutpoint[i].Position;
+    p3 = &p_link->a_Cutpoint[i + 1].Position;
+
+    u.xX = p1->xX - p0->xX; u.xY = p1->xY - p0->xY; u.xZ = p1->xZ - p0->xZ;
+    v.xX = p3->xX - p2->xX; v.xY = p3->xY - p2->xY; v.xZ = p3->xZ - p2->xZ;
+    w.xX = p0->xX - p2->xX; w.xY = p0->xY - p2->xY; w.xZ = p0->xZ - p2->xZ;
+
+    a = LNK_xDot3(u.xX, u.xX, u.xY, u.xY, u.xZ, u.xZ);
+    b = -LNK_xDot3(u.xX, v.xX, u.xY, v.xY, u.xZ, v.xZ);
+    c = LNK_xDot3(v.xX, v.xX, v.xY, v.xY, v.xZ, v.xZ);
+    d = LNK_xDot3(u.xX, w.xX, u.xY, w.xY, u.xZ, w.xZ);
+    e = -LNK_xDot3(v.xX, w.xX, v.xY, w.xY, v.xZ, w.xZ);
+    f = LNK_xDot3(w.xX, w.xX, w.xY, w.xY, w.xZ, w.xZ);
+
+    det = a * c - b * b;
+
+    if (det > 0.0f)
+    {
+        s = (b * e - c * d) / det;
+        t = (b * d - a * e) / det;
+        if (s >= 0.0f && s <= 1.0f && t >= 0.0f && t <= 1.0f)
+        {
+            DP.xDist = a * s * s + 2.0f * (b * s * t + d * s + e * t) + c * t * t + f;
+
+            u.xX = s * u.xX; u.xY = s * u.xY; u.xZ = s * u.xZ;
+            v.xX = t * v.xX; v.xY = t * v.xY; v.xZ = t * v.xZ;
+            u.xX = p0->xX + u.xX; u.xY = p0->xY + u.xY; u.xZ = p0->xZ + u.xZ;
+            v.xX = p2->xX + v.xX; v.xY = p2->xY + v.xY; v.xZ = p2->xZ + v.xZ;
+
+            DP.Point.xX = u.xX + v.xX; DP.Point.xY = u.xY + v.xY; DP.Point.xZ = u.xZ + v.xZ; DP.Point.xX = 0.5f * DP.Point.xX; DP.Point.xY = 0.5f * DP.Point.xY; DP.Point.xZ = 0.5f * DP.Point.xZ;
+        }
+        else
+        {
+            DP.xDist = -1.0f;
+        }
+    }
+    else
+    {
+        DP.xDist = -1.0f;
+    }
+
+    return &DP;
+}
+
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1628–1672 */
+/* addr: 0x0023de20  size: 928 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1628
+ *   +0x0024 -> line 1634
+ *   +0x0028 -> line 1628
+ *   +0x002c -> line 1636
+ *   +0x0030 -> line 1638
+ *   +0x0040 -> line 1640
+ *   +0x0048 -> line 1641
+ *   +0x004c -> line 1642
+ *   +0x0050 -> line 1641
+ *   +0x0054 -> line 1642
+ *   +0x0060 -> line 1643
+ *   +0x0084 -> line 1644
+ *   +0x00c0 -> line 1646
+ *   +0x00c8 -> line 1647
+ *   +0x00e0 -> line 1648
+ *   +0x0100 -> line 1650
+ *   +0x0108 -> line 1651
+ *   +0x0120 -> line 1652
+ *   +0x0124 -> line 1653
+ *   +0x012c -> line 1654
+ *   +0x0130 -> line 1657
+ *   +0x015c -> line 1660
+ *   +0x0160 -> line 1657
+ *   +0x017c -> line 1658
+ *   +0x0180 -> line 1664
+ *   +0x0184 -> line 1657
+ *   +0x0194 -> line 1664
+ *   +0x019c -> line 1657
+ *   +0x01a0 -> line 1658
+ *   +0x01b0 -> line 1657
+ *   +0x01b4 -> line 1658
+ *   +0x01b8 -> line 1657
+ *   +0x01bc -> line 1658
+ *   +0x01c0 -> line 1657
+ *   +0x01c4 -> line 1658
+ *   +0x01d0 -> line 1660
+ *   +0x01d4 -> line 1657
+ *   +0x01d8 -> line 1658
+ *   +0x01dc -> line 1660
+ *   +0x01e4 -> line 1658
+ *   +0x01e8 -> line 1660
+ *   +0x01ec -> line 1661
+ *   +0x01f0 -> line 1657
+ *   +0x01f4 -> line 1660
+ *   +0x01fc -> line 1661
+ *   +0x0210 -> line 1657
+ *   +0x0214 -> line 1661
+ *   +0x0218 -> line 1657
+ *   +0x021c -> line 1661
+ *   +0x0220 -> line 1657
+ *   +0x0224 -> line 1661
+ *   +0x022c -> line 1657
+ *   +0x0230 -> line 1661
+ *   +0x023c -> line 1662
+ *   +0x0240 -> line 1661
+ *   +0x0248 -> line 1657
+ *   +0x024c -> line 1662
+ *   +0x025c -> line 1657
+ *   +0x0260 -> line 1658
+ *   +0x026c -> line 1662
+ *   +0x027c -> line 1658
+ *   +0x0280 -> line 1664
+ *   +0x0284 -> line 1658
+ *   +0x02b0 -> line 1660
+ *   +0x02c8 -> line 1661
+ *   +0x031c -> line 1662
+ *   +0x033c -> line 1664
+ *   +0x0344 -> line 1666
+ *   +0x0374 -> line 1671
+ *   +0x0378 -> line 1672
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_DeleteLoops(LinkActorType_* p_link)
 {
     IntersectionPoint_* Ipoint;
@@ -5016,6 +4777,31 @@ int fn_DeleteLoops(LinkActorType_* p_link)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1773–1798 */
+/* addr: 0x0023dae0  size: 824 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1773
+ *   +0x0018 -> line 1776
+ *   +0x0054 -> line 1779
+ *   +0x0098 -> line 1781
+ *   +0x00a8 -> line 1782
+ *   +0x00ac -> line 1781
+ *   +0x00d4 -> line 1782
+ *   +0x0134 -> line 1783
+ *   +0x0180 -> line 1784
+ *   +0x01bc -> line 1785
+ *   +0x021c -> line 1786
+ *   +0x0240 -> line 1788
+ *   +0x0270 -> line 1789
+ *   +0x02a0 -> line 1790
+ *   +0x02c0 -> line 1791
+ *   +0x02dc -> line 1792
+ *   +0x02e4 -> line 1794
+ *   +0x0318 -> line 1795
+ *   +0x031c -> line 1798
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 unsigned char fn_Launch(LinkActorType_* p_link)
 {
     float xNorm;
@@ -5024,6 +4810,49 @@ unsigned char fn_Launch(LinkActorType_* p_link)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1818–1857 */
+/* addr: 0x0023d870  size: 624 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1824
+ *   +0x0004 -> line 1818
+ *   +0x0008 -> line 1824
+ *   +0x0040 -> line 1826
+ *   +0x0080 -> line 1828
+ *   +0x0084 -> line 1830
+ *   +0x008c -> line 1828
+ *   +0x0090 -> line 1830
+ *   +0x0098 -> line 1832
+ *   +0x0114 -> line 1834
+ *   +0x0124 -> line 1835
+ *   +0x014c -> line 1836
+ *   +0x0158 -> line 1837
+ *   +0x015c -> line 1836
+ *   +0x0168 -> line 1837
+ *   +0x016c -> line 1836
+ *   +0x0170 -> line 1837
+ *   +0x0190 -> line 1839
+ *   +0x019c -> line 1841
+ *   +0x01b0 -> line 1843
+ *   +0x01c8 -> line 1845
+ *   +0x01d4 -> line 1849
+ *   +0x01d8 -> line 1845
+ *   +0x01dc -> line 1849
+ *   +0x0218 -> line 1845
+ *   +0x021c -> line 1847
+ *   +0x0224 -> line 1849
+ *   +0x0228 -> line 1847
+ *   +0x022c -> line 1849
+ *   +0x023c -> line 1847
+ *   +0x0240 -> line 1849
+ *   +0x024c -> line 1847
+ *   +0x0250 -> line 1849
+ *   +0x0254 -> line 1852
+ *   +0x025c -> line 1853
+ *   +0x0264 -> line 1856
+ *   +0x0268 -> line 1857
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 int fn_CrunchLink(LinkActorType_* p_link)
 {
     float xScale;
@@ -5034,11 +4863,34 @@ int fn_CrunchLink(LinkActorType_* p_link)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1893–1893 */
+/* addr: 0x0023d860  size: 8 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1893
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* LNK_fn_p_SetLag(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1897–1925 */
+/* addr: 0x0023d770  size: 240 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1897
+ *   +0x0018 -> line 1910
+ *   +0x0034 -> line 1913
+ *   +0x008c -> line 1914
+ *   +0x0094 -> line 1915
+ *   +0x00a4 -> line 1917
+ *   +0x00b0 -> line 1918
+ *   +0x00cc -> line 1921
+ *   +0x00d4 -> line 1924
+ *   +0x00d8 -> line 1925
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     LinkActorType_* p_link;
@@ -5058,6 +4910,23 @@ tdstNodeInterpret_* LNK_fn_SetSendDataRate(HIE_tdstSuperObject_* p_SuperObjPerso
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1929–1957 */
+/* addr: 0x0023d690  size: 224 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1929
+ *   +0x0018 -> line 1942
+ *   +0x0034 -> line 1945
+ *   +0x008c -> line 1946
+ *   +0x0094 -> line 1947
+ *   +0x00a8 -> line 1948
+ *   +0x00ac -> line 1949
+ *   +0x00b4 -> line 1950
+ *   +0x00bc -> line 1953
+ *   +0x00c4 -> line 1956
+ *   +0x00c8 -> line 1957
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 tdstNodeInterpret_* LNK_fn_SetSendStatusPeriod(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)
 {
     LinkActorType_* p_link;
@@ -5079,6 +4948,61 @@ tdstNodeInterpret_* LNK_fn_SetSendStatusPeriod(HIE_tdstSuperObject_* p_SuperObjP
     return p_stTree;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1970–2059 */
+/* addr: 0x0023d220  size: 1128 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 1970
+ *   +0x0014 -> line 1975
+ *   +0x0018 -> line 1970
+ *   +0x0020 -> line 1977
+ *   +0x002c -> line 1979
+ *   +0x0034 -> line 1981
+ *   +0x0040 -> line 1986
+ *   +0x0044 -> line 1988
+ *   +0x004c -> line 1990
+ *   +0x005c -> line 1991
+ *   +0x0060 -> line 1992
+ *   +0x0088 -> line 1996
+ *   +0x0094 -> line 1997
+ *   +0x00b8 -> line 1998
+ *   +0x00f8 -> line 1999
+ *   +0x016c -> line 2000
+ *   +0x0184 -> line 2001
+ *   +0x018c -> line 2002
+ *   +0x0194 -> line 2004
+ *   +0x0198 -> line 2006
+ *   +0x01f8 -> line 2007
+ *   +0x0200 -> line 2010
+ *   +0x0204 -> line 2011
+ *   +0x020c -> line 2010
+ *   +0x0210 -> line 2011
+ *   +0x0228 -> line 2012
+ *   +0x0230 -> line 2016
+ *   +0x0290 -> line 2017
+ *   +0x0298 -> line 2021
+ *   +0x029c -> line 2020
+ *   +0x02a0 -> line 2021
+ *   +0x02ac -> line 2022
+ *   +0x02b0 -> line 2023
+ *   +0x02c8 -> line 2024
+ *   +0x0310 -> line 2027
+ *   +0x0318 -> line 2031
+ *   +0x0378 -> line 2032
+ *   +0x0380 -> line 2035
+ *   +0x0384 -> line 2036
+ *   +0x038c -> line 2038
+ *   +0x0390 -> line 2040
+ *   +0x03a0 -> line 2046
+ *   +0x03c0 -> line 2048
+ *   +0x03e0 -> line 2050
+ *   +0x03e8 -> line 2052
+ *   +0x0408 -> line 2053
+ *   +0x0438 -> line 2054
+ *   +0x0444 -> line 2055
+ *   +0x0448 -> line 2059
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_NetReceiveEvents(LinkActorType_* p_link)
 {
     unsigned short iAnotherLinkEventIndex;
@@ -5089,6 +5013,101 @@ void fn_NetReceiveEvents(LinkActorType_* p_link)
     /* TODO: decompile from asm/... */
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2064–2150 */
+/* addr: 0x0023ce30  size: 1008 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2064
+ *   +0x000c -> line 2068
+ *   +0x0018 -> line 2069
+ *   +0x004c -> line 2071
+ *   +0x0050 -> line 2073
+ *   +0x005c -> line 2074
+ *   +0x0064 -> line 2075
+ *   +0x0068 -> line 2076
+ *   +0x006c -> line 2077
+ *   +0x0070 -> line 2074
+ *   +0x0078 -> line 2075
+ *   +0x007c -> line 2076
+ *   +0x0080 -> line 2077
+ *   +0x0084 -> line 2078
+ *   +0x0088 -> line 2074
+ *   +0x0098 -> line 2075
+ *   +0x009c -> line 2074
+ *   +0x00a0 -> line 2076
+ *   +0x00a4 -> line 2075
+ *   +0x00a8 -> line 2077
+ *   +0x00ac -> line 2076
+ *   +0x00b4 -> line 2078
+ *   +0x00bc -> line 2079
+ *   +0x00d0 -> line 2081
+ *   +0x0110 -> line 2083
+ *   +0x0114 -> line 2084
+ *   +0x0120 -> line 2083
+ *   +0x0124 -> line 2084
+ *   +0x0128 -> line 2083
+ *   +0x0140 -> line 2084
+ *   +0x0154 -> line 2086
+ *   +0x015c -> line 2088
+ *   +0x0160 -> line 2092
+ *   +0x0164 -> line 2088
+ *   +0x0168 -> line 2089
+ *   +0x016c -> line 2090
+ *   +0x0170 -> line 2091
+ *   +0x0174 -> line 2095
+ *   +0x0178 -> line 2093
+ *   +0x017c -> line 2088
+ *   +0x0180 -> line 2092
+ *   +0x0184 -> line 2088
+ *   +0x0188 -> line 2089
+ *   +0x018c -> line 2093
+ *   +0x0190 -> line 2088
+ *   +0x0194 -> line 2093
+ *   +0x0198 -> line 2088
+ *   +0x01a0 -> line 2090
+ *   +0x01a4 -> line 2091
+ *   +0x01a8 -> line 2089
+ *   +0x01ac -> line 2090
+ *   +0x01b0 -> line 2091
+ *   +0x01b8 -> line 2095
+ *   +0x01c4 -> line 2092
+ *   +0x01c8 -> line 2088
+ *   +0x01d0 -> line 2089
+ *   +0x01d4 -> line 2090
+ *   +0x01dc -> line 2091
+ *   +0x01e4 -> line 2092
+ *   +0x01e8 -> line 2093
+ *   +0x01ec -> line 2092
+ *   +0x01f0 -> line 2095
+ *   +0x01f8 -> line 2097
+ *   +0x01fc -> line 2101
+ *   +0x0200 -> line 2097
+ *   +0x0204 -> line 2123
+ *   +0x0208 -> line 2122
+ *   +0x020c -> line 2097
+ *   +0x0220 -> line 2098
+ *   +0x0224 -> line 2099
+ *   +0x022c -> line 2100
+ *   +0x0230 -> line 2101
+ *   +0x0270 -> line 2103
+ *   +0x028c -> line 2107
+ *   +0x02a8 -> line 2108
+ *   +0x02ac -> line 2109
+ *   +0x02b4 -> line 2110
+ *   +0x02b8 -> line 2111
+ *   +0x02f8 -> line 2113
+ *   +0x0314 -> line 2116
+ *   +0x0330 -> line 2117
+ *   +0x0334 -> line 2118
+ *   +0x033c -> line 2119
+ *   +0x0340 -> line 2123
+ *   +0x0344 -> line 2120
+ *   +0x0384 -> line 2122
+ *   +0x03a0 -> line 2123
+ *   +0x03b8 -> line 2124
+ *   +0x03e0 -> line 2150
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned char iV, MTH3D_tdstVector_* vV, float fV)
 {
     unsigned char k;
@@ -5153,6 +5172,18 @@ void fn_NetSendEvent(LinkActorType_* p_link, LinkNetEventType_ LNEvent, unsigned
     }
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2169–2174 */
+/* addr: 0x0023cdb0  size: 124 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2169
+ *   +0x0008 -> line 2170
+ *   +0x0018 -> line 2171
+ *   +0x0030 -> line 2172
+ *   +0x0070 -> line 2173
+ *   +0x0074 -> line 2174
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher)
 {
     unsigned char k;
@@ -5167,6 +5198,25 @@ HIE_tdstSuperObject_* fn_p_Fisher2Fish(HIE_tdstSuperObject_* p_Fisher)
     return 0;
 }
 
+/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 2351–2382 */
+/* addr: 0x0023c860  size: 1348 bytes */
+/* Target MWCC statement boundaries (code offset -> source line):
+ *   +0x0000 -> line 2351
+ *   +0x0004 -> line 2356
+ *   +0x0008 -> line 2351
+ *   +0x001c -> line 2354
+ *   +0x0020 -> line 2356
+ *   +0x004c -> line 2358
+ *   +0x0054 -> line 2359
+ *   +0x0230 -> line 2360
+ *   +0x0238 -> line 2362
+ *   +0x0338 -> line 2363
+ *   +0x0340 -> line 2366
+ *   +0x034c -> line 2367
+ *   +0x0528 -> line 2382
+ * Place reconstructed statements at these boundaries;
+ * compare a candidate object's line table as an extra checkpoint.
+ */
 void fn_DisplayLink(LinkActorType_* p_link, LinkDisplayMode_ displayMode)
 {
     unsigned short cp;
