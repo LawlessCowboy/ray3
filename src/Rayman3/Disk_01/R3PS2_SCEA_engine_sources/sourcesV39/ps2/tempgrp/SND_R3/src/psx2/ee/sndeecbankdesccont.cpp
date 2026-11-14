@@ -19,7 +19,8 @@ namespace usnd { struct CUUID; }
 typedef usnd::CUUID CUUID;
 namespace usnd { struct sstring; }
 typedef usnd::sstring sstring;
-typedef struct CPS2IdObjInfo CPS2IdObjInfo;
+namespace usnd { struct CPS2IdObjInfo; }
+typedef usnd::CPS2IdObjInfo CPS2IdObjInfo;
 typedef struct less less;
 typedef struct stree stree;
 typedef struct smap smap;
@@ -133,7 +134,7 @@ struct usnd::sstring {
     bool operator<(const sstring& ro_Other) const;
 };
 
-struct CPS2IdObjInfo {
+struct usnd::CPS2IdObjInfo {
     CUUID m_oId; /* +0x0 */
     unsigned int m_uiOffset; /* +0x8 */
     sstring m_strFileName; /* +0xc */
@@ -289,17 +290,28 @@ struct stree : streebase {
          * constructor takes sTreeNode* and forwards to the base's
          * iterator_base(sTreeLink*) constructor. */
         iterator(sTreeNode* po_Node) : iterator_base((sTreeLink*)po_Node) {}
+        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
         V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
         iterator& operator++(void) { _Inc(); return *this; }
         bool operator==(const iterator& ro_It) const { return _Ptr == ro_It._Ptr; }
         bool operator!=(const iterator& ro_It) const { return !(*this == ro_It); }
     };
     stree(const CMP& ro_Compare = CMP(), bool b_Multi = false, const ALLOC& ro_Alloc = ALLOC());
+    ~stree()
+    {
+        erase(iterator((sTreeNode*)_GetHead()->m_poLeft), iterator((sTreeNode*)_HeadLink));
+        usnd_free(_HeadLink);
+        _HeadLink = 0;
+        _Size = 0;
+    }
+    sTreeLink* _GetHead(void) const;
+    iterator erase(iterator o_First, iterator o_Last);
+    void clear(void) { erase(iterator((sTreeNode*)_GetHead()->m_poLeft), iterator((sTreeNode*)_HeadLink)); }
     sTreeLink* _Lmost(void);
     sTreeLink* _Lbound(const K& ro_Key) const;
     void insert(const V& ro_Value);
     iterator begin(void) { return iterator((sTreeNode*)_Lmost()->m_poLeft); }
-    iterator end(void) { return iterator(_HeadLink); }
+    iterator end(void) { return iterator((sTreeNode*)_HeadLink); }
     ALLOC allocator; /* +0xc */
     CMP key_compare; /* +0xd */
 };
@@ -315,6 +327,12 @@ struct smap {
     _Imp _Tr; /* +0x0 */
 };
 
+template <class T, int N> struct CIndexAllocator {
+    struct CAllocBlock* m_poAllocBlocks; /* +0x0 */
+    char m_cRootNodeBuffer[N]; /* +0x4 */
+    unsigned int m_uiNbAllocs; /* +0x2c */
+};
+
 template <class K, class CMP, class ALLOC>
 struct sset {
     struct _Kfn {
@@ -326,12 +344,13 @@ struct sset {
 }
 
 struct CPS2IdObjLoader {
-    smap m_oIdObjsCache; /* +0x0 */
-    smap m_oIndex; /* +0x10 */
+    usnd::smap<usnd::CUUID, usnd::CIdObj*, usnd::less<usnd::CUUID>, usnd::sallocator<usnd::CIdObj*> > m_oIdObjsCache; /* +0x0 */
+    usnd::smap<usnd::CUUID, usnd::CPS2IdObjInfo, usnd::less<usnd::CUUID>, usnd::CIndexAllocator<usnd::CPS2IdObjInfo, 40> > m_oIndex; /* +0x10 */
 };
 
 struct CBankDescCont : usnd::smap<usnd::sstring, CBankDesc*, usnd::less<usnd::sstring>, usnd::sallocator<CBankDesc*> > {
     CPS2IdObjLoader moLoader; /* +0x10 */
+    ~CBankDescCont();
     CBankDesc* mfn_poAddBankDesc(const char* pch_FileName);
 };
 
@@ -355,6 +374,7 @@ struct CBankDesc : usnd::sset<CResData*, usnd::less<CResData*>, usnd::sallocator
     CPS2IdObjLoader* mroLoader; /* +0x10 */
     sstring mostringName; /* +0x14 */
     static void* operator new(size_t ui_Size) { return usnd_malloc(ui_Size); }
+    ~CBankDesc();
 };
 
 struct CResObjState {
@@ -660,6 +680,19 @@ struct CTextFileSrc : CTextFile {
    remaining differences are the callee-saved register assignment, the extra
    local the retail passes to insert(), and the shape of the map lookup; see
    the recorded attempt in config/matches.json. */
+
+/* lines 54–61 (the retail debug names sndclinkcallbackresobjcont.cpp) */
+/* addr: 0x0018d120  size: 352 bytes */
+CBankDescCont::~CBankDescCont()
+{
+    iterator it;
+
+    for (it = begin(); it != end(); ++it)
+    {
+        delete (*it).second;
+    }
+    _Tr.clear();
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeecbankdesccont.cpp lines 63–68 */
 /* addr: 0x0018cad0  size: 468 bytes */

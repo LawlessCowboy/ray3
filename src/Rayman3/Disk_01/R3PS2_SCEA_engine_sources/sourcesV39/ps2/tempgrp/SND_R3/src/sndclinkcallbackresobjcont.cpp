@@ -249,53 +249,5 @@ struct CActorModifiers {
     unsigned char m_bResultChanged; /* +0x20 */
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinkcallbackresobjcont.cpp lines 54–61 */
-/* addr: 0x0018d120  size: 352 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 54
- *   +0x001c -> line 57
- *   +0x003c -> line 58
- *   +0x0048 -> line 59
- *   +0x0078 -> line 60
- *   +0x014c -> line 61
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-void __dt__13CBankDescContFv(void)
-{
-    iterator it;
-    /* TODO: decompile from asm/... */
-}
+/* __dt__13CBankDescContFv (debug lines 54-61) is defined in
+   psx2/ee/sndeecbankdesccont.cpp, where the retail emits it. */

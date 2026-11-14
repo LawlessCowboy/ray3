@@ -1571,17 +1571,6 @@ unsigned char fn_ucIsAnAlwaysObject(tdstEngineObject_* p_stEngineObject);
 void fn_vInitAlwaysModel(tdeObjectTreeInit_ eObjIniType);
 void fn_vKillAllAlwaysModel(void);
 
-static inline HIE_tdstSuperObject_* fn_hGetAlwaysGenerator(HIE_tdstSuperObject_* _hAlways)
-{
-    if (_hAlways)
-    {
-        tdstEngineObject_* p_stChar = _hAlways->hLinkedObject.p_stCharacter;
-        tdstStandardGame_* p_stGame = p_stChar->h_StandardGame;
-        return (p_stGame == NULL || p_stChar == NULL) ? NULL : g_stAlways.d_hAlwaysGenerator[(unsigned int)(p_stGame->otObjectPersonalType - 0x10000)];
-    }
-    return NULL;
-}
-
 /* Not original source, needs cleaning up: retail recomputes the
  * d_stAlwaysSuperObject[i] offset (i << 7) every iteration instead of
  * stepping a pointer; no natural loop, index type or accessor form
@@ -2277,11 +2266,19 @@ void fn_vKillAllAlwaysInNonActiveSectors(void)
  */
 unsigned char fn_ucIsAlwaysGeneratedByMe(HIE_tdstSuperObject_* _hAlways, HIE_tdstSuperObject_* _hGenerator)
 {
+    tdstEngineObject_* p_stEngineObject;
     HIE_tdstSuperObject_* hGen;
+    unsigned int ulRank;
     if (_hGenerator == NULL)
         return 0;
-
-    return (fn_hGetAlwaysGenerator(_hAlways) == _hGenerator);
+    if (_hAlways == NULL || _hAlways->hLinkedObject.p_stCharacter->h_StandardGame == NULL || (p_stEngineObject = _hAlways->hLinkedObject.p_stCharacter) == NULL)
+        hGen = NULL;
+    else
+    {
+        ulRank = p_stEngineObject->h_StandardGame->otObjectPersonalType - 0x10000;
+        hGen = g_stAlways.d_hAlwaysGenerator[ulRank];
+    }
+    return (hGen == _hGenerator);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Always.c lines 1311–1327 */

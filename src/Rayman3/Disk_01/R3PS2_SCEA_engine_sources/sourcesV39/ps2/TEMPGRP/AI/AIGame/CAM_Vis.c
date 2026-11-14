@@ -3384,6 +3384,7 @@ MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation*, MTH3D_tdstVector_*
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void CAM_fn_vCheckForABetterPos(CAM_tdstUpdateCamera_* _p_stStruct);
 char CAM_fn_cCanResetConstraintMoveVisFailure(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWanted);
+unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MTH3D_tdstVector_* _p_stVector2, float _xEpsilon);
 void CAM_fn_vMakeAsNewIdealPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
 void CAM_fn_vComputeCineinfoCurrentForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
 void CAM_fn_vComputeCineinfoWorkForAPosition(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stPosition);
@@ -3953,7 +3954,40 @@ float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVect
 char CAM_fnc_IsDirectionCorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _pst_Dir, float _x_Pound, float _x_PoundRef, char _c_Mode)
 {
     MTH3D_tdstVector_ stTempVector;
-    /* TODO: decompile from asm/... */
+
+    stTempVector.xX = _pst_Dir->xX + _p_stStruct->stTargetedPersoRealPos.xX;
+    stTempVector.xY = _pst_Dir->xY + _p_stStruct->stTargetedPersoRealPos.xY;
+    stTempVector.xZ = _pst_Dir->xZ + _p_stStruct->stTargetedPersoRealPos.xZ;
+
+    if (_c_Mode & 8)
+    {
+        if (!(_x_Pound < _x_PoundRef))
+            return 0;
+
+        _x_PoundRef -= _x_Pound;
+        if (_x_PoundRef < 0.05f)
+            return 0;
+
+        if (!CAM_fn_cCanResetConstraintMoveVisFailure(_p_stStruct, &stTempVector))
+            return 0;
+    }
+
+    if (MTH_xSqrt(MTH3D_xSqrVector(_pst_Dir)) < _p_stStruct->hCineinfoWork->xBoundDistMin + CAM_g_stCameraConstants.xOffsetMinDistPerso)
+        return 0;
+
+    if (!(_c_Mode & 4))
+    {
+        if (CAM_fn_bEqualVectorWithEpsilon(&stTempVector, &_p_stStruct->stWantedCameraPos, CAM_g_stCameraConstants.xEpsilonForEqualVectors))
+            return 0;
+    }
+
+    if (!(_c_Mode & 4) || (_c_Mode & 8))
+    {
+        if (CAM_fn_bEqualVectorWithEpsilon(&stTempVector, &_p_stStruct->stCurrentCameraPos, CAM_g_stCameraConstants.xEpsilonForEqualVectors))
+            return 0;
+    }
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 936–939 */

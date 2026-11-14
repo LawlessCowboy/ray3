@@ -4092,16 +4092,13 @@ int CSpriteController::SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_t
 
 void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, float fSizeX, int bFade, float Alpha1, float Alpha2)
 {
+    unsigned int ColorOut;
+    unsigned int ColorCenter;
+    unsigned int* pC;
+    int Alpha;
     float Position1[4];
     float Position2[4];
-    int Alpha;
     float (*pV)[4];
-    unsigned int* pC;
-    unsigned int ColorCenter;
-    unsigned int ColorOut;
-    float fHalf;
-    float* p1;
-    float* p2;
 
     if (!StartSpriteList(pMaterial, 4, 8)) return;
     pC = (unsigned int*)m_CurrentVC;
@@ -4130,25 +4127,26 @@ void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_
     Position2[1] = a3_fPosition2->xY;
     Position2[2] = a3_fPosition2->xZ;
     pV = m_CurrentVP;
-    p1 = Position1;
-    p2 = Position2;
-    fHalf = 0.5f;
-    asm
     {
-        mfc1 v0, fHalf
-        qmtc2 v0, vf4
-        lqc2 vf1, 0x0(p1)
-        lqc2 vf2, 0x0(p2)
-        vadd.xyzw vf3, vf1, vf2
-        vmulx.xyz vf3, vf3, vf4x
-        sqc2 vf1, 0x0(pV)
-        sqc2 vf3, 0x10(pV)
-        sqc2 vf3, 0x40(pV)
-        sqc2 vf2, 0x50(pV)
-        addiu pV, pV, 0x20
-        swc1 fSizeX, 0x0(pV)
-        addiu pV, pV, 0x40
-        swc1 fSizeX, 0x0(pV)
+        float *p1 = Position1, *p2 = Position2, fHalf = 0.5f;
+        asm
+        {
+            .set noreorder
+            mfc1 v0, fHalf
+            qmtc2 v0, vf4
+            lqc2 vf1, 0x0(p1)
+            lqc2 vf2, 0x0(p2)
+            vadd.xyzw vf3, vf1, vf2
+            vmulx.xyz vf3, vf3, vf4x
+            sqc2 vf1, 0x0(pV)
+            sqc2 vf3, 0x10(pV)
+            sqc2 vf3, 0x40(pV)
+            sqc2 vf2, 0x50(pV)
+            addiu pV, pV, 0x20
+            swc1 fSizeX, 0x0(pV)
+            addiu pV, pV, 0x40
+            swc1 fSizeX, 0x0(pV)
+        }
     }
     m_CurrentVP += 8;
     m_NbVertices += 8;

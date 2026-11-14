@@ -3650,6 +3650,14 @@ tdstNodeInterpret_* fn_p_st_SPO_GetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPers
 tdstNodeInterpret_* fn_p_stColorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 int fn_lAddColor(int color1, int color2);
 tdstNodeInterpret_* fn_p_stEvalRedOrGreenOrBlueOrAlpha(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* lValue);
+void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
+int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial);
+int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial);
+void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stParam);
 tdstNodeInterpret_* fn_p_stVisualMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_stGameMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_stMiscFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
@@ -5267,13 +5275,62 @@ tdstNodeInterpret_* fn_p_stGameMaterialFunction(HIE_tdstSuperObject_* p_SuperObj
  */
 tdstNodeInterpret_* fn_p_stVisualMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    float fV;
-    float fU;
-    int lValue;
-    GEO_tdstColor_ stColor;
-    GLI_tdstMaterial_* hVisualMaterial;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    GLI_tdstMaterial_* hVisualMaterial;
+    GEO_tdstColor_ stColor;
+    int lValue;
+    float fU;
+    float fV;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hVisualMaterial = p_stValue->uDummy.uParam.hVisualMaterial;
+    if (hVisualMaterial)
+    {
+        switch (eFuncId)
+        {
+        case eFunc_GetVMTColor:
+            GLI_xGetMaterialColor(hVisualMaterial, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTSpecularCoef:
+            GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTSpecularExponent:
+            GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
+            p_stValue->uDummy.uParam.lValue = lValue; p_stValue->eType = E_vt_Integer;
+            return p_stTree;
+        case eFunc_GetVMTDiffuseCoef:
+            GLI_xGetMaterialDiffuseCoef(hVisualMaterial, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTAmbientCoef:
+            GLI_xGetMaterialAmbientCoef(hVisualMaterial, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTTextureScrollingCoefU:
+            GLI_xGetMaterialTextureScrollingCoef(hVisualMaterial, 0, &lValue, &fU, &fV);
+            p_stValue->uDummy.uParam.xValue = fU; p_stValue->eType = E_vt_Float;
+            return p_stTree;
+        case eFunc_GetVMTTextureScrollingCoefV:
+            GLI_xGetMaterialTextureScrollingCoef(hVisualMaterial, 0, &lValue, &fU, &fV);
+            p_stValue->uDummy.uParam.xValue = fV; p_stValue->eType = E_vt_Float;
+            return p_stTree;
+        case eFunc_GetVMTFrame:
+            p_stValue->uDummy.uParam.lValue = GLI_lGetCurrentAnimatedTextureNumber(hVisualMaterial);
+            p_stValue->eType = E_vt_Integer;
+            return p_stTree;
+        case eFunc_GetVMTNumberOfFrames:
+            p_stValue->uDummy.uParam.lValue = GLI_lGetMaterialNumberOfAnimatedTexture(hVisualMaterial);
+            p_stValue->eType = E_vt_Integer;
+            return p_stTree;
+        }
+    }
+
+    p_stValue->uDummy.uParam.lValue = 0; p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1991–2005 */

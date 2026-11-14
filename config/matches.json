@@ -46753,6 +46753,51 @@
       "status": "MISMATCH",
       "target_size": 720,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00253440",
+      "candidate_size": 356,
+      "first_difference": 76,
+      "implementation": "unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);\nunsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);\nunsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);\nunsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace);\nunsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nint INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2);\nunsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\COL\\Inters.c lines 49\u201391 */\n/* addr: 0x00255160  size: 232 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 49\n *   +0x0018 -> line 51\n *   +0x0028 -> line 52\n *   +0x0038 -> line 54\n *   +0x003c -> line 56\n *   +0x0040 -> line 59\n *   +0x0044 -> line 56\n *   +0x004c -> line 55\n *   +0x0050 -> line 56\n *   +0x0054 -> line 57\n *   +0x0058 -> line 58\n *   +0x005c -> line 57\n *   +0x0060 -> line 58\n *   +0x0064 -> line 57\n *   +0x0068 -> line 59\n *   +0x0070 -> line 63\n *   +0x0080 -> line 65\n *   +0x0088 -> line 69\n *   +0x0098 -> line 71\n *   +0x009c -> line 72\n *   +0x00a0 -> line 71\n *   +0x00ac -> line 72\n *   +0x00b4 -> line 79\n *   +0x00c4 -> line 81\n *   +0x00d0 -> line 82\n *   +0x00d4 -> line 81\n *   +0x00d8 -> line 82\n *   +0x00e0 -> line 91\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2)\n{\n    float xDiv;\n    float xDelta;\n\n    if (xA != 0.0f) {\n        xDelta = xB * xB - 4.0f * (xA * xC);\n        if (xDelta > 0.0f) {\n            xDelta = MTH_xSqrt(xDelta);\n            xDiv = 1.0f / (xA + xA);\n            *p_xT1 = xDiv * (-xB + xDelta);\n            *p_xT2 = xDiv * (-xB - xDelta);\n            return 2;\n        }\n        if (xDelta < 0.0f)\n            return 0;\n        if (xDelta == 0.0f) {\n            *p_xT1 = -(xB / (xA + xA));\n            return 1;\n        }\n    } else if (xB != 0.0f) {\n        *p_xT1 = -(xC / xB);\n        return 1;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "INT_fn_bDetectIntersectSegmentWithTriangle",
+      "reason": "3.0.1: extra hazard nop between add.s and div.s (+0xac) plus FP register renaming; source variants (inline/split dot, neg placement, decl order) don't move it. Under 3.0.3-pad7b the nop disappears and the residual is register-only renaming (f6/f7/f8): candidate for a function override plus permuter.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ec9b0",
+      "candidate_size": 352,
+      "first_difference": 280,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "InitOneParticle__8C_FireFxFP8C_Vector",
+      "reason": "352/352, relocs ok, lines ok; only residual is arg-load order (lui/mtc1 f12 vs f13) of the final FRR(0.6f,0.85f) call. Preceding statement forms (x+=F vs x=x+F, c*F vs F*c) flip each call's arg order; permuter 25 min found no improvement over score 20.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ec9b0",
+      "candidate_size": 352,
+      "first_difference": 280,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "InitOneParticle__8C_FireFxFP8C_Vector",
+      "reason": "352/352, relocs+lines ok; only residual: final FRR(0.6f,0.85f) loads 0.85 (f13) before 0.6 (f12) in retail. Arg-load order of each FRR call flips with the forms of the preceding statements (+= vs x=x+F, c*F vs F*c, zero-store spelling) like a parity effect; 36+72-combo sweeps, 3.0.3/pad7b/unfold compilers (same result) and 25 min permuter found no form fixing the last call alone.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
     }
   ],
   "data": {
@@ -63894,6 +63939,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeectextfilesrc.cpp",
       "status": "MATCH"
     },
+    "0x0018d120": {
+      "address": "0x0018d120",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__dt__13CBankDescContFv",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeecbankdesccont.cpp",
+      "status": "MATCH"
+    },
     "0x001c9930": {
       "address": "0x001c9930",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -64155,6 +64208,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "mfn_poGetActorFromIdInTypeActorInstance__14CLinkTypeActorFi",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001ccd30": {
+      "address": "0x001ccd30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__ct__14CLinkTypeActorFRQ24usnd12TTypedVar<f>iiPC22_tdstAllRetObjectSound",
+      "size": 404,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
       "status": "MATCH"
     },
@@ -68622,6 +68683,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Vis.c",
       "status": "MATCH"
     },
+    "0x0020cc00": {
+      "address": "0x0020cc00",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fnc_IsDirectionCorrect",
+      "size": 380,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Vis.c",
+      "status": "MATCH"
+    },
     "0x0020d080": {
       "address": "0x0020d080",
       "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
@@ -69611,6 +69680,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stEvalRedOrGreenOrBlueOrAlpha",
       "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00213610": {
+      "address": "0x00213610",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stVisualMaterialFunction",
+      "size": 420,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -73182,6 +73259,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
       "status": "MATCH"
     },
+    "0x00253440": {
+      "address": "0x00253440",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "INT_fn_bDetectIntersectSegmentWithTriangle",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "EQUIVALENT"
+    },
     "0x00254de0": {
       "address": "0x00254de0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -73723,6 +73808,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vClearUnusedAlwaysInDemoMode",
       "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
+      "status": "MATCH"
+    },
+    "0x0025b1c0": {
+      "address": "0x0025b1c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucIsAlwaysGeneratedByMe",
+      "size": 112,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
       "status": "MATCH"
     },
@@ -76510,11 +76603,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },
+    "0x0026fdf0": {
+      "address": "0x0026fdf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_hGetSuperObjectLight",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
     "0x0026fe60": {
       "address": "0x0026fe60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vMSLightSetRLIParameter",
       "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x0026feb0": {
+      "address": "0x0026feb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucGetNumberOfRLIFromCharacter",
+      "size": 92,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },
@@ -81326,6 +81435,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
       "status": "MATCH"
     },
+    "0x002aaac0": {
+      "address": "0x002aaac0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xSendObjectElement",
+      "size": 408,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
     "0x002aac60": {
       "address": "0x002aac60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -84619,6 +84736,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SDL_GetNew",
       "size": 72,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLUtils.cpp",
+      "status": "MATCH"
+    },
+    "0x002db230": {
+      "address": "0x002db230",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vGetVertexPointersFromSDCStructureForSinus",
+      "size": 356,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLUtils.cpp",
       "status": "MATCH"
     },
@@ -88299,6 +88424,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_iZCompare",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
+      "status": "MATCH"
+    },
+    "0x0031bef0": {
+      "address": "0x0031bef0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SCT_fn_vFindAllMirrorsInVisibleSector",
+      "size": 396,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
       "status": "MATCH"
     },

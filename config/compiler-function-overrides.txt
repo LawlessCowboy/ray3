@@ -48,3 +48,10 @@ impPS2glVertex4f 3.0.3-pad7b
 # member offset unfolded); plain pad7b, 3.0.1 and 3.0 all mismatch. Moving the
 # unit would lose impPS2glLoadIdentity and impPS2glLoadMatrixd, so it stays on 3.0.
 impPS2glMatrixMode 3.0.3-pad7b-unfold
+#
+# TEMPGRP/COL/Inters.c (3.0.1): INT_fn_bDetectIntersectSegmentWithTriangle has
+# an extra hazard nop between add.s and div.s under 3.0.1 (356/352 bytes) that
+# no source variant removes; under pad7b the size and code match apart from a
+# float register rotation (f6/f7/f8). The unit stays on 3.0.1, which its five
+# recorded matches were verified under.
+INT_fn_bDetectIntersectSegmentWithTriangle 3.0.3-pad7b

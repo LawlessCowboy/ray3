@@ -1150,6 +1150,12 @@ void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, G
 void GLI_vSetViewportVars(GLD_tdstViewportAttributes_* p_stVpt);
 void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt);
 float GLI_vGetGlobalAlpha(void);
+unsigned char GEO_bIsLookAt(GEO_tdstGeometricObject_* p_stObj);
+void GLI_c_DrawUnoptimizedCharacter(GEO_tdstGeometricObject_* pObj);
+void GLI_c_DrawUnoptimizedMap(GEO_tdstGeometricObject_* pObj);
+void GLI_c_DrawActorInstance(GEO_tdstGeometricObject_* pObj);
+void GLI_DRV_xSendElementTIToClip_TRIANGLES(void* p_stElement);
+void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, GEO_tdstIndexedSprite_* p_stISpr);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 224–225 */
 /* addr: 0x002aac60  size: 20 bytes */
@@ -1202,7 +1208,49 @@ void GLI_xSendObjectElement(GLD_tdstViewportAttributes_* p_stVpt)
     SDC_VertexArrays_* pSDC;
     int iElementType;
     short xElementCounter;
-    /* TODO: decompile from asm/... */
+
+    g_p_stCurrentViewport = (int)p_stVpt;
+
+    pSDC = (SDC_VertexArrays_*)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->pSDC_Data;
+    if (pSDC)
+    {
+        if ((pSDC->OptType & 0xf) == 3 || (pSDC->OptType & 0xf) == 6)
+        {
+            if (GEO_bIsLookAt((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj))
+            {
+                GLI_c_DrawUnoptimizedCharacter((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj);
+            }
+            else
+            {
+                GLI_c_DrawActorInstance((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj);
+            }
+            return;
+        }
+        else if ((pSDC->OptType & 0xf) == 1 || (pSDC->OptType & 0xf) == 4)
+        {
+            GLI_c_DrawUnoptimizedMap((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj);
+            return;
+        }
+    }
+
+    for (xElementCounter = 0; xElementCounter < ((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->xNbElements; xElementCounter++)
+    {
+        iElementType = ((short*)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_xListOfElementsTypes)[xElementCounter];
+        if (iElementType == 1)
+        {
+            GLI_DRV_xSendElementTIToClip_TRIANGLES(((void**)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfElements)[xElementCounter]);
+        }
+        else if (iElementType == 3)
+        {
+            int i;
+            GEO_tdstElementSprite_* p_stElementSprite;
+            p_stElementSprite = ((GEO_tdstElementSprite_**)((GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj)->d_stListOfElements)[xElementCounter];
+            for (i = 0; i < p_stElementSprite->xNbSprites; i++)
+            {
+                GLI_vDrawIndexedSprite((GLD_tdstViewportAttributes_*)GLI_BIG_GLOBALS_p_stVpt, (GEO_tdstGeometricObject_*)GLI_BIG_GLOBALS_p_stObj, &p_stElementSprite->d_stListOfSprites[i]);
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 438–445 */

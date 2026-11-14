@@ -1267,6 +1267,7 @@ void fn_vMSLightSetColorRGBA(tdstMSLight_* h_MSLight, float xR, float xG, float 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 GLI_tdstLight_* fn_p_stMSLightGetLight(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->p_stLight;
@@ -1291,6 +1292,7 @@ void fn_vMSLightSetLocalLight(tdstMSLight_* h_MSLight, unsigned char bLocalLight
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+#pragma auto_inline on
 unsigned char fn_bMSLightGetLocalLight(tdstMSLight_* h_MSLight)
 {
     return h_MSLight->bLocalLight;
@@ -1551,16 +1553,28 @@ void fn_vUpdateLight(HIE_tdstSuperObject_* hSupObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline unsigned char fn_ucGetNumberOfRLI(tdstMSLight_* hMSLight, unsigned char* ucIndex1, unsigned char* ucIndex2, float* xPercent)
+{
+    if (hMSLight)
+    {
+        *ucIndex1 = hMSLight->ucFirstRLI;
+        *ucIndex2 = hMSLight->ucSecondRLI;
+        *xPercent = (float)hMSLight->ucBlendPercent / 100.0f;
+        return hMSLight->ucNbRLIUse;
+    }
+    return 0;
+}
+
 unsigned char fn_ucGetNumberOfRLIFromCharacter(HIE_tdstSuperObject_* hSprObj, unsigned char* p_ucIndex1, unsigned char* p_ucIndex2, float* p_xPercent)
 {
-    int new_var;
-    int lNbRLIUse;
-    float xPercent;
-    if (hSprObj->ulTypeOfLinkedObject == (new_var = 2))
+    unsigned char ucNbRLIUse = 0;
+
+    if (hSprObj->ulTypeOfLinkedObject == 2)
     {
-        tdstMSLight_* hMSLight = hSprObj->hLinkedObject.p_stCharacter->h_MSLight; if (hMSLight != NULL) { *p_ucIndex1 = hMSLight->ucFirstRLI; *p_ucIndex2 = hMSLight->ucSecondRLI; xPercent = hMSLight->ucBlendPercent; *p_xPercent = xPercent / 100.0f; lNbRLIUse = hMSLight->ucNbRLIUse; } else { lNbRLIUse = 0; } return (unsigned char)lNbRLIUse;
+        ucNbRLIUse = fn_ucGetNumberOfRLI(hSprObj->hLinkedObject.p_stCharacter->h_MSLight, p_ucIndex1, p_ucIndex2, p_xPercent);
     }
-    return 0; }
+    return ucNbRLIUse;
+}
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\Actions\MSlight.c lines 1327–1333 */
 /* addr: 0x0026fe60  size: 80 bytes */
@@ -1601,18 +1615,9 @@ GLI_tdstLight_* HIE_fn_hGetSuperObjectLight(HIE_tdstSuperObject_* p_SuperObjPers
 
     if (p_SuperObjPerso->ulTypeOfLinkedObject == 2)
     {
-
         hMSLight = ((p_SuperObjPerso->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPerso->hLinkedObject.p_stCharacter)->h_MSLight;
 
-        if (hMSLight != NULL)
-        {
-            if (hMSLight->bLocalLight == 0)
-            {
-                return NULL;
-            }
-            return hMSLight->p_stLight;
-        }
-        return NULL;
+        return (hMSLight && fn_bMSLightGetLocalLight(hMSLight) ? fn_p_stMSLightGetLight(hMSLight) : NULL);
     }
     return NULL;
 }
