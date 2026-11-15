@@ -1316,20 +1316,72 @@ void GLI_vGsStoreFrameBufferIntoCompressed256x256__FPUcsiis(unsigned char* _pDes
  */
 void GLI_vUncompress_256x256_Screenshot(unsigned char* pUncompressed, unsigned char* pCompressed)
 {
-    float VRGB[4];
-    float VYUV[4];
-    float V5[4];
-    float V4[4];
-    float V3[4];
-    float V2[4];
-    float V1[4];
-    int U;
-    unsigned char* pDest;
-    unsigned char* pSrcUV;
-    unsigned char* pSrcY;
-    int y;
     int x;
-    /* TODO: decompile from asm/... */
+    int y;
+    unsigned char* pSrcY;
+    unsigned char* pSrcUV;
+    unsigned char* pDest;
+    int U;
+    float V1[4];
+    float V2[4];
+    float V3[4];
+    float V4[4];
+    float V5[4];
+    float VYUV[4];
+    float VRGB[4];
+
+    pSrcY = pCompressed;
+    pDest = pUncompressed;
+
+    V1[0] = 0.0f; V1[1] = 128.0f; V1[2] = 128.0f; V1[3] = 0.0f;
+    V5[0] = 255.0f; V5[1] = 255.0f; V5[2] = 255.0f; V5[3] = 255.0f;
+    V2[0] = 1.0f; V2[1] = 1.0f; V2[2] = 1.0f;
+    V3[0] = -0.0009267f; V4[0] = 1.4016868f;
+    V3[1] = -0.3436954f; V4[1] = -0.714169f;
+    V3[2] = 1.7721604f; V4[2] = 0.0009902f;
+
+    /* VU0 macro-mode YUV->RGB: MWCC cannot emit lqc2/sqc2/v* from C.
+       The (unsigned) float conversions below need MWCC 3.0.3 (3.0.1 calls fptoui). */
+    {
+        float* p1 = V1; float* p2 = V2; float* p3 = V3; float* p4 = V4; float* p5 = V5;
+        asm {
+            lqc2 vf1, 0(p1)
+            lqc2 vf2, 0(p2)
+            lqc2 vf3, 0(p3)
+            lqc2 vf4, 0(p4)
+            lqc2 vf5, 0(p5)
+        }
+    }
+
+    for (y = 0; y < 256; y++)
+    {
+        pSrcUV = pCompressed + 0x10000 + (y >> 1) * 128;
+        for (x = 0; x < 256; x++)
+        {
+            VYUV[0] = (unsigned int)*pSrcY++;
+            U = *pSrcUV;
+            pSrcUV += x & 1;
+            VYUV[2] = (U & 0x0F) << 4;
+            VYUV[1] = U & 0xF0;
+            {
+                float* p1 = VYUV; float* p2 = VRGB;
+                asm {
+                    lqc2 vf6, 0(p1)
+                    vsub.xyzw vf6, vf6, vf1
+                    vmulax.xyzw ACC, vf2, vf6x
+                    vmadday.xyzw ACC, vf3, vf6y
+                    vmaddz.xyzw vf7, vf4, vf6z
+                    vmini.xyzw vf7, vf7, vf5
+                    vmax.xyzw vf7, vf7, vf0
+                    sqc2 vf7, 0(p2)
+                }
+            }
+            pDest[0] = (unsigned int)VRGB[2];
+            pDest[1] = (unsigned int)VRGB[1];
+            pDest[2] = (unsigned int)VRGB[0];
+            pDest += 3;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\Picture.cpp lines 542–543 */

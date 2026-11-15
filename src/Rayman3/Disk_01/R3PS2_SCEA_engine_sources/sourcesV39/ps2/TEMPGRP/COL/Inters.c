@@ -431,9 +431,71 @@ unsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MT
 unsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace)
 {
     float xTmp;
-    unsigned int idx2;
-    unsigned int idx1;
-    /* TODO: decompile from asm/... */
+    unsigned int idx1 = 0;
+    unsigned int idx2 = 0;
+
+    switch (cFace)
+    {
+    case 'X':
+        idx1 = 1;
+        idx2 = 2;
+        break;
+    case 'Y':
+        idx2 = 2;
+        break;
+    case 'Z':
+        idx2 = 1;
+        break;
+    }
+
+    xTmp = xT * ((float*)p_stVect12)[idx1] + ((float*)p_stVertex1)[idx1];
+    if (((float*)p_stVect12)[idx1] > 0.0f)
+    {
+        if (xTmp > ((float*)p_stMaxPoint)[idx1])
+            return 0;
+        if (xTmp >= ((float*)p_stMinPoint)[idx1])
+        {
+            xTmp = xT * ((float*)p_stVect12)[idx2] + ((float*)p_stVertex1)[idx2];
+            if (((float*)p_stVect12)[idx2] > 0.0f)
+            {
+                if (xTmp > ((float*)p_stMaxPoint)[idx2])
+                    return 0;
+                if (xTmp >= ((float*)p_stMinPoint)[idx2])
+                    return 1;
+            }
+            else
+            {
+                if (xTmp < ((float*)p_stMinPoint)[idx2])
+                    return 0;
+                if (xTmp <= ((float*)p_stMaxPoint)[idx2])
+                    return 1;
+            }
+        }
+    }
+    else
+    {
+        if (xTmp < ((float*)p_stMinPoint)[idx1])
+            return 0;
+        if (xTmp <= ((float*)p_stMaxPoint)[idx1])
+        {
+            xTmp = xT * ((float*)p_stVect12)[idx2] + ((float*)p_stVertex1)[idx2];
+            if (((float*)p_stVect12)[idx2] > 0.0f)
+            {
+                if (xTmp > ((float*)p_stMaxPoint)[idx2])
+                    return 0;
+                if (xTmp >= ((float*)p_stMinPoint)[idx2])
+                    return 1;
+            }
+            else
+            {
+                if (xTmp < ((float*)p_stMinPoint)[idx2])
+                    return 0;
+                if (xTmp <= ((float*)p_stMaxPoint)[idx2])
+                    return 1;
+            }
+        }
+    }
+    return 2;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 742–936 */

@@ -1107,14 +1107,14 @@ struct LST2_tdstAnchorToCINE_tdxHandleToCineDyn {
     int lNumberOfElementsDyn; /* +0x8 */
 };
 
-int g_a_stObstacle;
+DNM_stMecObstacle* g_a_stObstacle;
 
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 asm void MTH4D_fn_vSerialMul4DMatrix3DVertexTo4DAlignedDest_VU0(void);
 DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _hSupObj, DNM_stParsingDatas* _p_stParsingDatas, void* _h_MecIdCard, float _xDT);
 void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, MTH3D_tdstVector_* _p_stNewPosition, MTH3D_tdstVector_* _p_stNewTarget, MTH3D_tdstVector_* _p_stAxisX, MTH3D_tdstVector_* _p_stAxisY, MTH3D_tdstVector_* _p_stAxisZ);
-DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition);
+DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition, float _xDT);
 int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition);
 DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _h_SupObj, DNM_stParsingDatas* _p_stExternData, float _xDT);
 float DNM_fn_xDynamicsCameraAngleParsing(float _xSpeed, float _xIncSpeed, float _xDecSpeed, float _xRequestAngle, float _xLastAngle, char _cIgnoreParsing, char _cIgnoreInertia);
@@ -1518,6 +1518,32 @@ DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE
     /* TODO: decompile from asm/... */
 }
 
+extern int COL_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _a_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition);
+extern unsigned long GMT_fn_b_ulIsValid(GMT_tdstGameMaterial_* _hMat);
+extern GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* _hMat);
+extern unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* _hMat);
+
+inline void CAM_M_vSubVector(MTH3D_tdstVector_* _p_stDst, MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    _p_stDst->xX = _p_stA->xX - _p_stB->xX;
+    _p_stDst->xY = _p_stA->xY - _p_stB->xY;
+    _p_stDst->xZ = _p_stA->xZ - _p_stB->xZ;
+}
+
+inline float CAM_M_xDot3(float _xX1, float _xX2, float _xY1, float _xY2, float _xZ1, float _xZ2)
+{
+    float _xR;
+    asm { mula.s _xX1, _xX2 }
+    asm { madda.s _xY1, _xY2 }
+    asm { madd.s _xR, _xZ1, _xZ2 }
+    return _xR;
+}
+
+inline float CAM_M_xDotProduct(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    return CAM_M_xDot3(_p_stA->xX, _p_stB->xX, _p_stA->xY, _p_stB->xY, _p_stA->xZ, _p_stB->xZ);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 691–757 */
 /* addr: 0x00300820  size: 568 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1561,18 +1587,69 @@ DNM_stDynamics* DNM_p_stDynamicsCameraParsing(DNM_stDynamics* _p_stDynamics, HIE
  */
 int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tdstSuperObject_* _p_stSupObj, MAT_tdstTransformation_* _p_stStartPosition, MAT_tdstTransformation_* _p_stEndPosition)
 {
-    MTH3D_tdstVector_ stTempVec;
-    MTH3D_tdstVector_ stStartVec;
-    char bLessDetected;
-    unsigned char bWater;
-    unsigned short xCollMask;
-    GMT_tdstCollideMaterial_* hCollMat;
-    GMT_tdstGameMaterial_* hGameMat;
-    DNM_stMecObstacle* p_stReturnObstacle;
-    DNM_stMecObstacle* p_stObstacle;
-    int lCollision;
     int lCounter;
-    /* TODO: decompile from asm/... */
+    int lCollision;
+    DNM_stMecObstacle* p_stObstacle;
+    DNM_stMecObstacle* p_stReturnObstacle = NULL;
+    GMT_tdstGameMaterial_* hGameMat;
+    GMT_tdstCollideMaterial_* hCollMat;
+    unsigned short xCollMask;
+    unsigned char bWater;
+    char bLessDetected = 0;
+    MTH3D_tdstVector_ stStartVec;
+    MTH3D_tdstVector_ stTempVec;
+
+    MTH_COPY_VECTOR_WORDS(&stStartVec, &_p_stStartPosition->stTransformMatrix.stCol_3);
+    MTH_COPY_VECTOR_WORDS(&stTempVec, &_p_stEndPosition->stTransformMatrix.stCol_3);
+
+    lCollision = COL_lHaveITakeSThgIntoTheMug(g_a_stObstacle, _p_stSupObj, _p_stStartPosition, _p_stEndPosition);
+
+    for (lCounter = 0; lCounter < lCollision; lCounter++)
+    {
+        bWater = 0;
+
+        p_stObstacle = &g_a_stObstacle[lCounter];
+
+        hGameMat = p_stObstacle->hCollidedMaterial;
+        if (GMT_fn_b_ulIsValid(hGameMat))
+        {
+            hCollMat = GMT_fn_hGetCollideMaterial(hGameMat);
+            if (hCollMat != (GMT_tdstCollideMaterial_*)-1)
+            {
+                xCollMask = GMT_fn_hGetCollideMaterialIdentifier(hCollMat);
+                bWater = (xCollMask & 0xC000) != 0;
+            }
+        }
+
+        if (!bWater)
+        {
+            CAM_M_vSubVector(&stTempVec, &p_stObstacle->m_stContact, &stStartVec);
+            if (CAM_M_xDotProduct(&stTempVec, &p_stObstacle->m_stNorm) <= 0.0f)
+            {
+                if (p_stObstacle->m_xRate >= 0.0f)
+                {
+                    if (CAM_M_xDotProduct(&p_stObstacle->m_stZoneMove, &p_stObstacle->m_stNorm) <= -0.005f)
+                    {
+                        *_p_stResultObstacle = *p_stObstacle;
+                        return 1;
+                    }
+                }
+                else
+                {
+                    bLessDetected = 1;
+                    p_stReturnObstacle = p_stObstacle;
+                }
+            }
+        }
+    }
+
+    if (bLessDetected)
+    {
+        *_p_stResultObstacle = *p_stReturnObstacle;
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 829–1209 */
@@ -1787,7 +1864,11 @@ int CAM_lHaveITakeSThgIntoTheMug(DNM_stMecObstacle* _p_stResultObstacle, HIE_tds
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
-DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition)
+/* _xDT is not in the retail debug record, but the only caller
+   (DNM_p_stDynamicsCameraMechanics) saves its _xDT across a call just to pass
+   it in f12 here, and this function never reads f12: an unused float
+   parameter that the debug record dropped. */
+DNM_stMecObstacle* DNM_p_stObstacleCameraObstacle(DNM_stMecObstacle* _p_stObstacle, DNM_stDynamics* _p_stDynamics, DNM_stParsingDatas* _p_stExternData, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stNewPosition, float _xDT)
 {
     float xNorm;
     MTH3D_tdstVector_ VectTmp;
@@ -1989,6 +2070,40 @@ void CAM_fn_vComputeCameraSystemAxis(DNM_stDynamics* _p_stDynamics, HIE_tdstSupe
     }
 }
 
+extern void MAT_fn_vSetRotationVectors(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecI, MTH3D_tdstVector_* _p_stVecJ, MTH3D_tdstVector_* _p_stVecK);
+
+inline void CAM_M_vCopyVectorWords(MTH3D_tdstVector_* _p_stDst, MTH3D_tdstVector_* _p_stSrc)
+{
+    ((unsigned int*)_p_stDst)[0] = ((unsigned int*)_p_stSrc)[0];
+    ((unsigned int*)_p_stDst)[1] = ((unsigned int*)_p_stSrc)[1];
+    ((unsigned int*)_p_stDst)[2] = ((unsigned int*)_p_stSrc)[2];
+}
+
+inline void CAM_fn_vUpdateCameraMatrix(DNM_stDynamics* _p_stDynamics, HIE_tdstSuperObject_* _hSupObj, MTH3D_tdstVector_* _p_stPosition, MTH3D_tdstVector_* _p_stTarget)
+{
+    MAT_tdstTransformation_* p_stMatrix;
+    stMACDPID* p_stMACDPID;
+    MTH3D_tdstVector_ stAxisX;
+    MTH3D_tdstVector_ stAxisY;
+    MTH3D_tdstVector_ stAxisZ;
+
+    p_stMatrix = _hSupObj->hLocalMatrix;
+    p_stMACDPID = &_p_stDynamics->m_tdstDynamicsComplexBlock.m_stExternalDatas;
+    if (!(p_stMACDPID->m_uwData9 & 0x80))
+    {
+        CAM_M_vCopyVectorWords(&stAxisZ, &p_stMACDPID->m_stData12);
+        CAM_fn_vComputeCameraSystemAxis(_p_stDynamics, _hSupObj, _p_stPosition, _p_stTarget, &stAxisX, &stAxisY, &stAxisZ);
+        MAT_fn_vSetRotationVectors(p_stMatrix, &stAxisX, &stAxisY, &stAxisZ);
+    }
+    if (p_stMatrix->eType == MAT_eTransform_Identity)
+    {
+        p_stMatrix->eType = MAT_eTransform_Translation;
+    }
+    MTH_COPY_VECTOR_WORDS(&p_stMatrix->stTransformMatrix.stCol_3, _p_stPosition);
+    p_stMatrix->stTransformMatrix.stCol_3.xW = 1.0f;
+    *_hSupObj->hGlobalMatrix = *p_stMatrix;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMCame.c lines 1359–1432 */
 /* addr: 0x002feb80  size: 520 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2018,7 +2133,22 @@ DNM_stDynamics* DNM_p_stDynamicsCameraMechanics(DNM_stDynamics* _p_stDynamics, H
     MTH3D_tdstVector_ stTarget;
     MTH3D_tdstVector_ stPosition;
     DNM_stMecObstacle stObstacle;
-    /* TODO: decompile from asm/... */
+
+    DNM_p_stDynamicsCameraParsing(_p_stDynamics, _hSupObj, _p_stParsingDatas, _xDT);
+    CAM_M_vCopyVectorWords(&stPosition, &_p_stParsingDatas->stPosition);
+    if (DNM_p_stObstacleCameraObstacle(&stObstacle, _p_stDynamics, _p_stParsingDatas, _hSupObj, &stPosition, &stPosition1, _xDT) == NULL)
+    {
+        return NULL;
+    }
+    CAM_M_vCopyVectorWords(&_p_stParsingDatas->stPosition, &stPosition);
+    CAM_M_vCopyVectorWords(&stTarget, &_p_stParsingDatas->stVector);
+    CAM_fn_vUpdateCameraMatrix(_p_stDynamics, _hSupObj, &stPosition1, &stTarget);
+    if (_p_stDynamics == NULL)
+    {
+        return NULL;
+    }
+    CAM_M_vCopyVectorWords(&_p_stParsingDatas->stVector, &stTarget);
+    return _p_stDynamics;
 }
 
 /* Hand-written assembly in the retail ELF: the VU0 matrix/vector product

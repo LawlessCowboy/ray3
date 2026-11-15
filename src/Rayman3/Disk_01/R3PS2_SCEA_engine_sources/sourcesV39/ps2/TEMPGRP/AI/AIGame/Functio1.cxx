@@ -332,6 +332,10 @@ struct DNM_stReport {
 };
 extern "C" DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_*);
 extern "C" unsigned char fn_ucCollSetGetCollComputeFrequency(tdstCollSet_*);
+extern "C" unsigned char fn_ucCollSetGetColliderType(tdstCollSet_*);
+extern "C" HIE_tdstSuperObject_* fn_stCollSetGetColliderActor(tdstCollSet_*, short);
+extern "C" MTH3D_tdstVector_ fn_stCollSetGetColliderVector(tdstCollSet_*, short);
+extern "C" float fn_xCollSetGetColliderReal(tdstCollSet_*, short);
 extern "C" float fn_xStandardGameGetCustomFloatSO(HIE_tdstSuperObject_*, long);
 extern "C" int fn_lStandardGameGetCustomLongSO(HIE_tdstSuperObject_*, long);
 extern "C" void fn_vStandardGameGetCustomVectorSO(HIE_tdstSuperObject_*, long, MTH3D_tdstVector_*);
@@ -1414,11 +1418,46 @@ tdstNodeInterpret_* fn_p_stGetNormalCollideVector(HIE_tdstSuperObject_* p_SuperO
  */
 tdstNodeInterpret_* fn_p_stCollideCommunicationFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstCollSet_* _hCollSet;
-    short wIndex;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    short wIndex;
+    tdstCollSet_* _hCollSet;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    wIndex = 0;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    _hCollSet = hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_CollSet;
+    switch (eFuncId) {
+    case 0x120:
+        if (_hCollSet)
+            wIndex = fn_ucCollSetGetColliderType(_hCollSet);
+        p_stValue->uParam.lValue = wIndex; p_stValue->eType = (tdeVariableType_)6;
+        break;
+    case 0x121:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        wIndex = (short)p_stValue->uParam.lValue;
+        if (_hCollSet) {
+            p_stValue->uParam.pValue = (fn_stCollSetGetColliderActor(_hCollSet, wIndex) == NULL) ? NULL : ((fn_stCollSetGetColliderActor(_hCollSet, wIndex)->ulTypeOfLinkedObject != 2) ? NULL : (void*)fn_stCollSetGetColliderActor(_hCollSet, wIndex)->hLinkedObject.p_stCharacter); p_stValue->eType = (tdeVariableType_)11;
+        } else {
+            p_stValue->uParam.pValue = NULL; p_stValue->eType = (tdeVariableType_)11;
+        }
+        break;
+    case 0x122:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        wIndex = (short)p_stValue->uParam.lValue;
+        if (_hCollSet)
+            { MTH3D_tdstVector_* p = &fn_stCollSetGetColliderVector(_hCollSet, wIndex); MTH3D_tdstVector_ v; float z, y, x; x = p->xX; y = p->xY; z = p->xZ; v.xX = x; v.xY = y; v.xZ = z; p_stValue->uParam.stVectorValue = v; }
+        else {
+            p_stValue->uParam.stVectorValue.xX = 0.0f; p_stValue->uParam.stVectorValue.xY = 0.0f; p_stValue->uParam.stVectorValue.xZ = 0.0f;
+        }
+        p_stValue->eType = (tdeVariableType_)21;
+        break;
+    case 0x123:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        wIndex = (short)p_stValue->uParam.lValue;
+        p_stValue->uParam.xValue = _hCollSet ? fn_xCollSetGetColliderReal(_hCollSet, wIndex) : 0.0f; p_stValue->eType = (tdeVariableType_)8;
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 1298–1313 */

@@ -499,6 +499,33 @@ unsigned int usnd_uiDesinitTimers(void)
     return 1;
 }
 
+inline void fs_vEnterCritSect(unsigned int uiCS)
+{
+    unsigned int uiThreadId;
+
+    uiThreadId = GetThreadId();
+    if (gs_uiCSThread[uiCS - 1] == uiThreadId)
+    {
+        gs_uiCSCount[uiCS - 1]++;
+    }
+    else
+    {
+        WaitSema(uiCS - 1);
+        gs_uiCSThread[uiCS - 1] = uiThreadId;
+        gs_uiCSCount[uiCS - 1] = 1;
+    }
+}
+
+inline void fs_vLeaveCritSect(unsigned int uiCS)
+{
+    gs_uiCSCount[uiCS - 1]--;
+    if (gs_uiCSCount[uiCS - 1] == 0)
+    {
+        gs_uiCSThread[uiCS - 1] = (unsigned int)-1;
+        SignalSema(uiCS - 1);
+    }
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeethrd.cpp lines 460–497 */
 /* addr: 0x0018a6a0  size: 524 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -527,7 +554,34 @@ unsigned int usnd_uiDesinitTimers(void)
 void usnd_vTimerLoop(void* arg)
 {
     _usnd_STimerStruct** ppSTS;
-    /* TODO: decompile from asm/... */
+    _usnd_STimerStruct* pSTS;
+
+    for (;;)
+    {
+        WaitSema(g_uiTimerSem);
+        fs_vEnterCritSect(g_uiCritSect);
+        ppSTS = (_usnd_STimerStruct**)&g_sTimers;
+        fs_vLeaveCritSect(g_uiCritSect);
+        while (*ppSTS != NULL)
+        {
+            pSTS = *ppSTS;
+            if (pSTS->m_bDelete == 1)
+            {
+                fs_vEnterCritSect(g_uiCritSect);
+                *ppSTS = pSTS->m_next;
+                fs_vLeaveCritSect(g_uiCritSect);
+                usnd_free(pSTS);
+            }
+            else
+            {
+                if (pSTS->m_bCall == 1)
+                {
+                    pSTS->m_pfnCallback((unsigned int)pSTS, pSTS->m_uiUserParam);
+                }
+                ppSTS = &(*ppSTS)->m_next;
+            }
+        }
+    }
 }
 
 /* The recovered debug record lists three parameters, but the retail ABI uses

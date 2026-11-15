@@ -1158,6 +1158,9 @@ void GLI_DRV_xSendElementTIToClip_TRIANGLES(void* p_stElement);
 void GLI_vDrawIndexedSprite(GLD_tdstViewportAttributes_* p_stVpt, GEO_tdstGeometricObject_* p_stObj, GEO_tdstIndexedSprite_* p_stISpr);
 void GEO_vTurnLookAt(GEO_tdstGeometricObject_* p_stObj, GLD_tdstViewportAttributes_* hVpt, GLI_tdstCamera_* _pstCameraFromPushBuffer, MAT_tdstTransformation_* p_stCurrentMatrix);
 MAT_tdstTransformation_* HIE_fn_pGetCurrentInCamCoordsMatrix(void);
+void GLI_vProcessSinusEffectOnObject(GEO_tdstGeometricObject_* pObj);
+void GLI_vProcessAgoLights(GEO_tdstGeometricObject_* pObj);
+void FireFx_vAddObjectToDisplay(GEO_tdstGeometricObject_* pObj);
 void MAT_fn_vCompose(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hA, MAT_tdstTransformation_* _hB);
 void GLI_vDrawDynamicShadow(void);
 
@@ -1328,7 +1331,68 @@ void GLI_xSendObjectToViewportWithLights(GLD_tdstViewportAttributes_* p_stVpt, G
 {
     MAT_tdstTransformation_ stPrevMatrix;
     GLI_tdstSpecificAttributesFor3D_* p_stSpecifAttrib3D;
-    /* TODO: decompile from asm/... */
+
+    stPrevMatrix.eType = (MAT_tdeTranformationType_)-1;
+
+    if (p_stObj->xNbPoints > 5000)
+        return;
+
+    g_p_stCurrentViewport = (int)p_stVpt;
+    if ((GLI_BIG_GLOBALS_xGlobalAlpha == 0.0f) && ((lDrawModeMask & 8) != 8))
+        return;
+
+    if (p_stObj->bIsStatic == 1)
+    {
+        if (g_cSinusEffectState != 0)
+        {
+            if ((g_cSinusEffectState == 1 && !(lDrawModeMask & 0x80000000))
+                || (g_cSinusEffectState == 2 && (lDrawModeMask & 0x80000000))
+                || g_cSinusEffectState == 3)
+            {
+                GLI_vProcessSinusEffectOnObject(p_stObj);
+            }
+        }
+
+        if (AGO_g_ulNbLights)
+        {
+            GLI_vProcessAgoLights(p_stObj);
+        }
+        return;
+    }
+    else if (p_stObj->bIsStatic == 2)
+    {
+        FireFx_vAddObjectToDisplay(p_stObj);
+        return;
+    }
+
+    p_stSpecifAttrib3D = (GLI_tdstSpecificAttributesFor3D_*)p_stVpt->p_vSpecificToXD;
+
+    GLI_BIG_GLOBALS_lHierachDrawMask = lDrawModeMask;
+    GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+    GLI_BIG_GLOBALS_p_stVpt = (int)p_stVpt;
+    GLI_BIG_GLOBALS_p_stObj = (int)p_stObj;
+    GLI_BIG_GLOBALS_gs_st_CameraMatrix = (int)p_stSpecifAttrib3D->p_stCam + 0x10;
+    GLI_BIG_GLOBALS_p_stCurrentCamera = (int)p_stSpecifAttrib3D->p_stCam;
+
+    if (GEO_bIsLookAt(p_stObj))
+    {
+        stPrevMatrix = *g_p_stCurrentMatrix;
+        GEO_vTurnLookAt(p_stObj, p_stVpt, NULL, g_p_stCurrentMatrix);
+        MAT_fn_vCompose(&GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix, (MAT_tdstTransformation_*)((int)p_stSpecifAttrib3D->p_stCam + 0x10), (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix);
+    }
+    else
+    {
+        GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix = *HIE_fn_pGetCurrentInCamCoordsMatrix();
+    }
+
+    GLI_xSendObjectElement(p_stVpt);
+
+    if (GEO_bIsLookAt(p_stObj))
+    {
+        *g_p_stCurrentMatrix = stPrevMatrix;
+    }
+
+    g_p_stRawRLIsForThisObject = 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 565–677 */

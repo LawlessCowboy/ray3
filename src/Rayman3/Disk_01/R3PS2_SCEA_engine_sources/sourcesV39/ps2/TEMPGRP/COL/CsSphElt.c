@@ -251,7 +251,7 @@ struct COL_tdstOctree_ {
 
 static float COL_g_xEdgeCoeffForNewComputations;
 MTH3D_tdstVector_* COL_g_p_stEdgeNormalForNewComputations;
-int g_pstGV;
+COL_tdstGVForCollision_* g_pstGV;
 int* COL_g_d_lTaggedFacesTable;
 int COL_g_lFacesTagCounter;
 
@@ -625,24 +625,27 @@ void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, 
     }
 }
 
-/* Swap the enlarged sphere in (radius and centre) unless it is already used. */
+/* Swap the enlarged sphere in (radius and centre) unless it is already used.
+   The centre goes through a volatile int[3] stack temporary: retail stores it
+   with sw 0(sp) and no materialised sp address, which a plain vector local
+   (addiu rX,sp,0) or a non-volatile int[3] (kept in registers) do not give. */
 #define COL_M_vUseEnlargeSphere(_p_stGV)                         \
     if (!(_p_stGV)->bUseEnlargeSphere)                           \
     {                                                            \
         float _xRadius;                                          \
-        MTH3D_tdstVector_ _stCenter;                             \
+        volatile int _stCenter[3];                               \
         _xRadius = (_p_stGV)->xDynamicRadius;                    \
         (_p_stGV)->xDynamicRadius = (_p_stGV)->xSwapRadius;      \
         (_p_stGV)->xSwapRadius = _xRadius;                       \
-        *(int*)&_stCenter.xX = *(int*)&(_p_stGV)->stDinST0Point.xX; \
-        *(int*)&_stCenter.xY = *(int*)&(_p_stGV)->stDinST0Point.xY; \
-        *(int*)&_stCenter.xZ = *(int*)&(_p_stGV)->stDinST0Point.xZ; \
+        _stCenter[0] = *(int*)&(_p_stGV)->stDinST0Point.xX; \
+        _stCenter[1] = *(int*)&(_p_stGV)->stDinST0Point.xY; \
+        _stCenter[2] = *(int*)&(_p_stGV)->stDinST0Point.xZ; \
         *(int*)&(_p_stGV)->stDinST0Point.xX = *(int*)&(_p_stGV)->stSwapDinST0Point.xX; \
         *(int*)&(_p_stGV)->stDinST0Point.xY = *(int*)&(_p_stGV)->stSwapDinST0Point.xY; \
         *(int*)&(_p_stGV)->stDinST0Point.xZ = *(int*)&(_p_stGV)->stSwapDinST0Point.xZ; \
-        *(int*)&(_p_stGV)->stSwapDinST0Point.xX = *(int*)&_stCenter.xX; \
-        *(int*)&(_p_stGV)->stSwapDinST0Point.xY = *(int*)&_stCenter.xY; \
-        *(int*)&(_p_stGV)->stSwapDinST0Point.xZ = *(int*)&_stCenter.xZ; \
+        *(int*)&(_p_stGV)->stSwapDinST0Point.xX = _stCenter[0]; \
+        *(int*)&(_p_stGV)->stSwapDinST0Point.xY = _stCenter[1]; \
+        *(int*)&(_p_stGV)->stSwapDinST0Point.xZ = _stCenter[2]; \
         (_p_stGV)->bUseEnlargeSphere = 1;                        \
     }
 
@@ -746,14 +749,14 @@ void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, 
  */
 unsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV)
 {
-    MTH3D_tdstVector_* pVertex;
     short* pTriIndex;
-    int result;
-    MTH3D_tdstVector_* param0;
+    MTH3D_tdstVector_* p_stVertex2;
     float xRadius;
     MTH3D_tdstVector_* p_stNormal;
+    int result;
     MTH3D_tdstVector_* p_stVertex3;
-    MTH3D_tdstVector_* p_stVertex2;
+    MTH3D_tdstVector_* param0;
+    MTH3D_tdstVector_* pVertex;
     MTH3D_tdstVector_* p_stVertex1;
 
     result = 1;
@@ -1317,6 +1320,22 @@ void COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV
     /* TODO: decompile from asm/... */
 }
 
+/* MatSp.h's vertex transform, expanded inline here (the line map puts the
+   copy in, the VU0 matrix product and the copy out on one caller line).
+   Retail's sp-direct X copy (sw rX,OFF(sp) beside the materialised &Vtmp)
+   is what MWCC 3.0.3 emits for this form; 3.0.1 reuses the &Vtmp register. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstVector_* p_stVtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+
+    p_stVtmp = &Vtmp; p_stMatrix = &_hTransform->stTransformMatrix;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    COL_VU_MUL_MATRIX(p_stVtmp, p_stMatrix);
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 957–994 */
 /* addr: 0x00250600  size: 580 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1352,9 +1371,34 @@ void COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV
  */
 void COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(COL_tdstGVForCollision_* p_stGV)
 {
-    short xStaticIndexedSphereIndex;
     short xDynamicIndexedSphereIndex;
-    /* TODO: decompile from asm/... */
+    short xStaticIndexedSphereIndex;
+
+    g_pstGV = p_stGV;
+
+    for (xDynamicIndexedSphereIndex = 0; xDynamicIndexedSphereIndex < p_stGV->p_stDynamicElementSpheres->xNbSpheres; xDynamicIndexedSphereIndex++)
+    {
+        p_stGV->p_stDynamicIndexedSphere = &p_stGV->p_stDynamicElementSpheres->d_stListOfSpheres[xDynamicIndexedSphereIndex];
+        p_stGV->p_stDynamicCenter = &p_stGV->p_stDynamicColObj->d_stListOfPoints[p_stGV->p_stDynamicIndexedSphere->xCenterPoint];
+        p_stGV->xDynamicRadius = p_stGV->p_stDynamicIndexedSphere->xRadius / p_stGV->xStaticScale;
+
+        MAT_fn_vApplyOnVertex(&p_stGV->stDinST0Point, &p_stGV->stD2ST0TransformMatrix, p_stGV->p_stDynamicCenter);
+
+        MAT_fn_vApplyOnVertex(&p_stGV->stDinST1Point, &p_stGV->stD2ST1TransformMatrix, p_stGV->p_stDynamicCenter);
+        p_stGV->stDinST01Vector.xX = p_stGV->stDinST1Point.xX - p_stGV->stDinST0Point.xX;
+        p_stGV->stDinST01Vector.xY = p_stGV->stDinST1Point.xY - p_stGV->stDinST0Point.xY;
+        p_stGV->stDinST01Vector.xZ = p_stGV->stDinST1Point.xZ - p_stGV->stDinST0Point.xZ;
+
+        COL_fn_vEnlargeSphereIfNecessary(p_stGV);
+
+        for (xStaticIndexedSphereIndex = 0; xStaticIndexedSphereIndex < p_stGV->p_stStaticElementSpheres->xNbSpheres; xStaticIndexedSphereIndex++)
+        {
+            p_stGV->p_stStaticIndexedSphere = &p_stGV->p_stStaticElementSpheres->d_stListOfSpheres[xStaticIndexedSphereIndex];
+            p_stGV->hDynamicMaterial = p_stGV->p_stDynamicIndexedSphere->hMaterial;
+            p_stGV->hStaticMaterial = p_stGV->p_stStaticIndexedSphere->hMaterial;
+            COL_fn_vCollideStaticSphereWithStaticSphere(p_stGV);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1005–1180 */
@@ -1719,7 +1763,56 @@ void COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollisio
 {
     short xIndexBox;
     int a_DEF_lBitsFieldOfCollisionsWithBoundingBox[50];
-    /* TODO: decompile from asm/... */
+
+    g_pstGV = p_stGV;
+
+    if ((p_stGV->p_stStaticColObj->xNbParallelBoxes == 0) || COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(p_stGV, a_DEF_lBitsFieldOfCollisionsWithBoundingBox, p_stGV->p_stOctree != NULL))
+    {
+        if (p_stGV->p_stOctree == NULL)
+        {
+            for (p_stGV->xStaticElementIndex = 0; p_stGV->xStaticElementIndex < p_stGV->p_stStaticColObj->xNbElements; p_stGV->xStaticElementIndex++)
+            {
+                if (p_stGV->p_stStaticColObj->xNbParallelBoxes != 0)
+                {
+                    xIndexBox = COL_xGetParallelBoxIndexOfElement(p_stGV->p_stStaticColObj, p_stGV->xStaticElementIndex);
+                    p_stGV->lBitsFieldOfIndexedSpheresInCollision = (xIndexBox == -1) ? -1 : *(int*)((unsigned int)a_DEF_lBitsFieldOfCollisionsWithBoundingBox + xIndexBox * 4);
+                    if (p_stGV->lBitsFieldOfIndexedSpheresInCollision == 0)
+                        continue;
+                }
+                else
+                    p_stGV->lBitsFieldOfIndexedSpheresInCollision = -1;
+
+                switch (p_stGV->p_stStaticColObj->d_xListOfElementsTypes[p_stGV->xStaticElementIndex])
+                {
+                    case 1:
+                        if (p_stGV->ulSelectedCollisionCases & 0x20000)
+                        {
+                            p_stGV->p_stStaticElementIndexedTriangles = (COL_tdstElementIndexedTriangles_*)p_stGV->p_stStaticColObj->d_stListOfElements[p_stGV->xStaticElementIndex];
+                            COL_fn_vCollideStaticElementSpheresWithStaticElementIndexedTriangles(p_stGV);
+                        }
+                        break;
+                    case 7:
+                        if (p_stGV->ulSelectedCollisionCases & 0x80000)
+                        {
+                            p_stGV->p_stStaticElementSpheres = (COL_tdstElementSpheres_*)p_stGV->p_stStaticColObj->d_stListOfElements[p_stGV->xStaticElementIndex];
+                            COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(p_stGV);
+                        }
+                        break;
+                    case 8:
+                        if (p_stGV->ulSelectedCollisionCases & 0x100000)
+                        {
+                            p_stGV->p_stStaticElementAlignedBoxes = (COL_tdstElementAlignedBoxes_*)p_stGV->p_stStaticColObj->d_stListOfElements[p_stGV->xStaticElementIndex];
+                            COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(p_stGV);
+                        }
+                        break;
+                }
+            }
+        }
+        else if (p_stGV->ulSelectedCollisionCases & 0x1E0000)
+        {
+            COL_fn_vCollideStaticElementSpheresWithStaticOctree(p_stGV);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1271–1336 */
@@ -1849,9 +1942,42 @@ unsigned char COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(COL_t
  */
 void COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(COL_tdstGVForCollision_* p_stGV)
 {
-    short xStaticIndexedBoxIndex;
     short xDynamicIndexedSphereIndex;
-    /* TODO: decompile from asm/... */
+    short xStaticIndexedBoxIndex;
+
+    for (xDynamicIndexedSphereIndex = 0; xDynamicIndexedSphereIndex < p_stGV->p_stDynamicElementSpheres->xNbSpheres; xDynamicIndexedSphereIndex++)
+    {
+        p_stGV->p_stDynamicIndexedSphere = &p_stGV->p_stDynamicElementSpheres->d_stListOfSpheres[xDynamicIndexedSphereIndex];
+
+        p_stGV->p_stDynamicCenter = &p_stGV->p_stDynamicColObj->d_stListOfPoints[p_stGV->p_stDynamicIndexedSphere->xCenterPoint];
+
+        p_stGV->xDynamicRadius = p_stGV->p_stDynamicIndexedSphere->xRadius / p_stGV->xStaticScale;
+
+        {
+            MTH4D_tdstVector_* p_stStaticTranslation = &p_stGV->p_stStaticGeomObjMatrix->stTransformMatrix.stCol_3;
+            MTH4D_tdstVector_* p_stT0Translation = &p_stGV->p_stT0DynamicGeomObjMatrix->stTransformMatrix.stCol_3;
+            MTH4D_tdstVector_* p_stT1Translation = &p_stGV->p_stT1DynamicGeomObjMatrix->stTransformMatrix.stCol_3;
+            MTH3D_tdstVector_ stT0, stT1;
+            stT0.xX = p_stT0Translation->xX - p_stStaticTranslation->xX; stT0.xY = p_stT0Translation->xY - p_stStaticTranslation->xY; stT0.xZ = p_stT0Translation->xZ - p_stStaticTranslation->xZ;
+            stT1.xX = p_stT1Translation->xX - p_stStaticTranslation->xX; stT1.xY = p_stT1Translation->xY - p_stStaticTranslation->xY; stT1.xZ = p_stT1Translation->xZ - p_stStaticTranslation->xZ;
+
+            p_stGV->stDinST0Point.xX = stT0.xX + p_stGV->p_stDynamicCenter->xX; p_stGV->stDinST0Point.xY = stT0.xY + p_stGV->p_stDynamicCenter->xY; p_stGV->stDinST0Point.xZ = stT0.xZ + p_stGV->p_stDynamicCenter->xZ;
+            p_stGV->stDinST1Point.xX = stT1.xX + p_stGV->p_stDynamicCenter->xX; p_stGV->stDinST1Point.xY = stT1.xY + p_stGV->p_stDynamicCenter->xY; p_stGV->stDinST1Point.xZ = stT1.xZ + p_stGV->p_stDynamicCenter->xZ;
+            p_stGV->stDinST01Vector.xX = p_stGV->stDinST1Point.xX - p_stGV->stDinST0Point.xX; p_stGV->stDinST01Vector.xY = p_stGV->stDinST1Point.xY - p_stGV->stDinST0Point.xY; p_stGV->stDinST01Vector.xZ = p_stGV->stDinST1Point.xZ - p_stGV->stDinST0Point.xZ;
+        }
+
+        COL_fn_vEnlargeSphereIfNecessary(p_stGV);
+
+        for (xStaticIndexedBoxIndex = 0; xStaticIndexedBoxIndex < p_stGV->p_stStaticElementAlignedBoxes->xNbAlignedBoxes; xStaticIndexedBoxIndex++)
+        {
+            p_stGV->p_stStaticIndexedBox = &p_stGV->p_stStaticElementAlignedBoxes->d_stListOfAlignedBoxes[xStaticIndexedBoxIndex];
+            p_stGV->p_stStaticMinPoint = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticIndexedBox->xMinPoint];
+            p_stGV->p_stStaticMaxPoint = &p_stGV->p_stStaticColObj->d_stListOfPoints[p_stGV->p_stStaticIndexedBox->xMaxPoint];
+            p_stGV->hDynamicMaterial = p_stGV->p_stDynamicIndexedSphere->hMaterial;
+            p_stGV->hStaticMaterial = p_stGV->p_stStaticIndexedBox->hMaterial;
+            COL_fn_vCollideStaticSphereWithStaticAlignedBox(p_stGV);
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 1437–1768 */

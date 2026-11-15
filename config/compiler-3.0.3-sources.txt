@@ -286,3 +286,9 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/C
 # (3.0.1 issues the zero-extension right after the asm mfc1). All 16 recorded
 # matches still MATCH under 3.0.3; +1 match.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c
+# playevts.c: +1 (fn_vPlayLastEventsBeforeRestart; 3.0.1 swaps andi/move at +0x5c), 0 lost (all 9 functions probed).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c
+# DNMCame.c: +1 (DNM_p_stDynamicsCameraMechanics; 3.0.1 CSEs &stPosition with the copy base), 0 lost (all 10 functions probed).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame.c
+# Picture.cpp: +1 (GLI_vUncompress_256x256_Screenshot; 3.0.1 calls fptoui where retail inlines the float->unsigned conversion), 0 lost (all recorded matches probed).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp
