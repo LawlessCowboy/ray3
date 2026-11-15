@@ -4522,18 +4522,18 @@ void CSpriteController::WorldQuadWithUV(GLD_tdstViewportAttributes_* p_stViewpor
 
 void CSpriteController::WorldQuadWithUVAndFade(GLD_tdstViewportAttributes_* p_stViewport, float* x1, float* x2, float* x3, float* x4, float u1, float v1, float u2, float v2, GLI_tdstMaterial_* pMaterial, float fAlpha, float fPercentage)
 {
-    float fADC;
-    float vTmp;
-    int v5;
-    int v3;
-    int VMax;
-    int VMin;
-    int UMax;
-    int UMin;
-    int Alpha;
-    float (*pV)[4];
-    unsigned int* pC;
     unsigned int Color;
+    unsigned int* pC;
+    float (*pV)[4];
+    int Alpha;
+    int UMin;
+    int UMax;
+    int VMin;
+    int VMax;
+    int v3;
+    int v5;
+    float vTmp;
+    float fADC;
 
     *(int*)&fADC = 0x8000;
     if (!StartSpriteList(pMaterial, 3, 8)) return;
@@ -4584,7 +4584,7 @@ void CSpriteController::WorldQuadWithUVAndFade(GLD_tdstViewportAttributes_* p_st
 
     /* Interpolate the two inner vertex pairs on VU0 (I = fPercentage);
        the VU0 instructions have no C form. */
-    asm
+    asm volatile
     {
         lqc2 vf1, 0x0(pV)
         lqc2 vf2, 0x10(pV)

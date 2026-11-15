@@ -292,3 +292,5 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAni
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame.c
 # Picture.cpp: +1 (GLI_vUncompress_256x256_Screenshot; 3.0.1 calls fptoui where retail inlines the float->unsigned conversion), 0 lost (all recorded matches probed).
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp
+# DNMMTH.c: +1 (MTH_p_stRotationMulVector; 3.0.1 materialises stack addresses for int-word vector copies), 0 lost (all 3 functions probed).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMMTH.c

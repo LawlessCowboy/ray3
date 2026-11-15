@@ -90,7 +90,7 @@ inline float MTH3D_xSqrVector(MTH3D_tdstVector_* _p_stV)
 
 inline float MTH3D_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
 {
-    float xAX, xBX, xAY, xBY, xAZ, xBZ, xResult;
+    float xResult, xBZ, xAZ, xBY, xAY, xBX, xAX;
     xBX = _p_stB->xX; xAX = _p_stA->xX; xBY = _p_stB->xY; xAY = _p_stA->xY; xBZ = _p_stB->xZ; xAZ = _p_stA->xZ;
     asm { mula.s xAX, xBX }
     asm { madda.s xAY, xBY }
@@ -98,7 +98,32 @@ inline float MTH3D_xDotProductVector(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector
     return xResult;
 }
 
+inline float MTH_xMulSubMul(float* _p_xA, float* _p_xB, float* _p_xC, float* _p_xD)
+{
+    float xResult, xD, xC, xB, xA;
+    xB = *_p_xB; xA = *_p_xA; xD = *_p_xD; xC = *_p_xC;
+    asm { mula.s xA, xB }
+    asm { msub.s xResult, xC, xD }
+    return xResult;
+}
+
+inline void MTH3D_vCopyVector(MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stSrc)
+{
+    ((int*)_p_stDest)[0] = ((int*)_p_stSrc)[0];
+    ((int*)_p_stDest)[1] = ((int*)_p_stSrc)[1];
+    ((int*)_p_stDest)[2] = ((int*)_p_stSrc)[2];
+}
+
+inline void MTH3D_vCrossProductVectorWithoutBuffer(MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    _p_stDest->xX = MTH_xMulSubMul(&_p_stA->xY, &_p_stB->xZ, &_p_stA->xZ, &_p_stB->xY);
+    _p_stDest->xY = MTH_xMulSubMul(&_p_stA->xZ, &_p_stB->xX, &_p_stA->xX, &_p_stB->xZ);
+    _p_stDest->xZ = MTH_xMulSubMul(&_p_stA->xX, &_p_stB->xY, &_p_stA->xY, &_p_stB->xX);
+}
+
 float acosf(float x);
+float cosf(float x);
+float sinf(float x);
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMMTH.c lines 74–151 */
 /* addr: 0x00302900  size: 576 bytes */
@@ -209,9 +234,29 @@ MTH3D_tdstVector_* MTH_p_stRotationMulVector(MTH_stRotation* _p_stRotation, MTH3
     float xSin;
     float xCos;
     MTH3D_tdstVector_* p_stAxis;
-    MTH3D_tdstVector_ stTmp1;
     MTH3D_tdstVector_ stTmp0;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stTmp1;
+
+    xAngle = _p_stRotation->m_xAngle;
+    xCos = cosf(xAngle);
+    xSin = sinf(xAngle);
+    p_stAxis = &_p_stRotation->m_stAxis;
+
+    if (&VectTmp == p_stAxis || &VectTmp == _p_stSource) { MTH3D_vCrossProductVectorWithoutBuffer(&stTmp1, p_stAxis, _p_stSource); MTH3D_vCopyVector(&VectTmp, &stTmp1); } else { MTH3D_vCrossProductVectorWithoutBuffer(&VectTmp, p_stAxis, _p_stSource); }
+    VectTmp.xX = xSin * VectTmp.xX; VectTmp.xY = xSin * VectTmp.xY; VectTmp.xZ = xSin * VectTmp.xZ;
+
+    xValue = MTH3D_xDotProductVector(p_stAxis, _p_stSource);
+    xValue = (1.0f - xCos) * xValue;
+    MTH3D_vCopyVector(&stTmp0, p_stAxis); stTmp0.xX = xValue * stTmp0.xX; stTmp0.xY = xValue * stTmp0.xY; stTmp0.xZ = xValue * stTmp0.xZ;
+
+    if (_p_stSource != _p_stResult)
+        MTH3D_vCopyVector(_p_stResult, _p_stSource);
+    _p_stResult->xX = xCos * _p_stResult->xX; _p_stResult->xY = xCos * _p_stResult->xY; _p_stResult->xZ = xCos * _p_stResult->xZ;
+
+    _p_stResult->xX = _p_stResult->xX + stTmp0.xX; _p_stResult->xY = _p_stResult->xY + stTmp0.xY; _p_stResult->xZ = _p_stResult->xZ + stTmp0.xZ;
+    _p_stResult->xX = _p_stResult->xX + VectTmp.xX; _p_stResult->xY = _p_stResult->xY + VectTmp.xY; _p_stResult->xZ = _p_stResult->xZ + VectTmp.xZ;
+
+    return _p_stResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\DNMMTH.c lines 224–299 */

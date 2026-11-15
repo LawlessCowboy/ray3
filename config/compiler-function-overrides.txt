@@ -62,3 +62,6 @@ INT_fn_bDetectIntersectSegmentWithTriangle 3.0.3-pad7b
 # variant removes; under pad7b it matches 172/172. The unit stays on 3.0.1,
 # which its other recorded matches were verified under.
 INT_fn_bIntersectBoxWithBox 3.0.3-pad7b
+#
+# SCT/Sectdraw.c (3.0.1): SCT_fn_lSendSectorToViewportStatic matches only under 3.0.3 (retail hoists the 0.01f lui/ori and fills the bc1f delay slot). Under pad7b the unit keeps its 4 recorded matches but SCT_fn_vSendSectorWhereIAmToViewport goes from 1160 to 1144 bytes, so the unit stays on 3.0.1.
+SCT_fn_lSendSectorToViewportStatic 3.0.3-pad7b

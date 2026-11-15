@@ -7,6 +7,8 @@
 extern "C" char* strchr(const char* s, int c);
 extern "C" unsigned int strlen(const char* pch_Str);
 extern "C" void usnd_free(void* pv_Ptr);
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" void* usnd_memcpy(void* p_Dst, const void* p_Src, unsigned int ui_Size);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 namespace usnd
@@ -43,7 +45,40 @@ typedef enum anon_enum_001bafd7 {
 struct usnd::sstring {
     char* m_pcData; /* +0x0 */
     static char* ms_czNil;
+    sstring(const char* pch_Str, unsigned int ui_Length)
+    {
+        if (ui_Length == 0)
+            m_pcData = ms_czNil;
+        else {
+            m_pcData = (char*)usnd_malloc(ui_Length + 1);
+            usnd_memcpy(m_pcData, pch_Str, ui_Length + 1);
+        }
+        if (ui_Length)
+            m_pcData[ui_Length] = 0;
+    }
+    ~sstring(void)
+    {
+        if (m_pcData != ms_czNil)
+            usnd_free(m_pcData);
+    }
     void _Init(const char* pch_Str, unsigned int ui_Length);
+    void AttachBuffer(char* szBuffer);
+    bool empty(void) const { return m_pcData == ms_czNil; }
+    sstring& operator+=(const sstring& ro_String)
+    {
+        unsigned int ui_OldLength;
+        const char* pch_Str = ro_String.m_pcData;
+        unsigned int ui_Length = strlen(pch_Str);
+        if (ui_Length)
+        {
+            ui_OldLength = length();
+            char* pch_New = (char*)usnd_malloc(ui_OldLength + ui_Length + 1);
+            usnd_memcpy(pch_New, m_pcData, ui_OldLength);
+            usnd_memcpy(pch_New + ui_OldLength, pch_Str, ui_Length + 1);
+            AttachBuffer(pch_New);
+        }
+        return *this;
+    }
     sstring& operator=(const char* pch_Str)
     {
         unsigned int ui_Length = strlen(pch_Str);
@@ -71,6 +106,9 @@ class CSrcFlow : public virtual CFlow {
 public:
     virtual ~CSrcFlow();
     virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb) = 0;
+    virtual unsigned int fv_uiWrite(void);
+    virtual unsigned int fv_uiTell(void);
+    virtual unsigned int fv_uiSeek(int i_Offset, int i_Origin);
 };
 
 class CPS2FileSrcFlow : public CSrcFlow {
@@ -105,6 +143,17 @@ struct CTextFile {
             return m_bOpened;
         }
         return 0;
+    }
+    unsigned int mfn_dwGetSize(void)
+    {
+        unsigned int dw_Size = (unsigned int)E_INVALID_SIZE;
+        if (m_bOpened)
+        {
+            unsigned int dw_Pos = m_File.fv_uiTell();
+            dw_Size = m_File.fv_uiSeek(0, 1);
+            m_File.fv_uiSeek(dw_Pos, 0);
+        }
+        return dw_Size;
     }
     bool mfn_bRead(void* p_Buffer, unsigned int dw_Size)
     {
@@ -353,7 +402,43 @@ unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
     unsigned int dw_Size;
     char* pch_StringEnd;
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+
+    b_Answer = 0;
+    if (m_bOpened)
+    {
+        ro_Sentence = "";
+        while (!b_Answer && mdwPosition < mfn_dwGetSize())
+        {
+            pch_StringEnd = mfn_pchParseChar();
+            if (pch_StringEnd)
+            {
+                dw_Size = pch_StringEnd - mpchCurrent;
+                sstring o_String(mpchCurrent, dw_Size);
+                ro_Sentence += o_String;
+                pch_StringNext = pch_StringEnd;
+            }
+            else
+            {
+                pch_StringNext = mpchCurrent + 1;
+                dw_Size = 1;
+            }
+
+            if (mpchCurrent < mpchBuffer2 && pch_StringNext >= mpchBuffer2)
+                CTextFile::mfn_bRead(mpchBuffer1, E_BUFFER_SIZE);
+
+            if (pch_StringNext == mpchBufferEnd)
+            {
+                CTextFile::mfn_bRead(mpchBuffer2, E_BUFFER_SIZE);
+                pch_StringNext = mpchBuffer1;
+            }
+
+            mpchCurrent = pch_StringNext;
+            mdwPosition += dw_Size;
+            b_Answer = !ro_Sentence.empty() && (*mpchCurrent == '\n' || *mpchCurrent == '\r');
+        }
+    }
+
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 37–67 */

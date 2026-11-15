@@ -1786,19 +1786,103 @@ void GLI_v_StopDrawingRain(void)
  */
 void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
 {
-    float Uv4[4];
-    float Uv3[4];
-    float Uv2[4];
-    float Uv1[4];
-    float Pos[4];
-    float Color[4];
-    float (*pT)[4];
-    float (*pC)[4];
-    float (*pV)[4];
-    MAT_tdstTransformation_ InvertedCam;
-    unsigned int NbSpritesReal;
     int i;
-    /* TODO: decompile from asm/... */
+    unsigned int NbSpritesReal;
+    MAT_tdstTransformation_ InvertedCam;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float Color[4];
+    float Pos[4];
+    float Uv1[4];
+    float Uv2[4];
+    float Uv3[4];
+    float Uv4[4];
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (i != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
+        GLI_v_CalculateVectorsFor3DRainVU0(&InvertedCam, pParticleArray->Direction, sx, sy);
+        Color[0] = Color[1] = Color[2] = 1.0f;
+        Pos[3] = 1.0f;
+        Uv1[0] = 0.0f; Uv1[1] = 1.0f; Uv1[2] = 0.0f; Uv1[3] = 0.0f;
+        Uv2[0] = 1.0f; Uv2[1] = 1.0f; Uv2[2] = 0.0f; Uv2[3] = 0.0f;
+        Uv3[0] = 1.0f; Uv3[1] = 0.0f; Uv3[2] = 0.0f; Uv3[3] = 0.0f;
+        Uv4[0] = 0.0f; Uv4[1] = 0.0f; Uv4[2] = 0.0f; Uv4[3] = 0.0f;
+        {
+            float* pXV = GLI_g_stXVecta;
+            float* pYV = GLI_g_stYVecta;
+            float* pUv1 = Uv1;
+            float* pUv2 = Uv2;
+            float* pUv3 = Uv3;
+            float* pUv4 = Uv4;
+            asm {
+                lqc2 vf15, 0x0(pXV)
+                lqc2 vf16, 0x0(pYV)
+                lqc2 vf17, 0x0(pUv1)
+                lqc2 vf18, 0x0(pUv2)
+                lqc2 vf19, 0x0(pUv3)
+                lqc2 vf20, 0x0(pUv4)
+            }
+        }
+        while (i != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                unsigned char* pPrefetch = (unsigned char*)pParticleArray + 0x60;
+                float* pColor;
+                float* pPos;
+                asm { pref 0x0, 0x0(pPrefetch) }
+                Color[3] = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                Pos[0] = pParticleArray->Position[0];
+                Pos[1] = pParticleArray->Position[1];
+                Pos[2] = pParticleArray->Position[2];
+                pColor = Color;
+                pPos = Pos;
+                asm {
+                    lqc2 vf1, 0x0(pColor)
+                    lqc2 vf2, 0x0(pPos)
+                    vsub.xyzw vf4, vf15, vf16
+                    vadd.xyzw vf5, vf15, vf16
+                    sqc2 vf1, 0x0(pC)
+                    sqc2 vf1, 0x10(pC)
+                    sqc2 vf1, 0x20(pC)
+                    sqc2 vf1, 0x30(pC)
+                    sqc2 vf1, 0x40(pC)
+                    sqc2 vf1, 0x50(pC)
+                    sqc2 vf17, 0x0(pT)
+                    sqc2 vf18, 0x10(pT)
+                    sqc2 vf19, 0x20(pT)
+                    sqc2 vf17, 0x30(pT)
+                    sqc2 vf19, 0x40(pT)
+                    sqc2 vf20, 0x50(pT)
+                    vsub.xyzw vf6, vf2, vf5
+                    vadd.xyzw vf7, vf2, vf4
+                    vadd.xyzw vf8, vf2, vf5
+                    vsub.xyzw vf9, vf2, vf4
+                    sqc2 vf6, 0x0(pV)
+                    sqc2 vf7, 0x10(pV)
+                    sqc2 vf8, 0x20(pV)
+                    sqc2 vf6, 0x30(pV)
+                    sqc2 vf8, 0x40(pV)
+                    sqc2 vf9, 0x50(pV)
+                }
+                pV += 6;
+                pC += 6;
+                pT += 6;
+            }
+            pParticleArray++;
+            i--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal; VAC_g_CurrentNbSprites += NbSpritesReal; VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal); VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal); VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 654–803 */

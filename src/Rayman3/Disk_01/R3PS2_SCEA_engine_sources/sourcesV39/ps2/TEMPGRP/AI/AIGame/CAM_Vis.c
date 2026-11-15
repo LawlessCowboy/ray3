@@ -3910,6 +3910,28 @@ char CAM_fn_cIsWantedPosIncorrect(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdst
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* abs.s has no C form under MWCC; only that instruction is asm. */
+inline float MTH_xAbs(float xValue)
+{
+    float xResult;
+    asm { abs.s xResult, xValue }
+    return xResult;
+}
+
+/* The engine's float-to-int conversion is asm (cvt.w.s through f30). */
+inline int MTH_M_xRealToLong(float _xValue)
+{
+    int _lResult;
+    asm
+    {
+        cvt.w.s f30, _xValue
+        mfc1 _lResult, f30
+    }
+    return _lResult;
+}
+
+#define CAM_M_lRound(_x) (MTH_M_xRealToLong(2.0f * (_x)) - MTH_M_xRealToLong(_x))
+
 float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVector_* _pst_Dir)
 {
     tdstInternalStructurCineinfo_ st_Temp;
@@ -3918,7 +3940,43 @@ float CAM_fnx_ComputePosPound(CAM_tdstUpdateCamera_* _pst_Struct, MTH3D_tdstVect
     float x_P2;
     float x_P1;
     float x_Pound;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stPos;
+
+    stPos.xX = _pst_Struct->stTargetedPersoPos.xX + _pst_Dir->xX; stPos.xY = _pst_Struct->stTargetedPersoPos.xY + _pst_Dir->xY; stPos.xZ = _pst_Struct->stTargetedPersoPos.xZ + _pst_Dir->xZ;
+
+    pst_Memo = _pst_Struct->hCineinfoWork;
+
+    st_Temp.hSuperObjectTargeted = _pst_Struct->hCineinfoWork->hSuperObjectTargeted;
+    st_Temp.hSecondSuperObjectTargeted = _pst_Struct->hCineinfoWork->hSecondSuperObjectTargeted;
+    st_Temp.cChannel = _pst_Struct->hCineinfoWork->cChannel;
+
+    _pst_Struct->hCineinfoWork = &st_Temp;
+    CAM_fn_vComputeCineinfoWorkForAPosition(_pst_Struct, &stPos);
+    _pst_Struct->hCineinfoWork = pst_Memo;
+
+    x_P1 = (gst_Ideal.xAngleAlpha > 3.1415927f) ? 6.2831855f - gst_Ideal.xAngleAlpha : gst_Ideal.xAngleAlpha;
+    x_P2 = (st_Temp.xAngleAlpha > 3.1415927f) ? 6.2831855f - st_Temp.xAngleAlpha : st_Temp.xAngleAlpha;
+    x_P1 = MTH_xAbs(x_P1 - x_P2);
+
+    x_P1 = 0.01f * (float)CAM_M_lRound(100.0f * x_P1);
+
+    x_P2 = (gst_Ideal.xAngleTheta > 3.1415927f) ? 6.2831855f - gst_Ideal.xAngleTheta : gst_Ideal.xAngleTheta;
+    x_P3 = (st_Temp.xAngleTheta > 3.1415927f) ? st_Temp.xAngleTheta - 6.2831855f : st_Temp.xAngleTheta;
+    x_P2 = MTH_xAbs(x_P2 - x_P3);
+
+    x_P2 = (float)CAM_M_lRound(100.0f * x_P2);
+
+    x_P2 = 0.1f * x_P2;
+
+    x_P3 = MTH_xAbs(gst_Ideal.xDistMin - st_Temp.xDistMin);
+
+    x_P3 = (float)CAM_M_lRound(100.0f * x_P3);
+    x_P3 = 0.01f * x_P3;
+
+    x_Pound = x_P1 + x_P2;
+    x_Pound += 0.1f * x_P3;
+
+    return x_Pound;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Vis.c lines 852–922 */

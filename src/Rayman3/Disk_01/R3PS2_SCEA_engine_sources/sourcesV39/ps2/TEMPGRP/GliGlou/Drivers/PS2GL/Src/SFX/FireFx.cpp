@@ -1365,7 +1365,7 @@ extern "C" void sceVu0CopyVector(void* pDest, void* pSrc);
  * compare a candidate object's line table as an extra checkpoint.
  */
 
-void C_FireFx::InitOneParticle(C_Vector* p)
+inline void C_FireFx::InitOneParticle(C_Vector* p)
 {
     C_Vector* pWork;
 
@@ -1450,7 +1450,57 @@ void C_FireFx::Process(void)
     float TimeDiff;
     C_Vector* pWork;
     C_Vector* pVect;
-    /* TODO: decompile from asm/... */
+
+    /* Retail keeps TimeDiff in f21 and multiplies at run time; MWCC here
+     * constant-folds these locals (a scoped opt_propagation/opt_common_subs off
+     * gets within 612/616, plus retail's 'b test' loop entry). */
+    TimeDiff = 0.032f;
+    fGravity = 50.0f * TimeDiff;
+    ReturnStrength = 0.6f;
+    fSizeReductor = 1.95f * TimeDiff;
+
+    if (g_stEngineStructure.bEngineFrozen)
+        return;
+
+    pVect = m_pData;
+
+    pWork = &m_Position;
+
+    asm
+    {
+        .set noreorder
+        mfc1 v0, TimeDiff
+        qmtc2.ni v0, vf10
+        mfc1 v0, fGravity
+        qmtc2.ni v0, vf11
+        mfc1 v0, ReturnStrength
+        qmtc2.ni v0, vf13
+        lqc2 vf12, 0x0(pWork)
+        vsub.xyzw vf4, vf0, vf0
+    }
+
+    for (i = m_NbParticles; i != 0; i--, pVect += 3)
+    {
+        asm
+        {
+            lqc2 vf1, 0x10(pVect)
+            lqc2 vf2, 0x0(pVect)
+            vmulx.xyz vf3, vf1, vf10x
+            vaddx.z vf1, vf1, vf11x
+            vadd.xyzw vf3, vf3, vf2
+            sqc2 vf3, 0x0(pVect)
+            vsub.xy vf4, vf12, vf3
+            vmulx.xy vf4, vf4, vf13x
+            vadd.xyzw vf1, vf1, vf4
+            sqc2 vf1, 0x10(pVect)
+        }
+
+        pVect[2].Vector[0] -= pVect[2].Vector[1] * TimeDiff;
+        pVect[2].Vector[2] -= fSizeReductor;
+
+        if ((*(unsigned int*)&pVect[2].Vector[0] | *(unsigned int*)&pVect[2].Vector[2]) & 0x80000000)
+            InitOneParticle(pVect);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\FireFx.cpp lines 295–313 */

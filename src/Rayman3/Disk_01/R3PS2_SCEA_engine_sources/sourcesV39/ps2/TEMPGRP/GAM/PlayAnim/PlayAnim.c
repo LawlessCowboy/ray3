@@ -3677,6 +3677,36 @@ MTH3D_tdstVector_* PLA_fn_stGetLinearSpeedVector(HIE_tdstSuperObject_* p_stSuper
     /* TODO: decompile from asm/... */
 }
 
+/* PS2 MTH matrix helpers: the dot products use the R5900 accumulator ops
+   (mula.s/madda.s/madd.s), which MWCC cannot emit from C. */
+inline float MTH3D_M_xDotRow(float _xA0, float _xB0, float _xA1, float _xB1, float _xA2, float _xB2)
+{
+    float _xResult;
+    asm { mula.s _xA0, _xB0 }
+    asm { madda.s _xA1, _xB1 }
+    asm { madd.s _xResult, _xA2, _xB2 }
+    return _xResult;
+}
+#define MTH3D_M_vSetIdentityMatrix(_M) \
+    { (_M)->stCol_0.xX = 1.0f; (_M)->stCol_0.xY = 0.0f; (_M)->stCol_0.xZ = 0.0f; \
+      (_M)->stCol_1.xX = 0.0f; (_M)->stCol_1.xY = 1.0f; (_M)->stCol_1.xZ = 0.0f; \
+      (_M)->stCol_2.xX = 0.0f; (_M)->stCol_2.xY = 0.0f; (_M)->stCol_2.xZ = 1.0f; }
+#define MTH3D_M_vMulMatrixVectorWithoutBuffer(_VDst, _M, _VSrc) \
+    { (_VDst)->xX = MTH3D_M_xDotRow((_M)->stCol_0.xX, (_VSrc)->xX, (_M)->stCol_1.xX, (_VSrc)->xY, (_M)->stCol_2.xX, (_VSrc)->xZ); \
+      (_VDst)->xY = MTH3D_M_xDotRow((_M)->stCol_0.xY, (_VSrc)->xX, (_M)->stCol_1.xY, (_VSrc)->xY, (_M)->stCol_2.xY, (_VSrc)->xZ); \
+      (_VDst)->xZ = MTH3D_M_xDotRow((_M)->stCol_0.xZ, (_VSrc)->xX, (_M)->stCol_1.xZ, (_VSrc)->xY, (_M)->stCol_2.xZ, (_VSrc)->xZ); }
+#define MTH3D_M_vCopyVector(_VDst, _VSrc) \
+    { ((int*)(_VDst))[0] = ((int*)(_VSrc))[0]; ((int*)(_VDst))[1] = ((int*)(_VSrc))[1]; ((int*)(_VDst))[2] = ((int*)(_VSrc))[2]; }
+#define MTH3D_M_vCopyMatrix(_MDst, _MSrc) \
+    { MTH3D_M_vCopyVector(&(_MDst)->stCol_0, &(_MSrc)->stCol_0); \
+      MTH3D_M_vCopyVector(&(_MDst)->stCol_1, &(_MSrc)->stCol_1); \
+      MTH3D_M_vCopyVector(&(_MDst)->stCol_2, &(_MSrc)->stCol_2); }
+#define MTH3D_M_vMulMatrixMatrix(_MDst, _MA, _MB) \
+    { MTH3D_M_vMulMatrixVectorWithoutBuffer(&Mtemp.stCol_0, _MA, &(_MB)->stCol_0); \
+      MTH3D_M_vMulMatrixVectorWithoutBuffer(&Mtemp.stCol_1, _MA, &(_MB)->stCol_1); \
+      MTH3D_M_vMulMatrixVectorWithoutBuffer(&Mtemp.stCol_2, _MA, &(_MB)->stCol_2); \
+      MTH3D_M_vCopyMatrix(_MDst, &Mtemp); }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 2991–3019 */
 /* addr: 0x00275720  size: 688 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3710,15 +3740,38 @@ MTH3D_tdstVector_* PLA_fn_stGetLinearSpeedVector(HIE_tdstSuperObject_* p_stSuper
  */
 MTH3D_tdstMatrix_* PLA_fn_stGetAngularSpeedMatrix(HIE_tdstSuperObject_* p_stSuperObject, float xLastFrame)
 {
-    MTH3D_tdstMatrix_ Mtemp;
-    MTH3D_tdstMatrix_ stMatrix;
-    unsigned short uwLastFrame;
-    unsigned char bSpeedMatrix;
-    int i;
-    tdstAnim3d_* p_stCurrentAnim;
+    static MTH3D_tdstMatrix_ stSpeedMatrix;
     tdst3dData_* h_Current3dData;
-    MTH3D_tdstMatrix_ stSpeedMatrix;
-    /* TODO: decompile from asm/... */
+    tdstAnim3d_* p_stCurrentAnim;
+    int i;
+    unsigned char bSpeedMatrix;
+    unsigned short uwLastFrame;
+    MTH3D_tdstMatrix_ stMatrix;
+    MTH3D_tdstMatrix_ Mtemp;
+
+    bSpeedMatrix = 0;
+    uwLastFrame = (unsigned short)xLastFrame;
+
+    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+
+    p_stCurrentAnim = h_Current3dData->h_CurrentState->p_stAnim;
+
+    if (p_stCurrentAnim != NULL && uwLastFrame != 0xFFFF)
+    {
+        MTH3D_M_vSetIdentityMatrix(&stSpeedMatrix);
+        for (i = uwLastFrame + 1; i <= (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame); i++)
+        {
+            if (fn_p_stGetAngularSpeedMatrix(p_stCurrentAnim, (unsigned short)i, &stMatrix))
+            {
+                MTH3D_M_vMulMatrixMatrix(&stSpeedMatrix, &stSpeedMatrix, &stMatrix);
+                bSpeedMatrix = 1;
+            }
+        }
+    }
+
+    if (bSpeedMatrix)
+        return &stSpeedMatrix;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 3023–3031 */

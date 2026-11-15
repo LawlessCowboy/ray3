@@ -3403,6 +3403,18 @@ static inline unsigned char fn_bZDMMaterialMatch(GMT_tdstGameMaterial_* hGameMat
     xId = GMT_fn_hGetCollideMaterialIdentifier(hCollideMat);
     return (xTestMask & xId) == xTestMask;
 }
+unsigned char fn_ucCollSetGetColliderPriority(tdstCollSet_* _hCollSet);
+void fn_vCollSetSetColliderPriority(tdstCollSet_* _hCollSet, unsigned char _ucPri);
+int PLA_fn_bTestNewState(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* h_WantedState);
+unsigned short fn_uwGetNbEngineFrameSinceLastMechEvent(HIE_tdstSuperObject_* p_stSuperObject);
+static inline unsigned char fn_bIsTypeOfGMTCollide(HIE_tdstSuperObject_* p_SuperObjPerso, unsigned short xTestMask)
+{
+    DNM_stReport* p_stDynamReport;
+    p_stDynamReport = fn_pstGetDNMReport(p_SuperObjPerso);
+    if (p_stDynamReport == NULL)
+        return 0;
+    return fn_bZDMMaterialMatch(p_stDynamReport->m_stGround.hCollidedMaterial, xTestMask);
+}
 
 #pragma opt_lifetimes off
 #pragma opt_strength_reduction off
@@ -4390,7 +4402,73 @@ tdstNodeInterpret_* fn_p_stMiscCondition(HIE_tdstSuperObject_* p_SuperObjPerso, 
     unsigned short xTestedMask;
     tdeCondId_ eCondId;
     tdstGetSetParam_ stParam;
-    /* TODO: decompile from asm/... */
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+    switch (eCondId) {
+    case eCond_EngineReinitRequested:
+        *p_lValue = g_stEngineStructure.eEngineMode != 9;
+        return p_stTree;
+    case eCond_CmtIdentifierContainsMask:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xTestMask = stParam.uDummy.uParam.xMask;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        xTestedMask = stParam.uDummy.uParam.xMask;
+        *p_lValue = (xTestMask & xTestedMask) ? 1 : 0;
+        return p_stTree;
+    case eCond_HitByCollider:
+        hCollSet = p_SuperObjPerso->hLinkedObject.p_stCharacter->h_CollSet;
+        if ((*p_lValue = (hCollSet && fn_ucCollSetGetColliderPriority(hCollSet)) ? 1 : 0))
+            fn_vCollSetSetColliderPriority(hCollSet, 0);
+        return p_stTree;
+    case eCond_IsTypeOfGMTCollide:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stDynamReport = fn_pstGetDNMReport(p_SuperObjPerso);
+        if (p_stDynamReport == NULL) {
+            *p_lValue = 0;
+            return p_stTree;
+        }
+        if (p_stDynamReport->m_ulCurrSurfaceState) {
+            *p_lValue = fn_bIsTypeOfGMTCollide(p_SuperObjPerso, stParam.uDummy.uParam.xMask);
+        } else {
+            *p_lValue = 0;
+        }
+        return p_stTree;
+    case eCond_IsInComport:
+    case eCond_IsInReflexComport: {
+        tdstIntelligence_* p_stIntelligence;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        hTempPerso = fn_h_StandardGameGetSuperObject(stParam.uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        p_stIntelligence = (eCondId == eCond_IsInComport) ? hTempPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stIntelligence : hTempPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind->p_stReflex;
+        if (p_stIntelligence != NULL)
+            *p_lValue = p_stIntelligence->p_stCurrentComport == stParam.uDummy.uParam.pComport;
+        else
+            *p_lValue = 0;
+        return p_stTree;
+    }
+    case eCond_ChangeActionEnable:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        *p_lValue = PLA_fn_bTestNewState(p_SuperObjPerso, stParam.uDummy.uParam.tdxstHandleToState);
+        return p_stTree;
+    case eCond_IsThereMechEvent:
+        ucVarId = p_stTree->uDummy.uParam.ucValue;
+        uwNbFrame = fn_uwGetNbEngineFrameSinceLastMechEvent(p_SuperObjPerso);
+        if (uwNbFrame != 0xFFFF) {
+            stParam.uDummy.uParam.lValue = uwNbFrame;
+            stParam.eType = E_vt_Integer;
+            if (fn_ucSetDsgVar(ucVarId, 0, p_SuperObjPerso->hLinkedObject.p_stCharacter->h_Brain->p_stMind, &stParam) == 0)
+                *p_lValue = 0;
+            else
+                *p_lValue = 1;
+        } else {
+            *p_lValue = 0;
+        }
+        p_stTree++;
+        return p_stTree;
+    default:
+        *p_lValue = 0;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 1305–1340 */

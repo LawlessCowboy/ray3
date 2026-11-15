@@ -3700,6 +3700,31 @@ tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPers
 short fn_wBbDeclareVariable2Monitor(void* p_pvVar, int lType, char* szName, int lFlag);
 
 inline int MTH_M_xRealToLong(float _xValue);
+float fn_xRealModuloAround(float xFrom, float xModulus, float xValue);
+float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow);
+float fn_xComputeDirectionAngle(MTH3D_tdstVector_* p_stVector);
+float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSuperObject_* p_SuperObjPerso2, unsigned char ucFlags);
+float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_tdstWayPoint_* hWP);
+
+inline void MAT_M_vGetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stTrans)
+{
+    ((int*)_p_stTrans)[0] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xX; ((int*)_p_stTrans)[1] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xY; ((int*)_p_stTrans)[2] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xZ;
+}
+
+inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
+{
+    ((int*)VectDest)[0] = ((int*)VectA)[0]; ((int*)VectDest)[1] = ((int*)VectA)[1]; ((int*)VectDest)[2] = ((int*)VectA)[2];
+}
+
+inline void MTH3D_M_vSubVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA, MTH3D_tdstVector_* VectB)
+{
+    VectDest->xX = VectA->xX - VectB->xX; VectDest->xY = VectA->xY - VectB->xY; VectDest->xZ = VectA->xZ - VectB->xZ;
+}
+
+inline void MTH3D_M_vSetVectorElements(MTH3D_tdstVector_* VectDest, float x, float y, float z)
+{
+    VectDest->xX = x; VectDest->xY = y; VectDest->xZ = z;
+}
 
 tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
 tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMCN);
@@ -4536,11 +4561,78 @@ tdstNodeInterpret_* fn_p_stDistanceFunction(HIE_tdstSuperObject_* p_SuperObjPers
     MTH3D_tdstVector_ stVector2;
     MTH3D_tdstVector_ stVector1;
     MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_* p_stVector;
     /*type_0x83*/ int hNewSuperObjPerso;
     float xReal;
     unsigned char ucFlags;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    /* Permuter-found (verified MATCH): the p_stVector alias and this unused
+     * local together make MWCC set up the fn_xRealModuloAround float
+     * arguments f13-before-f12 as retail does. */
+    int lUnused;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, (HIE_tdstSuperObject_**)&hNewSuperObjPerso);
+
+    switch (eFuncId)
+    {
+    case eFunc_GetPersoAbsolutePosition:
+        MAT_M_vGetTranslation(((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, &stVector2);
+        MTH3D_M_vCopyVector(&p_stValue->uDummy.uParam.stVectorValue, &stVector2);
+        p_stValue->eType = E_vt_Vector;
+        return p_stTree;
+
+    case eFunc_GetAngleAroundZToPerso:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_SuperObjTarget = fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame);
+
+        MTH3D_M_vSetVectorElements(&stVector1, 0.0f, -1.0f, 0.0f);
+        MAT_fn_vApplyOnVector(&stVector1, ((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, &stVector1);
+        p_stVector = &stVector1;
+        xAngleStart = fn_xComputeDirectionAngle(&stVector1);
+        xAngleStart = fn_xRealModuloAround(0, 6.2831855f, xAngleStart);
+
+        MAT_M_vGetTranslation(((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, p_stVector);
+        MAT_M_vGetTranslation(p_SuperObjTarget->hGlobalMatrix, &stVector);
+        MTH3D_M_vSubVector(&stVector, &stVector, p_stVector);
+        xAngleEnd = fn_xComputeDirectionAngle(&stVector);
+        xAngleEnd = fn_xRealModuloAround(0, 6.2831855f, xAngleEnd);
+        xDeltaAngle = fn_xComputeBestEcartDirectionAngle(xAngleStart, xAngleEnd);
+
+        p_stValue->uDummy.uParam.xValue = xDeltaAngle * 57.29578f;
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+
+    case eFunc_DistanceToWP:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stValue->uDummy.uParam.xValue = fn_xDistanceBetweenPersoAndWP((HIE_tdstSuperObject_*)hNewSuperObjPerso, p_stValue->uDummy.uParam.m_hWayPoint);
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+
+    default:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_SuperObjTarget = fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        ucFlags = 0;
+        switch (eFuncId)
+        {
+        case eFunc_DistanceXToPerso: ucFlags = 1; break;
+        case eFunc_DistanceYToPerso: ucFlags = 2; break;
+        case eFunc_DistanceZToPerso: ucFlags = 4; break;
+        case eFunc_DistanceXYToPerso: ucFlags = 3; break;
+        case eFunc_DistanceXZToPerso: ucFlags = 5; break;
+        case eFunc_DistanceYZToPerso: ucFlags = 6; break;
+        case eFunc_DistanceXToPersoCenter: ucFlags = 0x81; break;
+        case eFunc_DistanceYToPersoCenter: ucFlags = 0x82; break;
+        case eFunc_DistanceZToPersoCenter: ucFlags = 0x84; break;
+        case eFunc_DistanceXYToPersoCenter: ucFlags = 0x83; break;
+        case eFunc_DistanceXZToPersoCenter: ucFlags = 0x85; break;
+        case eFunc_DistanceYZToPersoCenter: ucFlags = 0x86; break;
+        }
+        xReal = fn_xExtendedDistanceBetweenPerso((HIE_tdstSuperObject_*)hNewSuperObjPerso, p_SuperObjTarget, ucFlags);
+        p_stValue->uDummy.uParam.xValue = xReal;
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 878–949 */

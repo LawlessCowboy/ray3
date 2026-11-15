@@ -3459,12 +3459,58 @@ void TakeCareOfCinemascopePS2(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern float tanf(float x);
+extern void sceVu0CopyMatrix(float dest[4][4], float src[4][4]);
+extern void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling);
+
+/* gluPerspective-style frustum: the guard-band frustum is scaled to the
+   4096-wide GS area, then the real frustum is loaded. Inlined, so each use
+   sits on one source line in retail. */
+inline void GLI_vSetPerspective(float fovy, float aspect, float zNear, float zFar)
+{
+    float xmin, xmax, ymin, ymax, fXScale, fYScale;
+    ymax = zNear * tanf(fovy * 0.0087266462f);
+    ymin = -ymax;
+    xmin = ymin * aspect;
+    xmax = ymax * aspect;
+    fXScale = 4096.0f / XRESf;
+    fYScale = 4096.0f / YRESf;
+    glFrustumf(xmin * fXScale, xmax * fXScale, ymin * fYScale, ymax * fYScale, zNear, zFar);
+    sceVu0CopyMatrix(g_PS2glContext.GuardBandProjectionMatrix, *g_PS2glContext.pCurMatrix);
+    PS2glLoadIdentity();
+    glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
+    PS2glBoundingSphereParameters(fovy, aspect, zNear, zFar, 0.0f, 0.0f);
+}
+
 void GLI_vInitGLProjectionMatrix(void)
 {
-    float g_fxAngle;
-    float g_fCurrentRatio;
     float TransformedxAngle;
-    /* TODO: decompile from asm/... */
+    float g_fCurrentRatio;
+    float g_fxAngle;
+
+    if (GLI_g_ProjectionMode == 1) {
+        return;
+    }
+    GLI_g_ProjMatrixHasChanged = 1;
+    g_fCurrentRatio = GLI_g_fCurrentCameraRatio;
+    g_fxAngle = GLI_g_fCurrentCameraxAngle;
+    if (g_bCinemascopeOn && g_a2_ulSize[1]) {
+        g_fxAngle *= 100.0f / g_a2_ulSize[1];
+    }
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    TransformedxAngle = 1.0f + (1.3333334f / g_fCurrentRatio - 1.0f);
+    TransformedxAngle *= g_fxAngle;
+    if (GLI_g_bWideScreenMode) {
+        GLI_vSetPerspective(TransformedxAngle, 1.3f * g_fCurrentRatio, GLI_g_NearValue, GLI_g_FarValue);
+    }
+    else {
+        GLI_vSetPerspective(TransformedxAngle, g_fCurrentRatio, GLI_g_NearValue, GLI_g_FarValue);
+    }
+    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+    PS2glScissor(0, 0, XRES, YRES);
+    GLI_DRV_vSetCommonGLRenderStates();
+    GLI_g_ProjectionMode = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1121–1141 */
@@ -3585,6 +3631,7 @@ void GLI_vSetFullScreenOrthoProjection(void)
  */
 void GLI_vSetFIXFullScreenOrthoProjection(void)
 {
+    float zFar = 1.0f;
     if (GLI_g_ProjectionMode == 2) {
         return;
     }
@@ -3600,7 +3647,7 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
     *(unsigned char*)g_PS2glContext.pbFogging = 0;
     PS2glMatrixMode(0x1701);
     PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, zFar);
     PS2glMatrixMode(0x1702);
     PS2glLoadIdentity();
     PS2glMatrixMode(0x1700);

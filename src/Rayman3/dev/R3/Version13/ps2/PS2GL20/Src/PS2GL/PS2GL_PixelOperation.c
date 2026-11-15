@@ -3057,16 +3057,100 @@ void impPS2glRasterPos4f(float x, float y, float z, float w)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+void sceVu0ApplyMatrix(float* v0, float m0[4][4], float* v1);
+float sceVu0InnerProduct(float* v0, float* v1);
+void sceVu0UnitMatrix(float m0[4][4]);
+void sceVu0AddVector(float* v0, float* v1, float* v2);
+
+/* sqrt.s has no C form under the baseline (MWCC calls sqrtf). */
+inline float PS2glRasterSqrt(float x)
+{
+    float r = x;
+    asm { sqrt.s r, r }
+    return r;
+}
+
+inline int PS2glRasterInsideClipPlanes(float* eye)
+{
+    unsigned int i;
+    unsigned int bit = 1;
+    for (i = 0; i < 6; bit <<= 1, i++)
+    {
+        if (g_PS2glContext.nClipBits & bit)
+        {
+            if (sceVu0InnerProduct(g_PS2glContext.avClipPlane[i], eye) < 0.0f)
+                return 0;
+        }
+    }
+    return 1;
+}
+
+inline int PS2glRasterInsideFrustum(float* clip)
+{
+    if (clip[0] > clip[3] || clip[0] < -clip[3] ||
+        clip[1] > clip[3] || clip[1] < -clip[3] ||
+        clip[2] > clip[3] || clip[2] < -clip[3])
+        return 0;
+    return 1;
+}
+
 void impPS2glRasterPos4fv(float* v1)
 {
-    float mViewScreen[4][4];
-    float d;
-    float clip[4];
-    float eye[4];
-    float v[4];
-    float vScreenScale[4];
     float vScreenOrg[4];
-    /* TODO: decompile from asm/... */
+    float vScreenScale[4];
+    float v[4];
+    float eye[4];
+    float clip[4];
+    float d;
+    float mViewScreen[4][4];
+
+    v[0] = v1[0];
+    v[1] = v1[1];
+    v[2] = v1[2];
+    v[3] = v1[3];
+
+    sceVu0ApplyMatrix(eye, g_PS2glContext.ModelViewMatrix, v);
+
+    if (!PS2glRasterInsideClipPlanes(eye))
+    {
+        g_PS2glContext.bRasterPosValid = 0;
+        return;
+    }
+
+    g_PS2glContext.fRasterDistance = PS2glRasterSqrt(eye[0] * eye[0] + eye[1] * eye[1] + eye[2] * eye[2]);
+
+    sceVu0ApplyMatrix(clip, g_PS2glContext.ProjectionMatrix, eye);
+
+    if (!PS2glRasterInsideFrustum(clip))
+    {
+        g_PS2glContext.bRasterPosValid = 0;
+        return;
+    }
+
+    vScreenScale[0] = 0.5f * g_PS2glContext.ViewPort[2];
+    vScreenScale[1] = 0.5f * g_PS2glContext.ViewPort[3];
+    vScreenScale[2] = -0.5f;
+    vScreenScale[3] = 0.0f;
+
+    vScreenOrg[0] = 0.0f;
+    vScreenOrg[1] = 0.0f;
+    vScreenOrg[2] = 1.0f;
+    vScreenOrg[3] = 1.0f;
+
+    sceVu0UnitMatrix(mViewScreen);
+    mViewScreen[0][0] = 0.5f * g_PS2glContext.ViewPort[2];
+    mViewScreen[1][1] = 0.5f * g_PS2glContext.ViewPort[3];
+    mViewScreen[2][2] = -0.5f;
+    sceVu0AddVector(mViewScreen[3], vScreenScale, vScreenOrg);
+
+    sceVu0ApplyMatrix(clip, mViewScreen, clip);
+
+    d = 1.0f / clip[3];
+    g_PS2glContext.fRasterPos[0] = clip[0] * d;
+    g_PS2glContext.fRasterPos[1] = 2.0f * (-clip[1] * d);
+    g_PS2glContext.fRasterPos[2] = 1.0f - clip[2] * d;
+    g_PS2glContext.fRasterPos[3] = clip[3];
+    g_PS2glContext.bRasterPosValid = 1;
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_PixelOperation.c lines 1024–1033 */

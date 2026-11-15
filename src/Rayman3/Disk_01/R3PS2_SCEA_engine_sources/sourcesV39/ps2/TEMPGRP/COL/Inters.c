@@ -37,6 +37,26 @@ inline float MTH_xDot3R(float _x1, float _x2, float _y1, float _y2, float _z1, f
     return _r;
 }
 
+/* R5900 accumulator a*b - c*d (msub.s has no C form). */
+inline float MTH_xMulSubMul(float _a, float _b, float _c, float _d)
+{
+    float _r;
+    asm { mula.s _a, _b }
+    asm { msub.s _r, _c, _d }
+    return _r;
+}
+
+/* R5900 accumulator x1*x2 + y1*y2 + z1*z2 - a*b. */
+inline float MTH_xDot3MinusMul(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2, float _a, float _b)
+{
+    float _r;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madda.s _z1, _z2 }
+    asm { msub.s _r, _a, _b }
+    return _r;
+}
+
 /* R5900 absolute value (abs.s has no C form). */
 inline float MTH_xAbs(float _x)
 {
@@ -1068,11 +1088,54 @@ unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_
  */
 unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal)
 {
-    float xInvR;
-    float xT2;
-    float xT1;
+    MTH3D_tdstVector_ stV1C;
+    float xA;
     float xB;
-    /* TODO: decompile from asm/... */
+    float xC;
+    float xT1;
+    float xT2;
+    float xT;
+    float xInvR;
+
+    if (!INT_fn_bFastRejectIntersectSegmentWithSphere(p_stVertex1, p_stVect12, p_stSphereCenter, xSphereRadius))
+    {
+        return 0;
+    }
+
+    stV1C.xX = p_stVertex1->xX - p_stSphereCenter->xX; stV1C.xY = p_stVertex1->xY - p_stSphereCenter->xY; stV1C.xZ = p_stVertex1->xZ - p_stSphereCenter->xZ;
+    xA = MTH_xDot3R(p_stVect12->xX, p_stVect12->xX, p_stVect12->xY, p_stVect12->xY, p_stVect12->xZ, p_stVect12->xZ);
+
+    xB = MTH_xDot3R(p_stVect12->xX, stV1C.xX, p_stVect12->xY, stV1C.xY, p_stVect12->xZ, stV1C.xZ);
+    xB += xB;
+    xC = MTH_xDot3MinusMul(stV1C.xX, stV1C.xX, stV1C.xY, stV1C.xY, stV1C.xZ, stV1C.xZ, xSphereRadius, xSphereRadius);
+
+    switch (INT_fn_xTrinomeResolution(xA, xB, xC, &xT1, &xT2))
+    {
+    case 2:
+        xT = MTH_M_xMin(xT1, xT2);
+        if (xT >= 0.0f && xT <= 1.0f)
+        {
+            *p_xT = xT;
+            p_stHit->xX = p_stVertex1->xX + xT * p_stVect12->xX; p_stHit->xY = p_stVertex1->xY + xT * p_stVect12->xY; p_stHit->xZ = p_stVertex1->xZ + xT * p_stVect12->xZ;
+            p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX; p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY; p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;
+            xInvR = 1.0f / xSphereRadius;
+            p_stNormal->xX = xInvR * p_stNormal->xX; p_stNormal->xY = xInvR * p_stNormal->xY; p_stNormal->xZ = xInvR * p_stNormal->xZ;
+            return 1;
+        }
+        return 0;
+    case 1:
+        if (xT1 >= 0.0f && xT1 <= 1.0f)
+        {
+            *p_xT = xT1;
+            p_stHit->xX = p_stVertex1->xX + xT1 * p_stVect12->xX; p_stHit->xY = p_stVertex1->xY + xT1 * p_stVect12->xY; p_stHit->xZ = p_stVertex1->xZ + xT1 * p_stVect12->xZ;
+            p_stNormal->xX = p_stHit->xX - p_stSphereCenter->xX; p_stNormal->xY = p_stHit->xY - p_stSphereCenter->xY; p_stNormal->xZ = p_stHit->xZ - p_stSphereCenter->xZ;
+            xInvR = 1.0f / xSphereRadius;
+            p_stNormal->xX = xInvR * p_stNormal->xX; p_stNormal->xY = xInvR * p_stNormal->xY; p_stNormal->xZ = xInvR * p_stNormal->xZ;
+            return 1;
+        }
+        break;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1702–1805 */
@@ -1142,10 +1205,95 @@ unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1,
  */
 unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
+    MTH3D_tdstVector_ stAC, stBC;
+    float xMinusRadius;
     float xSpecialRadius;
     float xTemp;
     float xdist;
-    /* TODO: decompile from asm/... */
+    stAC.xX = p_stVertexA->xX - p_stSphereCenter->xX; stAC.xZ = p_stVertexA->xZ - p_stSphereCenter->xZ; stAC.xY = p_stVertexA->xY - p_stSphereCenter->xY;
+    stBC.xX = stAC.xX + p_stVectAB->xX; stBC.xY = stAC.xY + p_stVectAB->xY; stBC.xZ = stAC.xZ + p_stVectAB->xZ;
+    xMinusRadius = -xSphereRadius;
+
+    xSpecialRadius = xSphereRadius * xSphereRadius;
+
+    xdist = MTH_xDot3R(stBC.xX, stBC.xX, stBC.xY, stBC.xY, stBC.xZ, stBC.xZ);
+    if (xdist <= xSpecialRadius)
+        return 1;
+
+    xdist = MTH_xDot3R(stAC.xX, stAC.xX, stAC.xY, stAC.xY, stAC.xZ, stAC.xZ);
+    if (xdist <= xSpecialRadius)
+        return 1;
+
+    if (p_stVectAB->xX > 0.0f)
+    {
+        if (stAC.xX > xSphereRadius)
+            return 0;
+        if (stBC.xX < xMinusRadius)
+            return 0;
+    }
+    else
+    {
+        if (stAC.xX < xMinusRadius)
+            return 0;
+        if (stBC.xX > xSphereRadius)
+            return 0;
+    }
+
+    if (p_stVectAB->xY > 0.0f)
+    {
+        if (stAC.xY > xSphereRadius)
+            return 0;
+        if (stBC.xY < xMinusRadius)
+            return 0;
+    }
+    else
+    {
+        if (stAC.xY < xMinusRadius)
+            return 0;
+        if (stBC.xY > xSphereRadius)
+            return 0;
+    }
+
+    if (p_stVectAB->xZ > 0.0f)
+    {
+        if (stAC.xZ > xSphereRadius)
+            return 0;
+        if (stBC.xZ < xMinusRadius)
+            return 0;
+    }
+    else
+    {
+        if (stAC.xZ < xMinusRadius)
+            return 0;
+        if (stBC.xZ > xSphereRadius)
+            return 0;
+    }
+
+    xTemp = MTH_xDot3R(stAC.xX, p_stVectAB->xX, stAC.xY, p_stVectAB->xY, stAC.xZ, p_stVectAB->xZ);
+    if (xTemp > 0.0f)
+        return 0;
+
+    xdist = MTH_xDot3R(p_stVectAB->xX, p_stVectAB->xX, p_stVectAB->xY, p_stVectAB->xY, p_stVectAB->xZ, p_stVectAB->xZ);
+    if (-xTemp > xdist)
+        return 0;
+
+    xSpecialRadius *= xdist;
+
+    xTemp = MTH_xMulSubMul(stAC.xX, p_stVectAB->xY, stAC.xY, p_stVectAB->xX);
+    xdist = xTemp * xTemp;
+    if (xdist >= xSpecialRadius)
+        return 0;
+
+    xTemp = MTH_xMulSubMul(stAC.xX, p_stVectAB->xZ, stAC.xZ, p_stVectAB->xX);
+    xdist += xTemp * xTemp;
+    if (xdist >= xSpecialRadius)
+        return 0;
+
+    xTemp = MTH_xMulSubMul(stAC.xY, p_stVectAB->xZ, stAC.xZ, p_stVectAB->xY);
+    xdist += xTemp * xTemp;
+    if (xdist >= xSpecialRadius)
+        return 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1826–1997 */

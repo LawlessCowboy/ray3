@@ -417,6 +417,7 @@ extern "C" tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_*, tdstNodeIn
 extern "C" tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_*, tdstNodeInterpret_*, HIE_tdstSuperObject_**);
 extern "C" unsigned char fn_ucGetDsgVar(unsigned char, unsigned char, AI_tdstMind_*, tdstGetSetParam_*);
 extern "C" unsigned char fn_ucSetDsgVar(unsigned char, unsigned char, AI_tdstMind_*, tdstGetSetParam_*);
+extern "C" unsigned char fn_bIsTransitionInProgress(void);
 extern "C" void fn_vComputeCollideResult(HIE_tdstSuperObject_*, int);
 extern "C" int GMT_fn_hGetCollideMaterialIdentifier(int);
 /* Sector list / border layouts as seen by the retail collide code. */
@@ -1891,7 +1892,59 @@ tdstNodeInterpret_* fn_p_stGetCollision(HIE_tdstSuperObject_* p_SuperObjPerso, t
     unsigned int ulMode;
     MTH3D_tdstVector_ stVectorSave;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    bCompute = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (g_stCollideParameterPoint.xX != p_stValue->uParam.stVectorValue.xX || g_stCollideParameterPoint.xY != p_stValue->uParam.stVectorValue.xY || g_stCollideParameterPoint.xZ != p_stValue->uParam.stVectorValue.xZ) {
+        *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_stValue->uParam.stVectorValue.xX;
+        bCompute = 1;
+        *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_stValue->uParam.stVectorValue.xY;
+        *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_stValue->uParam.stVectorValue.xZ;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (g_stCollideParameterVector.xX != p_stValue->uParam.stVectorValue.xX || g_stCollideParameterVector.xY != p_stValue->uParam.stVectorValue.xY || g_stCollideParameterVector.xZ != p_stValue->uParam.stVectorValue.xZ) {
+        *(int*)&g_stCollideParameterVector.xX = *(int*)&p_stValue->uParam.stVectorValue.xX;
+        bCompute = 1;
+        *(int*)&g_stCollideParameterVector.xY = *(int*)&p_stValue->uParam.stVectorValue.xY;
+        *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_stValue->uParam.stVectorValue.xZ;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    ulMode = p_stValue->uParam.lValue;
+    if (bCompute || g_ulCollideTimeCounter != g_stEngineStructure.stEngineTimer.ulCurrentTimerCount || g_ulMode != ulMode || g_ulTypeMode != 2) {
+        int* pVecY = (int*)&g_stCollideParameterVector.xY;
+        int* pVecZ = (int*)&g_stCollideParameterVector.xZ;
+        *(int*)&stVectorSave.xX = *(int*)&g_stCollideParameterVector.xX;
+        *(int*)&stVectorSave.xY = *pVecY;
+        *(int*)&stVectorSave.xZ = *pVecZ;
+        g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+        g_ulMode = ulMode;
+        g_ulTypeMode = 2;
+        g_xMask = 0;
+        fn_vComputeCollideResult(p_SuperObjPerso, ulMode);
+        *(int*)&g_stCollideParameterVector.xX = *(int*)&stVectorSave.xX;
+        *pVecY = *(int*)&stVectorSave.xY;
+        *pVecZ = *(int*)&stVectorSave.xZ;
+    }
+    switch (eFuncId) {
+    case 280:
+        *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&g_stCollideResultPoint.xX;
+        *(int*)&p_stValue->uParam.stVectorValue.xY = *(int*)&g_stCollideResultPoint.xY;
+        *(int*)&p_stValue->uParam.stVectorValue.xZ = *(int*)&g_stCollideResultPoint.xZ;
+        p_stValue->eType = (tdeVariableType_)21;
+        break;
+    case 281:
+        *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&g_stCollideResultVector.xX;
+        *(int*)&p_stValue->uParam.stVectorValue.xY = *(int*)&g_stCollideResultVector.xY;
+        *(int*)&p_stValue->uParam.stVectorValue.xZ = *(int*)&g_stCollideResultVector.xZ;
+        p_stValue->eType = (tdeVariableType_)21;
+        break;
+    case 282:
+        p_stValue->uParam.pValue = (g_hSuperObjectHit == NULL) ? NULL : ((g_hSuperObjectHit->ulTypeOfLinkedObject != 2) ? NULL : (void*)g_hSuperObjectHit->hLinkedObject.p_stCharacter);
+        p_stValue->eType = (tdeVariableType_)11;
+        break;
+    }
+    g_ulOverRideRayTraceSpoMask = 0x40;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2171–2235 */
@@ -1944,7 +1997,49 @@ tdstNodeInterpret_* fn_p_stGetCollisionWithCollideMaterial(HIE_tdstSuperObject_*
     unsigned int xTestedMask;
     unsigned int ulMode;
     MTH3D_tdstVector_ stVectorSave;
-    /* TODO: decompile from asm/... */
+    bCompute = 0;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (g_stCollideParameterPoint.xX != p_stValue->uParam.stVectorValue.xX || g_stCollideParameterPoint.xY != p_stValue->uParam.stVectorValue.xY || g_stCollideParameterPoint.xZ != p_stValue->uParam.stVectorValue.xZ) {
+        *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_stValue->uParam.stVectorValue.xX;
+        bCompute = 1;
+        *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_stValue->uParam.stVectorValue.xY;
+        *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_stValue->uParam.stVectorValue.xZ;
+    }
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (g_stCollideParameterVector.xX != p_stValue->uParam.stVectorValue.xX || g_stCollideParameterVector.xY != p_stValue->uParam.stVectorValue.xY || g_stCollideParameterVector.xZ != p_stValue->uParam.stVectorValue.xZ) {
+        *(int*)&g_stCollideParameterVector.xX = *(int*)&p_stValue->uParam.stVectorValue.xX;
+        bCompute = 1;
+        *(int*)&g_stCollideParameterVector.xY = *(int*)&p_stValue->uParam.stVectorValue.xY;
+        *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_stValue->uParam.stVectorValue.xZ;
+    }
+    if (!fn_bIsTransitionInProgress()) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        ulMode = p_stValue->uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        xTestedMask = (unsigned short)p_stValue->uParam.lValue;
+        if (bCompute || g_ulCollideTimeCounter != g_stEngineStructure.stEngineTimer.ulCurrentTimerCount || g_ulMode != ulMode || g_ulTypeMode != 1) {
+            int* pVecY = (int*)&g_stCollideParameterVector.xY;
+            int* pVecZ = (int*)&g_stCollideParameterVector.xZ;
+            *(int*)&stVectorSave.xX = *(int*)&g_stCollideParameterVector.xX;
+            *(int*)&stVectorSave.xY = *pVecY;
+            *(int*)&stVectorSave.xZ = *pVecZ;
+            g_xMask = xTestedMask;
+            g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            g_ulMode = ulMode;
+            g_ulTypeMode = 1;
+            fn_vComputeCollideResult(p_SuperObjPerso, xTestedMask);
+            *(int*)&g_stCollideParameterVector.xX = *(int*)&stVectorSave.xX;
+            *pVecY = *(int*)&stVectorSave.xY;
+            *pVecZ = *(int*)&stVectorSave.xZ;
+            g_xMask = 0;
+        }
+    }
+    g_ulOverRideRayTraceSpoMask = 0x40;
+    *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&g_stCollideResultPoint.xX;
+    *(int*)&p_stValue->uParam.stVectorValue.xY = *(int*)&g_stCollideResultPoint.xY;
+    *(int*)&p_stValue->uParam.stVectorValue.xZ = *(int*)&g_stCollideResultPoint.xZ;
+    p_stValue->eType = (tdeVariableType_)21;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2240–2300 */
@@ -2298,6 +2393,51 @@ tdstNodeInterpret_* fn_p_stVectorAndAngle(HIE_tdstSuperObject_* p_SuperObjPerso,
     /* TODO: decompile from asm/... */
 }
 
+/* Recovered DNM_stDynamics layout (DNMDynam.c); blocks not used here are
+ * kept as padding. */
+struct DNM_stDynamicsBaseBlock {
+    int m_lObjectType; /* +0x0 */
+    int m_pCurrentIdCard; /* +0x4 */
+    unsigned int ulFlags; /* +0x8 */
+    unsigned int ulEndFlags; /* +0xc */
+    float m_xGravity; /* +0x10 */
+    float m_xSlopeLimit; /* +0x14 */
+    float m_xCosSlope; /* +0x18 */
+    float m_xSlide; /* +0x1c */
+    float m_xRebound; /* +0x20 */
+    MTH3D_tdstVector_ m_stImposeSpeed; /* +0x24 */
+    MTH3D_tdstVector_ m_stProposeSpeed; /* +0x30 */
+    MTH3D_tdstVector_ m_stPreviousSpeed; /* +0x3c */
+    MTH3D_tdstVector_ m_stScale; /* +0x48 */
+    MTH3D_tdstVector_ m_stSpeedAnim; /* +0x54 */
+    unsigned char _pad60[0x170 - 0x60]; /* +0x60 */
+};
+struct DNM_stDynamicsAdvancedBlock {
+    float m_xInertiaX; /* +0x0 */
+    float m_xInertiaY; /* +0x4 */
+    float m_xInertiaZ; /* +0x8 */
+    float m_xStreamPrority; /* +0xc */
+    float m_xStreamFactor; /* +0x10 */
+    float m_xSlideFactorX; /* +0x14 */
+    float m_xSlideFactorY; /* +0x18 */
+    float m_xSlideFactorZ; /* +0x1c */
+    float m_xPreviousSlide; /* +0x20 */
+    MTH3D_tdstVector_ m_stMaxSpeed; /* +0x24 */
+    MTH3D_tdstVector_ m_stStreamSpeed; /* +0x30 */
+    unsigned char _pad3c[0x90 - 0x3c]; /* +0x3c */
+};
+struct DNM_stDynamicsComplexBlock {
+    float m_xTiltIntensity; /* +0x0 */
+    float m_xTiltInertia; /* +0x4 */
+    float m_xTiltOrigin; /* +0x8 */
+};
+struct DNM_stDynamics {
+    DNM_stDynamicsBaseBlock m_tdstDynamicsBaseBlock; /* +0x0 */
+    DNM_stDynamicsAdvancedBlock m_tdstDynamicsAdvancedBlock; /* +0x170 */
+    DNM_stDynamicsComplexBlock m_tdstDynamicsComplexBlock; /* +0x200 */
+};
+extern "C" float tanf(float);
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2552–2740 */
 /* addr: 0x00218b10  size: 780 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -2365,14 +2505,121 @@ tdstNodeInterpret_* fn_p_stVectorAndAngle(HIE_tdstSuperObject_* p_SuperObjPerso,
  */
 tdstNodeInterpret_* fn_p_GetMechanicParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    MTH3D_tdstVector_ stStreamSpeed;
-    MTH3D_tdstVector_ stSpeedLimit;
-    float xSlopeLimit;
-    tdeFuncId_ eFuncId;
-    HIE_tdstSuperObject_* hNewSuperObjPerso;
-    tdstDynam_* h_Dynam;
     DNM_stDynamics* pstDynamic;
-    /* TODO: decompile from asm/... */
+    tdstDynam_* h_Dynam;
+    HIE_tdstSuperObject_* hNewSuperObjPerso;
+    tdeFuncId_ eFuncId;
+    float xSlopeLimit;
+    MTH3D_tdstVector_ stSpeedLimit;
+    MTH3D_tdstVector_ stStreamSpeed;
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    h_Dynam = (tdstDynam_*)hNewSuperObjPerso->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL || fn_p_stDynamGetDynamics(h_Dynam) == NULL) {
+        p_stValue->uParam.lValue = 0;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    }
+    pstDynamic = fn_p_stDynamGetDynamics(h_Dynam);
+    switch (eFuncId) {
+    case 308:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsBaseBlock.m_xGravity;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 309:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsBaseBlock.m_xSlide;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 310:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsBaseBlock.m_xRebound;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 311:
+        xSlopeLimit = tanf(0.017453292f * pstDynamic->m_tdstDynamicsBaseBlock.m_xSlopeLimit);
+        p_stValue->uParam.xValue = xSlopeLimit;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 312:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaX;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 313:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaY;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 314:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xInertiaZ;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 315:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsComplexBlock.m_xTiltIntensity;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 316:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsComplexBlock.m_xTiltInertia;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 317:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsComplexBlock.m_xTiltOrigin;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 318:
+        {
+            int* pVecY = (int*)&stSpeedLimit.xY;
+            int* pVecZ = (int*)&stSpeedLimit.xZ;
+            *(int*)&stSpeedLimit.xX = *(int*)&pstDynamic->m_tdstDynamicsAdvancedBlock.m_stMaxSpeed.xX;
+            *pVecY = *(int*)&pstDynamic->m_tdstDynamicsAdvancedBlock.m_stMaxSpeed.xY;
+            *pVecZ = *(int*)&pstDynamic->m_tdstDynamicsAdvancedBlock.m_stMaxSpeed.xZ;
+            *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&stSpeedLimit.xX;
+            *(int*)&p_stValue->uParam.stVectorValue.xY = *pVecY;
+            *(int*)&p_stValue->uParam.stVectorValue.xZ = *pVecZ;
+        }
+        p_stValue->eType = (tdeVariableType_)21;
+        return p_stTree;
+    case 319:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamPrority;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 320:
+        {
+            int* pVecY = (int*)&stStreamSpeed.xY;
+            int* pVecZ = (int*)&stStreamSpeed.xZ;
+            *(int*)&stStreamSpeed.xX = *(int*)&pstDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xX;
+            *pVecY = *(int*)&pstDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xY;
+            *pVecZ = *(int*)&pstDynamic->m_tdstDynamicsAdvancedBlock.m_stStreamSpeed.xZ;
+            *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&stStreamSpeed.xX;
+            *(int*)&p_stValue->uParam.stVectorValue.xY = *pVecY;
+            *(int*)&p_stValue->uParam.stVectorValue.xZ = *pVecZ;
+        }
+        p_stValue->eType = (tdeVariableType_)21;
+        return p_stTree;
+    case 321:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xStreamFactor;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 322:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xSlideFactorX;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 323:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xSlideFactorY;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 324:
+        p_stValue->uParam.xValue = pstDynamic->m_tdstDynamicsAdvancedBlock.m_xSlideFactorZ;
+        p_stValue->eType = (tdeVariableType_)8;
+        return p_stTree;
+    case 326:
+        *(int*)&p_stValue->uParam.stVectorValue.xX = *(int*)&pstDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xX;
+        *(int*)&p_stValue->uParam.stVectorValue.xY = *(int*)&pstDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xY;
+        *(int*)&p_stValue->uParam.stVectorValue.xZ = *(int*)&pstDynamic->m_tdstDynamicsBaseBlock.m_stSpeedAnim.xZ;
+        p_stValue->eType = (tdeVariableType_)21;
+        return p_stTree;
+    default:
+        fn_vOnAIErm_M_UpdateLastError(39, NULL);
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Functio1.cxx lines 2744–2804 */

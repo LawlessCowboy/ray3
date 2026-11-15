@@ -1601,6 +1601,31 @@ void fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO)
     }
 }
 
+extern HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter);
+extern void HIE_fn_vApplyFunctionOnHierarchy(HIE_tdstSuperObject_* _hSprObj, void (*_fn_vApplyFunction)(HIE_tdstSuperObject_*));
+extern int SND_fn_s32SendRequestSound(int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int));
+
+inline void TRA_vChangeFather(HIE_tdstSuperObject_* hFather, HIE_tdstSuperObject_* hChild)
+{
+    HIE_tdstSuperObject_* hTmp;
+    if ((hTmp = hChild->hNextBrotherDyn) != 0) hTmp->hPrevBrotherDyn = hChild->hPrevBrotherDyn;
+    if (hChild->hPrevBrotherDyn) hChild->hPrevBrotherDyn->hNextBrotherDyn = hChild->hNextBrotherDyn;
+    if (hChild->hFatherDyn) { hChild->hFatherDyn->lNumberOfElementsDyn--;
+    if (hChild->hFatherDyn->hFirstElementDyn == hChild) hChild->hFatherDyn->hFirstElementDyn = hChild->hNextBrotherDyn;
+    if (hChild->hFatherDyn->hLastElementDyn == hChild) hChild->hFatherDyn->hLastElementDyn = hChild->hPrevBrotherDyn;
+    } hChild->hNextBrotherDyn = 0;
+    hChild->hPrevBrotherDyn = 0;
+    hChild->hFatherDyn = 0;
+    hChild->hNextBrotherDyn = 0;
+    hChild->hPrevBrotherDyn = hFather->hLastElementDyn;
+    hChild->hFatherDyn = hFather;
+    if (hFather->hFirstElementDyn == 0) hFather->hFirstElementDyn = hChild;
+    else hFather->hLastElementDyn->hNextBrotherDyn = hChild;
+    hFather->hLastElementDyn = hChild;
+    hFather->lNumberOfElementsDyn++;
+    
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 201–244 */
 /* addr: 0x0028d4f0  size: 728 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1629,7 +1654,19 @@ void fn_vInitTransitionHierarchy(void)
 {
     SECT_tdstSector_* hTransitionSector;
     HIE_tdstSuperObject_* hTransitionSectorSO;
-    /* TODO: decompile from asm/... */
+
+    hTransitionSectorSO = GAM_fn_hGetCurrentSector(g_stEngineStructure.h_StdCamCaracter);
+    hTransitionSector = hTransitionSectorSO->hLinkedObject.p_stSector;
+    g_xTransitionSector = hTransitionSector->xTransition;
+    hTransitionSector->stListOfSectorsInCollisionInteraction.lNumberOfElementsOpt = 0;
+    hTransitionSector->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt = 0;
+    hTransitionSector->stListOfSectorsInActivityInteraction.lNumberOfElementsOpt = 0;
+    HIE_fn_vApplyFunctionOnHierarchy((HIE_tdstSuperObject_*)gp_stDynamicWorld, fn_vPlugMicroOnSO);
+    SND_fn_s32SendRequestSound(-1, -1, g_lSoundObjectTypeAmbiance, hTransitionSector->hTransitionSoundEvent, 0, 0);
+    ((HIE_tdstSuperObject_*)gp_stActualWorld)->hFirstElementDyn = 0; ((HIE_tdstSuperObject_*)gp_stActualWorld)->hLastElementDyn = 0; ((HIE_tdstSuperObject_*)gp_stActualWorld)->lNumberOfElementsDyn = 0;
+    TRA_vChangeFather((HIE_tdstSuperObject_*)gp_stActualWorld, (HIE_tdstSuperObject_*)gp_stDynamicWorld);
+    TRA_vChangeFather((HIE_tdstSuperObject_*)gp_stActualWorld, (HIE_tdstSuperObject_*)gp_stInactiveDynamicWorld);
+    TRA_vChangeFather((HIE_tdstSuperObject_*)gp_stActualWorld, hTransitionSectorSO);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\transition.c lines 331–341 */
