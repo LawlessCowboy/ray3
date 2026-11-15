@@ -55,3 +55,9 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ago/AGO3.cp
 # a_Cutpoint[n].Position +0x34/+0x38/+0x3c member offsets unfolded, addiu a1,s5,0x34;
 # addu a1,a1,n*52; sw zero,0(a1)); all 13 other recorded matches still MATCH, 0 lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c
+# GliGlou/Drivers/PS2GL/Src/SendMat.c (was 3.0.3-pad7b): +1
+# (GLI_DRV_SendMaterialToViewport, retail keeps the
+# a_stMultiMaterial[stage].ulSetMaterialFunction +0xcc member offset unfolded,
+# addiu v1,s5,0xcc; addu v1,v1,stage*80; lw v1,0(v1)); all 17 other recorded
+# matches still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c

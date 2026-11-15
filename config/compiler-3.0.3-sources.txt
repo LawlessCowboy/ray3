@@ -275,3 +275,14 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/C
 # recorded under 3.0.1 still MATCH, plus those 3 (15/20). Process also needs
 # the unfold build (addiu a2,s0,0x28 for &m_pGrids[i]) but does not match yet.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/WaterFx.cpp
+# AI/AIGame/CAM_Tool.c: CAM_fn_vComputeAnglesBetweenTwoVectors (with the inlined
+# CAM_fn_vCheckValidityOfComputedAngles helper) matches 400/400 only under 3.0.3,
+# which schedules the vertical-angle reload after the pi/2 constant's lui as
+# retail does; 3.0.1 issues the lwc1 first. The 14 other recorded matches in the
+# file are unchanged under 3.0.3 (15/20).
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c
+# GliGlou/Drivers/PS2GL/Src/SendMat.c: GLI_vSendStaticMaterialToViewport's
+# MTH_M_xRealToLong conversions are scheduled as retail only under 3.0.3
+# (3.0.1 issues the zero-extension right after the asm mfc1). All 16 recorded
+# matches still MATCH under 3.0.3; +1 match.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c

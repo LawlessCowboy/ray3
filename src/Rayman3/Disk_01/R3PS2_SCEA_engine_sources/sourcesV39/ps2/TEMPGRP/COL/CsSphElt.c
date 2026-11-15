@@ -625,6 +625,27 @@ void COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, 
     }
 }
 
+/* Swap the enlarged sphere in (radius and centre) unless it is already used. */
+#define COL_M_vUseEnlargeSphere(_p_stGV)                         \
+    if (!(_p_stGV)->bUseEnlargeSphere)                           \
+    {                                                            \
+        float _xRadius;                                          \
+        MTH3D_tdstVector_ _stCenter;                             \
+        _xRadius = (_p_stGV)->xDynamicRadius;                    \
+        (_p_stGV)->xDynamicRadius = (_p_stGV)->xSwapRadius;      \
+        (_p_stGV)->xSwapRadius = _xRadius;                       \
+        *(int*)&_stCenter.xX = *(int*)&(_p_stGV)->stDinST0Point.xX; \
+        *(int*)&_stCenter.xY = *(int*)&(_p_stGV)->stDinST0Point.xY; \
+        *(int*)&_stCenter.xZ = *(int*)&(_p_stGV)->stDinST0Point.xZ; \
+        *(int*)&(_p_stGV)->stDinST0Point.xX = *(int*)&(_p_stGV)->stSwapDinST0Point.xX; \
+        *(int*)&(_p_stGV)->stDinST0Point.xY = *(int*)&(_p_stGV)->stSwapDinST0Point.xY; \
+        *(int*)&(_p_stGV)->stDinST0Point.xZ = *(int*)&(_p_stGV)->stSwapDinST0Point.xZ; \
+        *(int*)&(_p_stGV)->stSwapDinST0Point.xX = *(int*)&_stCenter.xX; \
+        *(int*)&(_p_stGV)->stSwapDinST0Point.xY = *(int*)&_stCenter.xY; \
+        *(int*)&(_p_stGV)->stSwapDinST0Point.xZ = *(int*)&_stCenter.xZ; \
+        (_p_stGV)->bUseEnlargeSphere = 1;                        \
+    }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 387–552 */
 /* addr: 0x00251aa0  size: 524 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -734,7 +755,114 @@ unsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(C
     MTH3D_tdstVector_* p_stVertex3;
     MTH3D_tdstVector_* p_stVertex2;
     MTH3D_tdstVector_* p_stVertex1;
-    /* TODO: decompile from asm/... */
+
+    result = 1;
+
+    pTriIndex = p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesTripled[p_stGV->xStaticIndexedTriangleIndex].a3_xIndex;
+    pVertex = p_stGV->p_stStaticColObj->d_stListOfPoints;
+
+    p_stNormal = &p_stGV->p_stStaticElementIndexedTriangles->d_stListOfFacesNormals[p_stGV->xStaticIndexedTriangleIndex];
+
+    p_stVertex1 = &pVertex[pTriIndex[0]];
+    p_stVertex2 = &pVertex[pTriIndex[1]];
+    p_stVertex3 = &pVertex[pTriIndex[2]];
+
+    COL_M_vUseEnlargeSphere(p_stGV);
+    xRadius = 1.01f * p_stGV->xDynamicRadius;
+    param0 = &p_stGV->stDinST0Point;
+
+    asm
+    {
+        .set noreorder
+        lwc1 $f6, 0x0(p_stVertex1)
+        lwc1 $f1, 0x0(p_stVertex2)
+        lwc1 $f2, 0x0(p_stVertex3)
+        lwc1 $f9, 0x0(param0)
+        mfc1 $a1, xRadius; mtc1 $a1, $f4
+        max.s $f5, $f6, $f1
+        min.s $f0, $f6, $f1
+        max.s $f5, $f5, $f2
+        min.s $f0, $f0, $f2
+        add.s $f5, $f5, $f4
+        sub.s $f0, $f0, $f4
+
+        c.lt.s $f5, $f9
+        bc1t LEnd
+        nop
+
+        c.lt.s $f9, $f0
+        bc1t LEnd
+        nop
+
+
+        lwc1 $f7, 0x4(p_stVertex1)
+        lwc1 $f1, 0x4(p_stVertex2)
+        lwc1 $f2, 0x4(p_stVertex3)
+        lwc1 $f10, 0x4(param0)
+        max.s $f5, $f7, $f1
+        min.s $f0, $f7, $f1
+        max.s $f5, $f5, $f2
+        min.s $f0, $f0, $f2
+        add.s $f5, $f5, $f4
+        sub.s $f0, $f0, $f4
+
+        c.lt.s $f5, $f10
+        bc1t LEnd
+        nop
+
+        c.lt.s $f10, $f0
+        bc1t LEnd
+        nop
+
+
+        lwc1 $f8, 0x8(p_stVertex1)
+        lwc1 $f1, 0x8(p_stVertex2)
+        lwc1 $f2, 0x8(p_stVertex3)
+        lwc1 $f11, 0x8(param0)
+        max.s $f5, $f8, $f1
+        min.s $f0, $f8, $f1
+        max.s $f5, $f5, $f2
+        min.s $f0, $f0, $f2
+        add.s $f5, $f5, $f4
+        sub.s $f0, $f0, $f4
+
+        c.lt.s $f5, $f11
+        bc1t LEnd
+        nop
+
+        c.lt.s $f11, $f0
+        bc1t LEnd
+        nop
+
+
+        lwc1 $f0, 0x0(p_stNormal)
+        addiu result, result, 1
+        sub.s $f6, $f6, $f9
+        sub.s $f7, $f7, $f10
+        sub.s $f8, $f8, $f11
+        lwc1 $f1, 0x4(p_stNormal)
+        lwc1 $f2, 0x8(p_stNormal)
+
+        mula.s $f0, $f6
+        madda.s $f1, $f7
+        madd.s $f0, $f2, $f8
+        abs.s $f0, $f0
+
+        c.lt.s $f4, $f0
+        bc1t LEnd
+        nop
+
+
+        addiu result, $zero, 0
+    LEnd:
+        .set reorder
+    }
+
+    if (result == 0)
+        goto LTrue;
+    return 0;
+LTrue:
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CsSphElt.c lines 564–719 */

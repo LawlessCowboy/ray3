@@ -152,14 +152,24 @@ short INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, floa
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline float MTH_M_xMin(float _xA, float _xB)
+{
+    float _xResult;
+    asm { min.s _xResult, _xA, _xB }
+    return _xResult;
+}
+
+inline float MTH_M_xMax(float _xA, float _xB)
+{
+    float _xResult;
+    asm { max.s _xResult, _xA, _xB }
+    return _xResult;
+}
 unsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2)
 {
-    return (((p_stMinPoint1->xX > p_stMinPoint2->xX) ? p_stMinPoint1->xX : p_stMinPoint2->xX) <=
-            ((p_stMaxPoint1->xX < p_stMaxPoint2->xX) ? p_stMaxPoint1->xX : p_stMaxPoint2->xX)) &&
-           (((p_stMinPoint1->xY > p_stMinPoint2->xY) ? p_stMinPoint1->xY : p_stMinPoint2->xY) <=
-            ((p_stMaxPoint1->xY < p_stMaxPoint2->xY) ? p_stMaxPoint1->xY : p_stMaxPoint2->xY)) &&
-           (((p_stMinPoint1->xZ > p_stMinPoint2->xZ) ? p_stMinPoint1->xZ : p_stMinPoint2->xZ) <=
-            ((p_stMaxPoint1->xZ < p_stMaxPoint2->xZ) ? p_stMaxPoint1->xZ : p_stMaxPoint2->xZ));
+    return (MTH_M_xMax(p_stMinPoint1->xX, p_stMinPoint2->xX) <= MTH_M_xMin(p_stMaxPoint1->xX, p_stMaxPoint2->xX)) &&
+           (MTH_M_xMax(p_stMinPoint1->xY, p_stMinPoint2->xY) <= MTH_M_xMin(p_stMaxPoint1->xY, p_stMaxPoint2->xY)) &&
+           (MTH_M_xMax(p_stMinPoint1->xZ, p_stMinPoint2->xZ) <= MTH_M_xMin(p_stMaxPoint1->xZ, p_stMaxPoint2->xZ));
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 139–178 */
@@ -816,7 +826,9 @@ unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_st
 {
     MTH3D_tdstVector_ stHit;
     float xDot;
+    float xVectABX;
     float xDivid;
+    float xVertexAX;
 
     if (!INT_fn_bFastRejectIntersectSegmentWithTriangle(p_stVertexA, p_stVectAB, p_stVertex1, p_stVertex2, p_stVertex3))
         return 0;
@@ -826,9 +838,13 @@ unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_st
     {
         xDivid = MTH_xDot3R(p_stNormal->xX, p_stVertexA->xX, p_stNormal->xY, p_stVertexA->xY, p_stNormal->xZ, p_stVertexA->xZ);
         xDivid = -((xDPlan + xDivid) / xDot);
+        /* Permuter-found (verified): retail loads both X components before
+         * the range test, and these locals' declaration order sets the FPRs. */
+        xVectABX = p_stVectAB->xX;
+        xVertexAX = p_stVertexA->xX;
         if ((xDivid >= 0.0f) && (xDivid <= 1.0f))
         {
-            stHit.xX = p_stVertexA->xX + xDivid * p_stVectAB->xX;
+            stHit.xX = xVertexAX + xDivid * xVectABX;
             stHit.xY = p_stVertexA->xY + xDivid * p_stVectAB->xY;
             stHit.xZ = p_stVertexA->xZ + xDivid * p_stVectAB->xZ;
             return INT_fn_bGetPointInTriangle(&stHit, p_stVertex1, p_stVertex2, p_stVertex3, p_stNormal);
@@ -895,7 +911,58 @@ unsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MT
  */
 unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stV1C, stV2C;
+    float xMinusRadius;
+    stV1C.xX = p_stVertex1->xX - p_stSphereCenter->xX; stV1C.xY = p_stVertex1->xY - p_stSphereCenter->xY; stV1C.xZ = p_stVertex1->xZ - p_stSphereCenter->xZ;
+    stV2C.xX = stV1C.xX + p_stVect12->xX; stV2C.xY = stV1C.xY + p_stVect12->xY; stV2C.xZ = stV1C.xZ + p_stVect12->xZ;
+
+    xMinusRadius = -xSphereRadius;
+    if (p_stVect12->xX > 0.0f)
+    {
+        if (stV1C.xX > xSphereRadius)
+            return 0;
+        if (stV2C.xX < xMinusRadius)
+            return 0;
+    }
+    else
+    {
+        if (stV1C.xX < xMinusRadius)
+            return 0;
+        if (stV2C.xX > xSphereRadius)
+            return 0;
+    }
+
+    if (p_stVect12->xY > 0.0f)
+    {
+        if (stV1C.xY > xSphereRadius)
+            return 0;
+        if (stV2C.xY < xMinusRadius)
+            return 0;
+    }
+    else
+    {
+        if (stV1C.xY < xMinusRadius)
+            return 0;
+        if (stV2C.xY > xSphereRadius)
+            return 0;
+    }
+
+    if (p_stVect12->xZ > 0.0f)
+    {
+        if (stV1C.xZ > xSphereRadius)
+            return 0;
+        if (stV2C.xZ < xMinusRadius)
+            return 0;
+    }
+    else
+    {
+        if (stV1C.xZ < xMinusRadius)
+            return 0;
+        if (stV2C.xZ > xSphereRadius)
+            return 0;
+    }
+
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1618–1675 */

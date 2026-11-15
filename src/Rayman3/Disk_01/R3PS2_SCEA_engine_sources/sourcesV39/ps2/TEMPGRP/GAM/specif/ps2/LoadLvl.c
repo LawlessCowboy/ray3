@@ -372,10 +372,12 @@ void Erm_fn_ClearLastError(int);
 void Erm_fn_v_UpdateLastError(int, int, int, int, int, int, int, int);
 
 /* The target writes COP0 register 24 (mtc0 $zero, $24); C cannot express it.
- * Spelled with the R5900 alias mtbpc, MWCC schedules it like retail did. */
+ * Spelled with the R5900 alias mtbpc, MWCC schedules it like retail did. 'asm volatile'
+ * also stops MWCC keeping &a_stFixViewportAttr[_ucIndex] in a saved register across
+ * fn_vDisplayFix's calls: retail recomputes it (and re-masks the index) for each call. */
 inline void LVL_vClearCop0Register24(void)
 {
-    asm { mtbpc zero }
+    asm volatile { mtbpc zero }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\specif\ps2\LoadLvl.c lines 68–100 */

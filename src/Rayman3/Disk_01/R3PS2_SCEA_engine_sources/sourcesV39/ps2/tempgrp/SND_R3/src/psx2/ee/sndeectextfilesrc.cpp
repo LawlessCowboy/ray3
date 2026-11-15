@@ -25,12 +25,12 @@ typedef struct CTextFile CTextFile;
 typedef struct CSrcFlow CSrcFlow;
 typedef struct CFlow CFlow;
 typedef struct CBankDesc CBankDesc;
-struct usnd::CUUID { int data[4]; };
-struct CFlow { int data[2]; };
-struct CBankDesc {
-    int data[8];
-    CResData* mfn_poAddCResData(const CUUID& ro_cuuid);
+struct usnd::CUUID {
+    CUUID(void);
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
 };
+struct CFlow { int data[2]; };
 
 typedef enum anon_enum_001bafa4 {
     E_INVALID_SIZE = -1,
@@ -126,6 +126,107 @@ struct CTextFileSrc : CTextFile {
     unsigned char mfn_bRead(sstring& ro_Sentence);
     char* mfn_pchParseChar(void) const;
     unsigned char mfn_bOpen(const char* pch_FilePath);
+};
+
+
+/* The usnd set CBankDesc derives from (see sndeecbankdesc.cpp); only the
+ * members this function needs are declared. */
+namespace usnd {
+struct streebase {
+    enum _Redbl {
+        _Red = 0,
+        _Black = 1
+    };
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        _Redbl m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        bool operator==(const iterator_base& ro_It) const { return _Ptr == ro_It._Ptr; }
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct binary_function {
+};
+
+template <class T> struct less : binary_function<T> {
+    bool operator()(const T& ro_Left, const T& ro_Right) const { return ro_Left < ro_Right; }
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        iterator(sTreeNode* po_Node);
+        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+    };
+    sTreeNode* _GetHead(void) const;
+    sTreeNode* _Lbound(const K& ro_Key) const;
+    iterator end(void) { return iterator(_GetHead()); }
+    spair<iterator, bool> insert(const V& ro_Value);
+    iterator lower_bound(const K& ro_Key) { return iterator(_Lbound(ro_Key)); }
+    iterator find(const K& ro_Key)
+    {
+        KFN o_Kfn;
+        iterator it = lower_bound(ro_Key);
+        return (it == end() || key_compare(ro_Key, o_Kfn(*it))) ? end() : it;
+    }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class CMP, class ALLOC>
+struct sset {
+    struct _Kfn {
+        _Kfn(void) {}
+        const K& operator()(const K& ro_Value) const;
+    };
+    typedef stree<K, K, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    iterator end(void) { return iterator(_Tr._HeadLink); }
+    iterator find(const K& ro_Key) { return _Tr.find(ro_Key); }
+    void insert(const K& ro_Value) { _Tr.insert(ro_Value); }
+    _Imp _Tr; /* +0x0 */
+};
+
+struct CIdObj;
+struct CIdObjPtrMgr {
+    static CIdObjPtrMgr& fs_roGetInst(void);
+    CIdObj* f_poGetIdObj(const CUUID& ro_Id);
+    unsigned int f_uiGetPendingReferences(CUUID* pa_Id, unsigned int ui_Nb);
+};
+struct CPS2IdObjLoader {
+    CIdObj* f_poLoadIdObj(const CUUID& ro_Id);
+    void f_vPreloadObjects(CUUID* pa_Id, unsigned int ui_Nb);
+};
+}
+using usnd::CPS2IdObjLoader;
+
+struct CBankDesc : usnd::sset<CResData*, usnd::less<CResData*>, usnd::sallocator<CResData*> > {
+    CResData* mfn_poAddCResData(const CUUID& ro_cuuid);
+    CPS2IdObjLoader* mroLoader; /* +0x10 */
+    usnd::sstring mostringName; /* +0x14 */
 };
 
 /* The functions below are in their original source-line order (retail
@@ -277,8 +378,31 @@ unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
  */
 CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
 {
-    CUUID aId[20];
-    int nb;
     CResData* po_Answer;
-    /* TODO: decompile from asm/... */
+
+    po_Answer = (CResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(ro_cuuid);
+
+    if (!po_Answer)
+    {
+        po_Answer = (CResData*)mroLoader->f_poLoadIdObj(ro_cuuid);
+        if (po_Answer)
+        {
+            CUUID aId[20];
+            int nb;
+
+            while ((nb = usnd::CIdObjPtrMgr::fs_roGetInst().f_uiGetPendingReferences(aId, 20)) != 0)
+            {
+                if (nb > 20)
+                    nb = 20;
+                mroLoader->f_vPreloadObjects(aId, nb);
+            }
+        }
+    }
+
+    if (find(po_Answer) == end())
+    {
+        insert(po_Answer);
+    }
+
+    return po_Answer;
 }

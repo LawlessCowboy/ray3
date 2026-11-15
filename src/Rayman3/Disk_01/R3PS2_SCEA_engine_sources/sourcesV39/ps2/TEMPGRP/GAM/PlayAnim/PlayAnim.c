@@ -3136,30 +3136,23 @@ void PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(HIE_tdstSuperObject_* _hSprObj)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline unsigned char PLA_fn_uDeformHelper(HIE_tdstSuperObject_* _hSprObj)
+{
+    if (_hSprObj->ulTypeOfLinkedObject == 2) {
+        if (_hSprObj->hLinkedObject.p_stCharacter->h_3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks != 0) { return 1; } else { return 0; }
+    }
+    return 0;
+}
+
 void PLA_fn_vRefreshGlobalMatrixUnderCharacter(HIE_tdstSuperObject_* _hSprObj)
 {
-    unsigned char lResult;
+    unsigned int lResult;
     HIE_tdstSuperObject_* hChild;
-
-    if (fn_ulStandardGameGetCustomBitsSO(_hSprObj) & 2)
-    {
-        lResult = 1;
-    }
-    else
-    {
-        lResult = 0;
-        if (_hSprObj->ulTypeOfLinkedObject == 2 && _hSprObj->hLinkedObject.p_stCharacter->h_3dData->stFrame3d.stDeformation.ulNbOfDeformationLinks != 0)
-        {
-            lResult = 1;
-        }
-    }
-    if (lResult)
-    {
+    if ((lResult = fn_ulStandardGameGetCustomBitsSO(_hSprObj) & 2) || PLA_fn_uDeformHelper(_hSprObj)) {
         hChild = _hSprObj->hFirstElementDyn;
-        while (hChild != NULL)
-        {
-            PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(hChild);
+        while (hChild != NULL) {
             hChild->hFatherDyn = _hSprObj;
+            PLA_fn_vRefreshGlobalMatrixOfAnimsHierarchy(hChild);
             hChild = hChild->hNextBrotherDyn;
         }
     }

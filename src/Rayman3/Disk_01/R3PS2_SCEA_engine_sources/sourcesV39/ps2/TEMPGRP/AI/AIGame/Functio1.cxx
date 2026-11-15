@@ -2840,7 +2840,7 @@ tdstNodeInterpret_* fn_p_GetBooleanInArray(HIE_tdstSuperObject_* p_SuperObjPerso
         ulIndexLastBit = ulValue & 0x1F;
         for (ulIndexFirstLong = ulFirstIndex; ulIndexFirstLong <= ulLastIndex; ulIndexFirstLong++) {
             if (fn_ucGetDsgVar(ucArrayId, (unsigned char)ulIndexFirstLong, p_stMind, p_stValue) != 1) { continue; }
-            ulValue = p_stValue->uParam.lValue;
+            unsigned int ulValue = p_stValue->uParam.lValue;
             ulIndexFirstBit = (ulIndexFirstLong == ulFirstIndex) ? ulIndexBit : 0;
             ulIndexLastLong = (ulIndexFirstLong == ulLastIndex) ? ulIndexLastBit : 0x1F;
             for (; ulIndexFirstBit <= ulIndexLastLong; ulIndexFirstBit++) {

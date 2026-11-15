@@ -266,6 +266,7 @@ float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* p_stTransform);
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale);
 void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV);
+void COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollision_* p_stGV);
 unsigned char COL_fn_bDetectCollisionStaticGeomObjWithStaticGeomObj(COL_tdstBoundingSphere_* _hDynamicGeometricObject, MAT_tdstTransformation_* _p_stDynamicGeometricObjectMatrix, void* _hStaticGeometricObject, MAT_tdstTransformation_* _p_stStaticGeometricObjectMatrix, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale, unsigned char _bHasABoxBoundingVolume);
 float MAT_fn_xGetMaxScaleTest(MAT_tdstTransformation_* _hTransform);
 
@@ -597,6 +598,24 @@ void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* 
     }
 }
 
+inline void COL_fn_vComputeCollisionStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* p_stGV)
+{
+    short xDynamicElementIndex;
+    if (p_stGV->ulSelectedCollisionCases & 0x1FFE000) {
+        for (xDynamicElementIndex = 0; xDynamicElementIndex < p_stGV->p_stDynamicColObj->xNbElements; xDynamicElementIndex++) {
+            switch (p_stGV->p_stDynamicColObj->d_xListOfElementsTypes[xDynamicElementIndex]) {
+            case 7:
+                if (p_stGV->ulSelectedCollisionCases & 0x1E0000) {
+                    p_stGV->p_stDynamicElementSpheres = ((COL_tdstElementSpheres_**)p_stGV->p_stDynamicColObj->d_stListOfElements)[xDynamicElementIndex];
+                    if (p_stGV->p_stDynamicElementSpheres->xNbSpheres)
+                        COL_fn_vCollideStaticElementSpheresWithStaticElements(p_stGV);
+                }
+                break;
+            }
+        }
+    }
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\CollGO.c lines 477–502 */
 /* addr: 0x0024ccb0  size: 432 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -628,5 +647,27 @@ void COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(COL_tdstGVForCollision_* 
  */
 void COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2(COL_tdstCollideObject_* _hGeometricObject1, MAT_tdstTransformation_* _p_stGeometricObjectStartMatrix1, MAT_tdstTransformation_* _p_stGeometricObjectEndMatrix1, COL_tdstCollideObject_* _hGeometricObject2, MAT_tdstTransformation_* _p_stGeometricObjectMatrix2, void* _p_vParameter1, short _sParameter2, unsigned char _bStaticGeomObjHasNoTransformationMatrix, unsigned char _bDynamicGeomObjHasZoomInsteadOfScale)
 {
-    /* TODO: decompile from asm/... */
+    COL_g_stGVForCol.bStaticGeomObjHasNoTransformationMatrix = _bStaticGeomObjHasNoTransformationMatrix;
+    COL_g_stGVForCol.bDynamicGeomObjHasZoomInsteadOfScale = _bDynamicGeomObjHasZoomInsteadOfScale;
+    COL_g_stGVForCol.p_stDynamicColObj = _hGeometricObject1;
+    COL_g_stGVForCol.p_stT0DynamicGeomObjMatrix = _p_stGeometricObjectEndMatrix1;
+    COL_g_stGVForCol.p_stT1DynamicGeomObjMatrix = _p_stGeometricObjectStartMatrix1;
+    COL_g_stGVForCol.p_stStaticColObj = _hGeometricObject2;
+    COL_g_stGVForCol.p_stStaticGeomObjMatrix = _p_stGeometricObjectMatrix2;
+    COL_g_stGVForCol.ulSelectedCollisionCases = 0x1FFFFFF;
+    COL_g_stGVForCol.p_vParameter1 = (int)_p_vParameter1;
+    COL_g_stGVForCol.sParameter2 = _sParameter2;
+
+
+    if (_hGeometricObject1 == NULL || _hGeometricObject2 == NULL || _hGeometricObject1->xNbPoints == 0 || _hGeometricObject2->xNbPoints == 0 || _hGeometricObject1->xNbElements == 0 || _hGeometricObject2->xNbElements == 0)
+        return;
+
+
+
+
+
+    COL_fn_vInitCollideStaticGeomObjWithStaticGeomObj(&COL_g_stGVForCol);
+
+
+    COL_fn_vComputeCollisionStaticGeomObjWithStaticGeomObj(&COL_g_stGVForCol);
 }

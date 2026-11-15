@@ -55,3 +55,10 @@ impPS2glMatrixMode 3.0.3-pad7b-unfold
 # float register rotation (f6/f7/f8). The unit stays on 3.0.1, which its five
 # recorded matches were verified under.
 INT_fn_bDetectIntersectSegmentWithTriangle 3.0.3-pad7b
+#
+# TEMPGRP/COL/Inters.c (3.0.1): INT_fn_bIntersectBoxWithBox is three
+# max.s/min.s compares. Under 3.0.1 the MTH_M_xMax/xMin asm wrappers get a
+# hazard nop after each max.s (184/172 bytes, EQUIVALENT only) that no source
+# variant removes; under pad7b it matches 172/172. The unit stays on 3.0.1,
+# which its other recorded matches were verified under.
+INT_fn_bIntersectBoxWithBox 3.0.3-pad7b

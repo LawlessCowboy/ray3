@@ -708,25 +708,33 @@ void IPT_fn_vResetIPTValueToDefault(IPT_tdstEntryElement_* _hElement)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+static inline char* IPT_fn_p_szGetNameOfKeyName(unsigned short uwKeyCode, unsigned char ucFrenchOrAmerican)
+{
+    int i;
+    char* szReturn = NULL;
+
+    for (i = 0; IPT_gd_hKeyAndPadDefine[i].uwBasedKey != 0xffff && uwKeyCode != IPT_gd_hKeyAndPadDefine[i].uwBasedKey; i++);
+
+    if (IPT_gd_hKeyAndPadDefine[i].uwBasedKey != 0xffff)
+    {
+        if (ucFrenchOrAmerican == 0)
+            szReturn = (char*)IPT_gd_hKeyAndPadDefine[i].p_szFrenchKey;
+    }
+
+    return szReturn;
+}
+
 char* IPT_fn_szGetStringOf(IPT_tdstEntryElement_* _hElement)
 {
-    char* szResult = 0;
-    int i;
-    short swKey;
-    unsigned short uwKey;
+    IPT_tdstKeyWordElement_* hNextElement;
 
-    if (_hElement->d_stKeyWordElementArray[0].u_ElementUnion.swKeyWord != -4074)
-        return 0;
-    swKey = _hElement->d_stKeyWordElementArray[2].u_ElementUnion.swKeyWord;
-    uwKey = (unsigned short)(swKey | 0x8000);
-    for (i = 0; IPT_gd_hKeyAndPadDefine[i].uwBasedKey != 0xFFFF; i++)
+    hNextElement = &_hElement->d_stKeyWordElementArray[0];
+    if (hNextElement->u_ElementUnion.swKeyWord == -4074)
     {
-        if (IPT_gd_hKeyAndPadDefine[i].uwBasedKey == uwKey)
-            break;
+        hNextElement += 2;
+        return IPT_fn_p_szGetNameOfKeyName((unsigned short)(hNextElement->u_ElementUnion.swKeyWord | 0x8000), 0);
     }
-    if (IPT_gd_hKeyAndPadDefine[i].uwBasedKey != 0xFFFF)
-        szResult = (char*)((int*)&IPT_gd_hKeyAndPadDefine[0].p_szFrenchKey)[i * 3];
-    return szResult;
+    return NULL;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_main.c lines 914–954 */

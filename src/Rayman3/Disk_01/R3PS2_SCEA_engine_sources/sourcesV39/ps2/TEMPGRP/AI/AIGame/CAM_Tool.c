@@ -3639,6 +3639,28 @@ unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MT
 }
 #pragma auto_inline reset
 
+/* Retail inlines this helper at line 467 of CAM_fn_vComputeAnglesBetweenTwoVectors; the
+   unused horizontal abs and the pointer parameters reproduce its store/reload of the angle. */
+inline void CAM_fn_vCheckValidityOfComputedAngles(MTH3D_tdstVector_* _p_stUnusedVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle)
+{
+    float xAbsHorizontalAngle, xAbsVerticalAngle;
+    float xPi = 3.1415927f;
+
+    xAbsHorizontalAngle = MTH_xAbs(*_p_xHorizontalAngle);
+
+    xAbsVerticalAngle = MTH_xAbs(*_p_xVerticalAngle);
+    if (xAbsVerticalAngle > 3.1415927f / 2.0f)
+    {
+        if (*_p_xVerticalAngle > 0.0f)
+            *_p_xVerticalAngle = xPi - *_p_xVerticalAngle;
+        else
+            *_p_xVerticalAngle = -xPi - *_p_xVerticalAngle;
+    }
+
+    *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle);
+    *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 463–468 */
 /* addr: 0x0020a7e0  size: 400 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3653,12 +3675,10 @@ unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MT
 #pragma auto_inline on
 void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
 {
-    float xPi = 3.1415927f;
-    float xValue;
-    float* pVert = _p_xVerticalAngle;
     *_p_xHorizontalAngle = CAM_fn_xComputeHorizontalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    *pVert = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    xValue = *_p_xVerticalAngle; if (MTH_xAbs(xValue) > 3.1415927f / 2.0f) { if (xValue > 0.0f) *_p_xVerticalAngle = xPi - xValue; else *_p_xVerticalAngle = -xPi - xValue; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
+    *_p_xVerticalAngle = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+
+    CAM_fn_vCheckValidityOfComputedAngles(_p_stUnusedVector, _p_xHorizontalAngle, _p_xVerticalAngle);
 }
 #pragma auto_inline reset
 

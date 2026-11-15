@@ -1934,14 +1934,16 @@ def coverage() -> dict:
 def print_coverage(result: dict) -> None:
     def pct(value: int, total: int) -> str:
         return f'{(100 * value / total):.4f}%' if total else 'n/a'
-    print(f"functions: {result['matched_functions']}/{result['total_functions']}")
+    print(f"functions: {result['matched_functions']}/{result['total_functions']} "
+          f"({result['total_functions'] - result['matched_functions']} unmatched)")
     if result.get('equivalent_functions'):
         print(f"register-equivalent (not matching): {result['equivalent_functions']}")
     print(f"code bytes: {result['code_bytes_matched']}/{result['code_bytes_total']} "
           f"({pct(result['code_bytes_matched'], result['code_bytes_total'])})")
     for category, part in result.get('split', {}).items():
         print(f"  {category + ':':8s} functions {part['matched_functions']}/{part['total_functions']}"
-              f" (+{part['equivalent_functions']} equivalent), code bytes "
+              f" ({part['total_functions'] - part['matched_functions']} unmatched,"
+              f" +{part['equivalent_functions']} equivalent), code bytes "
               f"{part['code_bytes_matched']}/{part['code_bytes_total']} "
               f"({pct(part['code_bytes_matched'], part['code_bytes_total'])})")
     print(f"data bytes: {result['data_bytes_matched']}/{result['data_bytes_total']} "

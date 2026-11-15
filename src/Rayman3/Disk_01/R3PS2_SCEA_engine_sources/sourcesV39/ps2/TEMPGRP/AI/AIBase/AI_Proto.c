@@ -3173,49 +3173,55 @@ unsigned char fn_bDoReflexPerso(HIE_tdstSuperObject_* p_SuperObjPerso)
  */
 void fn_vReinitDesignerVariablesWithFlags(AI_tdstMind_* p_stMind, tdeObjectTreeInit_ eObjIniType)
 {
-    char* ptrDst;
-    unsigned char ucVarId;
-    tdeDsgVarTypeId_ eDsgVarType;
-    unsigned int ulMyVarOffset;
-    tdstDsgVarInfo_* p_stDsgVarInfo;
-    char* ptrSrc;
-    unsigned int ulMyVarSize;
-    tdeObjectTreeInit_ eFlags;
-
     if (p_stMind != NULL)
     {
         if (p_stMind->p_stDsgMem != NULL)
         {
-            ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
-            ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
-            if (ptrSrc == NULL)
+            char* ptrSrc = NULL;
+            char* ptrDst = (char*)p_stMind->p_stDsgMem->p_cDsgMemBuffer;
+            unsigned char ucVarId;
+
+            if (p_stMind->p_stDsgMem->p_cDsgMemBufferInit == NULL)
+            {
                 ptrSrc = (char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit;
+            }
+            else
+            {
+                ptrSrc = (char*)p_stMind->p_stDsgMem->p_cDsgMemBufferInit;
+            }
 
             for (ucVarId = 0; ucVarId < p_stMind->p_stAIModel->p_stDsgVar->ucNbDsgVar; ucVarId++)
             {
-                p_stDsgVarInfo = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo + ucVarId;
-                eDsgVarType = p_stDsgVarInfo->eDsgVarTypeId;
+                tdeDsgVarTypeId_ eDsgVarType = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].eDsgVarTypeId;
+
                 if (eDsgVarType == eDsgVarType_List)
                 {
-                    ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-                    *(unsigned int*)(ptrDst + ulMyVarOffset + 4) = *(unsigned int*)(ptrSrc + ulMyVarOffset + 4);
-                    *(unsigned char*)(ptrDst + ulMyVarOffset) = 0;
-                    *(unsigned char*)(ptrDst + ulMyVarOffset + 1) = *(unsigned char*)(ptrSrc + ulMyVarOffset + 1);
-                    continue;
-                }
-                eFlags = p_stDsgVarInfo->eInitType;
-                if (eObjIniType > eFlags)
-                    continue;
-                ulMyVarOffset = p_stDsgVarInfo->ulOffsetInDsgMem;
-                if (fn_GetDsgVarType(eDsgVarType) == 42)
-                {
-                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, *(unsigned char*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem + 4));
+                    tdstList_* p_stDstList = (tdstList_*)(ptrDst + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
+                    tdstList_* p_stSrcList = (tdstList_*)(ptrSrc + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
+
+                    p_stDstList->p_hTabElt = p_stSrcList->p_hTabElt;
+                    p_stDstList->ucNbElt = 0;
+                    p_stDstList->ucMaxSize = p_stSrcList->ucMaxSize;
                 }
                 else
                 {
-                    ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+                    tdeObjectTreeInit_ eFlags = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].eInitType;
+
+                    if (eObjIniType <= eFlags)
+                    {
+                        unsigned int ulMyVarOffset = (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem;
+                        unsigned int ulMyVarSize;
+
+                        if (fn_GetDsgVarType(eDsgVarType) == 42)
+                        {
+                            tdstArray_* p_stArray = (tdstArray_*)((char*)p_stMind->p_stAIModel->p_stDsgVar->p_cDsgMemDefaultInit + (*p_stMind->p_stDsgMem->p_p_stDsgVar)->p_stDsgVarInfo[ucVarId].ulOffsetInDsgMem);
+                            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, p_stArray->ucMaxSize);
+                        }
+                        else
+                            ulMyVarSize = fn_ulSizeOfDsgVar(eDsgVarType, 0);
+                        memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
+                    }
                 }
-                memcpy(ptrDst + ulMyVarOffset, ptrSrc + ulMyVarOffset, ulMyVarSize);
             }
         }
     }

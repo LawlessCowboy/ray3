@@ -3,71 +3,15 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/IPT.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct IPT_tdstEntryElement_ IPT_tdstEntryElement_;
-typedef union tdu_KeyWordElementUnion_ tdu_KeyWordElementUnion_;
-typedef struct IPT_tdstKeyWordElement_ IPT_tdstKeyWordElement_;
-typedef struct IPT_tdstHistoricElement_ IPT_tdstHistoricElement_;
-typedef struct IPT_tdstCommandElement_ IPT_tdstCommandElement_;
 typedef struct anon_0 anon_0;
 typedef struct stDevice stDevice;
 typedef struct IPT_tdstKeyAndPadDefine_ IPT_tdstKeyAndPadDefine_;
-typedef struct MTH3D_tdstVector_ MTH3D_tdstVector_;
-typedef struct IPT_tdstPadReadingOutput_ IPT_tdstPadReadingOutput_;
 typedef struct IPT_tdstDevice_ IPT_tdstDevice_;
 typedef struct IPT_tdstScriptValue_ IPT_tdstScriptValue_;
 typedef struct IPT_tdstInput_ IPT_tdstInput_;
-
-struct IPT_tdstEntryElement_ {
-    unsigned int ulNumberOfKeyWordElement; /* +0x0 */
-    IPT_tdstKeyWordElement_* d_stKeyWordElementArray; /* +0x4 */
-    int p_szActionName; /* +0x8 */
-    int p_szEntryName; /* +0xc */
-    int lState; /* +0x10 */
-    float xAnalogicValue; /* +0x14 */
-    unsigned char bIsActivate; /* +0x18 */
-};
-
-union tdu_KeyWordElementUnion_ {
-    short swJoyNumber; /* +0x0 */
-    short swJoyAction; /* +0x0 */
-    short swJoyValueMin; /* +0x0 */
-    short swJoyValueMax; /* +0x0 */
-    short swPadNumber; /* +0x0 */
-    short swPadAction; /* +0x0 */
-    short swKey; /* +0x0 */
-    short swKeyWord; /* +0x0 */
-    short swMouseAction; /* +0x0 */
-    short swMouseValueMin; /* +0x0 */
-    short swMouseValueMax; /* +0x0 */
-    IPT_tdstEntryElement_* hEntryElement; /* +0x0 */
-    unsigned int ulNumberOfSequence; /* +0x0 */
-};
-
-struct IPT_tdstKeyWordElement_ {
-    tdu_KeyWordElementUnion_ u_ElementUnion; /* +0x0 */
-    tdu_KeyWordElementUnion_ u_ElementUnionDefault; /* +0x4 */
-    unsigned char ucResult; /* +0x8 */
-    unsigned char ucMinCounterInput; /* +0x9 */
-    unsigned char ucMaxCounterInput; /* +0xa */
-};
-
-struct IPT_tdstHistoricElement_ {
-    unsigned char bf2State; /* +0x0 */
-    unsigned char bf6DeviceType; /* +0x1 */
-    unsigned char ucCounter; /* +0x2 */
-    short swDeviceValue; /* +0x4 */
-};
-
-struct IPT_tdstCommandElement_ {
-    int p_szCommandName; /* +0x0 */
-    int p_szCommand; /* +0x4 */
-    int p_szHelpLine; /* +0x8 */
-    unsigned char ucNumberOfParamMin; /* +0xc */
-    unsigned char ucNumberOfParamMax; /* +0xd */
-    unsigned char ucState; /* +0xe */
-};
 
 struct anon_0 {
     unsigned char m_ucStatus; /* +0x0 */
@@ -88,22 +32,6 @@ struct IPT_tdstKeyAndPadDefine_ {
     unsigned short uwBasedKey; /* +0x0 */
     int p_szFrenchKey; /* +0x4 */
     int p_szAmericanKey; /* +0x8 */
-};
-
-struct MTH3D_tdstVector_ {
-    float xX; /* +0x0 */
-    float xY; /* +0x4 */
-    float xZ; /* +0x8 */
-};
-
-struct IPT_tdstPadReadingOutput_ {
-    MTH3D_tdstVector_ stGlobalVector; /* +0x0 */
-    short wHorizontalAxis; /* +0xc */
-    short wVerticalAxis; /* +0xe */
-    float xAnalogForce; /* +0x10 */
-    float xTrueAnalogForce; /* +0x14 */
-    float xRotationAngle; /* +0x18 */
-    int lSector; /* +0x1c */
 };
 
 struct IPT_tdstDevice_ {
@@ -183,71 +111,30 @@ unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement);
 unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement);
 unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement);
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 110–111 */
-/* addr: 0x002f5c10  size: 36 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 110
- *   +0x001c -> line 111
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
 unsigned char IPT_fn_bIsJustValidated(IPT_tdstEntryElement_* _hEntryElement)
 {
     return (_hEntryElement && (_hEntryElement->lState == 1)) ? (unsigned char)1 : (unsigned char)0;
 
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 115–116 */
-/* addr: 0x002f5be0  size: 48 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 115
- *   +0x0028 -> line 116
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char IPT_fn_bIsValidated(IPT_tdstEntryElement_* _hEntryElement)
 {
     return ((_hEntryElement != NULL) && (_hEntryElement->lState > 0)) ?
         (unsigned char)1 : (unsigned char)0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 120–121 */
-/* addr: 0x002f5ba0  size: 52 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 120
- *   +0x002c -> line 121
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char IPT_fn_bIsJustInvalidated(IPT_tdstEntryElement_* _hEntryElement)
 {
     return ((_hEntryElement != NULL) && (_hEntryElement->lState == -1)) ?
         (unsigned char)1 : (unsigned char)0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 125–126 */
-/* addr: 0x002f5b70  size: 40 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 125
- *   +0x0020 -> line 126
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char IPT_fn_bIsInvalidated(IPT_tdstEntryElement_* _hEntryElement)
 {
     return ((_hEntryElement == NULL) || (_hEntryElement->lState < 0)) ?
         (unsigned char)1 : (unsigned char)0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 149–152 */
-/* addr: 0x002f5b50  size: 28 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 149
- *   +0x0014 -> line 152
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
 {
     if (_hEntryElement != NULL)
@@ -255,29 +142,6 @@ float IPT_fn_xGetAnalogicValue(IPT_tdstEntryElement_* _hEntryElement)
     return 0.0f;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 161–179 */
-/* addr: 0x002f5aa0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 161
- *   +0x0004 -> line 162
- *   +0x0008 -> line 161
- *   +0x000c -> line 162
- *   +0x0010 -> line 163
- *   +0x0020 -> line 166
- *   +0x005c -> line 168
- *   +0x0060 -> line 169
- *   +0x0068 -> line 171
- *   +0x0070 -> line 172
- *   +0x0078 -> line 173
- *   +0x007c -> line 174
- *   +0x008c -> line 175
- *   +0x0090 -> line 176
- *   +0x0094 -> line 177
- *   +0x00a4 -> line 178
- *   +0x00a8 -> line 179
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char IPT_fn_bAKeyJustPressed(void)
 {
     unsigned short uwKeyCode;
@@ -305,27 +169,6 @@ unsigned char IPT_fn_bAKeyJustPressed(void)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 182–203 */
-/* addr: 0x002f59b0  size: 240 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 182
- *   +0x0004 -> line 186
- *   +0x0008 -> line 182
- *   +0x0024 -> line 186
- *   +0x0038 -> line 192
- *   +0x003c -> line 191
- *   +0x0040 -> line 192
- *   +0x0054 -> line 194
- *   +0x0058 -> line 196
- *   +0x00a0 -> line 197
- *   +0x00a8 -> line 198
- *   +0x00ac -> line 199
- *   +0x00b8 -> line 200
- *   +0x00c8 -> line 202
- *   +0x00cc -> line 203
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char IPT_fn_bAButtonPadJustPressed(void)
 {
     int j;
@@ -352,42 +195,34 @@ unsigned char IPT_fn_bAButtonPadJustPressed(void)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\Ipt\ipt_anal.c lines 37–49 */
-/* addr: 0x002f5910  size: 152 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 37
- *   +0x000c -> line 40
- *   +0x0010 -> line 41
- *   +0x0014 -> line 43
- *   +0x001c -> line 45
- *   +0x0028 -> line 46
- *   +0x0088 -> line 49
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+/* Inline keyword dispatch (the whole call is one line in the retail line map). */
+inline unsigned char IPT_fn_bIsKeyWordValid(IPT_tdstKeyWordElement_* _hKeyWordElement)
+{
+    unsigned char ucReturn = 0;
+    unsigned char (*p_fn_bFunction)(IPT_tdstKeyWordElement_*);
+
+    if ((p_fn_bFunction = (unsigned char (*)(IPT_tdstKeyWordElement_*))IPT_p_fn_bIsKeyWordValid[(_hKeyWordElement->u_ElementUnion.swKeyWord) & 0x00ff]) != NULL)
+        ucReturn = p_fn_bFunction(_hKeyWordElement);
+    else
+    {
+        Erm_fn_ClearLastError(0);
+        Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
+    }
+
+    return ucReturn;
+}
+
 unsigned char IPT_fn_bIsEntryActionValid(IPT_tdstEntryElement_* _hEntryElement)
 {
-    /* The retail body keeps the keyword result in a saved register and masks
-     * it once on return (andi v0,s0,0xff), so the local is int-sized even
-     * though the debug record types it as unsigned char. */
     unsigned char ucReturn;
 
-    g_h_ActualEntryInput = _hEntryElement;
-    _hEntryElement->xAnalogicValue = 0.0f;
-    IPT_g_hNextParameter = _hEntryElement->d_stKeyWordElementArray;
     ucReturn = 0;
-    if (IPT_g_hNextParameter)
-    {
-        ucReturn = 0;
-        if (IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord])
-        {
-            ucReturn = IPT_p_fn_bIsKeyWordValid[(unsigned char)IPT_g_hNextParameter->u_ElementUnion.swKeyWord]();
-        }
-        else
-        {
-            Erm_fn_ClearLastError(0);
-            Erm_fn_v_UpdateLastError(14, g_ucIPTModuleId, 0, 12, -1, 255, 255, NULL);
-        }
-    }
+    g_h_ActualEntryInput = _hEntryElement;
+    g_h_ActualEntryInput->xAnalogicValue = 0.0f;
+
+    IPT_g_hNextParameter = &_hEntryElement->d_stKeyWordElementArray[0];
+
+    if (IPT_g_hNextParameter != NULL)
+        ucReturn = IPT_fn_bIsKeyWordValid(IPT_g_hNextParameter);
     return ucReturn;
 }

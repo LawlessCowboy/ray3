@@ -2514,6 +2514,8 @@ extern void SDL_Draw(unsigned int hSDL);
 extern void PS2glMatrixMode(unsigned int mode);
 extern void PS2glLoadIdentity(void);
 extern void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+extern void PS2glScissor(int x, int y, int width, int height);
+extern void impPS2glScissor(int x, int y, int width, int height);
 
 void GLI_DRV_vSetCommonGLRenderStates(void);
 extern void GLI_vClearSendMatStates(void);
@@ -2669,11 +2671,25 @@ GLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElement
  */
 void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
-    int height;
-    int width;
-    int y;
     int x;
-    /* TODO: decompile from asm/... */
+    int y;
+    int width;
+    int height;
+
+    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+
+    x = _p_stFixViewportAttr->dwClipLeftInPix;
+    y = _p_stFixViewportAttr->dwClipBottomInPix;
+
+    width = _p_stFixViewportAttr->dwClipRightInPix - x;
+    height = y - _p_stFixViewportAttr->dwClipTopInPix;
+
+    x = x * XRES / 640;
+    y = y * YRES / 480;
+    width = width * XRES / 640;
+    height = height * YRES / 480;
+    PS2glScissor(x, YRES - y, width, height);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 254–256 */
