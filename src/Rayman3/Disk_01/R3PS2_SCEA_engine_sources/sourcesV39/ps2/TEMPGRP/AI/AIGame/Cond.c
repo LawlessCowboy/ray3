@@ -3492,9 +3492,91 @@ tdstNodeInterpret_* fn_p_stComparisonCondition(HIE_tdstSuperObject_* p_SuperObjP
     float xParam1;
     int lIsFloat;
     tdeCondId_ eCondId;
-    tdstGetSetParam_ stParam2;
-    tdstGetSetParam_ stParam1;
-    /* TODO: decompile from asm/... */
+    tdstGetSetParam_ stParam1 = {0};
+    tdstGetSetParam_ stParam2 = {0};
+
+    eCondId = p_stTree[-1].uDummy.uId.eCondId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam1);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam2);
+
+    if (stParam1.eType == stParam2.eType) {
+        if (stParam1.eType == E_vt_Float) {
+            xParam1 = stParam1.uDummy.uParam.xValue;
+            xParam2 = stParam2.uDummy.uParam.xValue;
+        } else if (stParam1.eType == E_vt_Vector) {
+            switch (eCondId) {
+            case eCond_Equal:
+                *p_lValue = stParam1.uDummy.uParam.vValue.xX == stParam2.uDummy.uParam.vValue.xX && stParam1.uDummy.uParam.vValue.xY == stParam2.uDummy.uParam.vValue.xY && stParam1.uDummy.uParam.vValue.xZ == stParam2.uDummy.uParam.vValue.xZ;
+                break;
+            case eCond_Different:
+                *p_lValue = !(stParam1.uDummy.uParam.vValue.xX == stParam2.uDummy.uParam.vValue.xX && stParam1.uDummy.uParam.vValue.xY == stParam2.uDummy.uParam.vValue.xY && stParam1.uDummy.uParam.vValue.xZ == stParam2.uDummy.uParam.vValue.xZ);
+                break;
+            default:
+                *p_lValue = 0;
+                break;
+            }
+            return p_stTree;
+        } else {
+            switch (eCondId) {
+            case eCond_Equal:
+                *p_lValue = stParam1.uDummy.uParam.lValue == stParam2.uDummy.uParam.lValue;
+                break;
+            case eCond_Different:
+                *p_lValue = stParam1.uDummy.uParam.lValue != stParam2.uDummy.uParam.lValue;
+                break;
+            case eCond_Lesser:
+                *p_lValue = stParam1.uDummy.uParam.lValue < stParam2.uDummy.uParam.lValue;
+                break;
+            case eCond_Greater:
+                *p_lValue = stParam1.uDummy.uParam.lValue > stParam2.uDummy.uParam.lValue;
+                break;
+            case eCond_LesserOrEqual:
+                *p_lValue = stParam1.uDummy.uParam.lValue <= stParam2.uDummy.uParam.lValue;
+                break;
+            case eCond_GreaterOrEqual:
+                *p_lValue = stParam1.uDummy.uParam.lValue >= stParam2.uDummy.uParam.lValue;
+                break;
+            default:
+                *p_lValue = 0;
+                break;
+            }
+            return p_stTree;
+        }
+    } else {
+        if (stParam1.eType == E_vt_Float) {
+            xParam1 = (stParam1.eType == E_vt_Float) ? stParam1.uDummy.uParam.xValue : (float)stParam1.uDummy.uParam.lValue;
+            xParam2 = (float)stParam2.uDummy.uParam.lValue;
+        } else {
+            xParam1 = (float)stParam1.uDummy.uParam.lValue;
+            xParam2 = (stParam2.eType == E_vt_Float) ? stParam2.uDummy.uParam.xValue : (float)stParam2.uDummy.uParam.lValue;
+        }
+    }
+
+    switch (eCondId) {
+    case eCond_Equal:
+        *p_lValue = xParam1 == xParam2;
+        break;
+    case eCond_Different:
+        *p_lValue = xParam1 != xParam2;
+        break;
+    case eCond_Lesser:
+        *p_lValue = xParam1 < xParam2;
+        break;
+    case eCond_Greater:
+        *p_lValue = xParam1 > xParam2;
+        break;
+    case eCond_LesserOrEqual:
+        *p_lValue = xParam1 <= xParam2;
+        break;
+    case eCond_GreaterOrEqual:
+        *p_lValue = xParam1 >= xParam2;
+        break;
+    default:
+        *p_lValue = 0;
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Cond.c lines 249–339 */

@@ -2603,10 +2603,67 @@ unsigned char PLA_fn_bDoAnimPlayerForCharacter(HIE_tdstSuperObject_* p_stSuperOb
  */
 void PLA_fn_vComputeNextFrame(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    float xNextFrameNumber;
-    tdstAnim3d_* p_stCurrentAnim;
     tdst3dData_* h_Current3dData;
-    /* TODO: decompile from asm/... */
+    tdstAnim3d_* p_stCurrentAnim;
+    float xNextFrameNumber;
+
+    h_Current3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    {
+        /* Not original source, needs cleaning up: as in
+           PLA_fn_vRefreshFrameNumber, a block-scoped state local (absent from
+           the debug list) keeps the state in a callee-saved register. */
+        tdstState_* h_CurrentState = h_Current3dData->h_CurrentState;
+
+        if (!h_CurrentState)
+            return;
+        p_stCurrentAnim = h_CurrentState->p_stAnim;
+        if (!p_stCurrentAnim)
+            return;
+
+        h_Current3dData->xLastFrame = h_Current3dData->xCurrentFrame;
+
+        if (g_bAnimConstantSpeed)
+            xNextFrameNumber = h_Current3dData->xCurrentFrame + 1.0f;
+        else
+            xNextFrameNumber = 0.001f * (float)(h_Current3dData->ucFrameRate * (g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - h_Current3dData->ulStartTime));
+
+        if (xNextFrameNumber >= (float)p_stCurrentAnim->uwNumberOfFrames)
+        {
+            if (!h_Current3dData->ucFlagEndOfAnim)
+            {
+                h_Current3dData->ulTimeDelay = MTH_M_xRealToLong((float)g_stEngineStructure.stEngineTimer.ulCurrentTimerCount - (float)h_Current3dData->ulStartTime - 1000.0f * (float)p_stCurrentAnim->uwNumberOfFrames / (float)h_Current3dData->ucFrameRate);
+                xNextFrameNumber = (float)p_stCurrentAnim->uwNumberOfFrames;
+            }
+            else
+            {
+                h_Current3dData->ulTimeDelay = 0;
+                xNextFrameNumber = 0.0f;
+                h_Current3dData->ulStartTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+            }
+        }
+        else
+        {
+            h_Current3dData->ulTimeDelay = 0;
+        }
+
+        if (p_stCurrentAnim->uwNumberOfFrames == 1 && !h_Current3dData->bStateJustModified && fn_hGetNextStateInState(h_CurrentState) == h_CurrentState)
+        {
+            h_Current3dData->bSkipCurrentFrame = 1;
+            h_Current3dData->xCurrentFrame = 0.0f;
+        }
+        else
+        {
+            h_Current3dData->xCurrentFrame = xNextFrameNumber;
+        }
+
+        h_Current3dData->ucFlagEndOfAnim = xNextFrameNumber >= (float)p_stCurrentAnim->uwNumberOfFrames;
+
+        if (!h_Current3dData->ucRepeatAnimation && (unsigned short)MTH_M_xRealToLong(h_Current3dData->xCurrentFrame) == p_stCurrentAnim->uwNumberOfFrames && !fn_hGetNextStateInState(h_CurrentState))
+            h_Current3dData->ucFlagEndState = 1;
+
+        h_Current3dData->bStateJustModified = 0;
+        h_Current3dData->ulTimePreviousFrame = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\PlayAnim.c lines 1735–1738 */

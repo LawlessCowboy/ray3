@@ -845,6 +845,86 @@ int HIE_bDetectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, M
 char HIE_cDetectObjectIntersectSegmentWithSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, char cTypeOfSearch, int* a_lHandleOnResult, short* p_NbOfObjectsFound);
 unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat);
 
+typedef struct COL_tdstIndexedSphere_ {
+    float xRadius; /* +0x0 */
+    GMT_tdstGameMaterial_* hMaterial; /* +0x4 */
+    short xCenterPoint; /* +0x8 */
+} COL_tdstIndexedSphere_;
+
+typedef struct COL_tdstElementSpheres_ {
+    COL_tdstIndexedSphere_* d_stListOfSpheres; /* +0x0 */
+} COL_tdstElementSpheres_;
+
+extern unsigned char HIE_fn_bLoadIdentity(void);
+extern short fn_xIntersectSegmentWithRepositioningSuperObject(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, HIE_tdstSuperObject_* _hSprObj, HIE_tdstPickInfo_* p_stPickInfo, short* p_xNbPickInfo);
+extern void COL_vGetNormalOfGeometricObjectElement(COL_tdstCollideObject_* hObject, short xElement, short xIndexOfElement, MTH3D_tdstVector_* p_stNormal);
+extern void COL_vGetGameMaterialOfIndexedTriangles(COL_tdstCollideObject_* hObject, short hElement, GMT_tdstGameMaterial_** p_hMaterial);
+extern GMT_tdstCollideMaterial_* GMT_fn_hGetCollideMaterial(GMT_tdstGameMaterial_* hMaterial);
+extern void MAT_fn_vApplyOnVector(MTH3D_tdstVector_* p_stDest, MAT_tdstTransformation_* hMatrix, MTH3D_tdstVector_* p_stSrc);
+
+#define HIE_M_vPopMatrix() \
+    if (HIE_g_lNbMatrixInStack) { \
+        HIE_g_lNbMatrixInStack--; \
+        g_p_stCurrentMatrix = HIE_g_hCurrentMatrix = HIE_g_a_hMatrixStack[HIE_g_lNbMatrixInStack - 1]; \
+    }
+
+#define MTH_SQR3_TO(_result, _x, _y, _z) \
+    asm { mula.s _x, _x }                  \
+    asm { madda.s _y, _y }                 \
+    asm { madd.s _result, _z, _z }
+#define MTH_SQRT_TO(_result, _value) \
+    asm { sqrt.s _result, _value }
+
+#define MTH3D_M_vSubVector(p_stDst, p_stA, p_stB) { (p_stDst)->xX = (p_stA)->xX - (p_stB)->xX; (p_stDst)->xY = (p_stA)->xY - (p_stB)->xY; (p_stDst)->xZ = (p_stA)->xZ - (p_stB)->xZ; }
+#define MTH3D_M_vMulScalarVector(p_stDst, xScalar, p_stSrc) { (p_stDst)->xX = (xScalar) * (p_stSrc)->xX; (p_stDst)->xY = (xScalar) * (p_stSrc)->xY; (p_stDst)->xZ = (xScalar) * (p_stSrc)->xZ; }
+
+inline float MTH3D_M_xNorm3(float xX, float xY, float xZ)
+{
+    float xSqr;
+    float xNorm;
+    MTH_SQR3_TO(xSqr, xX, xY, xZ);
+    MTH_SQRT_TO(xNorm, xSqr);
+    return xNorm;
+}
+
+#define MTH3D_M_vNormalizeVector(p_stVector) \
+    { \
+        float xNorm = MTH3D_M_xNorm3((p_stVector)->xX, (p_stVector)->xY, (p_stVector)->xZ); \
+        if (xNorm != 0.0f) \
+            MTH3D_M_vMulScalarVector(p_stVector, 1.0f / xNorm, p_stVector); \
+    }
+
+/* MatSp.h inline: the VU0 macro-mode instructions have no C form. */
+inline void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&Vtmp.xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&Vtmp.xZ = *(unsigned int*)&VectA->xZ;
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    ((unsigned int*)VectDest)[0] = *(unsigned int*)&Vtmp.xX; ((unsigned int*)VectDest)[1] = *(unsigned int*)&Vtmp.xY; ((unsigned int*)VectDest)[2] = *(unsigned int*)&Vtmp.xZ;
+}
+
+inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
+{
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&VectA->xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&VectA->xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&VectA->xZ;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 958–1023 */
 /* addr: 0x00320b50  size: 832 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -877,16 +957,66 @@ unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_st
  * compare a candidate object's line table as an extra checkpoint.
  */
 
+inline MAT_tdstTransformation_* HIE_fn_hGetSuperObjectGlobalMatrix(HIE_tdstSuperObject_* hSuperObj)
+{
+    return hSuperObj->hGlobalMatrix;
+}
+
 unsigned char HIE_bIntersectSegmentWithFirstSuperObject(MTH3D_tdstVector_* _p_stVertexA, MTH3D_tdstVector_* _p_stVectAB, HIE_tdstSuperObject_* hSprObj, MTH3D_tdstVector_* _p_stHit, MTH3D_tdstVector_* _p_stNormal, HIE_tdstSuperObject_** _p_hSprObjHit, GMT_tdstCollideMaterial_** _p_hColMat)
 {
     GMT_tdstGameMaterial_* hMaterial;
     float xNorm;
-    MTH3D_tdstVector_ stSphereCenter;
     MTH3D_tdstVector_ stNormal;
-    GLI_tdstDataOfElement_* p_stDataOfElement;
+    MTH3D_tdstVector_ stSphereCenter;
     COL_tdstCollideObject_* p_stCollObject;
+    GLI_tdstDataOfElement_* p_stDataOfElement;
     HIE_tdstPickInfo_ aDEF_stIntersInfo[3];
-    /* TODO: decompile from asm/... */
+    short xNbInters;
+    short xNbPickInfo;
+
+    xNbPickInfo = 0;
+    HIE_fn_bLoadIdentity();
+    xNbInters = fn_xIntersectSegmentWithRepositioningSuperObject(_p_stVertexA, _p_stVectAB, hSprObj, aDEF_stIntersInfo, &xNbPickInfo);
+    HIE_M_vPopMatrix();
+
+    if (xNbInters > 0)
+    {
+        p_stCollObject = aDEF_stIntersInfo[0].hCollideObject;
+        p_stDataOfElement = &aDEF_stIntersInfo[0].stPickedObject.aDEF_stDataOfElement[0];
+        if (aDEF_stIntersInfo[0].hSprObject->ulTypeOfLinkedObject & 0x67A)
+        {
+            *_p_hSprObjHit = aDEF_stIntersInfo[0].hSprObject;
+        }
+        else
+        {
+            *_p_hSprObjHit = NULL;
+        }
+        MTH3D_M_vCopyVector(_p_stHit, &p_stDataOfElement->stHit);
+
+        if (_p_hSprObjHit && ((short*)p_stCollObject->d_xListOfElementsTypes)[p_stDataOfElement->xElements] == 7)
+        {
+            MAT_fn_vApplyOnVertex(&stSphereCenter, HIE_fn_hGetSuperObjectGlobalMatrix(*_p_hSprObjHit),
+                &p_stCollObject->d_stListOfPoints[((COL_tdstElementSpheres_*)((int*)p_stCollObject->d_stListOfElements)[p_stDataOfElement->xElements])->d_stListOfSpheres[p_stDataOfElement->xIndexOfFace].xCenterPoint]);
+            MTH3D_M_vSubVector(_p_stNormal, _p_stHit, &stSphereCenter);
+            MTH3D_M_vNormalizeVector(_p_stNormal);
+        }
+        else
+        {
+            COL_vGetNormalOfGeometricObjectElement(p_stCollObject, p_stDataOfElement->xElements, p_stDataOfElement->xIndexOfFace, &stNormal);
+            MAT_fn_vApplyOnVector(_p_stNormal, (*_p_hSprObjHit)->hGlobalMatrix, &stNormal);
+            MTH3D_M_vNormalizeVector(_p_stNormal);
+        }
+
+        if (_p_hColMat)
+        {
+            hMaterial = NULL;
+            COL_vGetGameMaterialOfIndexedTriangles(p_stCollObject, p_stDataOfElement->xElements, &hMaterial);
+            if (hMaterial)
+                *_p_hColMat = GMT_fn_hGetCollideMaterial(hMaterial);
+        }
+        return 1;
+    }
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SPO\HiePick.c lines 1081–1298 */

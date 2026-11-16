@@ -1581,7 +1581,81 @@ void GLIPS2_vSendCharacterVisualSetToViewport(GEO_tdstVisualSet_* p_stVisualSet,
     SDC_VertexArrays_* pSDC;
     MAT_tdstTransformation_ stPrevMatrix;
     GEO_tdstGeometricObject_* p_stObj;
-    /* TODO: decompile from asm/... */
+
+    p_stObj = p_stVisualSet->d_p_stLodDefinitions[0].p_stGeometricObject;
+    GLI_BIG_GLOBALS_p_stObj = (int)p_stObj;
+    if (p_stObj == NULL)
+        return;
+
+    if ((GLI_BIG_GLOBALS_xGlobalAlpha == 0.0f) && ((lDrawModeMask & 8) != 8))
+        return;
+
+    if (p_stObj->pSDC_Data)
+    {
+        pSDC = (SDC_VertexArrays_*)p_stObj->pSDC_Data;
+        if (pSDC == NULL)
+            return;
+        if ((pSDC->OptType & 0xf) == 6)
+        {
+            if (*(unsigned char*)&p_stObj->ulType)
+            {
+                GLI_BIG_GLOBALS_lHierachDrawMask = lDrawModeMask;
+                GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+                stPrevMatrix = *g_p_stCurrentMatrix;
+                GEO_vTurnLookAt(p_stObj, (GLD_tdstViewportAttributes_*)g_p_stCurrentViewport, NULL, g_p_stCurrentMatrix);
+                if (Global_CharacterModuleBeingDisplayed)
+                {
+                    pScale = (float*)&(*(MAT_tdstTransformation_**)(Global_CharacterModuleBeingDisplayed + 0x24))->stScaleVector;
+                    pMatrix = (float*)&g_p_stCurrentMatrix->stTransformMatrix;
+                    pMatrix[0] *= pScale[0]; pMatrix[1] *= pScale[0]; pMatrix[2] *= pScale[0];
+                    pMatrix[4] *= pScale[1]; pMatrix[5] *= pScale[1]; pMatrix[6] *= pScale[1];
+                    pMatrix[8] *= pScale[2]; pMatrix[9] *= pScale[2]; pMatrix[10] *= pScale[2];
+                }
+                MAT_fn_vCompose(&GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix);
+                GLI_c_DrawUnoptimizedCharacter(p_stObj);
+                *g_p_stCurrentMatrix = stPrevMatrix;
+            }
+            else
+            {
+                GLI_c_DrawActorInstance(p_stObj);
+            }
+        }
+        else
+        {
+            if (*(unsigned char*)&p_stObj->ulType)
+            {
+                GLI_BIG_GLOBALS_lHierachDrawMask = lDrawModeMask;
+                GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+                stPrevMatrix = *g_p_stCurrentMatrix;
+                GEO_vTurnLookAt(p_stObj, (GLD_tdstViewportAttributes_*)g_p_stCurrentViewport, NULL, g_p_stCurrentMatrix);
+                MAT_fn_vCompose(&GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CameraMatrix, (MAT_tdstTransformation_*)GLI_BIG_GLOBALS_gs_st_CurrentMatrix);
+                GLI_xSendObjectElement((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport);
+                *g_p_stCurrentMatrix = stPrevMatrix;
+            }
+            else
+            {
+                GLI_BIG_GLOBALS_lHierachDrawMask = lDrawModeMask;
+                GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+                GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix = *HIE_fn_pGetCurrentInCamCoordsMatrix();
+                GLI_xSendObjectElement((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport);
+            }
+        }
+    }
+    else
+    {
+        GLI_BIG_GLOBALS_lHierachDrawMask = lDrawModeMask;
+        GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+        GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix = *HIE_fn_pGetCurrentInCamCoordsMatrix();
+        GLI_xSendObjectElement((GLD_tdstViewportAttributes_*)g_p_stCurrentViewport);
+    }
+
+    if (GLI_g_bDynShadowIsOn)
+    {
+        GLI_BIG_GLOBALS_lHierachDrawMask = lDrawModeMask;
+        GLI_BIG_GLOBALS_gs_st_CurrentMatrix = (int)g_p_stCurrentMatrix;
+        GLI_BIG_GLOBALS_gs_st_CurrentMatrixMultiplyedWithCameraMatrix = *HIE_fn_pGetCurrentInCamCoordsMatrix();
+        GLI_vDrawDynamicShadow();
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\MultiDRV\Src\Object.c lines 100–100 */

@@ -2927,23 +2927,102 @@ void internalFullScreenQuadJeffWithoutOptimization(unsigned int mask, float x1, 
  */
 void internalFullScreenQuadJeffSpecialNTSC_640_448(void)
 {
-    int Limit;
-    int iVertStrip;
-    unsigned long V2;
-    unsigned int X1;
-    anon_35 qworduv;
-    anon_35 qword2;
     anon_35 qword;
-    /* TODO: decompile from asm/...
-     *
-     * Retail structure (0x0017a750, 940 bytes): a 0xc0 stack frame with
-     * s0-s7 saved, the return address at 0x80(sp) and the GS packet buffer
-     * at 0x90(sp).  As in the PAL variant the function is a sequence of
-     * GsSendData(0xE, buffer) calls; the command byte of each packet is
-     * written to buffer+8 and the payload is built in the 16-byte union
-     * (see internalFullScreenQuadJeffSpecialPAL_512_512 for the packet
-     * layout and the GS register bit fields).
-     */
+    anon_35 qword2;
+    anon_35 qworduv;
+    unsigned int X1;
+    unsigned long V2;
+    int iVertStrip;
+    int Limit;
+
+    if (((unsigned long long *)&g_gsContext)[0x36])
+    {
+        GsUpdate();
+    }
+
+    qword.u64Data[1] = 0;
+    qword.u64Data[0] = 0;
+
+    qword.s.f3 = 1;
+    qword.s.f4 = 1;
+    qword.s.f0 = 1;
+    qword.s.f1 = 1;
+    qword.s.f2 = 1;
+
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.u64Data[0] = 0x110;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    qword.e.low3 = 6;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    qword.c.r = 0x80;
+    qword.c.g = 0x80;
+    qword.c.b = 0x80;
+    qword.c.a = 0x80;
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    X1 = 0x8080 - (g_stBufferInfo.iScreenWidth << 3);
+    V2 = (int)((g_stBufferInfo.iScreenHeight << 5) + 8);
+
+    qworduv.u64Data[1] = 0;
+    qworduv.u64Data[0] = 0;
+    qword2.u64Data[1] = 0;
+    qword2.u64Data[0] = 0;
+    qword.u64Data[1] = 0;
+
+    *(unsigned short *)(&qword.c.b) = 0x8000 - (g_stBufferInfo.iScreenHeight << 3);
+    qword.s.f5 = 0x1f40;
+
+    qword2.usData[1] = 0x8000 + g_stBufferInfo.iScreenHeight * 24;
+    qword2.s.f5 = 0x1f40;
+
+    Limit = (g_stBufferInfo.iScreenWidth >> 4) << 8;
+
+    for (iVertStrip = 0; iVertStrip < Limit; iVertStrip += 0x100)
+    {
+        qworduv.u64Data[0] = (unsigned long)(iVertStrip + 8) | ((unsigned long)8 << 16);
+        qworduv.ubData[8] = 3;
+        GsSendData(0xE, &qworduv);
+
+        qword.usData[0] = X1 + iVertStrip;
+        qword.ubData[8] = 5;
+        GsSendData(0xE, &qword);
+
+        qworduv.u64Data[0] = (unsigned long)(iVertStrip + 0x88) | (V2 << 16);
+        qworduv.ubData[8] = 3;
+        GsSendData(0xE, &qworduv);
+
+        qword2.usData[0] = X1 + iVertStrip + 0x80;
+        qword2.ubData[8] = 5;
+        GsSendData(0xE, &qword2);
+    }
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.PRMODE;
+    qword.ubData[8] = 0x1b;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext;
+    qword.ubData[8] = 0;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.TEST_1;
+    qword.ubData[8] = 0x47;
+    GsSendData(0xE, &qword);
+
+    qword.ubData[8] = 0x48;
+    GsSendData(0xE, &qword);
+
+    *(GSQword8 *)&qword = *(GSQword8 *)&g_gsContext.RGBAQ;
+    qword.ubData[8] = 1;
+    GsSendData(0xE, &qword);
+
+    GsFlushBuffer();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_Fragment.c lines 1190–1266 */

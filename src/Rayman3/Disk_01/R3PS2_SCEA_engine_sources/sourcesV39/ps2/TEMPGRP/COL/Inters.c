@@ -704,7 +704,78 @@ unsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVerte
  */
 unsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal)
 {
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stV0;
+    MTH3D_tdstVector_ stV1;
+    MTH3D_tdstVector_ stV2;
+    float xCross;
+
+    stV0.xX = p_stVertex0->xX - p_stPoint->xX; stV0.xY = p_stVertex0->xY - p_stPoint->xY; stV0.xZ = p_stVertex0->xZ - p_stPoint->xZ;
+    stV1.xX = p_stVertex1->xX - p_stPoint->xX; stV1.xY = p_stVertex1->xY - p_stPoint->xY; stV1.xZ = p_stVertex1->xZ - p_stPoint->xZ;
+    stV2.xX = p_stVertex2->xX - p_stPoint->xX; stV2.xY = p_stVertex2->xY - p_stPoint->xY; stV2.xZ = p_stVertex2->xZ - p_stPoint->xZ;
+
+    if (MTH_xAbs(p_stNormal->xZ) >= 0.57735026f)
+    {
+        xCross = MTH_xMulSubMul(stV0.xX, stV1.xY, stV0.xY, stV1.xX);
+        if ((xCross >= 0.0f) == (p_stNormal->xZ >= 0.0f))
+        {
+            xCross = MTH_xMulSubMul(stV1.xX, stV2.xY, stV1.xY, stV2.xX);
+            if ((xCross >= 0.0f) == (p_stNormal->xZ >= 0.0f))
+            {
+                xCross = MTH_xMulSubMul(stV2.xX, stV0.xY, stV2.xY, stV0.xX);
+                return (xCross >= 0.0f) == (p_stNormal->xZ >= 0.0f);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else if (MTH_xAbs(p_stNormal->xX) >= 0.57735026f)
+    {
+        xCross = MTH_xMulSubMul(stV0.xY, stV1.xZ, stV0.xZ, stV1.xY);
+        if ((xCross >= 0.0f) == (p_stNormal->xX >= 0.0f))
+        {
+            xCross = MTH_xMulSubMul(stV1.xY, stV2.xZ, stV1.xZ, stV2.xY);
+            if ((xCross >= 0.0f) == (p_stNormal->xX >= 0.0f))
+            {
+                xCross = MTH_xMulSubMul(stV2.xY, stV0.xZ, stV2.xZ, stV0.xY);
+                return (xCross >= 0.0f) == (p_stNormal->xX >= 0.0f);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        xCross = MTH_xMulSubMul(stV0.xZ, stV1.xX, stV0.xX, stV1.xZ);
+        if ((xCross >= 0.0f) == (p_stNormal->xY >= 0.0f))
+        {
+            xCross = MTH_xMulSubMul(stV1.xZ, stV2.xX, stV1.xX, stV2.xZ);
+            if ((xCross >= 0.0f) == (p_stNormal->xY >= 0.0f))
+            {
+                xCross = MTH_xMulSubMul(stV2.xZ, stV0.xX, stV2.xX, stV0.xZ);
+                return (xCross >= 0.0f) == (p_stNormal->xY >= 0.0f);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\COL\Inters.c lines 1055–1133 */

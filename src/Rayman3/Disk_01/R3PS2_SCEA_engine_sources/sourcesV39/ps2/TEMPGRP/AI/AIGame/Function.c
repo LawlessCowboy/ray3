@@ -5833,14 +5833,106 @@ int fn_lAddColor(int color1, int color2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline tdstNodeInterpret_* fn_p_stEvalRGB(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    int lBlue;
+    int lGreen;
+    int lRed;
+
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Alpha = 0;
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lRed);
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Red = (char)lRed;
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lGreen);
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Green = (char)lGreen;
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lBlue);
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Blue = (char)lBlue;
+    p_stValue->eType = E_vt_Color;
+    return p_stTree;
+}
+
+inline tdstNodeInterpret_* fn_p_stEvalRGBA(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    int lAlpha;
+
+    p_stTree = fn_p_stEvalRGB(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lAlpha);
+    *((char*)&p_stValue->uDummy.uParam.ColorValue + 3) = (char)lAlpha;
+    return p_stTree;
+}
+
 tdstNodeInterpret_* fn_p_stColorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     RGBAStruct_ rgba;
     int color1;
     int lValue;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    lValue = 0;
+    rgba.Color = 0;
+
+    switch (eFuncId)
+    {
+    case eFunc_ColorRedGreenBlueAlpha:
+        p_stValue->uDummy.uParam.ColorValue = 0;
+        p_stTree = fn_p_stEvalRGBA(p_SuperObjPerso, p_stTree, p_stValue);
+        return p_stTree;
+    case eFunc_ColorRedGreenBlue:
+        p_stValue->uDummy.uParam.ColorValue = 0;
+        p_stTree = fn_p_stEvalRGB(p_SuperObjPerso, p_stTree, p_stValue);
+        return p_stTree;
+    case eFunc_AddColor:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, p_stValue->uDummy.uParam.ColorValue); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddRed:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Red = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddGreen:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Green = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddBlue:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Blue = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddAlpha:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Alpha = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_ColorRed:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Red;
+        break;
+    case eFunc_ColorGreen:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Green;
+        break;
+    case eFunc_ColorBlue:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Blue;
+        break;
+    case eFunc_ColorAlpha:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Alpha;
+        break;
+    }
+
+    if (lValue < 0) lValue = 0; else if (lValue > 100) lValue = 100;
+    p_stValue->uDummy.uParam.lValue = lValue; p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2225–2244 */
 /* addr: 0x00213070  size: 140 bytes */

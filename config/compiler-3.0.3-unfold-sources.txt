@@ -61,3 +61,7 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/L
 # addiu v1,s5,0xcc; addu v1,v1,stage*80; lw v1,0(v1)); all 17 other recorded
 # matches still MATCH, 0 lost.
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c
+# HiePick.c: HIE_bIntersectSegmentWithFirstSuperObject gains (retail keeps the
+# d_stListOfSpheres[i].xCenterPoint +8 member offset unfolded, addiu a1,a1,8;
+# addu; lh 0(a1)); the other recorded matches in the file still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HiePick.c

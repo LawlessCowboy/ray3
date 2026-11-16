@@ -3871,6 +3871,21 @@ tdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, td
     return p_stTree;
 }
 
+/* MTH-style accumulator macros: mula.s/madda.s/madd.s and sqrt.s have no C
+   form under MWCC; only those instructions are asm. */
+#define LNK_M_vSubVector(_d, _a, _b) { MTH3D_tdstVector_* _pd = (_d); MTH3D_tdstVector_* _pa = (_a); MTH3D_tdstVector_* _pb = (_b); _pd->xX = _pa->xX - _pb->xX; _pd->xY = _pa->xY - _pb->xY; _pd->xZ = _pa->xZ - _pb->xZ; }
+inline float LNK_xNorm3f(float _xX, float _xY, float _xZ)
+{
+    float _xSq;
+    float _xR;
+    asm { mula.s _xX, _xX }
+    asm { madda.s _xY, _xY }
+    asm { madd.s _xSq, _xZ, _xZ }
+    asm { sqrt.s _xR, _xSq }
+    return _xR;
+}
+#define LNK_M_VECTOR_NORM_TO(_result, _vector) ((_result) = LNK_xNorm3f((_vector).xX, (_vector).xY, (_vector).xZ))
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 749–810 */
 /* addr: 0x002401e0  size: 856 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3924,7 +3939,52 @@ tdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperOb
     float xNorm;
     float xSpeed;
     tdstGetSetParam_ stValue;
-    /* TODO: decompile from asm/... */
+    LinkActorType_* p_link;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(p_stTree[-1].uDummy.uId.eFuncId), p_SuperObjPerso, &hNewSuperObjPerso);
+    vDirection.xX = 0.0f;
+    vDirection.xY = 0.0f;
+    vDirection.xZ = 0.0f;
+    p_link = fn_p_SPO2Link(p_SuperObjPerso);
+    if (p_link) {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stValue);
+        xSpeed = (stValue.eType == 8) ? stValue.uDummy.uParam.xValue : (float)stValue.uDummy.uParam.lValue;
+        if (xSpeed <= 0.0f)
+            xSpeed = p_link->xLaunchSpeed;
+        cp = p_link->ui_CutPointNb;
+        if (cp >= 2) {
+            vDirection.xX = p_link->a_Cutpoint[cp - 2].Position.xX - p_link->a_Cutpoint[cp - 1].Position.xX;
+            vDirection.xY = p_link->a_Cutpoint[cp - 2].Position.xY - p_link->a_Cutpoint[cp - 1].Position.xY;
+            vDirection.xZ = p_link->a_Cutpoint[cp - 2].Position.xZ - p_link->a_Cutpoint[cp - 1].Position.xZ;
+            LNK_M_VECTOR_NORM_TO(xNorm, vDirection);
+            xSpeed = p_link->ulLastFrameDuration ? xSpeed * p_link->ulLastFrameDuration / 1000.0f : 1.0f;
+            if (xNorm > 0.0f) {
+                if (cp == 2) {
+                    xNorm = LNK_xNorm3f(p_link->a_Cutpoint[0].Position.xX - p_link->a_Cutpoint[1].Position.xX, p_link->a_Cutpoint[0].Position.xY - p_link->a_Cutpoint[1].Position.xY, p_link->a_Cutpoint[0].Position.xZ - p_link->a_Cutpoint[1].Position.xZ);
+                    if (xNorm < 5.0f)
+                        xNorm = xNorm * (3.5f - xNorm / 2.0f);
+                }
+                xNorm = xSpeed / xNorm;
+                vDirection.xX = vDirection.xX * xNorm;
+                vDirection.xY = vDirection.xY * xNorm;
+                vDirection.xZ = vDirection.xZ * xNorm;
+            } else {
+                if (cp > 2)
+                    fn_DeleteCutPoint(p_link, cp - 2, cp - 2);
+                vDirection.xX = 0.0f;
+                vDirection.xY = 0.0f;
+                vDirection.xZ = 0.0f;
+            }
+        } else {
+            p_link->State = 2;
+            fn_StateConstructor(p_link);
+        }
+    }
+    ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xX = ((tdstRawVector*)&vDirection)->xX;
+    ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xY = ((tdstRawVector*)&vDirection)->xY;
+    ((tdstRawVector*)&p_stValue->uDummy.uParam.stVectorValue)->xZ = ((tdstRawVector*)&vDirection)->xZ;
+    p_stValue->eType = (tdeVariableType_)0x15;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 931–1004 */
@@ -4040,7 +4100,7 @@ void fn_StateConstructor(LinkActorType_* p_link)
 void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
 {
     *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
-    *(int*)&g_stCollideParameterVector.xX = *(int*)&p_vDirection->xX; *(int*)&g_stCollideParameterVector.xY = *(int*)&p_vDirection->xY; *(int*)&g_stCollideParameterVector.xZ = *(int*)&p_vDirection->xZ;
+    ((int*)&g_stCollideParameterVector)[0] = ((int*)p_vDirection)[0]; ((int*)&g_stCollideParameterVector)[1] = ((int*)p_vDirection)[1]; ((int*)&g_stCollideParameterVector)[2] = ((int*)p_vDirection)[2];
     g_ulMode = ulMode;
     g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
     g_hSuperObjectHit = 0;
@@ -4088,12 +4148,64 @@ void fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPo
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline float LNK_xVectorGap(MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    float xX, xY, xZ, xSq, xResult;
+    xX = _p_stA->xX - _p_stB->xX; xY = _p_stA->xY - _p_stB->xY; xZ = _p_stA->xZ - _p_stB->xZ;
+    asm { mula.s xX, xX }
+    asm { madda.s xY, xY }
+    asm { madd.s xSq, xZ, xZ }
+    asm { sqrt.s xResult, xSq }
+    return xResult;
+}
+
+#define LNK_vCopyVector(_d, _s) (((int*)(_d))[0] = ((int*)(_s))[0], ((int*)(_d))[1] = ((int*)(_s))[1], ((int*)(_d))[2] = ((int*)(_s))[2])
+
 void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index)
 {
-    unsigned char bAddPoint;
-    unsigned char k;
     unsigned char* uc_p_CutPointNb;
-    /* TODO: decompile from asm/... */
+    unsigned char k;
+    unsigned char bAddPoint;
+
+    bAddPoint = 1;
+    uc_p_CutPointNb = &p_link->ui_CutPointNb;
+
+    if (*uc_p_CutPointNb < 100)
+    {
+        if (uc_index == *uc_p_CutPointNb)
+        {
+            LNK_vCopyVector(&p_link->a_Cutpoint[uc_index].Position, p_vPosition);
+            LNK_vCopyVector(&p_link->a_Cutpoint[uc_index].Normal, p_vNormal);
+            LNK_vCopyVector(&p_link->a_Cutpoint[uc_index].Speed, p_vSpeed);
+            (*uc_p_CutPointNb)++;
+        }
+        else
+        {
+            if (uc_index > 0)
+                bAddPoint = (LNK_xVectorGap(p_vPosition, &p_link->a_Cutpoint[uc_index - 1].Position) > 0.001f);
+
+            if (bAddPoint)
+                bAddPoint = (LNK_xVectorGap(p_vPosition, &p_link->a_Cutpoint[uc_index].Position) > 0.001f);
+
+            if (bAddPoint)
+            {
+                for (k = *uc_p_CutPointNb - 1; k >= uc_index; k--)
+                    memcpy(&p_link->a_Cutpoint[k + 1], &p_link->a_Cutpoint[k], sizeof(LNK_CutPoint_));
+
+                LNK_vCopyVector(&p_link->a_Cutpoint[uc_index].Position, p_vPosition);
+                LNK_vCopyVector(&p_link->a_Cutpoint[uc_index].Normal, p_vNormal);
+                LNK_vCopyVector(&p_link->a_Cutpoint[uc_index].Speed, p_vSpeed);
+                (*uc_p_CutPointNb)++;
+            }
+        }
+    }
+
+    if (bAddPoint)
+    {
+        fn_NetSendEvent(p_link, LNE_CreateCP, uc_index, p_vPosition, 0);
+        fn_NetSendEvent(p_link, LNE_SetCPNormal, uc_index, p_vNormal, 0);
+        fn_NetSendEvent(p_link, LNE_SetCPSpeed, uc_index, p_vSpeed, 0);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1214–1236 */
@@ -4370,16 +4482,83 @@ void fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline float LNK_xDotProduct3(float _x1, float _x2, float _y1, float _y2, float _z1, float _z2)
+{
+    float _r;
+    asm { mula.s _x1, _x2 }
+    asm { madda.s _y1, _y2 }
+    asm { madd.s _r, _z1, _z2 }
+    return _r;
+}
+#define LNK_M_xDotProductVector(_a, _b) LNK_xDotProduct3((_a)->xX, (_b)->xX, (_a)->xY, (_b)->xY, (_a)->xZ, (_b)->xZ)
+#define LNK_M_vNormalizeVector(_p) \
+    { \
+        float _xN; \
+        LNK_M_VECTOR_NORM_TO(_xN, *(_p)); \
+        if (_xN != 0.0f) \
+        { \
+            _xN = 1.0f / _xN; \
+            (_p)->xX = _xN * (_p)->xX; (_p)->xY = _xN * (_p)->xY; (_p)->xZ = _xN * (_p)->xZ; \
+        } \
+    }
+#define LNK_M_vMiddleVector(_d, _a, _b) \
+    { \
+        (_d)->xX = (_a)->xX + (_b)->xX; (_d)->xY = (_a)->xY + (_b)->xY; (_d)->xZ = (_a)->xZ + (_b)->xZ; \
+        (_d)->xX = 0.5f * (_d)->xX; (_d)->xY = 0.5f * (_d)->xY; (_d)->xZ = 0.5f * (_d)->xZ; \
+    }
+
 int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k)
 {
-    float xNorm;
-    MTH3D_tdstVector_ p_tempVector;
-    MTH3D_tdstVector_* p_stNormalB;
-    MTH3D_tdstVector_* p_stPointC;
-    MTH3D_tdstVector_* p_stPointB;
-    MTH3D_tdstVector_* p_stPointA;
     int bRemoved;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stPointA;
+    MTH3D_tdstVector_* p_stPointB;
+    MTH3D_tdstVector_* p_stPointC;
+    MTH3D_tdstVector_* p_stNormalB;
+    MTH3D_tdstVector_ p_tempVector;
+    float xNorm;
+
+    p_stPointA = &p_link->a_Cutpoint[k].Position;
+    p_stPointB = &p_link->a_Cutpoint[k + 1].Position;
+    p_stPointC = &p_link->a_Cutpoint[k + 2].Position;
+    p_stNormalB = &p_link->a_Cutpoint[k + 1].Normal;
+
+    LNK_M_vSubVector(&p_tempVector, p_stPointA, p_stPointB);
+    LNK_M_VECTOR_NORM_TO(xNorm, p_tempVector);
+    if (xNorm < 0.1f)
+        bRemoved = 1;
+    else
+    {
+        LNK_M_vNormalizeVector(&p_tempVector);
+        xNorm = LNK_M_xDotProductVector(&p_tempVector, p_stNormalB);
+
+        LNK_M_vSubVector(&p_tempVector, p_stPointC, p_stPointB);
+        {
+            float xNorm2;
+            LNK_M_VECTOR_NORM_TO(xNorm2, p_tempVector);
+            if (xNorm2 < 0.1f)
+                bRemoved = 1;
+            else
+            {
+                float xDot;
+                LNK_M_vNormalizeVector(&p_tempVector);
+                xDot = LNK_M_xDotProductVector(&p_tempVector, p_stNormalB);
+
+                if (xNorm + xDot < 0.0f)
+                    bRemoved = 0;
+                else
+                    bRemoved = 1;
+            }
+        }
+    }
+
+    if (bRemoved)
+    {
+        LNK_M_vMiddleVector(p_stPointA, p_stPointA, p_stPointB);
+        LNK_M_vMiddleVector(&p_link->a_Cutpoint[k].Normal, &p_link->a_Cutpoint[k].Normal, &p_link->a_Cutpoint[k + 1].Normal);
+        fn_DeleteCutPoint(p_link, k + 1, k + 1);
+    }
+
+    return bRemoved;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1449–1525 */
@@ -4777,6 +4956,13 @@ int fn_DeleteLoops(LinkActorType_* p_link)
     /* TODO: decompile from asm/... */
 }
 
+inline float LNK_xSqrt(float _x)
+{
+    float _r;
+    asm { sqrt.s _r, _x }
+    return _r;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1773–1798 */
 /* addr: 0x0023dae0  size: 824 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -4802,12 +4988,62 @@ int fn_DeleteLoops(LinkActorType_* p_link)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* fn_Launch's expanded copy of fn_CollisionRayCastLnKProc: retail inlines
+   it there but calls it out of line from LNK_fn_p_DoBehaviour, which MWCC
+   -inline deferred cannot do for one function (see matching-insights). */
+static inline void LNK_vCollisionRayCastInline(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode)
+{
+    *(int*)&g_stCollideParameterPoint.xX = *(int*)&p_vPoint->xX; *(int*)&g_stCollideParameterPoint.xY = *(int*)&p_vPoint->xY; *(int*)&g_stCollideParameterPoint.xZ = *(int*)&p_vPoint->xZ;
+    ((int*)&g_stCollideParameterVector)[0] = ((int*)p_vDirection)[0]; ((int*)&g_stCollideParameterVector)[1] = ((int*)p_vDirection)[1]; ((int*)&g_stCollideParameterVector)[2] = ((int*)p_vDirection)[2];
+    g_ulMode = ulMode;
+    g_ulCollideTimeCounter = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    g_hSuperObjectHit = 0;
+    fn_vComputeCollideResult(p_link->p_LinkSPO);
+}
+
+inline float LNK_xNorm3(float _xX, float _xY, float _xZ)
+{
+    float _xSq;
+    float _xResult;
+    asm { mula.s _xX, _xX }
+    asm { madda.s _xY, _xY }
+    asm { madd.s _xSq, _xZ, _xZ }
+    asm { sqrt.s _xResult, _xSq }
+    return _xResult;
+}
+
 unsigned char fn_Launch(LinkActorType_* p_link)
 {
     float xNorm;
     MTH3D_tdstVector_ stDiff;
     float xScale;
-    /* TODO: decompile from asm/... */
+
+    xScale = (float)(p_link->ulCurrentTime - p_link->ulPrevFrameTime);
+
+    if (xScale > 0.0f) xScale = p_link->xLaunchSpeed * xScale / 1000.0f; else xScale = 1.0f;
+
+    stDiff.xX = p_link->a_Cutpoint[1].Position.xX - p_link->a_Cutpoint[2].Position.xX; stDiff.xY = p_link->a_Cutpoint[1].Position.xY - p_link->a_Cutpoint[2].Position.xY; stDiff.xZ = p_link->a_Cutpoint[1].Position.xZ - p_link->a_Cutpoint[2].Position.xZ;
+    LNK_vCollisionRayCastInline(p_link, &p_link->a_Cutpoint[0].Position, &stDiff, 0);
+    if (g_stCollideResultPoint.xX == 0.0f && g_stCollideResultPoint.xY == 0.0f && g_stCollideResultPoint.xZ == 0.0f)
+    {
+        if (stDiff.xX != 0.0f || stDiff.xY != 0.0f || stDiff.xZ != 0.0f)
+        {
+            xNorm = LNK_xNorm3(stDiff.xX, stDiff.xY, stDiff.xZ);
+            if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; stDiff.xX = xNorm * stDiff.xX; stDiff.xY = xNorm * stDiff.xY; stDiff.xZ = xNorm * stDiff.xZ; }
+            stDiff.xX = xScale * stDiff.xX; stDiff.xY = xScale * stDiff.xY; stDiff.xZ = xScale * stDiff.xZ;
+
+            p_link->a_Cutpoint[2].Position.xX += stDiff.xX; p_link->a_Cutpoint[2].Position.xY += stDiff.xY; p_link->a_Cutpoint[2].Position.xZ += stDiff.xZ;
+            stDiff.xX = p_link->a_Cutpoint[1].Position.xX - p_link->a_Cutpoint[2].Position.xX; stDiff.xY = p_link->a_Cutpoint[1].Position.xY - p_link->a_Cutpoint[2].Position.xY; stDiff.xZ = p_link->a_Cutpoint[1].Position.xZ - p_link->a_Cutpoint[2].Position.xZ;
+            xNorm = LNK_xNorm3(stDiff.xX, stDiff.xY, stDiff.xZ);
+            return (xNorm < xScale) ? 1 : 0;
+        }
+        return 1;
+    }
+    else
+    {
+        AGO_vAddParticle(45, &g_stCollideResultPoint, &g_stCollideResultPoint, hVisualMaterial[p_link->ui_Material], 8.0f);
+        return 2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1818–1857 */
@@ -4859,8 +5095,46 @@ int fn_CrunchLink(LinkActorType_* p_link)
     unsigned char cp;
     unsigned char k;
     float xTempLength;
-    float xCurrentLength;
-    /* TODO: decompile from asm/... */
+    float xCurrentLength = 0.0f;
+    MTH3D_tdstVector_ stSegment;
+
+    cp = p_link->ui_CutPointNb;
+    xScale = (float)(p_link->ulCurrentTime - p_link->ulPrevFrameTime);
+
+    if (xScale > 0.0f) xScale = p_link->xLaunchSpeed * xScale / 1000.0f; else xScale = 1.0f;
+
+    stSegment.xX = 0.0f; stSegment.xY = 0.0f; stSegment.xZ = 0.0f;
+    if (cp > 1)
+    {
+        for (xTempLength = 0.0f, k = 0; k < (unsigned char)(cp - 1); k++) { float x = p_link->a_Cutpoint[k + 1].Position.xX - p_link->a_Cutpoint[k].Position.xX; float y = p_link->a_Cutpoint[k + 1].Position.xY - p_link->a_Cutpoint[k].Position.xY; float z = p_link->a_Cutpoint[k + 1].Position.xZ - p_link->a_Cutpoint[k].Position.xZ; xTempLength += LNK_xSqrt(LNK_xDot3(x, x, y, y, z, z)); }
+
+        xTempLength -= xScale;
+        for (k = 0; k < cp - 1 && xCurrentLength < xTempLength; k++)
+        {
+            stSegment.xX = p_link->a_Cutpoint[k + 1].Position.xX - p_link->a_Cutpoint[k].Position.xX; stSegment.xY = p_link->a_Cutpoint[k + 1].Position.xY - p_link->a_Cutpoint[k].Position.xY; stSegment.xZ = p_link->a_Cutpoint[k + 1].Position.xZ - p_link->a_Cutpoint[k].Position.xZ;
+            xCurrentLength += LNK_xSqrt(LNK_xDot3(stSegment.xX, stSegment.xX, stSegment.xY, stSegment.xY, stSegment.xZ, stSegment.xZ));
+        }
+
+        cp = k + 1;
+        p_link->ui_CutPointNb = cp;
+
+        xScale = LNK_xSqrt(LNK_xDot3(stSegment.xX, stSegment.xX, stSegment.xY, stSegment.xY, stSegment.xZ, stSegment.xZ));
+
+        if (xScale > 0.0f)
+        {
+            xScale = (xTempLength - (xCurrentLength - LNK_xSqrt(LNK_xDot3(stSegment.xX, stSegment.xX, stSegment.xY, stSegment.xY, stSegment.xZ, stSegment.xZ)))) / xScale;
+
+            stSegment.xX *= xScale; p_link->a_Cutpoint[cp - 1].Position.xX = stSegment.xX + p_link->a_Cutpoint[cp - 2].Position.xX;
+            stSegment.xY *= xScale; p_link->a_Cutpoint[cp - 1].Position.xY = stSegment.xY + p_link->a_Cutpoint[cp - 2].Position.xY;
+            stSegment.xZ *= xScale; p_link->a_Cutpoint[cp - 1].Position.xZ = stSegment.xZ + p_link->a_Cutpoint[cp - 2].Position.xZ;
+        }
+    }
+    else
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\LNK_Proc.c lines 1893–1893 */

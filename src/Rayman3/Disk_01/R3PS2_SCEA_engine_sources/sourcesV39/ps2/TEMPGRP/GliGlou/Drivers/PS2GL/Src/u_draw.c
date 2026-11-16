@@ -2419,7 +2419,7 @@ GLI_g_PS2GL_ShadowVolume_ GLI_g_TheShadowVolumes[2];
 unsigned int GLI_g_xSaveDrawMsk;
 MTH3D_tdstVector_ GLI_g_stYVect;
 MTH3D_tdstVector_ GLI_g_stXVect;
-int g_p_stCurrentViewport;
+GLD_tdstViewportAttributes_* g_p_stCurrentViewport;
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
 unsigned int SCT_g_DrawingMirrored;
@@ -2429,7 +2429,7 @@ float GLI_BIG_GLOBALS_xGlobalAlpha;
 void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat);
 int GLI_BIG_GLOBALS_p_stObj;
 unsigned int GLI_g_NbTransparentElements;
-unsigned int NbElementComputed;
+extern unsigned int NbElementComputed[];
 int YRES;
 int XRES;
 float YRESf;
@@ -3660,6 +3660,7 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
 inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
 {
     asm {
+        .set noreorder
         lqc2 vf5, 0x0(_vec)
         lqc2 vf1, 0x0(_src)
         lqc2 vf2, 0x10(_src)
@@ -3673,6 +3674,7 @@ inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float
         sqc2 vf2, 0x10(_dst)
         sqc2 vf3, 0x20(_dst)
         sqc2 vf4, 0x30(_dst)
+        .set reorder
     }
 }
 
@@ -4200,12 +4202,72 @@ void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern void PS2glSetGsRegister(int reg, unsigned long data, unsigned long mask);
+extern void PS2glNormalPointer(unsigned int type, int stride, void* ptr);
+extern void PS2glTexCoordPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern void impPS2glColorPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern void PS2glVertexPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern void PS2glDrawArrays(unsigned int mode, int first, unsigned int count);
+extern void WAT_vTest(float (*pPos)[4]);
 void GLI_vDisplayAllShadows(void)
 {
-    float Temp[4];
-    unsigned int NbVertices;
     float a16_fWorldMatrix[16];
-    /* TODO: decompile from asm/... */
+    unsigned int NbVertices;
+    float Temp[4];
+
+    if (GLI_g_NbSimpleShadows)
+    {
+        GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+        GLI_vClearSendMatStates();
+        GLI_DRV_SendMaterialToViewport((GLI_tdstMaterial_*)GLI_g_SimpleShadowMaterial);
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glSetGsRegister(0x42, 0x8000000044, 0);
+
+        GLI_vInitGLProjectionMatrix();
+        PS2glMatrixMode(0x1700);
+
+        PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)*(int*)g_p_stCurrentViewport->p_vSpecificToXD)->stMatrix.stTransformMatrix, GLI_g_NegVect, (float (*)[4])a16_fWorldMatrix); a16_fWorldMatrix[15] = 1.0f;
+        PS2glLoadMatrixf(a16_fWorldMatrix);
+
+        g_PS2glContext.nLightBits &= ~0x400;
+
+        NbVertices = GLI_g_NbSimpleShadows * 6;
+
+        PS2glNormalPointer(0x1406, -2, GLI_g_SimpleShadowsRLIs[GLI_g_SimpleShadowBegin * 6]);
+        PS2glTexCoordPointer(NbVertices, 0x1406, -2, GLI_g_SimpleShadowsUVs[GLI_g_SimpleShadowBegin * 6]);
+        impPS2glColorPointer(NbVertices, 0x1406, -2, GLI_g_SimpleShadowsRLIs[GLI_g_SimpleShadowBegin * 6]);
+        PS2glVertexPointer(NbVertices, 0x1406, -2, GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6]);
+
+        PS2glDrawArrays(4, 0, NbVertices);
+
+        NbElementComputed[1]++;
+
+        if (!SCT_g_DrawingMirrored)
+        {
+            Temp[0] = GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6][0];
+            Temp[1] = GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6][1];
+            Temp[2] = GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6][2];
+
+            Temp[0] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 1][0];
+            Temp[1] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 1][1];
+
+            Temp[0] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 2][0];
+            Temp[1] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 2][1];
+
+            Temp[0] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 5][0];
+            Temp[1] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 5][1];
+
+            Temp[0] *= 0.25f;
+            Temp[1] *= 0.25f;
+
+            WAT_vTest(&Temp);
+        }
+
+        GLI_g_SimpleShadowBegin += GLI_g_NbSimpleShadows;
+
+        GLI_g_NbSimpleShadows = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1665–1748 */

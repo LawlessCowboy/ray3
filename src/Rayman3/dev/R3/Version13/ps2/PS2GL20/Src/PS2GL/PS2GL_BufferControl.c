@@ -1313,6 +1313,8 @@ void PS2glExecSwapBuffers(void);
 void FlushCache();
 int PS2glGsSyncPath(void);
 int MyGsSyncV(int);
+int sceGsSyncV(int);
+int printf(const char*, ...);
 int sceGsSetHalfOffset(void*, int, int, short);
 int sceGsSetHalfOffset2(void*, int, int, short);
 void VU1StartWorkingOnFakeSwapBuffer(void);
@@ -1423,9 +1425,46 @@ void PS2GL_SetProgressiveScanMode(int bOnOff)
  */
 void PS2glClearBuffers(void)
 {
-    tagGLtexblock theDefaultTexBlock;
     int i;
-    /* TODO: decompile from asm/... */
+
+    impPS2glFlush();
+
+    {
+        tagGLtexblock theDefaultTexBlock = { 0x3ff, 0, g_PS2glContext.iMaxTexBlockCount };
+        for (i = 0; i < 512; i++)
+        {
+            if (g_PS2glContext.aTexName[i].bAllocated)
+                g_PS2glContext.aTexName[i].bResident = 0;
+        }
+        for (i = 0; i < g_PS2glContext.iMaxTexBlockCount; i++)
+            g_PS2glContext.aBlockMap[i] = theDefaultTexBlock;
+        for (i = 0; i < 10; i++)
+            g_PS2glContext.aTexLevelCount[i] = 0;
+    }
+
+    g_PS2glContext.abTex2DChanged[g_PS2glContext.iCurTextureSet] = 1;
+    g_PS2glContext.abTex1DChanged[g_PS2glContext.iCurTextureSet] = 1;
+    g_PS2glContext.bTexCubeChanged = 1;
+
+    if (g_PS2glContext.nEnableBits & 0x8000)
+    {
+        if (PS2glGsSyncPath())
+            printf("In PS2glSwapBuffer, SyncPath failure!\n");
+        if (g_UseOwnVBLHandler)
+            MyGsSyncV(0);
+        else
+            sceGsSyncV(0);
+    }
+    else
+    {
+        if (PS2glGsSyncPath())
+            printf("In PS2glSwapBuffer, SyncPath failure!\n");
+    }
+
+    PS2glInternalSetScreenCalebration(0xF45, 0);
+    PS2glInternalSetScreenCalebration(0xF46, 0);
+
+    PS2glExecSwapBuffers();
 }
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 194–878 */
@@ -2374,6 +2413,9 @@ void PS2glMotionBlur(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+/* Retail inlines this into PS2glClearBuffers (two calls, lines 162-163)
+ * while still emitting it out of line. */
+#pragma auto_inline on
 void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewValue)
 {
     switch (target)
@@ -2400,6 +2442,7 @@ void PS2glInternalSetScreenCalebration(unsigned int target, unsigned int uiNewVa
             break;
     }
 }
+#pragma auto_inline reset
 
 /* D:\dev\R3\Version13\ps2\PS2GL20\Src\PS2GL\PS2GL_BufferControl.c lines 1088–1110 */
 /* addr: 0x001415a0  size: 152 bytes */

@@ -25,3 +25,5 @@ src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Array.c
 # instead of break (the -O3,p join after the loop gets an alignment nop).
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_ListsRecPly.c
 src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_Lists.c
+# PS2GL_BufferControl.c: +1 (PS2glClearBuffers; retail has loop-alignment nops from -O3,p), 0 lost (all 8 recorded matches probed).
+src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c

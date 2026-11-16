@@ -294,3 +294,7 @@ src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp
 # DNMMTH.c: +1 (MTH_p_stRotationMulVector; 3.0.1 materialises stack addresses for int-word vector copies), 0 lost (all 3 functions probed).
 src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMMTH.c
+# joyps2.c: INOPS2_fn_wRegisterJoystick gains (retail converts float->unsigned
+# inline in the wait loops, c.le.s/trunc.w.s; 3.0.1 calls fptoui); other
+# recorded matches in the file still MATCH, 0 lost.
+src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/joyps2.c
