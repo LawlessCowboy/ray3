@@ -2867,22 +2867,31 @@ extern "C" float sinf(float x);
 
 int CSpriteController::SimpleSpriteOriented_WithUVs(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, float U1, float V1, float U2, float V2, GLD_tdstViewportAttributes_* _p_stViewport, unsigned int AnimTime, float fAngle)
 {
+    unsigned int* param0;
+    float (*pV)[4];
+    unsigned int UMin;
+    unsigned int UMax;
+    unsigned int VMin;
+    unsigned int VMax;
+
     if (!StartSpriteList(pMaterial, 2, 4)) return 1;
-    unsigned int* pC = (unsigned int*)m_CurrentVC;
-    unsigned int ulColor = 0x808080 | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24);
-    pC[0] = pC[1] = pC[2] = pC[3] = ulColor;
+
+    param0 = (unsigned int*)m_CurrentVC;
+    param0[0] = param0[1] = param0[2] = param0[3] = 0x808080 | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24);
     m_CurrentVC += 16;
-    unsigned int* pT = (unsigned int*)m_CurrentVT;
-    int iU2 = (int)(4096.0f * U2);
-    int iV1 = (int)(4096.0f * V1);
-    int iU1 = (int)(4096.0f * U1);
-    int iV2 = (int)(4096.0f * V2);
-    pT[0] = (iV1 << 16) | iU2;
-    pT[1] = (iV1 << 16) | iU1;
-    pT[2] = (iV2 << 16) | iU2;
-    pT[3] = (iV2 << 16) | iU1;
+
+    param0 = (unsigned int*)m_CurrentVT;
+    UMin = (int)(4096.0f * U2);
+    UMax = (int)(4096.0f * U1);
+    VMin = (int)(4096.0f * V1);
+    VMax = (int)(4096.0f * V2);
+    param0[0] = (VMin << 16) | UMin;
+    param0[1] = (VMin << 16) | UMax;
+    param0[2] = (VMax << 16) | UMin;
+    param0[3] = (VMax << 16) | UMax;
     m_CurrentVT += 16;
-    float (*pV)[4] = m_CurrentVP;
+
+    pV = m_CurrentVP;
     pV[0][0] = pPosition->xX;
     pV[0][1] = pPosition->xY;
     pV[0][2] = pPosition->xZ;
@@ -4092,16 +4101,13 @@ int CSpriteController::SimpleSprite_UVAnim(GLI_tdstMaterial_* pMaterial, MTH3D_t
 
 void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_tdstVector_* a3_fPosition2, GLI_tdstMaterial_* pMaterial, float fSizeX, int bFade, float Alpha1, float Alpha2)
 {
+    unsigned int ColorOut;
+    unsigned int ColorCenter;
+    unsigned int* pC;
+    int Alpha;
     float Position1[4];
     float Position2[4];
-    int Alpha;
     float (*pV)[4];
-    unsigned int* pC;
-    unsigned int ColorCenter;
-    unsigned int ColorOut;
-    float fHalf;
-    float* p1;
-    float* p2;
 
     if (!StartSpriteList(pMaterial, 4, 8)) return;
     pC = (unsigned int*)m_CurrentVC;
@@ -4130,25 +4136,26 @@ void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_
     Position2[1] = a3_fPosition2->xY;
     Position2[2] = a3_fPosition2->xZ;
     pV = m_CurrentVP;
-    p1 = Position1;
-    p2 = Position2;
-    fHalf = 0.5f;
-    asm
     {
-        mfc1 v0, fHalf
-        qmtc2 v0, vf4
-        lqc2 vf1, 0x0(p1)
-        lqc2 vf2, 0x0(p2)
-        vadd.xyzw vf3, vf1, vf2
-        vmulx.xyz vf3, vf3, vf4x
-        sqc2 vf1, 0x0(pV)
-        sqc2 vf3, 0x10(pV)
-        sqc2 vf3, 0x40(pV)
-        sqc2 vf2, 0x50(pV)
-        addiu pV, pV, 0x20
-        swc1 fSizeX, 0x0(pV)
-        addiu pV, pV, 0x40
-        swc1 fSizeX, 0x0(pV)
+        float *p1 = Position1, *p2 = Position2, fHalf = 0.5f;
+        asm
+        {
+            .set noreorder
+            mfc1 v0, fHalf
+            qmtc2 v0, vf4
+            lqc2 vf1, 0x0(p1)
+            lqc2 vf2, 0x0(p2)
+            vadd.xyzw vf3, vf1, vf2
+            vmulx.xyz vf3, vf3, vf4x
+            sqc2 vf1, 0x0(pV)
+            sqc2 vf3, 0x10(pV)
+            sqc2 vf3, 0x40(pV)
+            sqc2 vf2, 0x50(pV)
+            addiu pV, pV, 0x20
+            swc1 fSizeX, 0x0(pV)
+            addiu pV, pV, 0x40
+            swc1 fSizeX, 0x0(pV)
+        }
     }
     m_CurrentVP += 8;
     m_NbVertices += 8;
@@ -4156,48 +4163,285 @@ void CSpriteController::SemiLookatSprite(MTH3D_tdstVector_* a3_fPosition, MTH3D_
 
 int CSpriteController::WorldOrthoPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2)
 {
-    float fADC;
-    float Pos[4];
-    float Vy[4];
-    float Vx[4];
-    float (*pV)[4];
     unsigned int* pC;
-    /* TODO: decompile from asm/... */
+    float (*pV)[4];
+    float Vx[4];
+    float Vy[4];
+    float Pos[4];
+    float fADC;
+
+    *(int*)&fADC = 0x8000;
+    if (!StartSpriteList(pMaterial, 3, 4)) return 1;
+
+    pC = (unsigned int*)m_CurrentVC;
+    pC[0] = pC[1] = pC[2] = pC[3] = 0x808080 | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24);
+    m_CurrentVC += 16;
+
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0;
+    pC[1] = 0x1000;
+    pC[2] = 0x10000000;
+    pC[3] = 0x10001000;
+    m_CurrentVT += 16;
+
+    Pos[0] = pPosition->xX;
+    Pos[1] = pPosition->xY;
+    Pos[2] = pPosition->xZ;
+    Pos[3] = 1.0f;
+    pV = m_CurrentVP;
+
+    Vx[0] = p_stV1->xX * SizeX;
+    Vx[1] = p_stV1->xY * SizeX;
+    Vx[2] = p_stV1->xZ * SizeX;
+    Vx[3] = 0.0f;
+    Vy[0] = p_stV2->xX * SizeY;
+    Vy[1] = p_stV2->xY * SizeY;
+    Vy[2] = p_stV2->xZ * SizeY;
+    Vy[3] = 0.0f;
+
+    /* Build the four corners Pos +/- Vx +/- Vy on VU0. */
+    {
+    float *pPos = Pos, *pVx = Vx, *pVy = Vy;
+    asm
+    {
+        lqc2 vf2, 0x0(pVx)
+        lqc2 vf3, 0x0(pVy)
+        lqc2 vf1, 0x0(pPos)
+        vsub.xyzw vf4, vf2, vf3
+        vadd.xyzw vf5, vf2, vf3
+        vsub.xyzw vf6, vf1, vf5
+        vadd.xyzw vf7, vf1, vf4
+        vadd.xyzw vf8, vf1, vf5
+        vsub.xyzw vf9, vf1, vf4
+        sqc2 vf6, 0x0(pV)
+        sqc2 vf7, 0x10(pV)
+        sqc2 vf9, 0x20(pV)
+        sqc2 vf8, 0x30(pV)
+    }
+    }
+
+    pV[0][3] = fADC;
+    pV[1][3] = fADC;
+    m_CurrentVP += 4;
+    m_NbVertices += 4;
+    return 0;
 }
 
 int CSpriteController::WorldOrthoPlanarSpriteColor(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, unsigned int ulColor)
 {
-    float fADC;
-    float Pos[4];
-    float Vy[4];
-    float Vx[4];
-    float (*pV)[4];
     unsigned int* pC;
-    /* TODO: decompile from asm/... */
+    float (*pV)[4];
+    float Vx[4];
+    float Vy[4];
+    float Pos[4];
+    float fADC;
+
+    *(int*)&fADC = 0x8000;
+    if (!StartSpriteList(pMaterial, 3, 4)) return 1;
+
+    pC = (unsigned int*)m_CurrentVC;
+    pC[0] = pC[1] = pC[2] = pC[3] = (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24) | (((ulColor & 0xFF) >> 1) << 16) | (((ulColor & 0xFF00) >> 9) << 8) | ((ulColor & 0xFF0000) >> 17);
+    m_CurrentVC += 16;
+
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0;
+    pC[1] = 0x1000;
+    pC[2] = 0x10000000;
+    pC[3] = 0x10001000;
+    m_CurrentVT += 16;
+
+    Pos[0] = pPosition->xX;
+    Pos[1] = pPosition->xY;
+    Pos[2] = pPosition->xZ;
+    Pos[3] = 1.0f;
+    pV = m_CurrentVP;
+
+    Vx[0] = p_stV1->xX * SizeX;
+    Vx[1] = p_stV1->xY * SizeX;
+    Vx[2] = p_stV1->xZ * SizeX;
+    Vx[3] = 0.0f;
+    Vy[0] = p_stV2->xX * SizeY;
+    Vy[1] = p_stV2->xY * SizeY;
+    Vy[2] = p_stV2->xZ * SizeY;
+    Vy[3] = 0.0f;
+
+    /* Build the four corners Pos +/- Vx +/- Vy on VU0. */
+    {
+    float *pPos = Pos, *pVx = Vx, *pVy = Vy;
+    asm
+    {
+        lqc2 vf2, 0x0(pVx)
+        lqc2 vf3, 0x0(pVy)
+        lqc2 vf1, 0x0(pPos)
+        vsub.xyzw vf4, vf2, vf3
+        vadd.xyzw vf5, vf2, vf3
+        vsub.xyzw vf6, vf1, vf5
+        vadd.xyzw vf7, vf1, vf4
+        vadd.xyzw vf8, vf1, vf5
+        vsub.xyzw vf9, vf1, vf4
+        sqc2 vf6, 0x0(pV)
+        sqc2 vf7, 0x10(pV)
+        sqc2 vf9, 0x20(pV)
+        sqc2 vf8, 0x30(pV)
+    }
+    }
+
+    pV[0][3] = fADC;
+    pV[1][3] = fADC;
+    m_CurrentVP += 4;
+    m_NbVertices += 4;
+    return 0;
 }
 
 void CSpriteController::WorldOrthoPlanarOriented(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float SizeX, float SizeY, GLD_tdstViewportAttributes_* p_stViewport, MTH3D_tdstVector_* p_stV1, MTH3D_tdstVector_* p_stV2, float fAngle)
 {
-    float fs;
-    float fc;
-    float fADC;
-    float Pos[4];
-    float Vy[4];
-    float Vx[4];
-    float (*pV)[4];
     unsigned int* pC;
-    /* TODO: decompile from asm/... */
+    float (*pV)[4];
+    float Vx[4];
+    float Vy[4];
+    float Pos[4];
+    float fADC;
+    float fc;
+    float fs;
+
+    *(int*)&fADC = 0x8000;
+    if (!StartSpriteList(pMaterial, 3, 4)) return;
+
+    fs = sinf(fAngle);
+    fc = cosf(fAngle);
+
+    pC = (unsigned int*)m_CurrentVC;
+    pC[0] = pC[1] = pC[2] = pC[3] = 0x808080 | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24);
+    m_CurrentVC += 16;
+
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0;
+    pC[1] = 0x1000;
+    pC[2] = 0x10000000;
+    pC[3] = 0x10001000;
+    m_CurrentVT += 16;
+
+    Pos[0] = pPosition->xX;
+    Pos[1] = pPosition->xY;
+    Pos[2] = pPosition->xZ;
+    Pos[3] = 1.0f;
+    pV = m_CurrentVP;
+
+    SizeX *= 0.5f;
+    SizeY *= 0.5f;
+    {
+    float V1x, V1y, V1z, V2x, V2y, V2z;
+    V1x = p_stV1->xX * SizeX;
+    V1y = p_stV1->xY * SizeX;
+    V1z = p_stV1->xZ * SizeX;
+
+    V2x = p_stV2->xX * SizeY;
+    V2y = p_stV2->xY * SizeY;
+    V2z = p_stV2->xZ * SizeY;
+
+    Vx[0] = fc * V1x - fs * V2x;
+    Vx[1] = fc * V1y - fs * V2y;
+    Vx[2] = fc * V1z - fs * V2z;
+    Vx[3] = 0.0f;
+    Vy[0] = fs * V1x + fc * V2x;
+    Vy[1] = fs * V1y + fc * V2y;
+    Vy[2] = fs * V1z + fc * V2z;
+    Vy[3] = 0.0f;
+    }
+
+    /* Build the four corners Pos +/- Vx +/- Vy on VU0. */
+    {
+    float *pPos = Pos, *pVx = Vx, *pVy = Vy;
+    asm
+    {
+        lqc2 vf2, 0x0(pVx)
+        lqc2 vf3, 0x0(pVy)
+        lqc2 vf1, 0x0(pPos)
+        vsub.xyzw vf4, vf2, vf3
+        vadd.xyzw vf5, vf2, vf3
+        vsub.xyzw vf6, vf1, vf5
+        vadd.xyzw vf7, vf1, vf4
+        vadd.xyzw vf8, vf1, vf5
+        vsub.xyzw vf9, vf1, vf4
+        sqc2 vf6, 0x0(pV)
+        sqc2 vf7, 0x10(pV)
+        sqc2 vf9, 0x20(pV)
+        sqc2 vf8, 0x30(pV)
+    }
+    }
+
+    pV[0][3] = fADC;
+    pV[1][3] = fADC;
+    m_CurrentVP += 4;
+    m_NbVertices += 4;
 }
 
 int CSpriteController::WorldPlanarSprite(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* pMaterial, float fSizeX, float fSizeY, GLD_tdstViewportAttributes_* p_stViewport, unsigned int AnimTime)
 {
-    float fADC;
-    float Pos[4];
-    float Vy[4];
-    float Vx[4];
-    float (*pV)[4];
+    unsigned int Color;
     unsigned int* pC;
-    /* TODO: decompile from asm/... */
+    float (*pV)[4];
+    float Vx[4];
+    float Vy[4];
+    float Pos[4];
+    float fADC;
+
+    *(int*)&fADC = 0x8000;
+    if (!StartSpriteList(pMaterial, 3, 4)) return 1;
+
+    pC = (unsigned int*)m_CurrentVC;
+    Color = 0x808080 | (((int)(127.0f * GLI_BIG_GLOBALS_xGlobalAlpha)) << 24);
+    pC[0] = pC[1] = pC[2] = pC[3] = Color;
+    m_CurrentVC += 16;
+
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0;
+    pC[1] = 0x1000;
+    pC[2] = 0x10000000;
+    pC[3] = 0x10001000;
+    m_CurrentVT += 16;
+
+    Pos[0] = pPosition->xX;
+    Pos[1] = pPosition->xY;
+    Pos[2] = pPosition->xZ;
+    Pos[3] = 1.0f;
+    pV = m_CurrentVP;
+
+    Vx[0] = fSizeX;
+    Vx[1] = 0.0f;
+    Vx[2] = 0.0f;
+    Vx[3] = 0.0f;
+    Vy[0] = 0.0f;
+    Vy[1] = fSizeY;
+    Vy[2] = 0.0f;
+    Vy[3] = 0.0f;
+
+    /* Build the four corners Pos +/- Vx +/- Vy on VU0. */
+    {
+    float *pPos = Pos, *pVx = Vx, *pVy = Vy;
+    asm
+    {
+        lqc2 vf2, 0x0(pVx)
+        lqc2 vf3, 0x0(pVy)
+        lqc2 vf1, 0x0(pPos)
+        vsub.xyzw vf4, vf2, vf3
+        vadd.xyzw vf5, vf2, vf3
+        vsub.xyzw vf6, vf1, vf5
+        vadd.xyzw vf7, vf1, vf4
+        vadd.xyzw vf8, vf1, vf5
+        vsub.xyzw vf9, vf1, vf4
+        sqc2 vf6, 0x0(pV)
+        sqc2 vf7, 0x10(pV)
+        sqc2 vf9, 0x20(pV)
+        sqc2 vf8, 0x30(pV)
+    }
+    }
+
+    pV[0][3] = fADC;
+    pV[1][3] = fADC;
+    m_CurrentVP += 4;
+    m_NbVertices += 4;
+    return 0;
 }
 
 void CSpriteController::WorldQuad(GLD_tdstViewportAttributes_* p_stViewport, float* x1, float* x2, float* x3, float* x4, GLI_tdstMaterial_* pMaterial)
@@ -4278,18 +4522,18 @@ void CSpriteController::WorldQuadWithUV(GLD_tdstViewportAttributes_* p_stViewpor
 
 void CSpriteController::WorldQuadWithUVAndFade(GLD_tdstViewportAttributes_* p_stViewport, float* x1, float* x2, float* x3, float* x4, float u1, float v1, float u2, float v2, GLI_tdstMaterial_* pMaterial, float fAlpha, float fPercentage)
 {
-    float fADC;
-    float vTmp;
-    int v5;
-    int v3;
-    int VMax;
-    int VMin;
-    int UMax;
-    int UMin;
-    int Alpha;
-    float (*pV)[4];
-    unsigned int* pC;
     unsigned int Color;
+    unsigned int* pC;
+    float (*pV)[4];
+    int Alpha;
+    int UMin;
+    int UMax;
+    int VMin;
+    int VMax;
+    int v3;
+    int v5;
+    float vTmp;
+    float fADC;
 
     *(int*)&fADC = 0x8000;
     if (!StartSpriteList(pMaterial, 3, 8)) return;
@@ -4340,7 +4584,7 @@ void CSpriteController::WorldQuadWithUVAndFade(GLD_tdstViewportAttributes_* p_st
 
     /* Interpolate the two inner vertex pairs on VU0 (I = fPercentage);
        the VU0 instructions have no C form. */
-    asm
+    asm volatile
     {
         lqc2 vf1, 0x0(pV)
         lqc2 vf2, 0x10(pV)
@@ -4506,14 +4750,57 @@ void CSpriteController::Icon2D_Rotate_Percent_and_UVs(GLD_tdstViewportAttributes
     /* TODO: decompile from asm/... */
 }
 
-void CSpriteController::Icon2D_Percent(float xXMin, float xYMin, float xXMax, float xYMax, GLI_tdstMaterial_* hMaterial)
+void CSpriteController::Icon2D_Percent(GLD_tdstViewportAttributes_* p_stViewport, float xXMin, float xYMin, float xXMax, float xYMax, GLI_tdstMaterial_* hMaterial)
 {
-    float fADC;
-    int Alpha;
-    float (*param0)[4];
-    unsigned int* pC;
+    union { int i; float f; } uW;
     unsigned int Color;
-    /* TODO: decompile from asm/... */
+    unsigned int* pC;
+    float (*param0)[4];
+    int Alpha;
+    float fADC;
+    uW.i = 0x8000;
+    if (!StartSpriteList(hMaterial, 5, 4)) return;
+    Alpha = (int)(128.0f * GLI_BIG_GLOBALS_xGlobalAlpha);
+    if (g_bDrawingBlackFrame)
+    {
+        Color = Alpha << 24;
+    }
+    else if (g_GLI_bForceAAAColor)
+    {
+        Color = (Alpha << 24) | (((int)(127.0f * g_GLI_ForcedAAAColor[2])) << 16) | (((int)(127.0f * g_GLI_ForcedAAAColor[1])) << 8) | ((int)(127.0f * g_GLI_ForcedAAAColor[0]));
+    }
+    else
+    {
+        Color = 0x808080 | (Alpha << 24);
+    }
+    pC = (unsigned int*)m_CurrentVC;
+    pC[0] = pC[1] = pC[2] = pC[3] = Color;
+    m_CurrentVC += 16;
+    pC = (unsigned int*)m_CurrentVT;
+    pC[0] = 0x10000000;
+    pC[1] = 0x10001000;
+    pC[2] = 0;
+    pC[3] = 0x1000;
+    m_CurrentVT += 16;
+    param0 = m_CurrentVP;
+    param0[0][0] = xXMin;
+    param0[0][1] = xYMin;
+    param0[0][2] = 1.0f;
+    param0[0][3] = uW.f;
+    param0[1][0] = xXMax;
+    param0[1][1] = xYMin;
+    param0[1][2] = 1.0f;
+    param0[1][3] = uW.f;
+    param0[2][0] = xXMin;
+    param0[2][1] = xYMax;
+    param0[2][2] = 1.0f;
+    param0[2][3] = 1.0f;
+    param0[3][0] = xXMax;
+    param0[3][1] = xYMax;
+    param0[3][2] = 1.0f;
+    param0[3][3] = 1.0f;
+    m_CurrentVP += 4;
+    m_NbVertices += 4;
 }
 
 void CSpriteController::Draw2DRectangleWithColor(float xXMin, float xXMax, float xYMin, float xYMax, GLI_tdstMaterial_* hMaterial, unsigned int ulColor)

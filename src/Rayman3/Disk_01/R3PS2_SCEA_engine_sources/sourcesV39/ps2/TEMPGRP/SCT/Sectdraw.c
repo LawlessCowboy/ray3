@@ -1332,18 +1332,79 @@ void SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstS
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+MTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector);
+MTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector);
+MTH3D_tdstVector_* COL_fn_pGetMinPointOfParallelBox(COL_tdstParallelBox_* _hBox);
+MTH3D_tdstVector_* COL_fn_pGetMaxPointOfParallelBox(COL_tdstParallelBox_* _hBox);
+int GEO_lCullingBox(GLD_tdstViewportAttributes_* p_stVpt, MTH3D_tdstVector_* p_stMin, MTH3D_tdstVector_* p_stMax, int _lCullingResult);
+void HIE_fn_vSendStaticWorldToViewport(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, int _DrawMask, int _lCullingResult);
+
+/* R5900 absolute value: MWCC never emits abs.s from plain C. */
+inline float SCT_M_xAbs(float x)
+{
+    float r = x;
+    asm { abs.s r, r }
+    return r;
+}
+#define SCT_M_lInOutMin(d) (((d) < 0.0f) ? 1 : -1)
+#define SCT_M_lInOutMax(d) (((d) < 0.0f) ? -1 : 1)
+
 int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask)
 {
-    int lMaxInOut;
-    int lMinInOut;
-    COL_tdstParallelBox_* hParallelBox;
-    int lCullingResult;
-    MTH3D_tdstVector_* p_stBorderMaxPoint;
-    MTH3D_tdstVector_* p_stBorderMinPoint;
-    MTH3D_tdstVector_* p_stBdvMaxPoint;
-    MTH3D_tdstVector_* p_stBdvMinPoint;
     SECT_tdstSector_* hSectorObject;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_* p_stBdvMinPoint;
+    MTH3D_tdstVector_* p_stBdvMaxPoint;
+    MTH3D_tdstVector_* p_stBorderMinPoint;
+    MTH3D_tdstVector_* p_stBorderMaxPoint;
+    int lCullingResult;
+    COL_tdstParallelBox_* hParallelBox;
+    int lMinInOut;
+    int lMaxInOut;
+
+    hSectorObject = _hSprObjSector->hLinkedObject.p_stSector;
+    SECT_fn_vSendFogToViewport(_p_stVpt, _hSprObjSector);
+    hParallelBox = (COL_tdstParallelBox_*)_hSprObjSector->hVisualBoundingVolume;
+    p_stBorderMinPoint = SECT_fn_p_stGetMinPointInBorder(hSectorObject);
+    p_stBorderMaxPoint = SECT_fn_p_stGetMaxPointInBorder(hSectorObject);
+    if (hParallelBox)
+    {
+        p_stBdvMinPoint = COL_fn_pGetMinPointOfParallelBox(hParallelBox);
+        p_stBdvMaxPoint = COL_fn_pGetMaxPointOfParallelBox(hParallelBox);
+        lCullingResult = GEO_lCullingBox(_p_stVpt, p_stBdvMinPoint, p_stBdvMaxPoint, 0);
+        {
+        MTH3D_tdstVector_ stMinDiff;
+        MTH3D_tdstVector_ stMaxDiff;
+        stMinDiff.xX = p_stBorderMinPoint->xX - p_stBdvMinPoint->xX; stMinDiff.xY = p_stBorderMinPoint->xY - p_stBdvMinPoint->xY; stMinDiff.xZ = p_stBorderMinPoint->xZ - p_stBdvMinPoint->xZ;
+        stMaxDiff.xX = p_stBorderMaxPoint->xX - p_stBdvMaxPoint->xX; stMaxDiff.xY = p_stBorderMaxPoint->xY - p_stBdvMaxPoint->xY; stMaxDiff.xZ = p_stBorderMaxPoint->xZ - p_stBdvMaxPoint->xZ;
+        if (!(SCT_M_xAbs(SCT_M_xAbs(stMinDiff.xX) + SCT_M_xAbs(stMinDiff.xY) + SCT_M_xAbs(stMinDiff.xZ)) < 0.01f
+           && SCT_M_xAbs(SCT_M_xAbs(stMaxDiff.xX) + SCT_M_xAbs(stMaxDiff.xY) + SCT_M_xAbs(stMaxDiff.xZ)) < 0.01f))
+        {
+            lMinInOut = SCT_M_lInOutMin(stMinDiff.xZ) + (SCT_M_lInOutMin(stMinDiff.xX) + SCT_M_lInOutMin(stMinDiff.xY));
+            if (lMinInOut == -3 || lMinInOut == 3)
+                lMaxInOut = SCT_M_lInOutMax(stMaxDiff.xZ) + (SCT_M_lInOutMax(stMaxDiff.xX) + SCT_M_lInOutMax(stMaxDiff.xY));
+            else
+                lMaxInOut = 0;
+            if (lMinInOut != lMaxInOut)
+            {
+                if (!lCullingResult)
+                    lCullingResult = GEO_lCullingBox(_p_stVpt, p_stBorderMinPoint, p_stBorderMaxPoint, 0);
+            }
+            else if (lMinInOut > 0)
+            {
+                lCullingResult = GEO_lCullingBox(_p_stVpt, p_stBorderMinPoint, p_stBorderMaxPoint, 0);
+            }
+        }
+        }
+        if (lCullingResult || (unsigned char)((_hSprObjSector->ulFlags & 0x800) >> 10))
+        {
+            HIE_fn_vSendStaticWorldToViewport(_p_stVpt, _hSprObjSector, _lDrawMask, lCullingResult);
+        }
+    }
+    else
+    {
+        lCullingResult = GEO_lCullingBox(_p_stVpt, p_stBorderMinPoint, p_stBorderMaxPoint, 0);
+    }
+    return lCullingResult;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectdraw.c lines 534–714 */

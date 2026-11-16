@@ -193,17 +193,67 @@ extern "C" void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_
 
 void GLI_vGetVertexPointersFromSDCStructureForSinus(SDC_VertexArrays_* pSDC, unsigned int iElement, float ** pVOrg[4], float** pVTSinus)
 {
-    unsigned int Type;
-    unsigned int LayerTypes;
-    unsigned int bMultiTexture;
-    unsigned int NbStages;
-    unsigned int stage;
-    GLI_tdstMaterial_* hVisualMaterial;
-    float (*pVA)[4];
-    unsigned int NbVerticesAlignedUVs;
-    unsigned int NbVerticesAligned;
     unsigned int NbVertices;
-    /* TODO: decompile from asm/... */
+    unsigned int NbVerticesAligned;
+    unsigned int NbVerticesAlignedUVs;
+    float (*pVA)[4];
+    GLI_tdstMaterial_* hVisualMaterial;
+    unsigned int stage;
+    unsigned int NbStages;
+    unsigned int bMultiTexture;
+    unsigned int LayerTypes;
+    unsigned int Type;
+
+    pVA = (float (*)[4])pSDC->pArrayOfVertexArrays[iElement];
+
+    Type = pSDC->OptType & 0xF;
+    if (Type == 5 || Type == 6 || Type == 4)
+    {
+        NbVerticesAligned = ((unsigned int*)pVA)[1];
+        NbVerticesAlignedUVs = ((unsigned int*)pVA)[2];
+        pVA++;
+    }
+    else
+    {
+        NbVertices = pSDC->pNbTrianglesPerElement[iElement] * 3;
+        NbVerticesAligned = NbVertices;
+        NbVerticesAlignedUVs = (NbVertices + 3) >> 2;
+    }
+
+    *(float (**)[4])pVOrg = pVA;
+    pVA += NbVerticesAligned;
+    hVisualMaterial = pSDC->pArrayOfMaterials[iElement];
+
+    if (hVisualMaterial && hVisualMaterial->ulNbTextureStages) NbStages = hVisualMaterial->ulNbTextureStages; else NbStages = 0;
+    if (NbStages == 0) { NbStages++; bMultiTexture = 0; } else bMultiTexture = 1;
+
+    LayerTypes = 0;
+    if (bMultiTexture)
+    {
+        for (stage = 0; stage < NbStages; stage++)
+        {
+            switch (hVisualMaterial->a_stMultiMaterial[stage].c_UVSource)
+            {
+            case 0:
+                LayerTypes |= 1;
+                break;
+            case 1:
+                LayerTypes |= 2;
+                break;
+            case 4:
+                LayerTypes |= 4;
+                break;
+            }
+        }
+    }
+    else
+        LayerTypes = 1;
+
+    if (LayerTypes & 1) pVA += NbVerticesAlignedUVs;
+    if (LayerTypes & 2) pVA += NbVerticesAlignedUVs;
+    if (LayerTypes & 4) pVA += NbVerticesAligned;
+
+    *pVTSinus = (float*)(pVA + NbVerticesAlignedUVs * NbStages);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLUtils.cpp lines 167–189 */

@@ -473,6 +473,8 @@ int fn_iZCompare(void* arg1, void* arg2);
 void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGometricMirror, HIE_tdstSuperObject_** p_hSectorOfMirror, short* p_shNbOfMirrors);
 
 unsigned char HIE_fn_bFindMirrorInHierarchy(HIE_tdstSuperObject_* hSO);
+unsigned char fn_bIsTransitionInProgress(void);
+void HIE_fn_hFindAllMirrorsInHierarchy(GLD_tdstViewportAttributes_* _hVpt, HIE_tdstSuperObject_* _hSprObj, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGeometricMirror, short* p_shNbOfMirrors, short shNbMaxOfMirrors);
 void SCT_fn_vDoPreClippingForPortal(HIE_tdstSuperObject_* _hSector);
 void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror);
 
@@ -508,11 +510,32 @@ void SCT_fn_vPreClippingForOnePortal(HIE_tdstSuperObject_* _hIPOMirror);
 
 void SCT_fn_vFindAllMirrorsInVisibleSector(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, HIE_tdstSuperObject_** p_hHandleOfMirror, GEO_tdstGeometricObject_** p_hHandleOfGometricMirror, HIE_tdstSuperObject_** p_hSectorOfMirror, short* p_shNbOfMirrors)
 {
-    short shTempNbOfMirrors;
-    short i;
-    short xI;
     SECT_tdstListOfSOSectorsInGraphicInteraction_* hGraphicElement;
-    /* TODO: decompile from asm/... */
+    short xI;
+    short i;
+    short shTempNbOfMirrors;
+
+    *p_shNbOfMirrors = 0;
+    if (fn_bIsTransitionInProgress())
+        return;
+
+    if (!(_hSprObjSector->lDrawModeMask & 0x10000000))
+        HIE_fn_hFindAllMirrorsInHierarchy(_p_stVpt, _hSprObjSector, p_hHandleOfMirror, p_hHandleOfGometricMirror, p_shNbOfMirrors, 6);
+
+    for (i = 0; i < *p_shNbOfMirrors; i++)
+        p_hSectorOfMirror[i] = _hSprObjSector;
+
+    for (xI = _hSprObjSector->hLinkedObject.p_stSector->stListOfSectorsInGraphicInteraction.lNumberOfElementsOpt,
+         hGraphicElement = _hSprObjSector->hLinkedObject.p_stSector->stListOfSectorsInGraphicInteraction.hFirstElementOpt;
+         xI > 0; hGraphicElement++, xI--)
+    {
+        shTempNbOfMirrors = *p_shNbOfMirrors;
+        if (!(hGraphicElement->hPointerOfSectorSO->lDrawModeMask & 0x10000000))
+            HIE_fn_hFindAllMirrorsInHierarchy(_p_stVpt, hGraphicElement->hPointerOfSectorSO, p_hHandleOfMirror, p_hHandleOfGometricMirror, p_shNbOfMirrors, 6);
+
+        for (i = shTempNbOfMirrors; i < *p_shNbOfMirrors; i++)
+            p_hSectorOfMirror[i] = hGraphicElement->hPointerOfSectorSO;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\SCT\Sectmir.c lines 279–280 */

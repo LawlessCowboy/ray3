@@ -7,6 +7,8 @@
 extern "C" char* strchr(const char* s, int c);
 extern "C" unsigned int strlen(const char* pch_Str);
 extern "C" void usnd_free(void* pv_Ptr);
+extern "C" void* usnd_malloc(unsigned int ui_Size);
+extern "C" void* usnd_memcpy(void* p_Dst, const void* p_Src, unsigned int ui_Size);
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 namespace usnd
@@ -25,12 +27,12 @@ typedef struct CTextFile CTextFile;
 typedef struct CSrcFlow CSrcFlow;
 typedef struct CFlow CFlow;
 typedef struct CBankDesc CBankDesc;
-struct usnd::CUUID { int data[4]; };
-struct CFlow { int data[2]; };
-struct CBankDesc {
-    int data[8];
-    CResData* mfn_poAddCResData(const CUUID& ro_cuuid);
+struct usnd::CUUID {
+    CUUID(void);
+    unsigned int m_uiHighWord; /* +0x0 */
+    unsigned int m_uiLowWord; /* +0x4 */
 };
+struct CFlow { int data[2]; };
 
 typedef enum anon_enum_001bafa4 {
     E_INVALID_SIZE = -1,
@@ -43,7 +45,40 @@ typedef enum anon_enum_001bafd7 {
 struct usnd::sstring {
     char* m_pcData; /* +0x0 */
     static char* ms_czNil;
+    sstring(const char* pch_Str, unsigned int ui_Length)
+    {
+        if (ui_Length == 0)
+            m_pcData = ms_czNil;
+        else {
+            m_pcData = (char*)usnd_malloc(ui_Length + 1);
+            usnd_memcpy(m_pcData, pch_Str, ui_Length + 1);
+        }
+        if (ui_Length)
+            m_pcData[ui_Length] = 0;
+    }
+    ~sstring(void)
+    {
+        if (m_pcData != ms_czNil)
+            usnd_free(m_pcData);
+    }
     void _Init(const char* pch_Str, unsigned int ui_Length);
+    void AttachBuffer(char* szBuffer);
+    bool empty(void) const { return m_pcData == ms_czNil; }
+    sstring& operator+=(const sstring& ro_String)
+    {
+        unsigned int ui_OldLength;
+        const char* pch_Str = ro_String.m_pcData;
+        unsigned int ui_Length = strlen(pch_Str);
+        if (ui_Length)
+        {
+            ui_OldLength = length();
+            char* pch_New = (char*)usnd_malloc(ui_OldLength + ui_Length + 1);
+            usnd_memcpy(pch_New, m_pcData, ui_OldLength);
+            usnd_memcpy(pch_New + ui_OldLength, pch_Str, ui_Length + 1);
+            AttachBuffer(pch_New);
+        }
+        return *this;
+    }
     sstring& operator=(const char* pch_Str)
     {
         unsigned int ui_Length = strlen(pch_Str);
@@ -71,6 +106,9 @@ class CSrcFlow : public virtual CFlow {
 public:
     virtual ~CSrcFlow();
     virtual unsigned int fv_uiRead(void* p_Buffer, unsigned int ui_Size, unsigned int ui_Nb) = 0;
+    virtual unsigned int fv_uiWrite(void);
+    virtual unsigned int fv_uiTell(void);
+    virtual unsigned int fv_uiSeek(int i_Offset, int i_Origin);
 };
 
 class CPS2FileSrcFlow : public CSrcFlow {
@@ -106,6 +144,17 @@ struct CTextFile {
         }
         return 0;
     }
+    unsigned int mfn_dwGetSize(void)
+    {
+        unsigned int dw_Size = (unsigned int)E_INVALID_SIZE;
+        if (m_bOpened)
+        {
+            unsigned int dw_Pos = m_File.fv_uiTell();
+            dw_Size = m_File.fv_uiSeek(0, 1);
+            m_File.fv_uiSeek(dw_Pos, 0);
+        }
+        return dw_Size;
+    }
     bool mfn_bRead(void* p_Buffer, unsigned int dw_Size)
     {
         bool b_Answer = false;
@@ -126,6 +175,107 @@ struct CTextFileSrc : CTextFile {
     unsigned char mfn_bRead(sstring& ro_Sentence);
     char* mfn_pchParseChar(void) const;
     unsigned char mfn_bOpen(const char* pch_FilePath);
+};
+
+
+/* The usnd set CBankDesc derives from (see sndeecbankdesc.cpp); only the
+ * members this function needs are declared. */
+namespace usnd {
+struct streebase {
+    enum _Redbl {
+        _Red = 0,
+        _Black = 1
+    };
+    struct sTreeLink {
+        sTreeLink* m_poLeft; /* +0x0 */
+        sTreeLink* m_poParent; /* +0x4 */
+        sTreeLink* m_poRight; /* +0x8 */
+        _Redbl m_eColor; /* +0xc */
+    };
+    struct iterator_base {
+        iterator_base(void) {}
+        iterator_base(sTreeLink* po_Link);
+        bool operator==(const iterator_base& ro_It) const { return _Ptr == ro_It._Ptr; }
+        sTreeLink* _Ptr; /* +0x0 */
+    };
+    sTreeLink* _HeadLink; /* +0x0 */
+    unsigned char _Multi; /* +0x4 */
+    unsigned int _Size; /* +0x8 */
+};
+
+template <class T> struct binary_function {
+};
+
+template <class T> struct less : binary_function<T> {
+    bool operator()(const T& ro_Left, const T& ro_Right) const { return ro_Left < ro_Right; }
+};
+
+template <class T> struct sallocator {
+};
+
+template <class T1, class T2> struct spair {
+    T1 first;
+    T2 second;
+};
+
+template <class K, class V, class KFN, class CMP, class ALLOC>
+struct stree : streebase {
+    struct sTreeNode : sTreeLink {
+        V m_oValue; /* +0x10 */
+    };
+    struct iterator : iterator_base {
+        iterator(void) {}
+        iterator(sTreeLink* po_Link) : iterator_base(po_Link) {}
+        iterator(sTreeNode* po_Node);
+        iterator(const iterator& ro_It) : iterator_base(ro_It._Ptr) {}
+        V& operator*(void) const { return ((sTreeNode*)_Ptr)->m_oValue; }
+    };
+    sTreeNode* _GetHead(void) const;
+    sTreeNode* _Lbound(const K& ro_Key) const;
+    iterator end(void) { return iterator(_GetHead()); }
+    spair<iterator, bool> insert(const V& ro_Value);
+    iterator lower_bound(const K& ro_Key) { return iterator(_Lbound(ro_Key)); }
+    iterator find(const K& ro_Key)
+    {
+        KFN o_Kfn;
+        iterator it = lower_bound(ro_Key);
+        return (it == end() || key_compare(ro_Key, o_Kfn(*it))) ? end() : it;
+    }
+    ALLOC allocator; /* +0xc */
+    CMP key_compare; /* +0xd */
+};
+
+template <class K, class CMP, class ALLOC>
+struct sset {
+    struct _Kfn {
+        _Kfn(void) {}
+        const K& operator()(const K& ro_Value) const;
+    };
+    typedef stree<K, K, _Kfn, CMP, ALLOC> _Imp;
+    typedef typename _Imp::iterator iterator;
+    iterator end(void) { return iterator(_Tr._HeadLink); }
+    iterator find(const K& ro_Key) { return _Tr.find(ro_Key); }
+    void insert(const K& ro_Value) { _Tr.insert(ro_Value); }
+    _Imp _Tr; /* +0x0 */
+};
+
+struct CIdObj;
+struct CIdObjPtrMgr {
+    static CIdObjPtrMgr& fs_roGetInst(void);
+    CIdObj* f_poGetIdObj(const CUUID& ro_Id);
+    unsigned int f_uiGetPendingReferences(CUUID* pa_Id, unsigned int ui_Nb);
+};
+struct CPS2IdObjLoader {
+    CIdObj* f_poLoadIdObj(const CUUID& ro_Id);
+    void f_vPreloadObjects(CUUID* pa_Id, unsigned int ui_Nb);
+};
+}
+using usnd::CPS2IdObjLoader;
+
+struct CBankDesc : usnd::sset<CResData*, usnd::less<CResData*>, usnd::sallocator<CResData*> > {
+    CResData* mfn_poAddCResData(const CUUID& ro_cuuid);
+    CPS2IdObjLoader* mroLoader; /* +0x10 */
+    usnd::sstring mostringName; /* +0x14 */
 };
 
 /* The functions below are in their original source-line order (retail
@@ -252,7 +402,43 @@ unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
     unsigned int dw_Size;
     char* pch_StringEnd;
     unsigned char b_Answer;
-    /* TODO: decompile from asm/... */
+
+    b_Answer = 0;
+    if (m_bOpened)
+    {
+        ro_Sentence = "";
+        while (!b_Answer && mdwPosition < mfn_dwGetSize())
+        {
+            pch_StringEnd = mfn_pchParseChar();
+            if (pch_StringEnd)
+            {
+                dw_Size = pch_StringEnd - mpchCurrent;
+                sstring o_String(mpchCurrent, dw_Size);
+                ro_Sentence += o_String;
+                pch_StringNext = pch_StringEnd;
+            }
+            else
+            {
+                pch_StringNext = mpchCurrent + 1;
+                dw_Size = 1;
+            }
+
+            if (mpchCurrent < mpchBuffer2 && pch_StringNext >= mpchBuffer2)
+                CTextFile::mfn_bRead(mpchBuffer1, E_BUFFER_SIZE);
+
+            if (pch_StringNext == mpchBufferEnd)
+            {
+                CTextFile::mfn_bRead(mpchBuffer2, E_BUFFER_SIZE);
+                pch_StringNext = mpchBuffer1;
+            }
+
+            mpchCurrent = pch_StringNext;
+            mdwPosition += dw_Size;
+            b_Answer = !ro_Sentence.empty() && (*mpchCurrent == '\n' || *mpchCurrent == '\r');
+        }
+    }
+
+    return b_Answer;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\psx2\ee\sndeectextfilesrc.cpp lines 37–67 */
@@ -277,8 +463,31 @@ unsigned char CTextFileSrc::mfn_bRead(sstring& ro_Sentence)
  */
 CResData* CBankDesc::mfn_poAddCResData(const CUUID& ro_cuuid)
 {
-    CUUID aId[20];
-    int nb;
     CResData* po_Answer;
-    /* TODO: decompile from asm/... */
+
+    po_Answer = (CResData*)usnd::CIdObjPtrMgr::fs_roGetInst().f_poGetIdObj(ro_cuuid);
+
+    if (!po_Answer)
+    {
+        po_Answer = (CResData*)mroLoader->f_poLoadIdObj(ro_cuuid);
+        if (po_Answer)
+        {
+            CUUID aId[20];
+            int nb;
+
+            while ((nb = usnd::CIdObjPtrMgr::fs_roGetInst().f_uiGetPendingReferences(aId, 20)) != 0)
+            {
+                if (nb > 20)
+                    nb = 20;
+                mroLoader->f_vPreloadObjects(aId, nb);
+            }
+        }
+    }
+
+    if (find(po_Answer) == end())
+    {
+        insert(po_Answer);
+    }
+
+    return po_Answer;
 }

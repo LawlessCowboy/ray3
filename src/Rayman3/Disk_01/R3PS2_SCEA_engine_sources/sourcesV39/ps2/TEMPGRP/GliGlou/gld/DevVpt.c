@@ -919,27 +919,25 @@ int GLD_bDeleteViewport(int _unused, short hVP)
  */
 int GLD_bDeleteDevice(short hDev)
 {
+    short hVP;
     GLD_stDevice* pstDev;
-    GLD_stViewport* pstVP;
-    int i;
 
+    pstDev = g_pstGLDDevices[hDev];
     if (!g_bGLDSwapInProgress)
     {
-        pstDev = g_pstGLDDevices[hDev];
-        for (i = 0; i < 16; i++)
+        for (hVP = 0; hVP < 16; hVP++)
         {
-            pstVP = pstDev->pstViewports[i];
-            if (pstVP != NULL)
+            if (pstDev->pstViewports[hVP])
             {
-                memset(pstVP, 0xCC, sizeof(GLD_stViewport));
-                pstDev->pstViewports[i] = NULL;
+                memset(pstDev->pstViewports[hVP], 0xCC, sizeof(GLD_stViewport));
+                pstDev->pstViewports[hVP] = NULL;
             }
         }
-        memset(pstDev, 0xCC, sizeof(GLD_stDevice));
-        Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
-        fn_vGenFree(pstDev, 0);
-        g_pstGLDDevices[hDev] = NULL;
     }
+    memset(pstDev, 0xCC, sizeof(GLD_stDevice));
+    Mmg_fn_v_SetModeAlloc(g_ucGLDModuleId, 0xFF, 0);
+    fn_vGenFree(pstDev, 0);
+    g_pstGLDDevices[hDev] = NULL;
     return 1;
 }
 

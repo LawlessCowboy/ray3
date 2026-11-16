@@ -48,3 +48,20 @@ impPS2glVertex4f 3.0.3-pad7b
 # member offset unfolded); plain pad7b, 3.0.1 and 3.0 all mismatch. Moving the
 # unit would lose impPS2glLoadIdentity and impPS2glLoadMatrixd, so it stays on 3.0.
 impPS2glMatrixMode 3.0.3-pad7b-unfold
+#
+# TEMPGRP/COL/Inters.c (3.0.1): INT_fn_bDetectIntersectSegmentWithTriangle has
+# an extra hazard nop between add.s and div.s under 3.0.1 (356/352 bytes) that
+# no source variant removes; under pad7b the size and code match apart from a
+# float register rotation (f6/f7/f8). The unit stays on 3.0.1, which its five
+# recorded matches were verified under.
+INT_fn_bDetectIntersectSegmentWithTriangle 3.0.3-pad7b
+#
+# TEMPGRP/COL/Inters.c (3.0.1): INT_fn_bIntersectBoxWithBox is three
+# max.s/min.s compares. Under 3.0.1 the MTH_M_xMax/xMin asm wrappers get a
+# hazard nop after each max.s (184/172 bytes, EQUIVALENT only) that no source
+# variant removes; under pad7b it matches 172/172. The unit stays on 3.0.1,
+# which its other recorded matches were verified under.
+INT_fn_bIntersectBoxWithBox 3.0.3-pad7b
+#
+# SCT/Sectdraw.c (3.0.1): SCT_fn_lSendSectorToViewportStatic matches only under 3.0.3 (retail hoists the 0.01f lui/ori and fills the bc1f delay slot). Under pad7b the unit keeps its 4 recorded matches but SCT_fn_vSendSectorWhereIAmToViewport goes from 1160 to 1144 bytes, so the unit stays on 3.0.1.
+SCT_fn_lSendSectorToViewportStatic 3.0.3-pad7b

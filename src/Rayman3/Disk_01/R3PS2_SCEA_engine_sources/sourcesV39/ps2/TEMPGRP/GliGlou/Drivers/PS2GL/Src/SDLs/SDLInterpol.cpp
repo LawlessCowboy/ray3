@@ -303,7 +303,8 @@ extern "C" void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc
     float fLimit = 500.0f;
     float* pHalf = GLI_g_SDL_pHalfVect;
 
-    asm {
+    asm volatile {
+        .set noreorder
         lqc2 vf9, 0x30(pSrc)
         lqc2 vf5, 0x30(pDest)
         vsub.xyzw vf10, vf9, vf5
@@ -347,6 +348,7 @@ extern "C" void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc
         sqc2 vf7, 0x10(pDest2)
         sqc2 vf8, 0x20(pDest2)
         sqc2 vf9, 0x30(pDest2)
+        .set reorder
     }
 }
 

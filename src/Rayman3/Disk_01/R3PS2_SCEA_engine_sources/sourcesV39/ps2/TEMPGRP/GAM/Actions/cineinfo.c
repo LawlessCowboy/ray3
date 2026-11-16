@@ -2059,17 +2059,24 @@ void fn_vGetPersoSightAxisSystem(tdstCineinfo_* _hCineinfo, MTH3D_tdstVector_* _
 void fn_vInitAveragePositionDatasIfNecessary(tdstCineinfo_* _hCineinfo)
 {
     unsigned int ulIndex;
-    for (ulIndex = 0; ulIndex < 8; ulIndex++) {
-        if (_hCineinfo->AveragePosition.a_CheckedTime[ulIndex] != 0.0f)
+    float xBaseTime;
+    MTH4D_tdstVector_* p_stVectorPos;
+
+    for (ulIndex = 0; ulIndex < 8; ulIndex++)
+        if (_hCineinfo->AveragePosition.a_CheckedTime[ulIndex])
             break;
-    }
-    if (ulIndex >= 8) {
-        MTH4D_tdstVector_* p_stPosition = &_hCineinfo->hWork->hSuperObjectTargeted->hGlobalMatrix->stTransformMatrix.stCol_3;
-        for (ulIndex = 0; ulIndex < 8; ulIndex++) {
-            _hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = 0.03;
-            _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
-            CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[ulIndex], *p_stPosition);
-        }
+
+    if (ulIndex < 8)
+        return;
+
+    p_stVectorPos = &_hCineinfo->hWork->hSuperObjectTargeted->hGlobalMatrix->stTransformMatrix.stCol_3;
+    xBaseTime = 0.03f;
+
+    for (ulIndex = 0; ulIndex < 8; ulIndex++)
+    {
+        _hCineinfo->AveragePosition.a_CheckedTime[ulIndex] = xBaseTime;
+        _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xX = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xY = 0.0f; _hCineinfo->AveragePosition.a_CheckedSpeed[ulIndex].xZ = 0.0f;
+        CAM_M_vCopyHistoryVector(_hCineinfo->AveragePosition.a_CheckedPos[ulIndex], *p_stVectorPos);
     }
 }
 

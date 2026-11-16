@@ -3,11 +3,12 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
+#include "r3/GEO.h"
+#include "r3/GLI.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
-typedef struct GLI_tdstAnimatedTextureNode_ GLI_tdstAnimatedTextureNode_;
 typedef struct anon_0 anon_0;
-typedef struct _sceDmaTag _sceDmaTag;
 typedef struct anon_1 anon_1;
 typedef struct tagGLprimbuf tagGLprimbuf;
 typedef struct anon_33 anon_33;
@@ -19,9 +20,7 @@ typedef struct anon_24 anon_24;
 typedef struct anon_18 anon_18;
 typedef struct tagGsLoadImage tagGsLoadImage;
 typedef struct tagListData tagListData;
-typedef struct tag_GLtexture_set tag_GLtexture_set;
 typedef struct GLI_tdstTexturePS2GL_ GLI_tdstTexturePS2GL_;
-typedef struct tagGLtexindex tagGLtexindex;
 typedef union unFunction unFunction;
 typedef struct tagGLlistnode tagGLlistnode;
 typedef struct tagGLlistcalls tagGLlistcalls;
@@ -33,20 +32,16 @@ typedef struct anon_28 anon_28;
 typedef struct anon_34 anon_34;
 typedef struct anon_22 anon_22;
 typedef struct tagGsSetTex tagGsSetTex;
-typedef struct GLI_tdstTexture_ GLI_tdstTexture_;
 typedef struct anon_5 anon_5;
 typedef struct anon_6 anon_6;
-typedef struct GEO_tdstColor_ GEO_tdstColor_;
 typedef struct GLI_tdstMaterial_ GLI_tdstMaterial_;
 typedef struct anon_7 anon_7;
 typedef struct anon_8 anon_8;
 typedef struct anon_9 anon_9;
-typedef struct tagListNodeSingle tagListNodeSingle;
 typedef struct anon_10 anon_10;
 typedef struct anon_11 anon_11;
 typedef struct anon_12 anon_12;
 typedef struct tagsceGsReg tagsceGsReg;
-typedef struct tagListNode tagListNode;
 typedef struct anon_14 anon_14;
 typedef struct anon_16 anon_16;
 typedef struct anon_40 anon_40;
@@ -67,23 +62,7 @@ typedef struct anon_21 anon_21;
 typedef struct anon_26 anon_26;
 typedef struct anon_41 anon_41;
 typedef struct tagGScontext tagGScontext;
-typedef struct tag_GLtexture_image tag_GLtexture_image;
-typedef struct tagGLlistpool tagGLlistpool;
-typedef struct tag_GLtexture tag_GLtexture;
-typedef struct tagGLtexname tagGLtexname;
-typedef struct tagGLtexblock tagGLtexblock;
-typedef struct tag_GLlight tag_GLlight;
-typedef struct tag_GLmaterial tag_GLmaterial;
-typedef struct tagGLArrayInfo tagGLArrayInfo;
 typedef struct tagGLcontext tagGLcontext;
-typedef struct tagstVIFCode tagstVIFCode;
-typedef struct tagGLlistdatas tagGLlistdatas;
-
-struct GLI_tdstAnimatedTextureNode_ {
-    GLI_tdstTexture_* p_stTexture; /* +0x0 */
-    float xDisplayTime; /* +0x4 */
-    GLI_tdstAnimatedTextureNode_* p_stNextDisplayNode; /* +0x8 */
-};
 
 struct anon_0 {
     unsigned char pad00 : 3; /* bit 0, byte +0x0 */
@@ -97,14 +76,6 @@ struct anon_0 {
     unsigned char FIX : 1; /* bit 10, byte +0x1 */
     unsigned char pad11 : 5; /* bit 11, byte +0x1 */
     unsigned char _extractor_padding_anon0[6]; /* +0x2..0x7 */
-};
-
-struct _sceDmaTag {
-    unsigned short qwc; /* +0x0 */
-    unsigned char mark; /* +0x2 */
-    unsigned char id; /* +0x3 */
-    _sceDmaTag* next; /* +0x4 */
-    unsigned int p[2]; /* +0x8 */
 };
 
 struct anon_1 {
@@ -248,27 +219,8 @@ struct tagListData {
     signed char ucSDLObjectReserveSize; /* +0x34 */
 };
 
-struct tag_GLtexture_set {
-    float vTexEnvColor[4]; /* +0x0 */
-    unsigned int eTexEnvMode; /* +0x10 */
-    unsigned int nTexGenBits; /* +0x14 */
-    unsigned short nTexGenModeS; /* +0x18 */
-    unsigned short nTexGenModeT; /* +0x1a */
-    unsigned short nTexGenModeR; /* +0x1c */
-    unsigned short nTexGenModeQ; /* +0x1e */
-    float vTexGenCoeffS[4]; /* +0x20 */
-    float vTexGenCoeffT[4]; /* +0x30 */
-    float vTexGenCoeffR[4]; /* +0x40 */
-    float vTexGenCoeffQ[4]; /* +0x50 */
-};
-
 struct GLI_tdstTexturePS2GL_ {
     unsigned int TextureID; /* +0x0 */
-};
-
-struct tagGLtexindex {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
 };
 
 union unFunction {
@@ -376,32 +328,6 @@ struct tagGsSetTex {
     long clampaddr; /* +0x68 */
 };
 
-struct GLI_tdstTexture_ {
-    int bIsAvailable; /* +0x0 */
-    int lTextureQuality; /* +0x4 */
-    int p_vBitMap; /* +0x8 */
-    int p_vColorTable; /* +0xc */
-    int p_stSpecParam; /* +0x10 */
-    int lTextureCaps; /* +0x14 */
-    unsigned short lHeight; /* +0x18 */
-    unsigned short lWidth; /* +0x1a */
-    unsigned short lRealHeight; /* +0x1c */
-    unsigned short lRealWidth; /* +0x1e */
-    float fAddU; /* +0x20 */
-    float fAddV; /* +0x24 */
-    int lIncrementIsEnable; /* +0x28 */
-    unsigned int lChromakeyColorRGBA; /* +0x2c */
-    unsigned int ulBlendColorRGBA; /* +0x30 */
-    int lNumberOfLod; /* +0x34 */
-    unsigned int lCompressionCounter; /* +0x38 */
-    unsigned int lTypeOfCompression; /* +0x3c */
-    unsigned int lTypeOfMipMapping; /* +0x40 */
-    GLI_tdstTexture_* p_TextureOfSubstitution; /* +0x44 */
-    unsigned char ucBilinearMode; /* +0x48 */
-    unsigned char ucCylingMode; /* +0x49 */
-    char a255_cFileName[128]; /* +0x4a */
-};
-
 struct anon_5 {
     unsigned long AC : 1; /* bit 0, byte +0x0 */
     unsigned long pad01 : 63; /* bit 1, byte +0x0 */
@@ -412,13 +338,6 @@ struct anon_6 {
     unsigned char bFinalCompile; /* +0x10 */
     unsigned int mode; /* +0x14 */
     tagGLprimbuf* pPrimBuf; /* +0x18 */
-};
-
-struct GEO_tdstColor_ {
-    float xR; /* +0x0 */
-    float xG; /* +0x4 */
-    float xB; /* +0x8 */
-    float xA; /* +0xc */
 };
 
 struct GLI_tdstMaterial_ {
@@ -470,11 +389,6 @@ struct anon_9 {
     float Q; /* +0x4 */
 };
 
-struct tagListNodeSingle {
-    unsigned int nIndex; /* +0x0 */
-    tagListData* pData; /* +0x4 */
-};
-
 struct anon_10 {
     unsigned long FBA : 1; /* bit 0, byte +0x0 */
     unsigned long pad01 : 63; /* bit 1, byte +0x0 */
@@ -494,13 +408,6 @@ struct anon_12 {
 
 struct tagsceGsReg {
     unsigned long DATA; /* +0x0 */
-};
-
-struct tagListNode {
-    tagListNode* pNext; /* +0x0 */
-    unsigned int nIndex; /* +0x4 */
-    int iSize; /* +0x8 */
-    int apData[1]; /* +0xc */
 };
 
 struct anon_14 {
@@ -789,92 +696,6 @@ struct tagGScontext {
     anon_3* pqCurrent; /* +0x2224 */
     anon_1* pCurTag; /* +0x2228 */
     signed char iRegs; /* +0x222c */
-};
-
-struct tag_GLtexture_image {
-    unsigned int target; /* +0x0 */
-    int inputComponents; /* +0x4 */
-    int width; /* +0x8 */
-    int height; /* +0xc */
-    unsigned int format; /* +0x10 */
-    int pixels; /* +0x14 */
-    int pixelsAux; /* +0x18 */
-    int cbPixels; /* +0x1c */
-    int cbPixelsAux; /* +0x20 */
-    unsigned char pixelsChanged; /* +0x24 */
-    unsigned char bConverted; /* +0x25 */
-    unsigned char bUserMaintain; /* +0x26 */
-    unsigned int uiSpan; /* +0x28 */
-};
-
-struct tagGLlistpool {
-    unsigned int nFreeIndex; /* +0x0 */
-    tagListNodeSingle aSingleIndex[64]; /* +0x4 */
-    tagListNode* pFirstNode; /* +0x204 */
-    tagListNode* pLastNode; /* +0x208 */
-};
-
-struct tag_GLtexture {
-    float vTexBorderColor[4]; /* +0x0 */
-    unsigned int eDimension; /* +0x10 */
-    unsigned int eTexFilterMin; /* +0x14 */
-    unsigned int eTexFilterMag; /* +0x18 */
-    unsigned int eTexWrapS; /* +0x1c */
-    unsigned int eTexWrapT; /* +0x20 */
-    int Image[7]; /* +0x24 */
-    int iClutOffset; /* +0x40 */
-    int iClutSize; /* +0x44 */
-    int clut; /* +0x48 */
-    unsigned char bClutUserMaintain; /* +0x4c */
-};
-
-struct tagGLtexname {
-    unsigned char bAllocated; /* +0x0 */
-    unsigned char bResident; /* +0x1 */
-    float fPrioritize; /* +0x4 */
-    unsigned int eDimension; /* +0x8 */
-    int iTexBlock; /* +0xc */
-    tag_GLtexture* pTex1D; /* +0x10 */
-    tag_GLtexture* pTex2D; /* +0x14 */
-    tag_GLtexture* pTexCube; /* +0x18 */
-};
-
-struct tagGLtexblock {
-    unsigned int nTexID : 10; /* bit 0, byte +0x0 */
-    int nStart : 11; /* bit 10, byte +0x0 */
-    int nLength : 11; /* bit 21, byte +0x0 */
-};
-
-struct tag_GLlight {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vPosition[4]; /* +0x30 */
-    float vDirection[4]; /* +0x40 */
-    float fSpotExponent; /* +0x50 */
-    float fSpotCutoff; /* +0x54 */
-    float fCosCutoff; /* +0x58 */
-    float fConstantAttenuation; /* +0x5c */
-    float fLinearAttenuation; /* +0x60 */
-    float fQuadraticAttenuation; /* +0x64 */
-} __attribute__((aligned(16)));
-
-struct tag_GLmaterial {
-    float vAmbient[4]; /* +0x0 */
-    float vDiffuse[4]; /* +0x10 */
-    float vSpecular[4]; /* +0x20 */
-    float vEmission[4]; /* +0x30 */
-    float fShininess; /* +0x40 */
-    float fAmbientIndex; /* +0x44 */
-    float fDiffuseIndex; /* +0x48 */
-    float fSpecularIndex; /* +0x4c */
-} __attribute__((aligned(16)));
-
-struct tagGLArrayInfo {
-    int size; /* +0x0 */
-    unsigned int type; /* +0x4 */
-    int stride; /* +0x8 */
-    int pointer; /* +0xc */
 };
 
 struct tagGLcontext {
@@ -1170,17 +991,6 @@ struct tagGLcontext {
     unsigned char VU1Package[10000]; /* +0x6ca0 */
 };
 
-struct tagstVIFCode {
-    unsigned short IMMEDIATE; /* +0x0 */
-    unsigned char NUM; /* +0x2 */
-    unsigned char CMD; /* +0x3 */
-};
-
-struct tagGLlistdatas {
-    tagGLlistdatas* pNext; /* +0x0 */
-    int apData[3]; /* +0x4 */
-};
-
 unsigned int GLI_g_HadHeatFx;
 int PS2GL_g_DontRecalculateMatrix;
 int PS2GL_g_DontUpdateTexture;
@@ -1274,6 +1084,74 @@ extern void PS2glFogf(unsigned int pname, float param);
 extern void PS2glFogiv(unsigned int pname, const unsigned int* params);
 extern unsigned int SDL_REF_GetNewFogRef(unsigned int count);
 extern void SDL_AddRef(unsigned int handle, unsigned int reference);
+extern void PS2glDisable(unsigned int cap);
+extern void PS2glTranslatef(float x, float y, float z);
+extern void GLI_vRefreshMultiTexturePart(GLI_tdstMaterial_* _pst_Material);
+extern unsigned int SDL_REF_GetNewTextureOffsetRef(float du, float dv, unsigned int Index, GLI_tdstMaterial_* hMaterial);
+extern char* strstr(const char* s1, const char* s2);
+
+/* The engine's MTH float-to-int helper: retail converts through the
+ * callee-saved $f30 ("cvt.w.s $f30, x; mfc1 r, $f30"), which only the MTH
+ * asm macro produces (MWCC's own conversion is trunc.w.s in a scratch reg). */
+inline int MTH_M_xRealToLong(float xValue)
+{
+    int lResult;
+    asm
+    {
+        cvt.w.s f30, xValue
+        mfc1 lResult, f30
+    }
+    return lResult;
+}
+
+#define GLI_M_STATIC_FOG(COLOR) \
+    if (GLI_BIG_GLOBALS_xFogIsOn) { PS2glEnable(0xB60); PS2glFogi(0xB65, 0x2601); PS2glFogf(0xB63, g_fFogStart); PS2glFogf(0xB64, g_fFogEnd); PS2glFogfv(0xB66, COLOR); } else PS2glDisable(0xB60)
+
+extern void PS2glColorMask(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+/* PS2GL state changes, inlined in GLI_DRV_SendMaterialToViewport. */
+#define M_ENABLE_TEXTURE() do { \
+    g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200; \
+    g_gsContext.PRMODE.TME = 1; \
+    g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+} while (0)
+#define M_DISABLE_TEXTURE() do { \
+    g_PS2glContext.nTextureEnableBits &= (g_PS2glContext.iCurTextureSet == 0) ? ~2 : ~0x200; \
+    g_gsContext.PRMODE.TME = (g_PS2glContext.nTextureEnableBits & 0xF) ? 1 : 0; \
+    g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+} while (0)
+#define M_ENABLE_BLEND() do { \
+    g_PS2glContext.nEnableBits |= 0x100; \
+    g_gsContext.PRMODE.ABE = 1; \
+    g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+} while (0)
+#define M_DISABLE_BLEND() do { \
+    g_PS2glContext.nEnableBits &= ~0x100; \
+    g_gsContext.PRMODE.ABE = 0; \
+    g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+} while (0)
+#define M_ENABLE_ALPHATEST() do { \
+    g_PS2glContext.nEnableBits |= 0x400; \
+    g_gsContext.TEST_1.ATE = 1; \
+    g_gsContext.ModFlgs.TEST_1_Modified = 1; \
+} while (0)
+#define M_DISABLE_ALPHATEST() do { \
+    g_PS2glContext.nEnableBits &= ~0x400; \
+    g_gsContext.TEST_1.ATE = 0; \
+    g_gsContext.ModFlgs.TEST_1_Modified = 1; \
+} while (0)
+#define M_DISABLE_FOG() do { \
+    g_PS2glContext.nEnableBits &= ~0x80; \
+    g_gsContext.PRMODE.FGE = 0; \
+    g_gsContext.ModFlgs.PRMODE_Modified = 1; \
+    *(unsigned char*)g_PS2glContext.pbFogging = 0; \
+} while (0)
+#define M_DISABLE_DEPTHTEST() do { \
+    g_PS2glContext.nEnableBits &= ~0x800; \
+    g_gsContext.TEST_1.ZTE = 1; \
+    g_gsContext.ModFlgs.TEST_1_Modified = 1; \
+    g_gsContext.TEST_1.ZTST = 1; \
+    g_gsContext.ModFlgs.TEST_1_Modified = 1; \
+} while (0)
 
 int TBF_g_CurrentFileAllocation;
 int TBF_g_CurrentFileSize;
@@ -1311,628 +1189,481 @@ inline signed char GLI_cGetUVSource(anon_2* pMat)
     return pMat ? pMat->c_UVSource : 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 117–168 */
-/* addr: 0x002c4640  size: 448 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 121
- *   +0x0004 -> line 117
- *   +0x0008 -> line 121
- *   +0x0010 -> line 123
- *   +0x001c -> line 124
- *   +0x0024 -> line 125
- *   +0x0028 -> line 126
- *   +0x0030 -> line 129
- *   +0x0038 -> line 133
- *   +0x0040 -> line 129
- *   +0x0044 -> line 130
- *   +0x0050 -> line 131
- *   +0x0058 -> line 133
- *   +0x006c -> line 135
- *   +0x0070 -> line 136
- *   +0x0074 -> line 135
- *   +0x00b4 -> line 136
- *   +0x00b8 -> line 137
- *   +0x00c0 -> line 138
- *   +0x00c8 -> line 144
- *   +0x00d8 -> line 146
- *   +0x00dc -> line 144
- *   +0x0130 -> line 146
- *   +0x0138 -> line 148
- *   +0x0154 -> line 149
- *   +0x015c -> line 152
- *   +0x0168 -> line 155
- *   +0x0178 -> line 157
- *   +0x0184 -> line 159
- *   +0x0188 -> line 162
- *   +0x018c -> line 159
- *   +0x0194 -> line 162
- *   +0x0198 -> line 160
- *   +0x019c -> line 163
- *   +0x01a0 -> line 160
- *   +0x01a4 -> line 163
- *   +0x01a8 -> line 161
- *   +0x01ac -> line 164
- *   +0x01b0 -> line 161
- *   +0x01b4 -> line 164
- *   +0x01b8 -> line 168
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 
 void GLI_vSetFogParameters(float start, float end, float* color)
 {
     float val;
-    /* TODO: decompile from asm/... */
+
+    g_fFogStart = start;
+    g_fFogEnd = end;
+
+    if (g_bForceWhiteFog)
+    {
+        g_fFogColor[0] = 1.0f;
+        g_fFogColor[1] = 1.0f;
+        g_fFogColor[2] = 1.0f;
+    }
+    else
+    {
+        g_fFogColor[0] = color[0];
+        g_fFogColor[1] = color[1];
+        g_fFogColor[2] = color[2];
+
+        if ((GLI_g_AfterEffect == 5) || (GLI_g_AfterEffect == 4))
+        {
+            val = 0.3f * color[0] + 0.59f * color[1] + 0.11f * color[2];
+            g_fFogColor[0] = val;
+            g_fFogColor[1] = val;
+            g_fFogColor[2] = val;
+        }
+    }
+
+    GLI_g_CurrentSDLFogColor = (unsigned char)(int)(255.0f * g_fFogColor[0]) + ((unsigned char)(int)(255.0f * g_fFogColor[1]) << 8) + ((unsigned char)(int)(255.0f * g_fFogColor[2]) << 16);
+
+    if (start != end)
+        GLI_g_OOStartMinusEnd = 1.0f / (start - end);
+    else
+        GLI_g_OOStartMinusEnd = -0.02f;
+
+    if (GLI_cGlobalFogIsOn)
+        GLI_BIG_GLOBALS_xFogIsOn = 1;
+
+    if (!GLI_BIG_GLOBALS_xFogIsOn)
+    {
+        g_fFogColor[0] = 1.0f;
+        g_fFogColor[1] = 1.0f;
+        g_fFogColor[2] = 1.0f;
+        g_fFogStart = 4095.0f;
+        g_fFogEnd = 4096.0f;
+        GLI_g_OOStartMinusEnd = -1.0f;
+    }
+
+    GLI_g_CurrentFogMode = 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 172–193 */
-/* addr: 0x002c44f0  size: 328 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 172
- *   +0x0008 -> line 173
- *   +0x0014 -> line 175
- *   +0x0024 -> line 177
- *   +0x003c -> line 178
- *   +0x0044 -> line 177
- *   +0x0088 -> line 178
- *   +0x0090 -> line 179
- *   +0x009c -> line 180
- *   +0x00a8 -> line 181
- *   +0x00b8 -> line 182
- *   +0x00bc -> line 184
- *   +0x00c4 -> line 187
- *   +0x00d4 -> line 189
- *   +0x0138 -> line 190
- *   +0x013c -> line 193
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SetFogc(void)
 {
     SET_FOGC();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 253–864 */
-/* addr: 0x002c18a0  size: 11336 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 253
- *   +0x0038 -> line 263
- *   +0x003c -> line 258
- *   +0x0040 -> line 259
- *   +0x0044 -> line 263
- *   +0x004c -> line 265
- *   +0x0060 -> line 267
- *   +0x0068 -> line 269
- *   +0x0074 -> line 274
- *   +0x00b4 -> line 276
- *   +0x00b8 -> line 277
- *   +0x00c0 -> line 280
- *   +0x00e4 -> line 282
- *   +0x00ec -> line 283
- *   +0x00f4 -> line 285
- *   +0x00f8 -> line 288
- *   +0x00fc -> line 310
- *   +0x0100 -> line 290
- *   +0x0104 -> line 291
- *   +0x0108 -> line 302
- *   +0x010c -> line 311
- *   +0x0110 -> line 314
- *   +0x0114 -> line 288
- *   +0x0124 -> line 314
- *   +0x0130 -> line 317
- *   +0x0148 -> line 319
- *   +0x0150 -> line 320
- *   +0x015c -> line 324
- *   +0x0164 -> line 329
- *   +0x016c -> line 330
- *   +0x0178 -> line 338
- *   +0x0180 -> line 343
- *   +0x0184 -> line 341
- *   +0x0188 -> line 343
- *   +0x01c4 -> line 346
- *   +0x01cc -> line 349
- *   +0x01e8 -> line 351
- *   +0x01ec -> line 354
- *   +0x0200 -> line 356
- *   +0x0260 -> line 357
- *   +0x026c -> line 358
- *   +0x029c -> line 361
- *   +0x02a4 -> line 364
- *   +0x02bc -> line 365
- *   +0x02c0 -> line 364
- *   +0x02f8 -> line 365
- *   +0x0300 -> line 367
- *   +0x031c -> line 368
- *   +0x0338 -> line 369
- *   +0x0470 -> line 370
- *   +0x0478 -> line 377
- *   +0x04d4 -> line 380
- *   +0x04dc -> line 381
- *   +0x0618 -> line 383
- *   +0x066c -> line 385
- *   +0x0674 -> line 389
- *   +0x068c -> line 390
- *   +0x0694 -> line 389
- *   +0x06cc -> line 390
- *   +0x06d4 -> line 391
- *   +0x06dc -> line 392
- *   +0x06ec -> line 393
- *   +0x06f0 -> line 392
- *   +0x073c -> line 393
- *   +0x0858 -> line 394
- *   +0x0860 -> line 396
- *   +0x0868 -> line 399
- *   +0x0880 -> line 400
- *   +0x0884 -> line 399
- *   +0x08bc -> line 400
- *   +0x08c4 -> line 401
- *   +0x08d0 -> line 402
- *   +0x08ec -> line 403
- *   +0x0908 -> line 404
- *   +0x0a40 -> line 405
- *   +0x0a48 -> line 411
- *   +0x0aa4 -> line 415
- *   +0x0aac -> line 416
- *   +0x0be8 -> line 418
- *   +0x0c38 -> line 419
- *   +0x0c40 -> line 422
- *   +0x0c90 -> line 424
- *   +0x0c98 -> line 426
- *   +0x0cb4 -> line 427
- *   +0x0cbc -> line 430
- *   +0x0cd8 -> line 433
- *   +0x0ce8 -> line 437
- *   +0x0cec -> line 433
- *   +0x0d38 -> line 437
- *   +0x0e5c -> line 438
- *   +0x0e68 -> line 439
- *   +0x0e70 -> line 441
- *   +0x0e88 -> line 442
- *   +0x0e94 -> line 441
- *   +0x0ea0 -> line 442
- *   +0x0ea4 -> line 441
- *   +0x0eb4 -> line 442
- *   +0x0eb8 -> line 441
- *   +0x0ebc -> line 442
- *   +0x0ec0 -> line 441
- *   +0x0ec4 -> line 442
- *   +0x0ed4 -> line 443
- *   +0x0ed8 -> line 441
- *   +0x0ef0 -> line 442
- *   +0x0f14 -> line 443
- *   +0x0f18 -> line 442
- *   +0x0f1c -> line 443
- *   +0x0f24 -> line 442
- *   +0x0f28 -> line 443
- *   +0x0f2c -> line 442
- *   +0x0f30 -> line 443
- *   +0x0f38 -> line 444
- *   +0x1074 -> line 445
- *   +0x1080 -> line 446
- *   +0x1088 -> line 448
- *   +0x10a0 -> line 449
- *   +0x10ac -> line 448
- *   +0x10b8 -> line 449
- *   +0x10bc -> line 448
- *   +0x10cc -> line 449
- *   +0x10d0 -> line 448
- *   +0x10d4 -> line 449
- *   +0x10d8 -> line 448
- *   +0x10dc -> line 449
- *   +0x10ec -> line 450
- *   +0x10f0 -> line 448
- *   +0x1108 -> line 449
- *   +0x112c -> line 450
- *   +0x1130 -> line 449
- *   +0x1134 -> line 450
- *   +0x113c -> line 449
- *   +0x1140 -> line 450
- *   +0x1144 -> line 449
- *   +0x1148 -> line 450
- *   +0x1150 -> line 451
- *   +0x128c -> line 452
- *   +0x1298 -> line 453
- *   +0x12a0 -> line 455
- *   +0x12a8 -> line 458
- *   +0x12c0 -> line 459
- *   +0x12c4 -> line 458
- *   +0x12fc -> line 459
- *   +0x1304 -> line 460
- *   +0x1310 -> line 461
- *   +0x132c -> line 462
- *   +0x1348 -> line 463
- *   +0x1350 -> line 472
- *   +0x13ac -> line 473
- *   +0x13b4 -> line 475
- *   +0x13c4 -> line 476
- *   +0x13c8 -> line 475
- *   +0x1414 -> line 476
- *   +0x1534 -> line 481
- *   +0x1548 -> line 483
- *   +0x1554 -> line 485
- *   +0x1564 -> line 486
- *   +0x156c -> line 489
- *   +0x157c -> line 492
- *   +0x158c -> line 494
- *   +0x159c -> line 495
- *   +0x15a4 -> line 498
- *   +0x15b4 -> line 500
- *   +0x15bc -> line 501
- *   +0x15c0 -> line 500
- *   +0x15c4 -> line 504
- *   +0x15d4 -> line 508
- *   +0x15e4 -> line 511
- *   +0x15e8 -> line 512
- *   +0x15f0 -> line 515
- *   +0x1600 -> line 516
- *   +0x1604 -> line 515
- *   +0x160c -> line 516
- *   +0x1610 -> line 518
- *   +0x1614 -> line 521
- *   +0x1618 -> line 518
- *   +0x1620 -> line 519
- *   +0x1628 -> line 521
- *   +0x1630 -> line 522
- *   +0x1638 -> line 523
- *   +0x1648 -> line 525
- *   +0x1650 -> line 528
- *   +0x165c -> line 530
- *   +0x1664 -> line 531
- *   +0x166c -> line 532
- *   +0x1674 -> line 536
- *   +0x167c -> line 543
- *   +0x1684 -> line 585
- *   +0x1698 -> line 591
- *   +0x16a4 -> line 594
- *   +0x16ac -> line 596
- *   +0x16b0 -> line 597
- *   +0x16b8 -> line 602
- *   +0x1718 -> line 603
- *   +0x1724 -> line 604
- *   +0x1728 -> line 605
- *   +0x172c -> line 613
- *   +0x1750 -> line 617
- *   +0x175c -> line 620
- *   +0x1760 -> line 621
- *   +0x1768 -> line 624
- *   +0x1778 -> line 625
- *   +0x177c -> line 624
- *   +0x1784 -> line 625
- *   +0x1788 -> line 628
- *   +0x178c -> line 631
- *   +0x1790 -> line 628
- *   +0x1798 -> line 629
- *   +0x17a0 -> line 631
- *   +0x17a8 -> line 632
- *   +0x17b0 -> line 633
- *   +0x17c0 -> line 635
- *   +0x17c8 -> line 638
- *   +0x17d4 -> line 640
- *   +0x17dc -> line 641
- *   +0x17e4 -> line 642
- *   +0x17ec -> line 650
- *   +0x1800 -> line 652
- *   +0x180c -> line 654
- *   +0x181c -> line 655
- *   +0x1824 -> line 658
- *   +0x1834 -> line 661
- *   +0x1844 -> line 663
- *   +0x1854 -> line 664
- *   +0x185c -> line 667
- *   +0x186c -> line 669
- *   +0x1874 -> line 670
- *   +0x1878 -> line 669
- *   +0x187c -> line 675
- *   +0x189c -> line 683
- *   +0x18a4 -> line 685
- *   +0x18bc -> line 686
- *   +0x18c0 -> line 685
- *   +0x18f8 -> line 686
- *   +0x1900 -> line 687
- *   +0x191c -> line 688
- *   +0x192c -> line 689
- *   +0x1930 -> line 688
- *   +0x197c -> line 689
- *   +0x1a98 -> line 691
- *   +0x1aa0 -> line 695
- *   +0x1aac -> line 697
- *   +0x1ab4 -> line 698
- *   +0x1ad0 -> line 699
- *   +0x1ad8 -> line 698
- *   +0x1ae4 -> line 699
- *   +0x1ae8 -> line 698
- *   +0x1af8 -> line 699
- *   +0x1afc -> line 698
- *   +0x1b00 -> line 699
- *   +0x1b04 -> line 698
- *   +0x1b08 -> line 699
- *   +0x1b18 -> line 700
- *   +0x1b1c -> line 698
- *   +0x1b34 -> line 699
- *   +0x1b54 -> line 700
- *   +0x1b58 -> line 699
- *   +0x1b5c -> line 700
- *   +0x1b64 -> line 699
- *   +0x1b68 -> line 700
- *   +0x1b70 -> line 699
- *   +0x1b74 -> line 700
- *   +0x1b7c -> line 703
- *   +0x1b80 -> line 702
- *   +0x1b84 -> line 703
- *   +0x1cbc -> line 709
- *   +0x1cc4 -> line 713
- *   +0x1cd4 -> line 718
- *   +0x1cdc -> line 721
- *   +0x1cf4 -> line 722
- *   +0x1cfc -> line 721
- *   +0x1d34 -> line 722
- *   +0x1d3c -> line 723
- *   +0x1d44 -> line 724
- *   +0x1d4c -> line 727
- *   +0x1d58 -> line 729
- *   +0x1d60 -> line 730
- *   +0x1d64 -> line 731
- *   +0x1d68 -> line 730
- *   +0x1d6c -> line 731
- *   +0x1d74 -> line 730
- *   +0x1d84 -> line 731
- *   +0x1d88 -> line 730
- *   +0x1dc0 -> line 731
- *   +0x1dc8 -> line 734
- *   +0x1e24 -> line 736
- *   +0x1e2c -> line 741
- *   +0x1f68 -> line 743
- *   +0x1f70 -> line 747
- *   +0x1f8c -> line 752
- *   +0x1fe0 -> line 753
- *   +0x1fe8 -> line 755
- *   +0x1ff0 -> line 759
- *   +0x2000 -> line 765
- *   +0x2010 -> line 766
- *   +0x2014 -> line 765
- *   +0x2060 -> line 766
- *   +0x2184 -> line 767
- *   +0x2190 -> line 768
- *   +0x2198 -> line 771
- *   +0x21a4 -> line 773
- *   +0x21ac -> line 774
- *   +0x21c8 -> line 775
- *   +0x21d8 -> line 776
- *   +0x21dc -> line 775
- *   +0x2228 -> line 776
- *   +0x234c -> line 777
- *   +0x2358 -> line 779
- *   +0x2360 -> line 782
- *   +0x2368 -> line 785
- *   +0x2374 -> line 790
- *   +0x2380 -> line 793
- *   +0x2398 -> line 794
- *   +0x23a0 -> line 793
- *   +0x23d8 -> line 794
- *   +0x23e0 -> line 795
- *   +0x23e8 -> line 796
- *   +0x2440 -> line 799
- *   +0x2444 -> line 798
- *   +0x2448 -> line 799
- *   +0x257c -> line 801
- *   +0x2584 -> line 815
- *   +0x2590 -> line 813
- *   +0x2594 -> line 815
- *   +0x25c8 -> line 824
- *   +0x25d0 -> line 826
- *   +0x25e4 -> line 828
- *   +0x25e8 -> line 826
- *   +0x25fc -> line 828
- *   +0x2600 -> line 826
- *   +0x260c -> line 828
- *   +0x2610 -> line 826
- *   +0x261c -> line 828
- *   +0x2624 -> line 826
- *   +0x2628 -> line 828
- *   +0x2638 -> line 826
- *   +0x263c -> line 828
- *   +0x2640 -> line 826
- *   +0x2644 -> line 828
- *   +0x2648 -> line 826
- *   +0x264c -> line 828
- *   +0x2650 -> line 826
- *   +0x2660 -> line 828
- *   +0x2664 -> line 829
- *   +0x2668 -> line 828
- *   +0x2670 -> line 829
- *   +0x2674 -> line 828
- *   +0x267c -> line 826
- *   +0x2680 -> line 828
- *   +0x2684 -> line 826
- *   +0x2694 -> line 830
- *   +0x2698 -> line 829
- *   +0x269c -> line 828
- *   +0x26a0 -> line 829
- *   +0x26a4 -> line 828
- *   +0x26a8 -> line 829
- *   +0x26b4 -> line 830
- *   +0x26b8 -> line 826
- *   +0x26bc -> line 829
- *   +0x26c0 -> line 826
- *   +0x26c4 -> line 829
- *   +0x26c8 -> line 828
- *   +0x26d0 -> line 829
- *   +0x26f4 -> line 830
- *   +0x26fc -> line 833
- *   +0x2704 -> line 834
- *   +0x270c -> line 837
- *   +0x2720 -> line 838
- *   +0x2724 -> line 837
- *   +0x272c -> line 838
- *   +0x2730 -> line 837
- *   +0x2740 -> line 838
- *   +0x2744 -> line 837
- *   +0x2754 -> line 838
- *   +0x2758 -> line 837
- *   +0x275c -> line 838
- *   +0x2760 -> line 837
- *   +0x2764 -> line 838
- *   +0x2768 -> line 837
- *   +0x276c -> line 838
- *   +0x2770 -> line 837
- *   +0x2774 -> line 838
- *   +0x277c -> line 839
- *   +0x2780 -> line 838
- *   +0x2784 -> line 837
- *   +0x278c -> line 838
- *   +0x2794 -> line 837
- *   +0x279c -> line 838
- *   +0x27ac -> line 839
- *   +0x27b8 -> line 838
- *   +0x27c0 -> line 839
- *   +0x27c4 -> line 838
- *   +0x27c8 -> line 839
- *   +0x27d4 -> line 838
- *   +0x27dc -> line 839
- *   +0x27e0 -> line 838
- *   +0x27e4 -> line 839
- *   +0x2830 -> line 842
- *   +0x2838 -> line 845
- *   +0x2974 -> line 848
- *   +0x297c -> line 851
- *   +0x2990 -> line 852
- *   +0x2994 -> line 851
- *   +0x299c -> line 852
- *   +0x29a0 -> line 853
- *   +0x29a4 -> line 851
- *   +0x29b4 -> line 852
- *   +0x29b8 -> line 851
- *   +0x29c8 -> line 855
- *   +0x29cc -> line 852
- *   +0x29d0 -> line 851
- *   +0x29d4 -> line 852
- *   +0x29d8 -> line 851
- *   +0x29e0 -> line 852
- *   +0x29e4 -> line 851
- *   +0x29e8 -> line 852
- *   +0x29ec -> line 851
- *   +0x29f0 -> line 852
- *   +0x29f4 -> line 851
- *   +0x29f8 -> line 853
- *   +0x29fc -> line 852
- *   +0x2a04 -> line 851
- *   +0x2a08 -> line 852
- *   +0x2a0c -> line 851
- *   +0x2a10 -> line 852
- *   +0x2a14 -> line 853
- *   +0x2a18 -> line 852
- *   +0x2a24 -> line 853
- *   +0x2a28 -> line 852
- *   +0x2a2c -> line 853
- *   +0x2a30 -> line 852
- *   +0x2a34 -> line 853
- *   +0x2a40 -> line 855
- *   +0x2a44 -> line 852
- *   +0x2a48 -> line 853
- *   +0x2a4c -> line 852
- *   +0x2a50 -> line 853
- *   +0x2a54 -> line 852
- *   +0x2a58 -> line 853
- *   +0x2a5c -> line 855
- *   +0x2a60 -> line 853
- *   +0x2a64 -> line 855
- *   +0x2a68 -> line 852
- *   +0x2a6c -> line 855
- *   +0x2a70 -> line 852
- *   +0x2a74 -> line 853
- *   +0x2a7c -> line 855
- *   +0x2a84 -> line 853
- *   +0x2a90 -> line 856
- *   +0x2a94 -> line 853
- *   +0x2a98 -> line 855
- *   +0x2a9c -> line 853
- *   +0x2aa0 -> line 855
- *   +0x2aa4 -> line 853
- *   +0x2ac0 -> line 855
- *   +0x2ac4 -> line 853
- *   +0x2ac8 -> line 855
- *   +0x2acc -> line 853
- *   +0x2ad0 -> line 855
- *   +0x2ad4 -> line 853
- *   +0x2ad8 -> line 855
- *   +0x2b00 -> line 857
- *   +0x2b08 -> line 858
- *   +0x2b10 -> line 859
- *   +0x2b2c -> line 860
- *   +0x2b30 -> line 859
- *   +0x2b44 -> line 860
- *   +0x2b48 -> line 859
- *   +0x2b58 -> line 860
- *   +0x2b5c -> line 859
- *   +0x2b60 -> line 860
- *   +0x2b64 -> line 859
- *   +0x2b6c -> line 860
- *   +0x2b70 -> line 859
- *   +0x2b74 -> line 860
- *   +0x2b78 -> line 859
- *   +0x2b7c -> line 861
- *   +0x2b80 -> line 859
- *   +0x2b88 -> line 860
- *   +0x2b8c -> line 859
- *   +0x2b94 -> line 860
- *   +0x2b98 -> line 859
- *   +0x2bac -> line 860
- *   +0x2bb8 -> line 861
- *   +0x2bbc -> line 860
- *   +0x2bc0 -> line 861
- *   +0x2bcc -> line 859
- *   +0x2bd4 -> line 860
- *   +0x2be0 -> line 859
- *   +0x2bf0 -> line 860
- *   +0x2c04 -> line 861
- *   +0x2c10 -> line 864
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* hVisualMaterial)
 {
-    float dv;
     float du;
-    char Operator;
-    anon_2* pMat;
+    float dv;
+    GLI_tdstTexture_* p_stTexture;
+    int bUseAlpha;
     int Local_LastTextureMode;
     void* p_stLastTexture;
-    int bUseAlpha;
-    GLI_tdstTexture_* p_stTexture;
+    anon_2* pMat;
+    char Operator;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    int HasVertexTransparency;
+
+    p_stLastTexture = (void*)GLI_g_p_stLastTexture;
+    Local_LastTextureMode = GLI_g_LastTextureMode;
+    GLI_g_bChromeEffectOnThisLayer = 0;
+
+    if (GLI_g_BadColorMask)
+        PS2glColorMask(1, 1, 1, 0);
+
+    if (hVisualMaterial != NULL)
+    {
+        if (GLI_g_RecoverMode)
+            goto RecoverMode;
+
+        HasVertexTransparency = GLI_g_HasVertexTransparency;
+        if (HasVertexTransparency || ((GLI_BIG_GLOBALS_xGlobalAlpha < 0.98f) && !(GLI_BIG_GLOBALS_lCurrentDrawMask & 8)))
+        {
+            bUseAlpha = 1;
+        }
+        else
+        {
+            if (hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage].ulSetMaterialFunction)
+            {
+                ((void (*)(GLI_tdstMaterial_*))hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage].ulSetMaterialFunction)(hVisualMaterial);
+                return;
+            }
+            bUseAlpha = 0;
+        }
+
+        pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+
+        GLI_g_LastTextureMode = 0;
+        GLI_g_p_stLastTexture = 0;
+
+        GLI_g_HasVertexTransparency = 0;
+
+        p_stTexture = NULL;
+        PS2GL_g_DontUpdateTexture = 0;
+
+        if (hVisualMaterial->lNumberOfDisplayNode > 1)
+        {
+            GLI_BIG_GLOBALS_hCurrentMaterial = hVisualMaterial;
+            if (!GLI_g_DontRefreshAnimated || !GLI_g_AnimatedTextureToUse)
+            {
+                GLI_xRefreshAnimatedTexture(hVisualMaterial);
+                if (hVisualMaterial->p_stTexture != NULL)
+                    p_stTexture = hVisualMaterial->p_stTexture;
+            }
+            else
+            {
+                p_stTexture = (GLI_tdstTexture_*)GLI_g_AnimatedTextureToUse;
+            }
+        }
+        else if (hVisualMaterial->ulNbTextureStages)
+        {
+            GLI_vRefreshMultiTexturePart(hVisualMaterial);
+
+            p_stTexture = pMat->pst_Texture;
+            Operator = pMat->c_Operator;
+
+            if (GLI_cGetUVSource(&hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage]) == 4)
+                GLI_g_bChromeEffectOnThisLayer = 1;
+
+            if ((Operator == 2) && HasVertexTransparency)
+                Operator = 3;
+
+            if (p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam))
+            {
+                M_ENABLE_TEXTURE();
+                PS2glBindTexture(0xDE1, p_stSpecParam->TextureID);
+
+                switch (Operator)
+                {
+                    case 2:
+                        if (bUseAlpha)
+                        {
+                            M_ENABLE_BLEND();
+                            PS2glDepthMask(0);
+                            PS2glSetGsRegister(0x42, 0x64 | ((unsigned long)(unsigned int)MTH_M_xRealToLong(GLI_BIG_GLOBALS_xGlobalAlpha * 128.0f) << 32), 0);
+                            SET_FOGC();
+                        }
+                        else
+                        {
+                            M_DISABLE_BLEND();
+                            PS2glDepthMask(1);
+                            SET_FOGC();
+                        }
+                        M_DISABLE_ALPHATEST();
+                        break;
+
+                    case 3:
+                    case 4:
+                        M_ENABLE_BLEND();
+                        PS2glBlendFunc(0x302, 0x303);
+                        PS2glDepthMask(0);
+                        M_DISABLE_ALPHATEST();
+                        SET_FOGC();
+                        break;
+
+                    case 8:
+                        if (bUseAlpha)
+                        {
+                            M_ENABLE_BLEND();
+                            PS2glDepthMask(0);
+                            PS2glBlendFunc(0x302, 0x303);
+                            PS2glSetGsRegister(0x42, 0x64 | ((unsigned long)(unsigned int)MTH_M_xRealToLong(GLI_BIG_GLOBALS_xGlobalAlpha * 128.0f) << 32), 0);
+                            SET_FOGC();
+                        }
+                        else
+                        {
+                            M_DISABLE_BLEND();
+                            PS2glDepthMask(1);
+                            SET_FOGC();
+                        }
+                        M_ENABLE_ALPHATEST();
+                        break;
+
+                    case 1:
+                    case 7:
+                        M_ENABLE_BLEND();
+                        if (bUseAlpha)
+                        {
+                            PS2glSetGsRegister(0x42, 0x8000000048, 0);
+                        }
+                        else
+                        {
+                            PS2glSetGsRegister(0x42, 0x8000000068, 0);
+                        }
+                        M_DISABLE_ALPHATEST();
+                        SET_FOG(4, 3, g_fFogColorZero);
+                        PS2glDepthMask(0);
+                        break;
+
+                    case 0:
+                        M_ENABLE_BLEND();
+                        M_DISABLE_ALPHATEST();
+                        PS2glSetGsRegister(0x42, 0x80000000A1, 0);
+                        SET_FOG(4, 3, g_fFogColorZero);
+                        PS2glDepthMask(0);
+                        break;
+
+                    case 5:
+                        M_ENABLE_BLEND();
+                        M_DISABLE_ALPHATEST();
+                        PS2glSetGsRegister(0x42, 0x8000000089, 0);
+                        SET_FOGC();
+                        PS2glDepthMask(0);
+                        break;
+
+                    default:
+                        if (bUseAlpha)
+                        {
+                            M_ENABLE_BLEND();
+                            PS2glDepthMask(0);
+                            PS2glBlendFunc(0x302, 0x303);
+                            PS2glSetGsRegister(0x42, 0x64 | ((unsigned long)(unsigned int)MTH_M_xRealToLong(GLI_BIG_GLOBALS_xGlobalAlpha * 128.0f) << 32), 0);
+                        }
+                        else
+                        {
+                            M_DISABLE_BLEND();
+                            PS2glDepthMask(1);
+                        }
+                        M_DISABLE_ALPHATEST();
+                        SET_FOGC();
+                        break;
+                }
+
+                if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+                {
+                    if (pMat->ulTextureProperties & 1)
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+
+                    if (pMat->ulTextureProperties & 2)
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+
+                    GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+                    PS2GL_g_DontUpdateTexture = 0;
+                }
+
+                if (pMat->c_Flags & 2)
+                {
+                    if (hVisualMaterial->lIncrementIsEnable == 2)
+                    {
+                        du = hVisualMaterial->fAddU;
+                        dv = hVisualMaterial->fAddV;
+                    }
+                    else
+                    {
+                        du = 1000.0f * g_ffFrameTime * pMat->st_UVDynamicPos.stTrans[0];
+                        dv = 1000.0f * g_ffFrameTime * pMat->st_UVDynamicPos.stTrans[1];
+                    }
+
+                    du -= (float)(int)du;
+                    dv -= (float)(int)dv;
+
+                    PS2glMatrixMode(0x1702);
+                    PS2glLoadIdentity();
+                    PS2glTranslatef(du, dv, 0.0f);
+
+                    g_TextMatrixIsIdentity = 0;
+                }
+                else if (!g_TextMatrixIsIdentity)
+                {
+                    PS2glMatrixMode(0x1702);
+                    PS2glLoadIdentity();
+                    g_TextMatrixIsIdentity = 1;
+                }
+                return;
+            }
+        }
+        else
+        {
+            p_stTexture = hVisualMaterial->p_stTexture;
+        }
+
+        if (p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam))
+        {
+            if (p_stSpecParam->TextureID)
+            {
+                if ((void*)p_stTexture == p_stLastTexture)
+                {
+                    PS2GL_g_DontUpdateTexture = 1;
+                }
+                else
+                {
+                    M_ENABLE_TEXTURE();
+                    PS2glBindTexture(0xDE1, p_stSpecParam->TextureID);
+                    GLI_g_p_stLastTexture = (int)p_stTexture;
+                    PS2GL_g_DontUpdateTexture = 0;
+                }
+
+                if (hVisualMaterial->lIncrementIsEnable && !(hVisualMaterial && (hVisualMaterial->lMaterialAdditionnalType & 2)))
+                {
+                    if (hVisualMaterial->lIncrementIsEnable == 2)
+                    {
+                        du = hVisualMaterial->fAddU;
+                        dv = hVisualMaterial->fAddV;
+                    }
+                    else
+                    {
+                        du = 1000.0f * g_ffFrameTime * hVisualMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[0];
+                        dv = 1000.0f * g_ffFrameTime * hVisualMaterial->a_stMultiMaterial[0].st_UVDynamicPos.stTrans[1];
+                    }
+
+                    du -= (float)(int)du;
+                    dv -= (float)(int)dv;
+
+                    PS2glMatrixMode(0x1702);
+                    PS2glLoadIdentity();
+                    PS2glTranslatef(du, dv, 0.0f);
+
+                    g_TextMatrixIsIdentity = 0;
+                }
+                else if (!g_TextMatrixIsIdentity)
+                {
+                    PS2glMatrixMode(0x1702);
+                    PS2glLoadIdentity();
+                    g_TextMatrixIsIdentity = 1;
+                }
+
+                if (GLI_g_LastCyclingMode != (pMat->ulTextureProperties & 3))
+                {
+                    if (pMat->ulTextureProperties & 1)
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+
+                    if (pMat->ulTextureProperties & 2)
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+
+                    GLI_g_LastCyclingMode = pMat->ulTextureProperties & 3;
+                    PS2GL_g_DontUpdateTexture = 0;
+                }
+
+                if (!(p_stTexture->lTextureCaps & 0x12A) && !(pMat->ulTextureProperties & 0x60))
+                {
+                    if (bUseAlpha)
+                    {
+                        M_ENABLE_BLEND();
+                        PS2glDepthMask(0);
+                        PS2glSetGsRegister(0x42, 0x8000000044, 0);
+                        M_DISABLE_ALPHATEST();
+                        SET_FOGC();
+                    }
+                    else
+                    {
+                        if (Local_LastTextureMode != 1)
+                        {
+                            PS2glDepthMask(1);
+                            M_DISABLE_ALPHATEST();
+                            M_ENABLE_BLEND();
+                            PS2glSetGsRegister(0x42, 0x80000000A8, 0);
+                        }
+                        GLI_g_LastTextureMode = 1;
+                        SET_FOGC();
+                    }
+                    return;
+                }
+                else if (pMat->ulTextureProperties & 0x40)
+                {
+                    if (bUseAlpha)
+                    {
+                        M_ENABLE_BLEND();
+                        PS2glBlendFunc(0x302, 0x303);
+                        PS2glDepthMask(0);
+                    }
+                    else
+                    {
+                        if (Local_LastTextureMode != 2)
+                        {
+                            PS2glDepthMask(1);
+                            M_ENABLE_ALPHATEST();
+                            PS2glAlphaFunc(0x204, 0.1f);
+                            M_DISABLE_BLEND();
+                        }
+                        GLI_g_LastTextureMode = 2;
+                    }
+                    SET_FOGC();
+                    return;
+                }
+                else if ((pMat->ulTextureProperties & 0x20) || ((p_stTexture->lTextureCaps & 0x20) == 0x20))
+                {
+                    M_ENABLE_BLEND();
+                    if (bUseAlpha)
+                    {
+                        PS2glBlendFunc(0x302, 1);
+                        PS2glSetGsRegister(0x42, 0x48, 0);
+                        M_DISABLE_ALPHATEST();
+                        SET_FOG(4, 3, g_fFogColorZero);
+                        PS2glDepthMask(0);
+                    }
+                    else
+                    {
+                        if (Local_LastTextureMode != 4)
+                        {
+                            PS2glBlendFunc(0x302, 1);
+                            PS2glSetGsRegister(0x42, 0x8000000068, 0);
+                            M_DISABLE_ALPHATEST();
+                            SET_FOG(4, 3, g_fFogColorZero);
+                            PS2glDepthMask(0);
+                        }
+                        GLI_g_LastTextureMode = 4;
+                    }
+                    return;
+                }
+                else if (p_stTexture->lTextureCaps & 8)
+                {
+                    if (Local_LastTextureMode != 3)
+                    {
+                        M_ENABLE_BLEND();
+                        PS2glBlendFunc(0x302, 0x303);
+                        PS2glDepthMask(0);
+                        M_DISABLE_ALPHATEST();
+                    }
+                    GLI_g_LastTextureMode = 3;
+                    SET_FOGC();
+                    return;
+                }
+            }
+        }
+    }
+
+    GLI_g_LastTextureMode = 0;
+    GLI_g_p_stLastTexture = 0;
+
+    if ((GLI_BIG_GLOBALS_xGlobalAlpha < 0.98f) && !(GLI_BIG_GLOBALS_lCurrentDrawMask & 8))
+        bUseAlpha = 1;
+    else
+        bUseAlpha = 0;
+
+    if (bUseAlpha)
+    {
+        M_DISABLE_TEXTURE();
+        M_DISABLE_ALPHATEST();
+        M_ENABLE_BLEND();
+        PS2glBlendFunc(0x302, 0x303);
+        PS2glDepthMask(0);
+    }
+    else
+    {
+        M_DISABLE_ALPHATEST();
+        M_DISABLE_BLEND();
+        M_DISABLE_TEXTURE();
+        PS2glDepthMask(1);
+    }
+    SET_FOGC();
+    return;
+
+RecoverMode:
+    M_DISABLE_ALPHATEST();
+    M_DISABLE_BLEND();
+    M_DISABLE_TEXTURE();
+    M_DISABLE_FOG();
+    GLI_g_CurrentFogMode = 3;
+    PS2glDepthMask(1);
+    PS2glDepthMask(0);
+    M_DISABLE_DEPTHTEST();
+    M_ENABLE_BLEND();
+    PS2glSetGsRegister(0x42, 0x2500000068, 0);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 955–989 */
-/* addr: 0x002c1500  size: 916 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 955
- *   +0x0014 -> line 958
- *   +0x0018 -> line 959
- *   +0x001c -> line 962
- *   +0x0020 -> line 974
- *   +0x0030 -> line 962
- *   +0x0040 -> line 974
- *   +0x00cc -> line 975
- *   +0x00f0 -> line 976
- *   +0x0178 -> line 978
- *   +0x0184 -> line 980
- *   +0x018c -> line 981
- *   +0x01a8 -> line 982
- *   +0x01b4 -> line 981
- *   +0x01d0 -> line 982
- *   +0x01d4 -> line 981
- *   +0x01d8 -> line 982
- *   +0x01dc -> line 981
- *   +0x01e0 -> line 982
- *   +0x01f4 -> line 981
- *   +0x020c -> line 982
- *   +0x023c -> line 986
- *   +0x0374 -> line 987
- *   +0x037c -> line 989
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
 {
     GLI_tdstTexture_* p_stTexture;
@@ -1994,35 +1725,6 @@ void SEND_MAT_OPT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
     GLI_g_LastTextureMode = 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 992–1018 */
-/* addr: 0x002c1150  size: 936 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 992
- *   +0x0014 -> line 995
- *   +0x0018 -> line 996
- *   +0x001c -> line 999
- *   +0x0020 -> line 1003
- *   +0x0030 -> line 999
- *   +0x0040 -> line 1003
- *   +0x00cc -> line 1004
- *   +0x00f0 -> line 1005
- *   +0x0178 -> line 1007
- *   +0x0184 -> line 1009
- *   +0x018c -> line 1010
- *   +0x0190 -> line 1011
- *   +0x0194 -> line 1010
- *   +0x0198 -> line 1011
- *   +0x01a0 -> line 1010
- *   +0x01b0 -> line 1011
- *   +0x01b4 -> line 1010
- *   +0x01ec -> line 1011
- *   +0x01f4 -> line 1012
- *   +0x0250 -> line 1014
- *   +0x0388 -> line 1015
- *   +0x0390 -> line 1018
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_NZ(GLI_tdstMaterial_* hVisualMaterial)
 {
     GLI_tdstTexture_* p_stTexture;
@@ -2085,39 +1787,6 @@ void SEND_MAT_OPT_NZ(GLI_tdstMaterial_* hVisualMaterial)
     GLI_g_LastTextureMode = 2;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1022–1049 */
-/* addr: 0x002c0db0  size: 928 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1022
- *   +0x0014 -> line 1025
- *   +0x0018 -> line 1026
- *   +0x001c -> line 1029
- *   +0x0020 -> line 1033
- *   +0x0030 -> line 1029
- *   +0x0040 -> line 1033
- *   +0x00cc -> line 1034
- *   +0x00f0 -> line 1035
- *   +0x0178 -> line 1037
- *   +0x0184 -> line 1039
- *   +0x0188 -> line 1041
- *   +0x018c -> line 1039
- *   +0x0190 -> line 1041
- *   +0x0198 -> line 1039
- *   +0x019c -> line 1041
- *   +0x01a0 -> line 1039
- *   +0x01ac -> line 1041
- *   +0x01b4 -> line 1039
- *   +0x01ec -> line 1041
- *   +0x01f4 -> line 1042
- *   +0x0204 -> line 1043
- *   +0x0208 -> line 1042
- *   +0x0254 -> line 1043
- *   +0x0374 -> line 1044
- *   +0x0380 -> line 1046
- *   +0x0388 -> line 1049
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_ADD(GLI_tdstMaterial_* hVisualMaterial)
 {
     GLI_tdstTexture_* p_stTexture;
@@ -2180,32 +1849,6 @@ void SEND_MAT_OPT_ADD(GLI_tdstMaterial_* hVisualMaterial)
     GLI_g_LastTextureMode = 4;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1053–1080 */
-/* addr: 0x002c0a20  size: 908 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1053
- *   +0x0014 -> line 1056
- *   +0x0018 -> line 1057
- *   +0x001c -> line 1060
- *   +0x0020 -> line 1065
- *   +0x0030 -> line 1060
- *   +0x0040 -> line 1065
- *   +0x00cc -> line 1066
- *   +0x00f0 -> line 1067
- *   +0x0178 -> line 1069
- *   +0x0184 -> line 1071
- *   +0x0198 -> line 1072
- *   +0x01a0 -> line 1071
- *   +0x01d8 -> line 1072
- *   +0x01e0 -> line 1073
- *   +0x01e8 -> line 1074
- *   +0x0240 -> line 1077
- *   +0x0244 -> line 1076
- *   +0x0248 -> line 1077
- *   +0x0374 -> line 1080
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
 {
     GLI_tdstTexture_* p_stTexture;
@@ -2268,36 +1911,6 @@ void SEND_MAT_OPT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
     SET_FOGC();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1083–1110 */
-/* addr: 0x002c0640  size: 992 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1083
- *   +0x001c -> line 1092
- *   +0x0020 -> line 1084
- *   +0x0024 -> line 1085
- *   +0x0028 -> line 1094
- *   +0x002c -> line 1092
- *   +0x0034 -> line 1094
- *   +0x0038 -> line 1092
- *   +0x003c -> line 1094
- *   +0x0040 -> line 1092
- *   +0x0044 -> line 1094
- *   +0x011c -> line 1095
- *   +0x0140 -> line 1096
- *   +0x01c8 -> line 1098
- *   +0x01d4 -> line 1100
- *   +0x01e8 -> line 1101
- *   +0x01f0 -> line 1100
- *   +0x0228 -> line 1101
- *   +0x0230 -> line 1102
- *   +0x0238 -> line 1103
- *   +0x0290 -> line 1107
- *   +0x0294 -> line 1106
- *   +0x0298 -> line 1107
- *   +0x03c4 -> line 1110
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_MULT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
 {
     unsigned int Local_LastTextureMode;
@@ -2362,40 +1975,6 @@ void SEND_MAT_OPT_MULT_ALPHA(GLI_tdstMaterial_* hVisualMaterial)
     SET_FOGC();
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1113–1145 */
-/* addr: 0x002c0250  size: 1000 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1113
- *   +0x001c -> line 1129
- *   +0x0020 -> line 1114
- *   +0x0024 -> line 1115
- *   +0x0028 -> line 1131
- *   +0x002c -> line 1129
- *   +0x0034 -> line 1131
- *   +0x0038 -> line 1129
- *   +0x003c -> line 1131
- *   +0x0040 -> line 1129
- *   +0x0044 -> line 1131
- *   +0x011c -> line 1132
- *   +0x0140 -> line 1133
- *   +0x01c8 -> line 1135
- *   +0x01d4 -> line 1137
- *   +0x01dc -> line 1138
- *   +0x01f8 -> line 1139
- *   +0x0204 -> line 1138
- *   +0x0220 -> line 1139
- *   +0x0224 -> line 1138
- *   +0x0228 -> line 1139
- *   +0x022c -> line 1138
- *   +0x0230 -> line 1139
- *   +0x0244 -> line 1138
- *   +0x025c -> line 1139
- *   +0x028c -> line 1141
- *   +0x03c4 -> line 1142
- *   +0x03cc -> line 1145
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_MULT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
 {
     unsigned int Local_LastTextureMode;
@@ -2459,39 +2038,6 @@ void SEND_MAT_OPT_MULT_OPAQUE(GLI_tdstMaterial_* hVisualMaterial)
     GLI_g_LastTextureMode = 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1148–1181 */
-/* addr: 0x002bfe50  size: 1020 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1148
- *   +0x001c -> line 1164
- *   +0x0020 -> line 1149
- *   +0x0024 -> line 1150
- *   +0x0028 -> line 1166
- *   +0x002c -> line 1164
- *   +0x0034 -> line 1166
- *   +0x0038 -> line 1164
- *   +0x003c -> line 1166
- *   +0x0040 -> line 1164
- *   +0x0044 -> line 1166
- *   +0x011c -> line 1167
- *   +0x0140 -> line 1168
- *   +0x01c8 -> line 1170
- *   +0x01d4 -> line 1172
- *   +0x01dc -> line 1173
- *   +0x01e0 -> line 1174
- *   +0x01e4 -> line 1173
- *   +0x01e8 -> line 1174
- *   +0x01f0 -> line 1173
- *   +0x0200 -> line 1174
- *   +0x0204 -> line 1173
- *   +0x023c -> line 1174
- *   +0x0244 -> line 1175
- *   +0x02a0 -> line 1177
- *   +0x03d8 -> line 1178
- *   +0x03e0 -> line 1181
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_MULT_NZ(GLI_tdstMaterial_* hVisualMaterial)
 {
     unsigned int Local_LastTextureMode;
@@ -2556,43 +2102,6 @@ void SEND_MAT_OPT_MULT_NZ(GLI_tdstMaterial_* hVisualMaterial)
     GLI_g_LastTextureMode = 2;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1184–1211 */
-/* addr: 0x002bfa60  size: 1008 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1184
- *   +0x001c -> line 1193
- *   +0x0020 -> line 1185
- *   +0x0024 -> line 1186
- *   +0x0028 -> line 1195
- *   +0x002c -> line 1193
- *   +0x0034 -> line 1195
- *   +0x0038 -> line 1193
- *   +0x003c -> line 1195
- *   +0x0040 -> line 1193
- *   +0x0044 -> line 1195
- *   +0x011c -> line 1196
- *   +0x0140 -> line 1197
- *   +0x01c8 -> line 1199
- *   +0x01d4 -> line 1203
- *   +0x01d8 -> line 1201
- *   +0x01dc -> line 1203
- *   +0x01e4 -> line 1201
- *   +0x01e8 -> line 1203
- *   +0x01ec -> line 1201
- *   +0x01f8 -> line 1203
- *   +0x0200 -> line 1201
- *   +0x0238 -> line 1203
- *   +0x0240 -> line 1204
- *   +0x025c -> line 1205
- *   +0x0260 -> line 1204
- *   +0x0298 -> line 1205
- *   +0x02a0 -> line 1208
- *   +0x02a4 -> line 1207
- *   +0x02a8 -> line 1208
- *   +0x03d4 -> line 1211
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SEND_MAT_OPT_MULT_ADD(GLI_tdstMaterial_* hVisualMaterial)
 {
     unsigned int Local_LastTextureMode;
@@ -2657,22 +2166,6 @@ void SEND_MAT_OPT_MULT_ADD(GLI_tdstMaterial_* hVisualMaterial)
     SET_FOG(4, 3, g_fFogColorZero);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1220–1243 */
-/* addr: 0x002bf9d0  size: 132 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1220
- *   +0x0010 -> line 1221
- *   +0x001c -> line 1224
- *   +0x0020 -> line 1225
- *   +0x0038 -> line 1228
- *   +0x0044 -> line 1230
- *   +0x004c -> line 1236
- *   +0x0070 -> line 1239
- *   +0x0078 -> line 1242
- *   +0x007c -> line 1243
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_DRV_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
 {
     unsigned int Operator;
@@ -2695,78 +2188,81 @@ int GLI_DRV_IsMaterialTransparent(GLI_tdstMaterial_* hVisualMaterial)
     return 1;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1252–1344 */
-/* addr: 0x002bf800  size: 456 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1252
- *   +0x0008 -> line 1264
- *   +0x0018 -> line 1269
- *   +0x005c -> line 1275
- *   +0x0060 -> line 1279
- *   +0x0074 -> line 1281
- *   +0x0094 -> line 1285
- *   +0x0098 -> line 1286
- *   +0x00a0 -> line 1288
- *   +0x00b0 -> line 1291
- *   +0x00b8 -> line 1292
- *   +0x00c0 -> line 1293
- *   +0x00c8 -> line 1296
- *   +0x00d0 -> line 1297
- *   +0x00d8 -> line 1298
- *   +0x00e4 -> line 1301
- *   +0x00ec -> line 1306
- *   +0x0110 -> line 1314
- *   +0x0140 -> line 1319
- *   +0x0144 -> line 1320
- *   +0x0148 -> line 1319
- *   +0x014c -> line 1320
- *   +0x0158 -> line 1321
- *   +0x016c -> line 1324
- *   +0x0188 -> line 1328
- *   +0x0190 -> line 1332
- *   +0x0198 -> line 1335
- *   +0x01a0 -> line 1338
- *   +0x01a4 -> line 1341
- *   +0x01a8 -> line 1338
- *   +0x01ac -> line 1342
- *   +0x01c0 -> line 1344
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vAssignOptimizedFunctionToMaterial(GLI_tdstMaterial_* hVisualMaterial)
 {
-    unsigned int Operator;
-    anon_2* pMat;
-    int stage;
-    GLI_tdstTexture_* p_stTexture;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexture_* p_stTexture;
+    int stage;
+    anon_2* pMat;
+    unsigned int Operator;
+
+    if (hVisualMaterial == NULL)
+        return;
+
+    hVisualMaterial->a_stMultiMaterial[0].ulSetMaterialFunction = 0;
+    hVisualMaterial->a_stMultiMaterial[1].ulSetMaterialFunction = 0;
+    hVisualMaterial->a_stMultiMaterial[2].ulSetMaterialFunction = 0;
+    hVisualMaterial->a_stMultiMaterial[3].ulSetMaterialFunction = 0;
+
+    p_stTexture = hVisualMaterial->p_stTexture;
+    if ((hVisualMaterial->lNumberOfDisplayNode == 0) && (hVisualMaterial->ulNbTextureStages == 0) && (hVisualMaterial->lIncrementIsEnable == 0) && (p_stTexture != NULL) && !(hVisualMaterial && (hVisualMaterial->lMaterialAdditionnalType & 2)))
+    {
+        p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam;
+        pMat = hVisualMaterial->a_stMultiMaterial;
+
+        if (p_stSpecParam && p_stSpecParam->TextureID)
+        {
+            if (!(p_stTexture->lTextureCaps & 8) && !(pMat->ulTextureProperties & 0x60))
+            {
+                hVisualMaterial->a_stMultiMaterial[0].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_OPAQUE;
+            }
+            else
+            {
+                Operator = pMat->ulTextureProperties;
+                if (Operator & 0x40)
+                    hVisualMaterial->a_stMultiMaterial[0].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_NZ;
+                else if (Operator & 0x20)
+                    hVisualMaterial->a_stMultiMaterial[0].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_ADD;
+                else if ((p_stTexture->lTextureCaps & 8) == 8)
+                    hVisualMaterial->a_stMultiMaterial[0].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_ALPHA;
+            }
+        }
+    }
+
+    if ((hVisualMaterial->lNumberOfDisplayNode == 0) && (hVisualMaterial->ulNbTextureStages != 0) && (hVisualMaterial->lIncrementIsEnable == 0))
+    {
+        for (stage = 0; stage < hVisualMaterial->ulNbTextureStages; stage++)
+        {
+            Operator = hVisualMaterial->a_stMultiMaterial[stage].c_Operator;
+            p_stSpecParam = (GLI_tdstTexturePS2GL_*)hVisualMaterial->a_stMultiMaterial[stage].pst_Texture->p_stSpecParam;
+            if (hVisualMaterial->a_stMultiMaterial[stage].c_Flags & 2)
+                continue;
+            if (!p_stSpecParam || !p_stSpecParam->TextureID)
+                continue;
+            hVisualMaterial->a_stMultiMaterial[stage].ulSetMaterialFunction = 0;
+            /* Stores through a cast so MWCC does not share the field address with
+             * the zero store above (retail folds 0xcc into every sw). */
+            switch (Operator)
+            {
+            case 2:
+                *(unsigned int*)&hVisualMaterial->a_stMultiMaterial[stage].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_MULT_OPAQUE;
+                break;
+            case 3:
+            case 4:
+                *(unsigned int*)&hVisualMaterial->a_stMultiMaterial[stage].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_MULT_ALPHA;
+                break;
+            case 8:
+                *(unsigned int*)&hVisualMaterial->a_stMultiMaterial[stage].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_MULT_NZ;
+                break;
+            case 1:
+            case 7:
+                *(unsigned int*)&hVisualMaterial->a_stMultiMaterial[stage].ulSetMaterialFunction = (unsigned int)SEND_MAT_OPT_MULT_ADD;
+                break;
+            }
+        }
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1389–1416 */
-/* addr: 0x002bf720  size: 224 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1389
- *   +0x0008 -> line 1390
- *   +0x0014 -> line 1394
- *   +0x001c -> line 1395
- *   +0x0028 -> line 1396
- *   +0x0038 -> line 1397
- *   +0x004c -> line 1398
- *   +0x005c -> line 1400
- *   +0x0064 -> line 1401
- *   +0x0070 -> line 1402
- *   +0x0078 -> line 1407
- *   +0x0080 -> line 1408
- *   +0x008c -> line 1409
- *   +0x009c -> line 1410
- *   +0x00b0 -> line 1411
- *   +0x00c0 -> line 1413
- *   +0x00c8 -> line 1414
- *   +0x00d4 -> line 1416
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void SetStaticFog(void)
 {
     unsigned int hRef;
@@ -2792,22 +2288,6 @@ void SetStaticFog(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1440–1453 */
-/* addr: 0x002bf630  size: 236 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1440
- *   +0x0004 -> line 1442
- *   +0x0018 -> line 1444
- *   +0x001c -> line 1446
- *   +0x0038 -> line 1448
- *   +0x00b8 -> line 1449
- *   +0x00c0 -> line 1448
- *   +0x00c8 -> line 1449
- *   +0x00d8 -> line 1451
- *   +0x00e4 -> line 1453
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vForceSkinMaterialIndex(GLI_tdstMaterial_* pMat, unsigned int Index)
 {
     unsigned int i;
@@ -2824,295 +2304,404 @@ void GLI_vForceSkinMaterialIndex(GLI_tdstMaterial_* pMat, unsigned int Index)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 1460–2113 */
-/* addr: 0x002be950  size: 3292 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 1460
- *   +0x0028 -> line 1472
- *   +0x002c -> line 1469
- *   +0x0030 -> line 1472
- *   +0x0038 -> line 1474
- *   +0x0040 -> line 1479
- *   +0x008c -> line 1481
- *   +0x0090 -> line 1482
- *   +0x0098 -> line 1485
- *   +0x009c -> line 1488
- *   +0x00a0 -> line 1499
- *   +0x00a4 -> line 1490
- *   +0x00a8 -> line 1491
- *   +0x00ac -> line 1488
- *   +0x00b4 -> line 1500
- *   +0x00b8 -> line 1488
- *   +0x00c0 -> line 1502
- *   +0x00cc -> line 1511
- *   +0x00d0 -> line 1514
- *   +0x00e0 -> line 1517
- *   +0x00ec -> line 1519
- *   +0x00f4 -> line 1520
- *   +0x0100 -> line 1524
- *   +0x0108 -> line 1529
- *   +0x0110 -> line 1530
- *   +0x011c -> line 1538
- *   +0x0124 -> line 1543
- *   +0x0128 -> line 1541
- *   +0x012c -> line 1543
- *   +0x0168 -> line 1544
- *   +0x0170 -> line 1547
- *   +0x0188 -> line 1549
- *   +0x018c -> line 1552
- *   +0x01a0 -> line 1556
- *   +0x01a8 -> line 1557
- *   +0x01b4 -> line 1560
- *   +0x01e0 -> line 1563
- *   +0x01e8 -> line 1566
- *   +0x01f0 -> line 1567
- *   +0x01f8 -> line 1569
- *   +0x0214 -> line 1570
- *   +0x0230 -> line 1571
- *   +0x0238 -> line 1572
- *   +0x0240 -> line 1579
- *   +0x0248 -> line 1582
- *   +0x0250 -> line 1583
- *   +0x0258 -> line 1585
- *   +0x0264 -> line 1587
- *   +0x026c -> line 1592
- *   +0x0274 -> line 1593
- *   +0x0280 -> line 1594
- *   +0x0288 -> line 1595
- *   +0x0290 -> line 1596
- *   +0x0298 -> line 1599
- *   +0x02a0 -> line 1601
- *   +0x02a8 -> line 1604
- *   +0x02b0 -> line 1605
- *   +0x02b8 -> line 1606
- *   +0x02c4 -> line 1607
- *   +0x02e0 -> line 1608
- *   +0x02fc -> line 1609
- *   +0x0304 -> line 1610
- *   +0x030c -> line 1616
- *   +0x0314 -> line 1620
- *   +0x031c -> line 1621
- *   +0x0324 -> line 1623
- *   +0x0330 -> line 1624
- *   +0x0338 -> line 1627
- *   +0x0340 -> line 1629
- *   +0x0348 -> line 1631
- *   +0x0364 -> line 1632
- *   +0x036c -> line 1635
- *   +0x0384 -> line 1638
- *   +0x0390 -> line 1642
- *   +0x03e8 -> line 1643
- *   +0x03f4 -> line 1645
- *   +0x03fc -> line 1647
- *   +0x0404 -> line 1648
- *   +0x040c -> line 1649
- *   +0x0428 -> line 1650
- *   +0x0480 -> line 1651
- *   +0x048c -> line 1652
- *   +0x0494 -> line 1654
- *   +0x049c -> line 1655
- *   +0x04a4 -> line 1656
- *   +0x04c0 -> line 1657
- *   +0x04c8 -> line 1658
- *   +0x04d0 -> line 1659
- *   +0x04d8 -> line 1661
- *   +0x04e0 -> line 1664
- *   +0x04e8 -> line 1665
- *   +0x04f0 -> line 1666
- *   +0x04fc -> line 1667
- *   +0x0518 -> line 1668
- *   +0x0534 -> line 1669
- *   +0x053c -> line 1678
- *   +0x0544 -> line 1679
- *   +0x054c -> line 1681
- *   +0x0558 -> line 1682
- *   +0x0560 -> line 1688
- *   +0x0570 -> line 1690
- *   +0x0580 -> line 1691
- *   +0x0588 -> line 1694
- *   +0x0594 -> line 1697
- *   +0x05a4 -> line 1699
- *   +0x05b4 -> line 1700
- *   +0x05bc -> line 1703
- *   +0x05c8 -> line 1708
- *   +0x05d4 -> line 1710
- *   +0x05e4 -> line 1711
- *   +0x05f4 -> line 1712
- *   +0x0604 -> line 1713
- *   +0x0614 -> line 1714
- *   +0x061c -> line 1717
- *   +0x062c -> line 1718
- *   +0x063c -> line 1721
- *   +0x064c -> line 1732
- *   +0x0654 -> line 1733
- *   +0x065c -> line 1734
- *   +0x0664 -> line 1735
- *   +0x0688 -> line 1738
- *   +0x068c -> line 1736
- *   +0x0690 -> line 1738
- *   +0x0694 -> line 1740
- *   +0x06a8 -> line 1741
- *   +0x06b4 -> line 1744
- *   +0x06bc -> line 1750
- *   +0x06c4 -> line 1751
- *   +0x06cc -> line 1756
- *   +0x06d4 -> line 1763
- *   +0x06dc -> line 1801
- *   +0x06f0 -> line 1807
- *   +0x06fc -> line 1810
- *   +0x0704 -> line 1813
- *   +0x070c -> line 1820
- *   +0x0714 -> line 1821
- *   +0x0720 -> line 1825
- *   +0x0724 -> line 1826
- *   +0x0728 -> line 1838
- *   +0x074c -> line 1853
- *   +0x0754 -> line 1854
- *   +0x075c -> line 1855
- *   +0x0764 -> line 1856
- *   +0x0788 -> line 1858
- *   +0x078c -> line 1857
- *   +0x0790 -> line 1858
- *   +0x0794 -> line 1861
- *   +0x07a8 -> line 1862
- *   +0x07b4 -> line 1864
- *   +0x07bc -> line 1869
- *   +0x07c8 -> line 1870
- *   +0x07d0 -> line 1871
- *   +0x07d8 -> line 1881
- *   +0x07e8 -> line 1883
- *   +0x07f8 -> line 1884
- *   +0x0800 -> line 1887
- *   +0x080c -> line 1890
- *   +0x081c -> line 1892
- *   +0x082c -> line 1893
- *   +0x0834 -> line 1896
- *   +0x0840 -> line 1902
- *   +0x084c -> line 1904
- *   +0x085c -> line 1905
- *   +0x086c -> line 1906
- *   +0x087c -> line 1907
- *   +0x088c -> line 1908
- *   +0x0894 -> line 1911
- *   +0x08a4 -> line 1912
- *   +0x08b4 -> line 1917
- *   +0x08d4 -> line 1925
- *   +0x08dc -> line 1927
- *   +0x08e4 -> line 1928
- *   +0x08ec -> line 1929
- *   +0x0908 -> line 1930
- *   +0x0910 -> line 1931
- *   +0x0918 -> line 1933
- *   +0x0920 -> line 1939
- *   +0x0928 -> line 1940
- *   +0x0930 -> line 1941
- *   +0x0938 -> line 1942
- *   +0x0954 -> line 1945
- *   +0x095c -> line 1951
- *   +0x0964 -> line 1955
- *   +0x0974 -> line 1960
- *   +0x097c -> line 1963
- *   +0x0984 -> line 1964
- *   +0x0990 -> line 1965
- *   +0x0998 -> line 1966
- *   +0x09a0 -> line 1971
- *   +0x09a8 -> line 1972
- *   +0x09b0 -> line 1973
- *   +0x09c4 -> line 1976
- *   +0x09cc -> line 1983
- *   +0x09d4 -> line 1985
- *   +0x09dc -> line 1989
- *   +0x09f0 -> line 1994
- *   +0x09f8 -> line 1995
- *   +0x0a00 -> line 1997
- *   +0x0a0c -> line 2001
- *   +0x0a1c -> line 2007
- *   +0x0a24 -> line 2008
- *   +0x0a7c -> line 2009
- *   +0x0a88 -> line 2010
- *   +0x0a90 -> line 2015
- *   +0x0a98 -> line 2016
- *   +0x0ab4 -> line 2017
- *   +0x0abc -> line 2018
- *   +0x0b14 -> line 2019
- *   +0x0b20 -> line 2024
- *   +0x0b28 -> line 2027
- *   +0x0b30 -> line 2032
- *   +0x0b44 -> line 2034
- *   +0x0b4c -> line 2035
- *   +0x0b58 -> line 2036
- *   +0x0b60 -> line 2037
- *   +0x0b68 -> line 2038
- *   +0x0b70 -> line 2042
- *   +0x0b78 -> line 2043
- *   +0x0b84 -> line 2044
- *   +0x0b8c -> line 2045
- *   +0x0b94 -> line 2048
- *   +0x0b9c -> line 2050
- *   +0x0ba4 -> line 2064
- *   +0x0be4 -> line 2073
- *   +0x0bec -> line 2075
- *   +0x0bf4 -> line 2077
- *   +0x0bfc -> line 2078
- *   +0x0c04 -> line 2079
- *   +0x0c10 -> line 2082
- *   +0x0c18 -> line 2083
- *   +0x0c20 -> line 2086
- *   +0x0c28 -> line 2087
- *   +0x0c30 -> line 2088
- *   +0x0c38 -> line 2091
- *   +0x0c40 -> line 2094
- *   +0x0c48 -> line 2097
- *   +0x0c50 -> line 2100
- *   +0x0c58 -> line 2101
- *   +0x0c60 -> line 2102
- *   +0x0c68 -> line 2104
- *   +0x0c70 -> line 2105
- *   +0x0c74 -> line 2106
- *   +0x0c80 -> line 2107
- *   +0x0c88 -> line 2108
- *   +0x0c90 -> line 2109
- *   +0x0c98 -> line 2110
- *   +0x0cb4 -> line 2113
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void GLI_vSendStaticMaterialToViewport(GLI_tdstMaterial_* hVisualMaterial)
 {
-    unsigned int hRef;
-    char Operator;
-    anon_2* pMat;
-    int HasVertexTransparency;
-    int bUseAlpha;
-    GLI_tdstTexture_* p_stTexture;
     GLI_tdstTexturePS2GL_* p_stSpecParam;
-    /* TODO: decompile from asm/... */
+    GLI_tdstTexture_* p_stTexture;
+    int bUseAlpha;
+    int HasVertexTransparency;
+    anon_2* pMat;
+    char Operator;
+    unsigned int hRef;
+
+    GLI_g_bChromeEffectOnThisLayer = 0;
+    GLI_g_ThisLayerHasScrolling = 0;
+
+    if (!GLI_g_RecoverMode)
+    {
+        if (hVisualMaterial != NULL)
+        {
+            if (!GLI_b_CreatingActorSDL && (GLI_g_HasVertexTransparency || ((GLI_BIG_GLOBALS_xGlobalAlpha < 0.98f) && !(GLI_BIG_GLOBALS_lCurrentDrawMask & 8))))
+                bUseAlpha = 1;
+            else
+                bUseAlpha = 0;
+
+            pMat = &hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage];
+
+            GLI_g_LastTextureMode = 0;
+            GLI_g_p_stLastTexture = 0;
+
+            HasVertexTransparency = GLI_g_HasVertexTransparency;
+            GLI_g_HasVertexTransparency = 0;
+
+            if (GLI_b_CreatingActorSDL)
+                HasVertexTransparency = 0;
+
+            PS2GL_g_DontUpdateTexture = 0;
+            p_stTexture = NULL;
+
+            if (hVisualMaterial->lNumberOfDisplayNode > 1)
+            {
+                GLI_BIG_GLOBALS_hCurrentMaterial = hVisualMaterial;
+                if (!GLI_g_DontRefreshAnimated)
+                {
+                    GLI_xRefreshAnimatedTexture(hVisualMaterial);
+                    if (hVisualMaterial->p_stTexture != NULL)
+                        p_stTexture = hVisualMaterial->p_stTexture;
+                }
+                else
+                {
+                    p_stTexture = (GLI_tdstTexture_*)GLI_g_AnimatedTextureToUse;
+                }
+            }
+            else if (hVisualMaterial->ulNbTextureStages)
+            {
+                GLI_vRefreshMultiTexturePart(hVisualMaterial);
+
+                p_stTexture = pMat->pst_Texture;
+                Operator = pMat->c_Operator;
+
+                if (GLI_cGetUVSource(&hVisualMaterial->a_stMultiMaterial[GLI_g_CurrentStage]) == 4)
+                    GLI_g_bChromeEffectOnThisLayer = 1;
+
+                if ((Operator == 2) && HasVertexTransparency)
+                    Operator = 3;
+
+                if (p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam))
+                {
+                    PS2glEnable(0xDE1);
+                    PS2glBindTexture(0xDE1, p_stSpecParam->TextureID);
+
+                    switch (Operator)
+                    {
+                        case 2:
+                            if (bUseAlpha)
+                            {
+                                PS2glEnable(0xBE2);
+                                PS2glDepthMask(0);
+                                PS2glSetGsRegister(0x42, 0x64 | ((unsigned long)(unsigned int)MTH_M_xRealToLong(GLI_BIG_GLOBALS_xGlobalAlpha * 128.0f) << 32), 0);
+                                SetStaticFog();
+                            }
+                            else
+                            {
+                                PS2glDisable(0xBE2);
+                                PS2glDepthMask(1);
+                                SetStaticFog();
+                            }
+                            PS2glDisable(0xBC0);
+                            break;
+
+                        case 3:
+                        case 4:
+                            PS2glEnable(0xBE2);
+                            PS2glBlendFunc(0x302, 0x303);
+                            PS2glDepthMask(0);
+                            PS2glDisable(0xBC0);
+                            SetStaticFog();
+                            break;
+
+                        case 8:
+                            if (bUseAlpha)
+                            {
+                                PS2glEnable(0xBE2);
+                                PS2glDepthMask(0);
+                                PS2glBlendFunc(0x302, 0x303);
+                                PS2glSetGsRegister(0x42, 0x64 | ((unsigned long)(unsigned int)MTH_M_xRealToLong(GLI_BIG_GLOBALS_xGlobalAlpha * 128.0f) << 32), 0);
+                                SetStaticFog();
+                            }
+                            else
+                            {
+                                PS2glDisable(0xBE2);
+                                PS2glDepthMask(1);
+                                SetStaticFog();
+                            }
+                            PS2glEnable(0xBC0);
+                            break;
+
+                        case 1:
+                        case 7:
+                            PS2glEnable(0xBE2);
+                            if (bUseAlpha)
+                            {
+                                PS2glSetGsRegister(0x42, 0x8000000048, 0);
+                            }
+                            else
+                            {
+                                PS2glSetGsRegister(0x42, 0x8000000068, 0);
+                            }
+                            PS2glDisable(0xBC0);
+                            GLI_M_STATIC_FOG(g_fFogColorZero);
+                            PS2glDepthMask(0);
+                            break;
+
+                        case 0:
+                            PS2glEnable(0xBE2);
+                            PS2glDisable(0xBC0);
+                            PS2glSetGsRegister(0x42, 0x80000000A1, 0);
+                            GLI_M_STATIC_FOG(g_fFogColorZero);
+                            PS2glDepthMask(0);
+                            break;
+
+                        case 5:
+                            PS2glEnable(0xBE2);
+                            PS2glDisable(0xBC0);
+                            PS2glSetGsRegister(0x42, 0x8000000089, 0);
+                            SetStaticFog();
+                            PS2glDepthMask(0);
+                            break;
+
+                        default:
+                            if (bUseAlpha)
+                            {
+                                PS2glEnable(0xBE2);
+                                PS2glDepthMask(0);
+                                PS2glBlendFunc(0x302, 0x303);
+                                PS2glSetGsRegister(0x42, 0x64 | ((unsigned long)(unsigned int)MTH_M_xRealToLong(GLI_BIG_GLOBALS_xGlobalAlpha * 128.0f) << 32), 0);
+                            }
+                            else
+                            {
+                                PS2glDisable(0xBE2);
+                                PS2glDepthMask(1);
+                            }
+                            PS2glDisable(0xBC0);
+                            SetStaticFog();
+                            break;
+                    }
+
+                    if (pMat->ulTextureProperties & 1)
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+
+                    if (pMat->ulTextureProperties & 2)
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+
+                    PS2GL_g_DontUpdateTexture = 0;
+
+                    if (GLI_g_ChristianSlaterMode)
+                    {
+                        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+                        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+                        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+                        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+                    }
+                    else
+                    {
+                        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+                        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+                    }
+
+                    if (pMat->c_Flags & 2)
+                    {
+                        PS2glEnable(0xBA8);
+                        PS2glMatrixMode(0x1702);
+                        PS2glLoadIdentity();
+                        {
+                            float fX = 3.0f;
+                            float fZ = 1.5f;
+                            float fY = 0.1f;
+                            PS2glTranslatef(fX, fY, fZ);
+                        }
+                        g_TextMatrixIsIdentity = 0;
+                        GLI_g_ThisLayerHasScrolling = 1;
+                        hRef = SDL_REF_GetNewTextureOffsetRef(pMat->st_UVDynamicPos.stTrans[0], pMat->st_UVDynamicPos.stTrans[1], GLI_g_NumberInList, hVisualMaterial);
+                        SDL_AddRef(hCurrentSDL, hRef);
+                    }
+                    else
+                    {
+                        PS2glMatrixMode(0x1702);
+                        PS2glLoadIdentity();
+                    }
+                    return;
+                }
+            }
+            else
+            {
+                p_stTexture = hVisualMaterial->p_stTexture;
+            }
+
+            if (p_stTexture && (p_stSpecParam = (GLI_tdstTexturePS2GL_*)p_stTexture->p_stSpecParam))
+            {
+                if (p_stSpecParam->TextureID)
+                {
+                    if (p_stTexture == NULL)
+                    {
+                        PS2GL_g_DontUpdateTexture = 0;
+                    }
+                    else
+                    {
+                        PS2glEnable(0xDE1);
+                        PS2glBindTexture(0xDE1, p_stSpecParam->TextureID);
+                        GLI_g_p_stLastTexture = (int)p_stTexture;
+                        PS2GL_g_DontUpdateTexture = 0;
+                    }
+
+                    if (hVisualMaterial->lIncrementIsEnable && !(hVisualMaterial && (hVisualMaterial->lMaterialAdditionnalType & 2)))
+                    {
+                        PS2glEnable(0xBA8);
+                        PS2glMatrixMode(0x1702);
+                        PS2glLoadIdentity();
+                        PS2glTranslatef(3.0f, 0.1f, 1.5f);
+                        g_TextMatrixIsIdentity = 0;
+                        GLI_g_ThisLayerHasScrolling = 1;
+                        hRef = SDL_REF_GetNewTextureOffsetRef(hVisualMaterial->fConstantAddU, hVisualMaterial->fConstantAddV, GLI_g_NumberInList, hVisualMaterial);
+                        SDL_AddRef(hCurrentSDL, hRef);
+                    }
+                    else
+                    {
+                        PS2glMatrixMode(0x1702);
+                        PS2glLoadIdentity();
+                        g_TextMatrixIsIdentity = 1;
+                    }
+
+                    if (pMat->ulTextureProperties & 1)
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2802, 0x2900);
+
+                    if (pMat->ulTextureProperties & 2)
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2901);
+                    else
+                        PS2glTexParameteri(0xDE1, 0x2803, 0x2900);
+
+                    PS2GL_g_DontUpdateTexture = 0;
+
+                    if (GLI_g_ChristianSlaterMode)
+                    {
+                        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+                        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+                        PS2glTexParameteri(0xDE1, 0x2800, 0x2600);
+                        PS2glTexParameteri(0xDE1, 0x2801, 0x2600);
+                    }
+                    else
+                    {
+                        PS2glTexParameteri(0xDE1, 0x2800, 0x2601);
+                        PS2glTexParameteri(0xDE1, 0x2801, 0x2701);
+                    }
+
+                    if (!(p_stTexture->lTextureCaps & 0x12A) && !(pMat->ulTextureProperties & 0x60))
+                    {
+                        if (bUseAlpha)
+                        {
+                            PS2glEnable(0xBE2);
+                            PS2glDepthMask(0);
+                            PS2glSetGsRegister(0x42, 0x8000000044, 0);
+                            PS2glDisable(0xBC0);
+                            SetStaticFog();
+                        }
+                        else
+                        {
+                            PS2glDepthMask(1);
+                            PS2glDisable(0xBC0);
+                            PS2glEnable(0xBE2);
+                            PS2glSetGsRegister(0x42, 0x80000000A8, 0);
+                            SetStaticFog();
+                        }
+                        return;
+                    }
+                    else if (pMat->ulTextureProperties & 0x40)
+                    {
+                        if (bUseAlpha)
+                        {
+                            PS2glEnable(0xBE2);
+                            PS2glBlendFunc(0x302, 0x303);
+                            PS2glDepthMask(0);
+                        }
+                        else
+                        {
+                            PS2glDepthMask(1);
+                            PS2glEnable(0xBC0);
+                            PS2glAlphaFunc(0x204, 0.1f);
+                            PS2glDisable(0xBE2);
+                        }
+                        SetStaticFog();
+                        return;
+                    }
+                    else if ((pMat->ulTextureProperties & 0x20) || ((p_stTexture->lTextureCaps & 0x20) == 0x20))
+                    {
+                        PS2glEnable(0xBE2);
+                        if (bUseAlpha)
+                        {
+                            PS2glBlendFunc(0x302, 1);
+                            PS2glSetGsRegister(0x42, 0x48, 0);
+                            PS2glDisable(0xBC0);
+                            GLI_M_STATIC_FOG(g_fFogColorZero);
+                            PS2glDepthMask(0);
+                        }
+                        else
+                        {
+                            PS2glBlendFunc(0x302, 1);
+                            PS2glSetGsRegister(0x42, 0x8000000068, 0);
+                            PS2glDisable(0xBC0);
+                            GLI_M_STATIC_FOG(g_fFogColorZero);
+                            PS2glDepthMask(0);
+                        }
+                        return;
+                    }
+                    else if (p_stTexture->lTextureCaps & 8)
+                    {
+                        if (strstr(p_stTexture->a255_cFileName, "_ZBUF"))
+                        {
+                            PS2glEnable(0xBE2);
+                            PS2glBlendFunc(0x302, 0x303);
+                            PS2glDepthMask(1);
+                            PS2glDisable(0xBC0);
+                        }
+                        else
+                        {
+                            PS2glEnable(0xBE2);
+                            PS2glBlendFunc(0x302, 0x303);
+                            PS2glDepthMask(0);
+                            PS2glDisable(0xBC0);
+                        }
+                        SetStaticFog();
+                        return;
+                    }
+                }
+            }
+        }
+
+        GLI_g_p_stLastTexture = 0;
+
+        if ((GLI_BIG_GLOBALS_xGlobalAlpha < 0.98f) && !(GLI_BIG_GLOBALS_lCurrentDrawMask & 8))
+            bUseAlpha = 1;
+        else
+            bUseAlpha = 0;
+
+        if (bUseAlpha)
+        {
+            PS2glDisable(0xDE1);
+            PS2glDisable(0xBC0);
+            PS2glEnable(0xBE2);
+            PS2glBlendFunc(0x302, 0x303);
+            PS2glDepthMask(0);
+        }
+        else
+        {
+            PS2glDisable(0xBC0);
+            PS2glDisable(0xBE2);
+            PS2glDisable(0xDE1);
+            PS2glDepthMask(1);
+        }
+        SetStaticFog();
+    }
+    else
+    {
+        PS2glDisable(0xBC0);
+        PS2glDisable(0xBE2);
+        PS2glDisable(0xDE1);
+        PS2glDisable(0xB60);
+        GLI_g_CurrentFogMode = 3;
+        PS2glDepthMask(1);
+        PS2glDepthMask(0);
+        PS2glDisable(0xB71);
+        PS2glEnable(0xBE2);
+        PS2glSetGsRegister(0x42, 0x2500000068, 0);
+    }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 2362–2418 */
-/* addr: 0x002be850  size: 244 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 2362
- *   +0x0014 -> line 2367
- *   +0x0024 -> line 2374
- *   +0x0028 -> line 2369
- *   +0x002c -> line 2374
- *   +0x0038 -> line 2378
- *   +0x0040 -> line 2379
- *   +0x004c -> line 2384
- *   +0x0054 -> line 2385
- *   +0x0060 -> line 2391
- *   +0x0084 -> line 2395
- *   +0x0090 -> line 2401
- *   +0x0098 -> line 2406
- *   +0x00a0 -> line 2409
- *   +0x00a8 -> line 2411
- *   +0x00cc -> line 2413
- *   +0x00d8 -> line 2417
- *   +0x00dc -> line 2418
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int GLI_bIsMaterialAdditive(GLI_tdstMaterial_* hVisualMaterial)
 {
     GLI_tdstTexture_* p_stTexture;
@@ -3151,26 +2740,6 @@ int GLI_bIsMaterialAdditive(GLI_tdstMaterial_* hVisualMaterial)
     return 0;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SendMat.c lines 103–130 */
-/* addr: 0x002be7a0  size: 176 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 103
- *   +0x000c -> line 104
- *   +0x0010 -> line 107
- *   +0x0018 -> line 108
- *   +0x001c -> line 110
- *   +0x0030 -> line 111
- *   +0x0034 -> line 113
- *   +0x003c -> line 116
- *   +0x0048 -> line 117
- *   +0x0050 -> line 120
- *   +0x0054 -> line 121
- *   +0x005c -> line 126
- *   +0x009c -> line 127
- *   +0x00a0 -> line 130
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void TBF_ChangeCacheSize(int size)
 {
     int iNewSize;

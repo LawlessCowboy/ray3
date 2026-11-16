@@ -1411,7 +1411,7 @@ void fn_vDetectAllObjectsInThisModule(HIE_tdstSuperObject_* _hCharacter, COL_tds
 
 HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
 void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
-void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+static void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
 unsigned char INT_fn_bGetInclusionPointInCollideObject(MTH3D_tdstVector_* _p_stPoint, COL_tdstCollideObject_* _hGeoObj);
 
 inline unsigned char fn_bIsCharacterInGeoObj(HIE_tdstSuperObject_* _hCharacter, COL_tdstCollideObject_* _hGeoObj, MAT_tdstTransformation_* _p_stMatrix)
@@ -1428,7 +1428,7 @@ inline unsigned char fn_bIsCharacterInGeoObj(HIE_tdstSuperObject_* _hCharacter, 
 
 COL_tdstCollideObject_* ZDX_fn_hGetGeoObjOfTypeAndMatrixFromZdxInfos(HIE_tdstSuperObject_* _hCharacter, unsigned char _ucZoneType, unsigned char _ucModuleOrCharacter, unsigned char _ucChannelNumber, MAT_tdstTransformation_** _p_hMatrix);
 void MAT_fn_vInvert(MAT_tdstTransformation_* _hDest, MAT_tdstTransformation_* _hSource);
-void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
+static void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA);
 COL_tdstCollideObject_* PCS_fn_hGetGeoObjOfPhysicalCollSet(unsigned char ucZoneType, tdstPhysicalCollSet_* _hPhyCollSet);
 
 GMT_tdstGameMaterial_* fn_hIsTypeExistsInGeoObj(COL_tdstCollideObject_* _hGeoObj, unsigned short _wMaterialMask);
@@ -2530,9 +2530,9 @@ unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hC
 {
     unsigned short uwCurrentIndexInActivation;
     HIE_tdstSuperObject_* hModule;
-    tdstAChannel_* hChannel;
-    tdstPhysicalCollSet_* hPhyCollSet;
     COL_tdstCollideObject_* hGeoObj1;
+    tdstPhysicalCollSet_* hPhyCollSet;
+    tdstAChannel_* hChannel;
     short xI;
     tdstZdxIndexList_* p_stZdxIndex;
     tdstZoneSetList_* hZoneSet;
@@ -2581,6 +2581,36 @@ unsigned char fn_bIsCharacterTWODetectedByCharacterOne(HIE_tdstSuperObject_* _hC
         }
     }
     return 0;
+}
+
+/* MatSp.h (addr 0x0026b490, 124 bytes): a static header function, so this unit
+ * gets its own out-of-line copy. Because MWCC compiles it before its callers it
+ * knows the copy leaves a0 alone, and fn_bIsCharacterTWODetectedByThisZddOfCharacterOne
+ * passes &stPoint on to INT_fn_bGetInclusionPointInCollideObject without reloading a0.
+ * The VU0 macro-mode instructions have no C form. */
+static void MAT_fn_vApplyOnVertex(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    ((unsigned int*)&Vtmp)[0] = ((unsigned int*)VectA)[0]; ((unsigned int*)&Vtmp)[1] = ((unsigned int*)VectA)[1]; ((unsigned int*)&Vtmp)[2] = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    ((unsigned int*)VectDest)[0] = ((unsigned int*)&Vtmp)[0]; ((unsigned int*)VectDest)[1] = ((unsigned int*)&Vtmp)[1]; ((unsigned int*)VectDest)[2] = ((unsigned int*)&Vtmp)[2];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\ZdxStuff.c lines 2091–2146 */

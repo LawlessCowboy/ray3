@@ -3294,7 +3294,15 @@ tdstNodeInterpret_* fn_p_stThenKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, td
  */
 tdstNodeInterpret_* fn_p_stElseKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    return fn_p_stSkipElseNode(p_stTree - 1);
+    unsigned short uwSkip;
+    tdstNodeInterpret_* p_stNext;
+
+    uwSkip = p_stTree[-1].uwNodeToSkip;
+    if (uwSkip)
+        return (tdstNodeInterpret_*)((char*)(p_stTree - 1) + (uwSkip & 0xffff) * sizeof(tdstNodeInterpret_));
+    p_stNext = fn_p_stSwapNextParameter(p_stTree);
+    (p_stTree - 1)->uwNodeToSkip = (unsigned short)(p_stNext - (p_stTree - 1));
+    return p_stNext;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Keyword.c lines 219–232 */

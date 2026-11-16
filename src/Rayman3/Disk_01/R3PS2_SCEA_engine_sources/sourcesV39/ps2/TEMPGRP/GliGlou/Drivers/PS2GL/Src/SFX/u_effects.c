@@ -5630,7 +5630,27 @@ void AE_SimpleBlurWINDOWEDNoOpt(int Counter)
     float u2;
     float v1;
     float u1;
-    /* TODO: decompile from asm/... */
+
+    v1 = u1 = 10.0f * 0.01f;
+    u2 = v2 = 60.0f * 0.01f;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f - 1.0f * 100.0f / 224.0f, 60.0f, 60.0f - 1.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f - 1.0f * 100.0f / 320.0f, 10.0f, 60.0f - 1.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f - 2.0f * 100.0f / 224.0f, 60.0f, 60.0f - 2.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f - 2.0f * 100.0f / 320.0f, 10.0f, 60.0f - 2.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 3.0f * 100.0f / 224.0f, 60.0f, 60.0f + 3.0f * 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 3.0f * 100.0f / 320.0f, 10.0f, 60.0f + 3.0f * 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5291–5326 */
@@ -5704,7 +5724,27 @@ void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter)
     float u2;
     float v1;
     float u1;
-    /* TODO: decompile from asm/... */
+
+    v1 = u1 = 10.0f * 0.01f;
+    u2 = v2 = 60.0f * 0.01f;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 100.0f / 224.0f, 60.0f, 60.0f + 100.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 100.0f / 320.0f, 10.0f, 60.0f + 100.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 200.0f / 224.0f, 60.0f, 60.0f + 200.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 200.0f / 320.0f, 10.0f, 60.0f + 200.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 300.0f / 224.0f, 60.0f, 60.0f + 300.0f / 224.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 300.0f / 320.0f, 10.0f, 60.0f + 300.0f / 320.0f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5370–5407 */
@@ -5741,7 +5781,27 @@ void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter)
     float u2;
     float v1;
     float u1;
-    /* TODO: decompile from asm/... */
+
+    v1 = u1 = 10.0f * 0.01f;
+    u2 = v2 = 60.0f * 0.01f;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 0.371f, 60.0f, 60.0f + 0.371f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 0.371f, 10.0f, 60.0f + 0.371f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 0.841f, 60.0f, 60.0f + 0.841f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 0.601f, 10.0f, 60.0f + 0.601f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    if (!--Counter)
+        return;
+
+    AE_DrawWindowWithoutOptimization(10.0f, 10.0f + 0.901f, 60.0f, 60.0f + 0.901f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
+
+    AE_DrawWindowWithoutOptimization(10.0f + 0.901f, 10.0f, 60.0f + 0.901f, 60.0f, 0.5f, 0.5f, 0.5f, 0.5f, u1, v1, u2, v2);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SFX\u_effects.c lines 5414–5476 */

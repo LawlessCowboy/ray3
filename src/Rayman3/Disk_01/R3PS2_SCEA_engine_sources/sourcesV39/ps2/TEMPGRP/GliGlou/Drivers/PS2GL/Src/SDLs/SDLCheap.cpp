@@ -3447,14 +3447,19 @@ void CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMat
 void CHEAP_DisplayAllSDLs(int bTransparent)
 {
     unsigned int i;
+    unsigned int off;
+    C_Sdl* pSdl;
 
     GLI_vSetOptimizedSDC(1);
+    off = GLI_g_CurrentNbCheapSDLsForViewport << 2;
     for (i = GLI_g_CurrentNbCheapSDLsForViewport; i < GLI_g_CurrentNbCheapSDLs; i++)
     {
-        if (bTransparent == GLI_g_CheapSDLs[i]->m_bIsTransparent)
+        pSdl = *(C_Sdl**)((char*)GLI_g_CheapSDLs + off);
+        if (bTransparent == pSdl->m_bIsTransparent)
         {
-            GLI_g_CheapSDLs[i]->Draw(0);
+            pSdl->Draw(0);
         }
+        off += 4;
     }
     GLI_vSetOptimizedSDC(0);
 }

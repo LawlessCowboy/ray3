@@ -3154,6 +3154,8 @@ void CAM_fn_vAverageSpeed(tdstCineinfo_* _hCineinfo, float xTimeWindow, MTH3D_td
  * emits them in reverse); these prototypes keep earlier calls valid. */
 void CAM_fn_vForceBestPosition(HIE_tdstSuperObject_* _hCamera);
 void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct);
+HIE_tdstSuperObject_* fn_h_SectInfoGetCurrentSector(tdstSectInfo_* h_SectInfo);
+void fn_vSectInfoSetCurrentSector(tdstSectInfo_* h_SectInfo, HIE_tdstSuperObject_* hSector);
 void CAM_fn_vInitCameraStructure(HIE_tdstSuperObject_* _hSuperObjPerso, CAM_tdstUpdateCamera_* _p_stStruct);
 void Cam_fn_vComputeMovingOnRail(CAM_tdstUpdateCamera_* _p_stStruct, MTH3D_tdstVector_* _p_stWantedPosition, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stPreviousWpPosition, float _xDistWanted);
 float Cam_fn_xComputeProjectionRail(MTH3D_tdstVector_* _p_stTargetedPersoPos, MTH3D_tdstVector_* _p_stWpPosition, MTH3D_tdstVector_* _p_stDestWpPosition);
@@ -3585,6 +3587,48 @@ void CAM_fn_vComputeProjection(MTH3D_tdstVector_* _p_sDestVector, MTH3D_tdstVect
 }
 #pragma auto_inline reset
 
+float acosf(float);
+
+/* PS2 MTH helpers for CAM_fn_xComputeRotation: sqrt.s and the R5900 accumulator
+   ops (mula.s/madda.s/madd.s/msub.s) have no C form under the baseline. */
+inline float MTH_xSqrt(float _xValue)
+{
+    float xResult;
+    asm { sqrt.s xResult, _xValue }
+    return xResult;
+}
+
+inline float MTH_xMulSubMul(float _xA, float _xB, float _xC, float _xD)
+{
+    float xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s xResult, _xC, _xD }
+    return xResult;
+}
+
+inline float MTH3D_M_xSqrVector(MTH3D_tdstVector_* _p_stV)
+{
+    float xResult;
+    float xZ, xY, xX;
+    xZ = _p_stV->xZ; xY = _p_stV->xY; xX = _p_stV->xX;
+    MTH_SQR3_TO(xResult, xX, xY, xZ);
+    return xResult;
+}
+
+#define MTH3D_M_bIsNullVector(_p) ((_p)->xX == 0.0f && (_p)->xY == 0.0f && (_p)->xZ == 0.0f)
+
+inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stSrc)
+{
+    *(int*)&_p_stDest->xX = *(int*)&_p_stSrc->xX; *(int*)&_p_stDest->xY = *(int*)&_p_stSrc->xY; *(int*)&_p_stDest->xZ = *(int*)&_p_stSrc->xZ;
+}
+
+inline void MTH3D_M_vCrossProductVectorWithoutBuffer(MTH3D_tdstVector_* _p_stDest, MTH3D_tdstVector_* _p_stA, MTH3D_tdstVector_* _p_stB)
+{
+    _p_stDest->xX = MTH_xMulSubMul(_p_stA->xY, _p_stB->xZ, _p_stA->xZ, _p_stB->xY);
+    _p_stDest->xY = MTH_xMulSubMul(_p_stA->xZ, _p_stB->xX, _p_stA->xX, _p_stB->xZ);
+    _p_stDest->xZ = MTH_xMulSubMul(_p_stA->xX, _p_stB->xY, _p_stA->xY, _p_stB->xX);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 360–389 */
 /* addr: 0x0020a9c0  size: 668 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3614,7 +3658,29 @@ float CAM_fn_xComputeRotation(MTH3D_tdstVector_* _p_stDestVector, MTH3D_tdstVect
     MTH3D_tdstVector_ VectTmp;
     float xDenom;
     float xCos;
-    /* TODO: decompile from asm/... */
+
+    if (MTH3D_M_bIsNullVector(_p_stSrcVector) || MTH3D_M_bIsNullVector(_p_stDestVector))
+        return 0.0f;
+
+    xDenom = MTH3D_M_xSqrVector(_p_stSrcVector) * MTH3D_M_xSqrVector(_p_stDestVector);
+    xNorm = MTH_xDotProduct3(_p_stSrcVector->xX, _p_stDestVector->xX, _p_stSrcVector->xY, _p_stDestVector->xY, _p_stSrcVector->xZ, _p_stDestVector->xZ);
+    xCos = xNorm / MTH_xSqrt(xDenom);
+
+    if (_p_stAxisVector != NULL)
+    {
+        if (_p_stAxisVector == _p_stSrcVector || _p_stAxisVector == _p_stDestVector) { MTH3D_M_vCrossProductVectorWithoutBuffer(&VectTmp, _p_stSrcVector, _p_stDestVector); ((unsigned int*)_p_stAxisVector)[0] = ((unsigned int*)&VectTmp)[0]; ((unsigned int*)_p_stAxisVector)[1] = ((unsigned int*)&VectTmp)[1]; ((unsigned int*)_p_stAxisVector)[2] = ((unsigned int*)&VectTmp)[2]; } else { MTH3D_M_vCrossProductVectorWithoutBuffer(_p_stAxisVector, _p_stSrcVector, _p_stDestVector); }
+        if (!MTH3D_M_bIsNullVector(_p_stAxisVector))
+        {
+            xNorm = MTH_xSqrt(MTH3D_M_xSqrVector(_p_stAxisVector)); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; _p_stAxisVector->xX = xNorm * _p_stAxisVector->xX; _p_stAxisVector->xY = xNorm * _p_stAxisVector->xY; _p_stAxisVector->xZ = xNorm * _p_stAxisVector->xZ; }
+        }
+    }
+
+    if (xCos < -1.0f)
+        xCos = -1.0f;
+    else if (xCos > 1.0f)
+        xCos = 1.0f;
+
+    return acosf(xCos);
 }
 #pragma auto_inline reset
 
@@ -3639,6 +3705,28 @@ unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MT
 }
 #pragma auto_inline reset
 
+/* Retail inlines this helper at line 467 of CAM_fn_vComputeAnglesBetweenTwoVectors; the
+   unused horizontal abs and the pointer parameters reproduce its store/reload of the angle. */
+inline void CAM_fn_vCheckValidityOfComputedAngles(MTH3D_tdstVector_* _p_stUnusedVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle)
+{
+    float xAbsHorizontalAngle, xAbsVerticalAngle;
+    float xPi = 3.1415927f;
+
+    xAbsHorizontalAngle = MTH_xAbs(*_p_xHorizontalAngle);
+
+    xAbsVerticalAngle = MTH_xAbs(*_p_xVerticalAngle);
+    if (xAbsVerticalAngle > 3.1415927f / 2.0f)
+    {
+        if (*_p_xVerticalAngle > 0.0f)
+            *_p_xVerticalAngle = xPi - *_p_xVerticalAngle;
+        else
+            *_p_xVerticalAngle = -xPi - *_p_xVerticalAngle;
+    }
+
+    *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle);
+    *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 463–468 */
 /* addr: 0x0020a7e0  size: 400 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3653,12 +3741,10 @@ unsigned char CAM_fn_bEqualVectorWithEpsilon(MTH3D_tdstVector_* _p_stVector1, MT
 #pragma auto_inline on
 void CAM_fn_vComputeAnglesBetweenTwoVectors(MTH3D_tdstVector_* _p_stUnusedVector, MTH3D_tdstVector_* _p_stOrgVector, MTH3D_tdstVector_* _p_stDestVector, float* _p_xHorizontalAngle, float* _p_xVerticalAngle, MTH3D_tdstVector_* _p_stRefAxisZ)
 {
-    float xPi = 3.1415927f;
-    float xValue;
-    float* pVert = _p_xVerticalAngle;
     *_p_xHorizontalAngle = CAM_fn_xComputeHorizontalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    *pVert = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
-    xValue = *_p_xVerticalAngle; if (MTH_xAbs(xValue) > 3.1415927f / 2.0f) { if (xValue > 0.0f) *_p_xVerticalAngle = xPi - xValue; else *_p_xVerticalAngle = -xPi - xValue; } *_p_xHorizontalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xHorizontalAngle); *_p_xVerticalAngle = CAM_fn_xSetAngleInInterval02Pi(*_p_xVerticalAngle);
+    *_p_xVerticalAngle = CAM_fn_xComputeVerticalAngle(_p_stOrgVector, _p_stDestVector, _p_stRefAxisZ);
+
+    CAM_fn_vCheckValidityOfComputedAngles(_p_stUnusedVector, _p_xHorizontalAngle, _p_xVerticalAngle);
 }
 #pragma auto_inline reset
 
@@ -4018,8 +4104,93 @@ void CAM_fn_vSendParametersToParsing(CAM_tdstUpdateCamera_* _p_stStruct)
     tdstDynam_* h_Dynam;
     DNM_stDynamics* p_stDynamics;
     stMACDPID* p_stMACDPID;
-    /* TODO: decompile from asm/... */
+
+    h_Dynam = _p_stStruct->hSuperObjCamera->hLinkedObject.p_stCharacter->h_Dynam;
+    if (h_Dynam == NULL) return;
+    if ((p_stDynamics = fn_p_stDynamGetDynamics(h_Dynam)) == NULL) return;
+    p_stMACDPID = &p_stDynamics->m_tdstDynamicsComplexBlock.m_stExternalDatas;
+
+    p_stMACDPID->m_xData11 = CAM_g_stCameraConstants.xCutAngleFactorPos;
+    p_stMACDPID->m_xData13 = CAM_g_stCameraConstants.xCutAngleFactorTgt;
+
+    p_stMACDPID->m_xData0 = _p_stStruct->hCineinfoWork->xAngleTheta;
+
+    *(int*)&p_stMACDPID->m_stData1.xX = *(int*)&_p_stStruct->stCptPos.stTarget.xX; *(int*)&p_stMACDPID->m_stData1.xY = *(int*)&_p_stStruct->stCptPos.stTarget.xY; *(int*)&p_stMACDPID->m_stData1.xZ = *(int*)&_p_stStruct->stCptPos.stTarget.xZ;
+    *(int*)&p_stMACDPID->m_stData2.xX = *(int*)&_p_stStruct->stCptPos.stMovePos.xX; *(int*)&p_stMACDPID->m_stData2.xY = *(int*)&_p_stStruct->stCptPos.stMovePos.xY; *(int*)&p_stMACDPID->m_stData2.xZ = *(int*)&_p_stStruct->stCptPos.stMovePos.xZ;
+
+    p_stMACDPID->m_stData6.m_stAxis.xX = _p_stStruct->stCptPos.xLinearSpeed;
+    if (_p_stStruct->hCineinfoWork->xLinearIncreaseSpeed == 0.0f)
+        _p_stStruct->hCineinfoWork->xLinearIncreaseSpeed = 0.001f;
+    p_stMACDPID->m_stData6.m_stAxis.xY = _p_stStruct->hCineinfoWork->xLinearIncreaseSpeed;
+    p_stMACDPID->m_stData6.m_stAxis.xZ = _p_stStruct->hCineinfoWork->xLinearDecreaseSpeed;
+
+    p_stMACDPID->m_stData7.m_stAxis.xX = _p_stStruct->stCptPos.xAngularSpeed;
+    if (_p_stStruct->hCineinfoWork->xAngularIncreaseSpeed == 0.0f)
+        _p_stStruct->hCineinfoWork->xLinearIncreaseSpeed = 0.001f;
+    p_stMACDPID->m_stData7.m_stAxis.xY = _p_stStruct->hCineinfoWork->xAngularIncreaseSpeed;
+    p_stMACDPID->m_stData7.m_stAxis.xZ = _p_stStruct->hCineinfoWork->xAngularDecreaseSpeed;
+
+    p_stMACDPID->m_stData3.xX = _p_stStruct->stCptPos.xTargetSpeed;
+    if (_p_stStruct->hCineinfoWork->xAngularIncreaseSpeed == 0.0f)
+        _p_stStruct->hCineinfoWork->xTargetIncreaseSpeed = 0.001f;
+    p_stMACDPID->m_stData3.xY = _p_stStruct->hCineinfoWork->xTargetIncreaseSpeed;
+    p_stMACDPID->m_stData3.xZ = _p_stStruct->hCineinfoWork->xTargetDecreaseSpeed;
+
+    *(int*)&p_stMACDPID->m_stData10.xX = *(int*)&_p_stStruct->stTargetedPersoPos.xX; *(int*)&p_stMACDPID->m_stData10.xY = *(int*)&_p_stStruct->stTargetedPersoPos.xY; *(int*)&p_stMACDPID->m_stData10.xZ = *(int*)&_p_stStruct->stTargetedPersoPos.xZ;
+
+    *(int*)&p_stMACDPID->m_stData12.xX = *(int*)&_p_stStruct->stCptPos.stRefAxisZ.xX; *(int*)&p_stMACDPID->m_stData12.xY = *(int*)&_p_stStruct->stCptPos.stRefAxisZ.xY; *(int*)&p_stMACDPID->m_stData12.xZ = *(int*)&_p_stStruct->stCptPos.stRefAxisZ.xZ;
+
+    if (_p_stStruct->hCineinfo->ucVolIAFlags & 2)
+    {
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 1;
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 4;
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 0x10;
+    }
+
+    if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted == NULL)
+    {
+        p_stMACDPID->m_stData10.xX = 0.0f; p_stMACDPID->m_stData10.xY = 0.0f; p_stMACDPID->m_stData10.xZ = 0.0f;
+    }
+
+    if (_p_stStruct->hCineinfoWork->uwIAFlags & 0x2000)
+    {
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 4;
+        p_stMACDPID->m_stData10.xX = 0.0f; p_stMACDPID->m_stData10.xY = 0.0f; p_stMACDPID->m_stData10.xZ = 0.0f;
+    }
+
+    if (_p_stStruct->hCineinfoWork->uwDNMFlags & 0x80)
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 0x10;
+
+    if (_p_stStruct->hCineinfoWork->uwDNMFlags & 1)
+    {
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 2;
+        p_stMACDPID->m_xData11 = 1.0f;
+    }
+
+    if (_p_stStruct->hCineinfoWork->uwDNMFlags & 4)
+    {
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 8;
+        p_stMACDPID->m_xData11 = 1.0f;
+    }
+
+    if (_p_stStruct->hCineinfoWork->uwDNMFlags & 0x10)
+    {
+        _p_stStruct->hCineinfoWork->uwDNMFlags |= 0x20;
+        p_stMACDPID->m_xData13 = 1.0f;
+    }
+
+    p_stMACDPID->m_uwData9 = _p_stStruct->hCineinfoWork->uwDNMFlags;
+
+    if (_p_stStruct->hCineinfoWork->hSuperObjectTargeted && (_p_stStruct->hCineinfoWork->uwDNMFlags & 0x40))
+    {
+        tdstEngineObject_* p_stCameraObject = _p_stStruct->hSuperObjCamera->hLinkedObject.p_stCharacter;
+        fn_vSectInfoSetCurrentSector(p_stCameraObject->h_SectInfo, fn_h_SectInfoGetCurrentSector(_p_stStruct->hCineinfoWork->hSuperObjectTargeted->hLinkedObject.p_stCharacter->h_SectInfo));
+    }
+
+    if (!_p_stStruct->cTgtPersoIsMovingAbsolute)
+        p_stMACDPID->m_xData11 = p_stMACDPID->m_xData13 = 1.0f;
 }
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\CAM_Tool.c lines 973–1011 */
 /* addr: 0x002099f0  size: 172 bytes */

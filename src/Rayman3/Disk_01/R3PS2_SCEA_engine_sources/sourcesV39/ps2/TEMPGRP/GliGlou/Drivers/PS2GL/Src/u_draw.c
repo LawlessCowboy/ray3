@@ -2419,7 +2419,7 @@ GLI_g_PS2GL_ShadowVolume_ GLI_g_TheShadowVolumes[2];
 unsigned int GLI_g_xSaveDrawMsk;
 MTH3D_tdstVector_ GLI_g_stYVect;
 MTH3D_tdstVector_ GLI_g_stXVect;
-int g_p_stCurrentViewport;
+GLD_tdstViewportAttributes_* g_p_stCurrentViewport;
 tagGScontext g_gsContext;
 tagGLcontext g_PS2glContext;
 unsigned int SCT_g_DrawingMirrored;
@@ -2429,7 +2429,7 @@ float GLI_BIG_GLOBALS_xGlobalAlpha;
 void GLI_vAddShadowObject(float* p1, float* p2, float* p3, float* p4, GLI_tdstMaterial_* ShadowMat);
 int GLI_BIG_GLOBALS_p_stObj;
 unsigned int GLI_g_NbTransparentElements;
-unsigned int NbElementComputed;
+extern unsigned int NbElementComputed[];
 int YRES;
 int XRES;
 float YRESf;
@@ -2514,6 +2514,8 @@ extern void SDL_Draw(unsigned int hSDL);
 extern void PS2glMatrixMode(unsigned int mode);
 extern void PS2glLoadIdentity(void);
 extern void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+extern void PS2glScissor(int x, int y, int width, int height);
+extern void impPS2glScissor(int x, int y, int width, int height);
 
 void GLI_DRV_vSetCommonGLRenderStates(void);
 extern void GLI_vClearSendMatStates(void);
@@ -2669,11 +2671,25 @@ GLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElement
  */
 void GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr)
 {
-    int height;
-    int width;
-    int y;
     int x;
-    /* TODO: decompile from asm/... */
+    int y;
+    int width;
+    int height;
+
+    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+    g_PS2glContext.nEnableBits &= ~0x800; g_gsContext.TEST_1.ZTE = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1; g_gsContext.TEST_1.ZTST = 1; g_gsContext.ModFlgs.TEST_1_Modified = 1;
+
+    x = _p_stFixViewportAttr->dwClipLeftInPix;
+    y = _p_stFixViewportAttr->dwClipBottomInPix;
+
+    width = _p_stFixViewportAttr->dwClipRightInPix - x;
+    height = y - _p_stFixViewportAttr->dwClipTopInPix;
+
+    x = x * XRES / 640;
+    y = y * YRES / 480;
+    width = width * XRES / 640;
+    height = height * YRES / 480;
+    PS2glScissor(x, YRES - y, width, height);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 254–256 */
@@ -3443,12 +3459,58 @@ void TakeCareOfCinemascopePS2(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern float tanf(float x);
+extern void sceVu0CopyMatrix(float dest[4][4], float src[4][4]);
+extern void PS2glBoundingSphereParameters(float fov, float aspect, float zNear, float zFar, float zNearTolerantCulling, float zFarTolerantCulling);
+
+/* gluPerspective-style frustum: the guard-band frustum is scaled to the
+   4096-wide GS area, then the real frustum is loaded. Inlined, so each use
+   sits on one source line in retail. */
+inline void GLI_vSetPerspective(float fovy, float aspect, float zNear, float zFar)
+{
+    float xmin, xmax, ymin, ymax, fXScale, fYScale;
+    ymax = zNear * tanf(fovy * 0.0087266462f);
+    ymin = -ymax;
+    xmin = ymin * aspect;
+    xmax = ymax * aspect;
+    fXScale = 4096.0f / XRESf;
+    fYScale = 4096.0f / YRESf;
+    glFrustumf(xmin * fXScale, xmax * fXScale, ymin * fYScale, ymax * fYScale, zNear, zFar);
+    sceVu0CopyMatrix(g_PS2glContext.GuardBandProjectionMatrix, *g_PS2glContext.pCurMatrix);
+    PS2glLoadIdentity();
+    glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
+    PS2glBoundingSphereParameters(fovy, aspect, zNear, zFar, 0.0f, 0.0f);
+}
+
 void GLI_vInitGLProjectionMatrix(void)
 {
-    float g_fxAngle;
-    float g_fCurrentRatio;
     float TransformedxAngle;
-    /* TODO: decompile from asm/... */
+    float g_fCurrentRatio;
+    float g_fxAngle;
+
+    if (GLI_g_ProjectionMode == 1) {
+        return;
+    }
+    GLI_g_ProjMatrixHasChanged = 1;
+    g_fCurrentRatio = GLI_g_fCurrentCameraRatio;
+    g_fxAngle = GLI_g_fCurrentCameraxAngle;
+    if (g_bCinemascopeOn && g_a2_ulSize[1]) {
+        g_fxAngle *= 100.0f / g_a2_ulSize[1];
+    }
+    PS2glMatrixMode(0x1701);
+    PS2glLoadIdentity();
+    TransformedxAngle = 1.0f + (1.3333334f / g_fCurrentRatio - 1.0f);
+    TransformedxAngle *= g_fxAngle;
+    if (GLI_g_bWideScreenMode) {
+        GLI_vSetPerspective(TransformedxAngle, 1.3f * g_fCurrentRatio, GLI_g_NearValue, GLI_g_FarValue);
+    }
+    else {
+        GLI_vSetPerspective(TransformedxAngle, g_fCurrentRatio, GLI_g_NearValue, GLI_g_FarValue);
+    }
+    g_PS2glContext.nEnableBits |= 0x20; impPS2glScissor((int)g_PS2glContext.vScissorBox[0], (int)g_PS2glContext.vScissorBox[1], (int)g_PS2glContext.vScissorBox[2], (int)g_PS2glContext.vScissorBox[3]);
+    PS2glScissor(0, 0, XRES, YRES);
+    GLI_DRV_vSetCommonGLRenderStates();
+    GLI_g_ProjectionMode = 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1121–1141 */
@@ -3569,6 +3631,7 @@ void GLI_vSetFullScreenOrthoProjection(void)
  */
 void GLI_vSetFIXFullScreenOrthoProjection(void)
 {
+    float zFar = 1.0f;
     if (GLI_g_ProjectionMode == 2) {
         return;
     }
@@ -3584,7 +3647,7 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
     *(unsigned char*)g_PS2glContext.pbFogging = 0;
     PS2glMatrixMode(0x1701);
     PS2glLoadIdentity();
-    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, 1.0f);
+    PS2glOrtho(0.0f, 100.0f, 100.0f, 0.0f, -1.0f, zFar);
     PS2glMatrixMode(0x1702);
     PS2glLoadIdentity();
     PS2glMatrixMode(0x1700);
@@ -3597,6 +3660,7 @@ void GLI_vSetFIXFullScreenOrthoProjection(void)
 inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])
 {
     asm {
+        .set noreorder
         lqc2 vf5, 0x0(_vec)
         lqc2 vf1, 0x0(_src)
         lqc2 vf2, 0x10(_src)
@@ -3610,6 +3674,7 @@ inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float
         sqc2 vf2, 0x10(_dst)
         sqc2 vf3, 0x20(_dst)
         sqc2 vf4, 0x30(_dst)
+        .set reorder
     }
 }
 
@@ -4137,12 +4202,72 @@ void GLI_SendShadowElementToViewport(int param0, GEO_tdstGeometricObject_* p_stO
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+extern void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);
+extern void PS2glSetGsRegister(int reg, unsigned long data, unsigned long mask);
+extern void PS2glNormalPointer(unsigned int type, int stride, void* ptr);
+extern void PS2glTexCoordPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern void impPS2glColorPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern void PS2glVertexPointer(unsigned int size, unsigned int type, int stride, void* ptr);
+extern void PS2glDrawArrays(unsigned int mode, int first, unsigned int count);
+extern void WAT_vTest(float (*pPos)[4]);
 void GLI_vDisplayAllShadows(void)
 {
-    float Temp[4];
-    unsigned int NbVertices;
     float a16_fWorldMatrix[16];
-    /* TODO: decompile from asm/... */
+    unsigned int NbVertices;
+    float Temp[4];
+
+    if (GLI_g_NbSimpleShadows)
+    {
+        GLI_BIG_GLOBALS_xGlobalAlpha = 1.0f;
+        GLI_vClearSendMatStates();
+        GLI_DRV_SendMaterialToViewport((GLI_tdstMaterial_*)GLI_g_SimpleShadowMaterial);
+        g_PS2glContext.nTextureEnableBits |= (g_PS2glContext.iCurTextureSet == 0) ? 2 : 0x200; g_gsContext.PRMODE.TME = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;
+        PS2glSetGsRegister(0x42, 0x8000000044, 0);
+
+        GLI_vInitGLProjectionMatrix();
+        PS2glMatrixMode(0x1700);
+
+        PS2_M_vMulMatrixColumnsByVector((float (*)[4])&((GLI_tdstCamera_*)*(int*)g_p_stCurrentViewport->p_vSpecificToXD)->stMatrix.stTransformMatrix, GLI_g_NegVect, (float (*)[4])a16_fWorldMatrix); a16_fWorldMatrix[15] = 1.0f;
+        PS2glLoadMatrixf(a16_fWorldMatrix);
+
+        g_PS2glContext.nLightBits &= ~0x400;
+
+        NbVertices = GLI_g_NbSimpleShadows * 6;
+
+        PS2glNormalPointer(0x1406, -2, GLI_g_SimpleShadowsRLIs[GLI_g_SimpleShadowBegin * 6]);
+        PS2glTexCoordPointer(NbVertices, 0x1406, -2, GLI_g_SimpleShadowsUVs[GLI_g_SimpleShadowBegin * 6]);
+        impPS2glColorPointer(NbVertices, 0x1406, -2, GLI_g_SimpleShadowsRLIs[GLI_g_SimpleShadowBegin * 6]);
+        PS2glVertexPointer(NbVertices, 0x1406, -2, GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6]);
+
+        PS2glDrawArrays(4, 0, NbVertices);
+
+        NbElementComputed[1]++;
+
+        if (!SCT_g_DrawingMirrored)
+        {
+            Temp[0] = GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6][0];
+            Temp[1] = GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6][1];
+            Temp[2] = GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6][2];
+
+            Temp[0] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 1][0];
+            Temp[1] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 1][1];
+
+            Temp[0] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 2][0];
+            Temp[1] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 2][1];
+
+            Temp[0] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 5][0];
+            Temp[1] += GLI_g_SimpleShadowsPos[GLI_g_SimpleShadowBegin * 6 + 5][1];
+
+            Temp[0] *= 0.25f;
+            Temp[1] *= 0.25f;
+
+            WAT_vTest(&Temp);
+        }
+
+        GLI_g_SimpleShadowBegin += GLI_g_NbSimpleShadows;
+
+        GLI_g_NbSimpleShadows = 0;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_draw.c lines 1665–1748 */

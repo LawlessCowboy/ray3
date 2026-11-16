@@ -1127,6 +1127,18 @@ void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove, DNM_stDyna
     /* TODO: decompile from asm/... */
 }
 
+extern void MAT_fn_vGetRotationVectorBaseK(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stVecK);
+extern void MAT_fn_vInitTransformationAndType(MAT_tdstTransformation_* _hTransform, MAT_tdeTranformationType_ _eType, MTH3D_tdstVector_* _p_stI, MTH3D_tdstVector_* _p_stJ, MTH3D_tdstVector_* _p_stK, MTH3D_tdstVector_* _p_stTranslation);
+extern void MAT_fn_vSetScale(MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* _p_stScale);
+
+inline float MEC_M_xCrossComponent(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 723–752 */
 /* addr: 0x0030b150  size: 496 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1162,13 +1174,49 @@ void MEC_fn_vWallObstacleManagement(MTH3D_tdstVector_* pstResultMove, DNM_stDyna
  */
 void MEC_fn_vOrient(DNM_stDynamics* p_stDynamic, MTH3D_tdstVector_* p_stNormal)
 {
-    float xNorm;
-    MTH3D_tdstVector_ stZ;
-    MTH3D_tdstVector_ stY;
-    MTH3D_tdstVector_ stX;
-    MTH3D_tdstVector_ stVector;
     MAT_tdstTransformation_* hCurrentMatrix;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_ stX;
+    MTH3D_tdstVector_ stY;
+    MTH3D_tdstVector_ stZ;
+    float xNorm;
+    MTH3D_tdstVector_ stOldZ;
+    MTH3D_tdstVector_ stVertical;
+
+    stVertical.xX = 0.0f;
+    stVertical.xY = 0.0f;
+    hCurrentMatrix = &p_stDynamic->m_tdstDynamicsBaseBlock.m_stCurrentMatrix;
+    MAT_fn_vGetRotationVectorBaseK(hCurrentMatrix, &stZ);
+    stOldZ.xX = 0.7f * stZ.xX;
+    stOldZ.xY = 0.7f * stZ.xY;
+    stOldZ.xZ = 0.7f * stZ.xZ;
+    ((int*)&stY)[0] = ((int*)p_stNormal)[0];
+    ((int*)&stY)[1] = ((int*)p_stNormal)[1];
+    ((int*)&stY)[2] = ((int*)p_stNormal)[2];
+    stVertical.xZ = 1.0f;
+    stX.xX = MEC_M_xCrossComponent(stY.xY, stVertical.xZ, stY.xZ, stVertical.xY);
+    stX.xY = MEC_M_xCrossComponent(stY.xZ, stVertical.xX, stY.xX, stVertical.xZ);
+    stX.xZ = MEC_M_xCrossComponent(stY.xX, stVertical.xY, stY.xY, stVertical.xX);
+    xNorm = MTH_xSqrt(MTH_xDot3(stX.xX, stX.xX, stX.xY, stX.xY, stX.xZ, stX.xZ));
+    if (xNorm != 0.0f)
+    {
+        xNorm = 1.0f / xNorm;
+        stX.xX = xNorm * stX.xX;
+        stX.xY = xNorm * stX.xY;
+        stX.xZ = xNorm * stX.xZ;
+    }
+    stZ.xX = MEC_M_xCrossComponent(stX.xY, stY.xZ, stX.xZ, stY.xY);
+    stZ.xY = MEC_M_xCrossComponent(stX.xZ, stY.xX, stX.xX, stY.xZ);
+    stZ.xZ = MEC_M_xCrossComponent(stX.xX, stY.xY, stX.xY, stY.xX);
+    stVector.xX = 0.7f * stZ.xX;
+    stVector.xY = 0.7f * stZ.xY;
+    stVector.xZ = 0.7f * stZ.xZ;
+    stVector.xX = stOldZ.xX - stVector.xX;
+    stVector.xY = stOldZ.xY - stVector.xY;
+    stVector.xZ = stOldZ.xZ - stVector.xZ;
+    MAT_fn_vTranslate(hCurrentMatrix, &stVector);
+    MAT_fn_vInitTransformationAndType(hCurrentMatrix, MAT_eTransform_Rotation, &stX, &stY, &stZ, (MTH3D_tdstVector_*)&hCurrentMatrix->stTransformMatrix.stCol_3);
+    MAT_fn_vSetScale(hCurrentMatrix, &p_stDynamic->m_tdstDynamicsBaseBlock.m_stScale);
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\MEC\MECBhv.c lines 757–787 */

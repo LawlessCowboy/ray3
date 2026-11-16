@@ -3,10 +3,10 @@
 /* Compiler: MW MIPS C Compiler */
 
 #include <stddef.h>
+#include "r3/ENG.h"
 
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct CVarAccess CVarAccess;
-typedef struct _SND_tdstBlockEvent _SND_tdstBlockEvent;
 typedef struct _tdstAllRetObjectSound _tdstAllRetObjectSound;
 typedef struct CResObjParams CResObjParams;
 typedef struct V3Ds V3Ds;
@@ -20,7 +20,6 @@ typedef struct CExtraEventActor CExtraEventActor;
 typedef struct CLinkActor CLinkActor;
 typedef struct CLinkTypeActor CLinkTypeActor;
 typedef struct sallocator sallocator;
-typedef int anon_0;
 struct sallocator {
 };
 typedef struct CPitchActorModifier CPitchActorModifier;
@@ -32,12 +31,12 @@ typedef struct CResObjState CResObjState;
 typedef struct CCritSect CCritSect;
 typedef struct CActorProgramContext CActorProgramContext;
 typedef struct CActorResObj CActorResObj;
-typedef struct TTypedVar TTypedVar;
+namespace usnd { template <class T> struct TTypedVar; }
+typedef usnd::TTypedVar<float> TTypedVar;
 typedef struct sset sset;
 typedef struct CVar CVar;
 typedef struct CResData CResData;
 typedef struct CResObj CResObj;
-typedef struct CStringIsLess CStringIsLess;
 typedef struct CProgramContext CProgramContext;
 typedef struct _stVector _stVector;
 typedef struct CSndVarType CSndVarType;
@@ -142,12 +141,6 @@ struct smap {
     stree _Tr; /* +0x0 */
 };
 
-struct _RollOffParam {
-    int rDistSatur; /* +0x0 */
-    int rDistBackGround; /* +0x4 */
-    unsigned char ucBackgroundVol; /* +0x8 */
-};
-
 struct CExtraEventActor {
     CExtraEventActor* m_poNext; /* +0x0 */
     CExtraEventActor* m_poPrevious; /* +0x4 */
@@ -174,6 +167,7 @@ struct CLinkActor {
     CLinkTypeActor* mpoType; /* +0x0 */
     int ms32ACPObjectId; /* +0x4 */
     virtual ~CLinkActor(); /* vtable pointer at +0x8 */
+    CLinkActor();
     CExtraEventActor m_oExtraActors; /* +0xc */
     CLinkActor* m_poNext; /* +0x74 */
     CLinkActor* m_poPrevious; /* +0x78 */
@@ -192,11 +186,12 @@ struct CLinkActorPool {
 
 struct CLinkTypeActor {
     CLinkActor m_oActors; /* +0x0 */
-    TTypedVar* mroVolumeModifier; /* +0x7c */
+    TTypedVar& mroVolumeModifier; /* +0x7c */
     int ms32TypeId; /* +0x80 */
     int ms32LineId; /* +0x84 */
-    CLinkTypeActor(TTypedVar*, int, int, _tdstAllRetObjectSound*);
+    CLinkTypeActor(TTypedVar& ro_VolumeModifier, int s32_TypeId, int s32_LineId, const _tdstAllRetObjectSound* pst_IActor);
     _tdstAllRetObjectSound mstIActor; /* +0x88 */
+    virtual ~CLinkTypeActor(); /* vtable pointer at +0xc4 (retail __vt__14CLinkTypeActor) */
     unsigned char mfn_bSoundPlaying(void);
     unsigned char mfn_bExecuteActorInTypeActorInstance(int s32_CmdId, int s32_ObjectId);
     void mfn_vSynchronizeActorInTypeActorInstance(void);
@@ -313,9 +308,11 @@ struct CVar {
     sstring m_strName; /* +0x18 */
 };
 
-struct TTypedVar : CVar {
-    float m_oValue; /* +0x1c */
+namespace usnd {
+template <class T> struct TTypedVar : CVar {
+    T m_oValue; /* +0x1c */
 };
+}
 
 struct CUUID {
     unsigned int m_uiHighWord; /* +0x0 */
@@ -334,10 +331,6 @@ struct CRefIdObj : CIdObj {
 struct CResData : CRefIdObj {
     unsigned int m_uiVersionId; /* +0x10 */
     sstring m_strName; /* +0x14 */
-};
-
-struct CStringIsLess {
-    /* C++ base binary_function at +0x0. */
 };
 
 struct CProgramContext {
@@ -379,20 +372,6 @@ struct sTreeLink {
     _Redbl m_eColor; /* +0xc */
 };
 
-union _SND_tduRefEvt {
-    unsigned int Id; /* +0x0 */
-    _SND_tdstBlockEvent* pstPtr; /* +0x0 */
-};
-
-anon_0 __vt__14CLinkTypeActor;
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 70–70 */
-/* addr: 0x001cca20  size: 8 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 70
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 int fn_s32GhostObjectCoordinate__Fi(void)
 {
     return 0;
@@ -401,40 +380,13 @@ int fn_s32GhostObjectCoordinate__Fi(void)
 /* The functions below are in their original source-line order (retail
  * emits them in reverse); these prototypes keep earlier calls valid. */
 
-#pragma auto_inline on
-
-#pragma auto_inline reset
-
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 53–62 */
-/* addr: 0x001ccd30  size: 404 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 53
- *   +0x005c -> line 60
- *   +0x0110 -> line 61
- *   +0x0174 -> line 62
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
-
-CLinkTypeActor::CLinkTypeActor(TTypedVar* ro_VolumeModifier, int s32_TypeId, int s32_LineId, _tdstAllRetObjectSound* pst_IActor)
+CLinkTypeActor::CLinkTypeActor(TTypedVar& ro_VolumeModifier, int s32_TypeId, int s32_LineId, const _tdstAllRetObjectSound* pst_IActor)
+    : mroVolumeModifier(ro_VolumeModifier), ms32TypeId(s32_TypeId), ms32LineId(s32_LineId)
 {
-    /* TODO: decompile from asm/... */
+    mstIActor = *pst_IActor;
+    mfn_poAddActorInTypeActorInstance(-1, 0);
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 68–76 */
-/* addr: 0x001cccf0  size: 60 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 68
- *   +0x0004 -> line 69
- *   +0x000c -> line 71
- *   +0x0018 -> line 72
- *   +0x0020 -> line 73
- *   +0x0024 -> line 74
- *   +0x0030 -> line 75
- *   +0x0034 -> line 76
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 #pragma auto_inline on
 CLinkActor* CLinkTypeActor::mfn_poGetActorFromIdInTypeActorInstance(int s32_ActorId)
 {
@@ -449,21 +401,7 @@ CLinkActor* CLinkTypeActor::mfn_poGetActorFromIdInTypeActorInstance(int s32_Acto
 }
 #pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 79–91 */
-/* addr: 0x001ccc50  size: 160 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 79
- *   +0x0018 -> line 82
- *   +0x004c -> line 83
- *   +0x0054 -> line 84
- *   +0x005c -> line 86
- *   +0x0068 -> line 87
- *   +0x0078 -> line 89
- *   +0x0084 -> line 90
- *   +0x0088 -> line 91
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
+#pragma auto_inline on
 CLinkActor* CLinkTypeActor::mfn_poAddActorInTypeActorInstance(int s32_ObjectId, int s32_Unused)
 {
     CLinkActor* poActor;
@@ -476,25 +414,8 @@ CLinkActor* CLinkTypeActor::mfn_poAddActorInTypeActorInstance(int s32_ObjectId, 
     poActor->f_vInsertAfter(&m_oActors);
     return poActor;
 }
+#pragma auto_inline reset
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 151–167 */
-/* addr: 0x001ccbd0  size: 116 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 151
- *   +0x0010 -> line 153
- *   +0x0014 -> line 154
- *   +0x001c -> line 156
- *   +0x002c -> line 159
- *   +0x0030 -> line 160
- *   +0x0038 -> line 161
- *   +0x0040 -> line 162
- *   +0x0048 -> line 163
- *   +0x0050 -> line 165
- *   +0x0058 -> line 166
- *   +0x0060 -> line 167
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 void CLinkTypeActor::mfn_vSynchronizeActorInTypeActorInstance(void)
 {
     CLinkActor* poActor;
@@ -516,29 +437,6 @@ void CLinkTypeActor::mfn_vSynchronizeActorInTypeActorInstance(void)
     }
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 170–194 */
-/* addr: 0x001ccb10  size: 180 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 170
- *   +0x0004 -> line 174
- *   +0x0008 -> line 170
- *   +0x000c -> line 173
- *   +0x0010 -> line 170
- *   +0x0018 -> line 174
- *   +0x0020 -> line 176
- *   +0x0054 -> line 177
- *   +0x005c -> line 179
- *   +0x0064 -> line 181
- *   +0x006c -> line 184
- *   +0x0070 -> line 185
- *   +0x0078 -> line 187
- *   +0x008c -> line 188
- *   +0x0094 -> line 190
- *   +0x0098 -> line 191
- *   +0x00a0 -> line 194
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char CLinkTypeActor::mfn_bExecuteActorInTypeActorInstance(int s32_CmdId, int s32_ObjectId)
 {
     CLinkActor* poActor;
@@ -563,26 +461,6 @@ unsigned char CLinkTypeActor::mfn_bExecuteActorInTypeActorInstance(int s32_CmdId
     return bAnswer;
 }
 
-/* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\SND_R3\src\sndclinktypeactor.cpp lines 200–232 */
-/* addr: 0x001cca30  size: 220 bytes */
-/* Target MWCC statement boundaries (code offset -> source line):
- *   +0x0000 -> line 200
- *   +0x0010 -> line 202
- *   +0x0014 -> line 207
- *   +0x001c -> line 210
- *   +0x0028 -> line 213
- *   +0x003c -> line 214
- *   +0x0040 -> line 213
- *   +0x0044 -> line 215
- *   +0x0058 -> line 217
- *   +0x0060 -> line 218
- *   +0x0080 -> line 221
- *   +0x0094 -> line 224
- *   +0x00a0 -> line 227
- *   +0x00c8 -> line 232
- * Place reconstructed statements at these boundaries;
- * compare a candidate object's line table as an extra checkpoint.
- */
 unsigned char CLinkTypeActor::mfn_bSoundPlaying(void)
 {
     CExtraEventActor* pExtraActor;

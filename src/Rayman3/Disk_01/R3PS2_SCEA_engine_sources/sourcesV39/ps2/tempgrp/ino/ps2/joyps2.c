@@ -69,7 +69,7 @@ static int gs_iScePadInit;
 signed char INO_aJoyUsedByAI[16];
 static int gs_a_DeconnectedJoy[2];
 static int gs_a_InitializedJoy[2];
-long double a_u128PadDmaBuf[2][16];
+__int128 a_u128PadDmaBuf[2][16];
 unsigned int GLI_g_bInExpertRasters;
 unsigned int GLI_g_bInMenu;
 int g_EngineHasBeenPausedBecauseOfMC;
@@ -253,12 +253,38 @@ short INOPS2_fn_wInit(void)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int scePadPortOpen(int port, int slot, void* addr);
+int scePadGetState(int port, int slot);
+void fn_vUpdateIsFfbTable(unsigned char _ucJoyNb);
+inline short INOPS2_fn_vSetDualShock(short _wJoystickNum);
+inline short INOPS2_fn_vWaitReady(int _iPort, int _iSlot);
+inline short INOPS2_fn_wIsDualShock(short _wJoystickNum);
+
 short INOPS2_fn_wRegisterJoystick(short _wJoystickNum)
 {
+    static int s_bBlackBoxPadDeclared;
     int iSlot;
     int iPort;
-    int s_bBlackBoxPadDeclared;
-    /* TODO: decompile from asm/... */
+
+    if (!gs_a_InitializedJoy[_wJoystickNum])
+    {
+        iPort = g_axPadMapping[_wJoystickNum].iPort;
+        iSlot = g_axPadMapping[_wJoystickNum].iSlot;
+        if ((short)(scePadPortOpen(iPort, iSlot, a_u128PadDmaBuf[_wJoystickNum]) == 1 ? 1 : -1) == 1)
+        {
+            if (INOPS2_fn_vWaitReady(iPort, iSlot) == 6)
+            {
+                iPort = INOPS2_fn_vSetDualShock(_wJoystickNum);
+                INOPS2_fn_vWaitReady(iPort, iSlot);
+                if (INOPS2_fn_wIsDualShock(_wJoystickNum))
+                    gs_a_InitializedJoy[_wJoystickNum] = 1;
+            }
+            if (!s_bBlackBoxPadDeclared && _wJoystickNum == 0)
+                s_bBlackBoxPadDeclared = 1;
+        }
+    }
+    fn_vUpdateIsFfbTable((unsigned char)_wJoystickNum);
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 723–729 */
@@ -325,12 +351,81 @@ short INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int scePadGetState(int port, int slot);
+int scePadSetMainMode(int port, int slot, int offs, int lock);
+int scePadSetActAlign(int port, int slot, const unsigned char* data);
+int scePadGetReqState(int port, int slot);
+int scePadRead(int port, int slot, unsigned char* rdata);
+int INOPS2_fn_iWaitCmd(int _iPort, int _iSlot, int time_to_wait);
+unsigned int fn_ulTimerWaitTicksPerSecond(void);
+void fn_vTimerWait(unsigned int ulTicksToWait);
+
+inline short INOPS2_fn_vSetDualShock(short _wJoystickNum)
+{
+    static unsigned char act_align[6] = { 0, 1, 0xff, 0xff, 0xff, 0xff };
+    int iPort = g_axPadMapping[_wJoystickNum].iPort;
+    int iSlot = g_axPadMapping[_wJoystickNum].iSlot;
+
+    scePadSetMainMode(iPort, iSlot, 1, 3);
+    INOPS2_fn_iWaitCmd(iPort, iSlot, 10);
+    scePadSetActAlign(iPort, iSlot, act_align);
+    INOPS2_fn_iWaitCmd(iPort, iSlot, 10);
+    return scePadGetReqState(iPort, iSlot);
+}
+
+inline short INOPS2_fn_vWaitReady(int _iPort, int _iSlot)
+{
+    int iTimeToWait = 50;
+    int iState;
+
+    while ((iState = scePadGetState(_iPort, _iSlot)) == 5 && iTimeToWait >= 0)
+        fn_vTimerWait((unsigned int)((float)iTimeToWait * (float)fn_ulTimerWaitTicksPerSecond() / 1000.0f));
+    return iState;
+}
+
+inline short INOPS2_fn_wIsDualShockId(unsigned char _ucId)
+{
+    if (_ucId == 0x79)
+        return 1;
+    if (_ucId == 0x73)
+        return 1;
+    return 0;
+}
+
+inline short INOPS2_fn_wIsDualShock(short _wJoystickNum)
+{
+    unsigned char a_ucData[32] __attribute__((aligned(16)));
+
+    if (scePadRead(g_axPadMapping[_wJoystickNum].iPort, g_axPadMapping[_wJoystickNum].iSlot, a_ucData) != 32)
+        return 0;
+    return INOPS2_fn_wIsDualShockId(a_ucData[1]);
+}
+
 short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum)
 {
-    int iSlot;
-    int iPort;
-    unsigned char act_align[6];
-    /* TODO: decompile from asm/... */
+    int iPort = g_axPadMapping[_wJoystickNum].iPort;
+    int iSlot = g_axPadMapping[_wJoystickNum].iSlot;
+
+    switch (scePadGetState(iPort, iSlot))
+    {
+    default:
+        gs_a_DeconnectedJoy[_wJoystickNum] = 1;
+        break;
+    case 6:
+    case 2:
+        if (gs_a_DeconnectedJoy[_wJoystickNum])
+        {
+            INOPS2_fn_vSetDualShock(_wJoystickNum);
+            INOPS2_fn_vWaitReady(iPort, iSlot);
+            if (INOPS2_fn_wIsDualShock(_wJoystickNum))
+                gs_a_DeconnectedJoy[_wJoystickNum] = 0;
+        }
+        break;
+    }
+
+    if (gs_a_DeconnectedJoy[_wJoystickNum])
+        return 0;
+    return 1;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\ino\ps2\joyps2.c lines 772–773 */

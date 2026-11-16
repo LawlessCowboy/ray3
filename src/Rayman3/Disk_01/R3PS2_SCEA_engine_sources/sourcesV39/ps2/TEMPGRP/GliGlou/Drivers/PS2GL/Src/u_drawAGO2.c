@@ -1414,6 +1414,37 @@ inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float
     }
 }
 
+/* sqrt.s and the R5900 accumulator ops have no C form under MWCC; only
+ * those instructions are asm. */
+inline float MTH_M_xSqrNorm(float _xX, float _xY, float _xZ)
+{
+    float _xResult;
+    asm { mula.s _xX, _xX }
+    asm { madda.s _xY, _xY }
+    asm { madd.s _xResult, _xZ, _xZ }
+    return _xResult;
+}
+inline float MTH_M_xSqrt(float _xA)
+{
+    float _xResult;
+    asm { sqrt.s _xResult, _xA }
+    return _xResult;
+}
+inline float MTH_M_xMulSubMul(float _xA, float _xB, float _xC, float _xD)
+{
+    float _xResult;
+    asm { mula.s _xA, _xB }
+    asm { msub.s _xResult, _xC, _xD }
+    return _xResult;
+}
+#define MTH3D_M_vMulScalarVector(_d,_s,_v) { float _x = (_s); (_d)->xX = _x * (_v)->xX; (_d)->xY = _x * (_v)->xY; (_d)->xZ = _x * (_v)->xZ; }
+#define MTH3D_M_vCrossProductVector(_d, _a, _b)                                    \
+    {                                                                               \
+        (_d)->xX = MTH_M_xMulSubMul((_a)->xY, (_b)->xZ, (_a)->xZ, (_b)->xY);        \
+        (_d)->xY = MTH_M_xMulSubMul((_a)->xZ, (_b)->xX, (_a)->xX, (_b)->xZ);        \
+        (_d)->xZ = MTH_M_xMulSubMul((_a)->xX, (_b)->xY, (_a)->xY, (_b)->xX);        \
+    }
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 313–343 */
 /* addr: 0x002b5550  size: 568 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -1460,10 +1491,30 @@ inline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float
 void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy)
 {
     float xNorm;
-    MTH3D_tdstVector_ V3;
-    MTH3D_tdstVector_ V2;
     MTH3D_tdstVector_ V1;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ V2;
+    MTH3D_tdstVector_ V3;
+
+    V1.xX = 0.0f;
+    V1.xY = 0.0f;
+    V1.xZ = -1.0f;
+    MAT_fn_vApplyOnVector(&V2, param0, &V1);
+
+    GLI_g_stYVect.xX = pDirection[0];
+    GLI_g_stYVect.xY = pDirection[1];
+    GLI_g_stYVect.xZ = pDirection[2];
+
+    xNorm = MTH_M_xSqrt(MTH_M_xSqrNorm(GLI_g_stYVect.xX, GLI_g_stYVect.xY, GLI_g_stYVect.xZ)); if (xNorm != 0.0f) { xNorm = 1.0f / xNorm; GLI_g_stYVect.xX = xNorm * GLI_g_stYVect.xX; GLI_g_stYVect.xY = xNorm * GLI_g_stYVect.xY; GLI_g_stYVect.xZ = xNorm * GLI_g_stYVect.xZ; }
+    MTH3D_M_vCrossProductVector(&V3, &GLI_g_stYVect, &V2);
+    xNorm = MTH_M_xSqrt(MTH_M_xSqrNorm(V3.xX, V3.xY, V3.xZ)); if (xNorm != 0.0f) { float xInv = 1.0f / xNorm; GLI_g_stXVect.xX = xInv * V3.xX; GLI_g_stXVect.xY = xInv * V3.xY; GLI_g_stXVect.xZ = xInv * V3.xZ; } else { GLI_g_stXVect = V3; }
+
+    GLI_g_stXVect.xX *= sx;
+    GLI_g_stXVect.xY *= sx;
+    GLI_g_stXVect.xZ *= sx;
+
+    GLI_g_stYVect.xX *= sy;
+    GLI_g_stYVect.xY *= sy;
+    GLI_g_stYVect.xZ *= sy;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 347–424 */
@@ -1735,19 +1786,103 @@ void GLI_v_StopDrawingRain(void)
  */
 void GLI_vDisplaySerialParticleRain(GLD_tdstViewportAttributes_* param0, AGO2_RainParticle_* pParticleArray, int NumberOfParticles, void* pMaterial, float sx, float sy)
 {
-    float Uv4[4];
-    float Uv3[4];
-    float Uv2[4];
-    float Uv1[4];
-    float Pos[4];
-    float Color[4];
-    float (*pT)[4];
-    float (*pC)[4];
-    float (*pV)[4];
-    MAT_tdstTransformation_ InvertedCam;
-    unsigned int NbSpritesReal;
     int i;
-    /* TODO: decompile from asm/... */
+    unsigned int NbSpritesReal;
+    MAT_tdstTransformation_ InvertedCam;
+    float (*pV)[4];
+    float (*pC)[4];
+    float (*pT)[4];
+    float Color[4];
+    float Pos[4];
+    float Uv1[4];
+    float Uv2[4];
+    float Uv3[4];
+    float Uv4[4];
+
+    NbSpritesReal = 0;
+    GLI_g_RainMaterial = (int)pMaterial;
+    i = (NumberOfParticles < (int)VAC_g_NbSpritesLefts) ? NumberOfParticles : (int)VAC_g_NbSpritesLefts;
+    if (i != 0)
+    {
+        pV = (float (*)[4])VAC_g_CurrentpV;
+        pC = (float (*)[4])VAC_g_CurrentpC;
+        pT = (float (*)[4])VAC_g_CurrentpT;
+        GLI_v_CalculateInverseCamMat(&InvertedCam, param0);
+        GLI_v_CalculateVectorsFor3DRainVU0(&InvertedCam, pParticleArray->Direction, sx, sy);
+        Color[0] = Color[1] = Color[2] = 1.0f;
+        Pos[3] = 1.0f;
+        Uv1[0] = 0.0f; Uv1[1] = 1.0f; Uv1[2] = 0.0f; Uv1[3] = 0.0f;
+        Uv2[0] = 1.0f; Uv2[1] = 1.0f; Uv2[2] = 0.0f; Uv2[3] = 0.0f;
+        Uv3[0] = 1.0f; Uv3[1] = 0.0f; Uv3[2] = 0.0f; Uv3[3] = 0.0f;
+        Uv4[0] = 0.0f; Uv4[1] = 0.0f; Uv4[2] = 0.0f; Uv4[3] = 0.0f;
+        {
+            float* pXV = GLI_g_stXVecta;
+            float* pYV = GLI_g_stYVecta;
+            float* pUv1 = Uv1;
+            float* pUv2 = Uv2;
+            float* pUv3 = Uv3;
+            float* pUv4 = Uv4;
+            asm {
+                lqc2 vf15, 0x0(pXV)
+                lqc2 vf16, 0x0(pYV)
+                lqc2 vf17, 0x0(pUv1)
+                lqc2 vf18, 0x0(pUv2)
+                lqc2 vf19, 0x0(pUv3)
+                lqc2 vf20, 0x0(pUv4)
+            }
+        }
+        while (i != 0)
+        {
+            if (pParticleArray->Flags == 0)
+            {
+                unsigned char* pPrefetch = (unsigned char*)pParticleArray + 0x60;
+                float* pColor;
+                float* pPos;
+                asm { pref 0x0, 0x0(pPrefetch) }
+                Color[3] = pParticleArray->xTransparency * (1.0f / 255.0f);
+                NbSpritesReal++;
+                Pos[0] = pParticleArray->Position[0];
+                Pos[1] = pParticleArray->Position[1];
+                Pos[2] = pParticleArray->Position[2];
+                pColor = Color;
+                pPos = Pos;
+                asm {
+                    lqc2 vf1, 0x0(pColor)
+                    lqc2 vf2, 0x0(pPos)
+                    vsub.xyzw vf4, vf15, vf16
+                    vadd.xyzw vf5, vf15, vf16
+                    sqc2 vf1, 0x0(pC)
+                    sqc2 vf1, 0x10(pC)
+                    sqc2 vf1, 0x20(pC)
+                    sqc2 vf1, 0x30(pC)
+                    sqc2 vf1, 0x40(pC)
+                    sqc2 vf1, 0x50(pC)
+                    sqc2 vf17, 0x0(pT)
+                    sqc2 vf18, 0x10(pT)
+                    sqc2 vf19, 0x20(pT)
+                    sqc2 vf17, 0x30(pT)
+                    sqc2 vf19, 0x40(pT)
+                    sqc2 vf20, 0x50(pT)
+                    vsub.xyzw vf6, vf2, vf5
+                    vadd.xyzw vf7, vf2, vf4
+                    vadd.xyzw vf8, vf2, vf5
+                    vsub.xyzw vf9, vf2, vf4
+                    sqc2 vf6, 0x0(pV)
+                    sqc2 vf7, 0x10(pV)
+                    sqc2 vf8, 0x20(pV)
+                    sqc2 vf6, 0x30(pV)
+                    sqc2 vf8, 0x40(pV)
+                    sqc2 vf9, 0x50(pV)
+                }
+                pV += 6;
+                pC += 6;
+                pT += 6;
+            }
+            pParticleArray++;
+            i--;
+        }
+        VAC_g_NbSpritesLefts -= NbSpritesReal; VAC_g_CurrentNbSprites += NbSpritesReal; VAC_g_CurrentpV = (int)((unsigned char*)VAC_g_CurrentpV + 96 * NbSpritesReal); VAC_g_CurrentpC = (int)((unsigned char*)VAC_g_CurrentpC + 96 * NbSpritesReal); VAC_g_CurrentpT = (int)((unsigned char*)VAC_g_CurrentpT + 96 * NbSpritesReal);
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawAGO2.c lines 654–803 */

@@ -962,18 +962,16 @@ void GLI_vRecomputeNormalsWhileWaitingForVBL(void)
  */
 void GLI_vPrepareDisplayingAGOs(GLD_tdstViewportAttributes_* _p_stViewport)
 {
-    GLI_tdstCamera_* p_stCam;
     MTH4D_tdstMatrix_* p_stWorldMatrix;
+    GLI_tdstCamera_* p_stCam;
     float* pVec;
-    float (*pSrc)[4];
     float (*pDst)[4];
 
     p_stCam = *(GLI_tdstCamera_**)(*(int*)&_p_stViewport->p_vSpecificToXD);
     p_stWorldMatrix = (MTH4D_tdstMatrix_*)&p_stCam->stMatrix.stTransformMatrix;
     pVec = GLI_g_NegVect;
-    pSrc = (float (*)[4])p_stWorldMatrix;
     pDst = (float (*)[4])GLI_g_a16_fWorldMatrix;
-    PS2_M_vMulMatrixColumnsByVector(pDst, pVec, pSrc);
+    PS2_M_vMulMatrixColumnsByVector(pDst, pVec, p_stWorldMatrix);
     GLI_g_a16_fWorldMatrix[15] = 1.0f;
     MAT_fn_vInvert(&GLI_g_InvertexCameraMatrix, &p_stCam->stMatrix);
     GLI_vInitSpritesForThisViewport(_p_stViewport);

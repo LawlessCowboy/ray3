@@ -46753,6 +46753,537 @@
       "status": "MISMATCH",
       "target_size": 720,
       "unresolved_relocations": []
+    },
+    {
+      "address": "0x00253440",
+      "candidate_size": 356,
+      "first_difference": 76,
+      "implementation": "unsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);\nunsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);\nunsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);\nunsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace);\nunsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nint INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2);\nunsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\COL\\Inters.c lines 49\u201391 */\n/* addr: 0x00255160  size: 232 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 49\n *   +0x0018 -> line 51\n *   +0x0028 -> line 52\n *   +0x0038 -> line 54\n *   +0x003c -> line 56\n *   +0x0040 -> line 59\n *   +0x0044 -> line 56\n *   +0x004c -> line 55\n *   +0x0050 -> line 56\n *   +0x0054 -> line 57\n *   +0x0058 -> line 58\n *   +0x005c -> line 57\n *   +0x0060 -> line 58\n *   +0x0064 -> line 57\n *   +0x0068 -> line 59\n *   +0x0070 -> line 63\n *   +0x0080 -> line 65\n *   +0x0088 -> line 69\n *   +0x0098 -> line 71\n *   +0x009c -> line 72\n *   +0x00a0 -> line 71\n *   +0x00ac -> line 72\n *   +0x00b4 -> line 79\n *   +0x00c4 -> line 81\n *   +0x00d0 -> line 82\n *   +0x00d4 -> line 81\n *   +0x00d8 -> line 82\n *   +0x00e0 -> line 91\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2)\n{\n    float xDiv;\n    float xDelta;\n\n    if (xA != 0.0f) {\n        xDelta = xB * xB - 4.0f * (xA * xC);\n        if (xDelta > 0.0f) {\n            xDelta = MTH_xSqrt(xDelta);\n            xDiv = 1.0f / (xA + xA);\n            *p_xT1 = xDiv * (-xB + xDelta);\n            *p_xT2 = xDiv * (-xB - xDelta);\n            return 2;\n        }\n        if (xDelta < 0.0f)\n            return 0;\n        if (xDelta == 0.0f) {\n            *p_xT1 = -(xB / (xA + xA));\n            return 1;\n        }\n    } else if (xB != 0.0f) {\n        *p_xT1 = -(xC / xB);\n        return 1;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "INT_fn_bDetectIntersectSegmentWithTriangle",
+      "reason": "3.0.1: extra hazard nop between add.s and div.s (+0xac) plus FP register renaming; source variants (inline/split dot, neg placement, decl order) don't move it. Under 3.0.3-pad7b the nop disappears and the residual is register-only renaming (f6/f7/f8): candidate for a function override plus permuter.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ec9b0",
+      "candidate_size": 352,
+      "first_difference": 280,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "InitOneParticle__8C_FireFxFP8C_Vector",
+      "reason": "352/352, relocs ok, lines ok; only residual is arg-load order (lui/mtc1 f12 vs f13) of the final FRR(0.6f,0.85f) call. Preceding statement forms (x+=F vs x=x+F, c*F vs F*c) flip each call's arg order; permuter 25 min found no improvement over score 20.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ec9b0",
+      "candidate_size": 352,
+      "first_difference": 280,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "InitOneParticle__8C_FireFxFP8C_Vector",
+      "reason": "352/352, relocs+lines ok; only residual: final FRR(0.6f,0.85f) loads 0.85 (f13) before 0.6 (f12) in retail. Arg-load order of each FRR call flips with the forms of the preceding statements (+= vs x=x+F, c*F vs F*c, zero-store spelling) like a parity effect; 36+72-combo sweeps, 3.0.3/pad7b/unfold compilers (same result) and 25 min permuter found no form fixing the last call alone.",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 352,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d2fd0",
+      "candidate_size": 400,
+      "first_difference": 78,
+      "implementation": "",
+      "line_offsets_equal": true,
+      "model": "claude-haiku",
+      "name": "SemiLookatSprite__17CSpriteControllerFP17MTH3D_tdstVector_P17MTH3D_tdstVector_P17GLI_tdstMaterial_fiff",
+      "reason": "Still EQUIVALENT (register renaming only, 400/400, asm VU0 block kept). Only variant that moved rows: ColorCenter = 0x808080; ColorCenter |= ColorOut; (fixes 4 register rows, still 19 register + 3 immediate, ETStack symbolisation). Residual: retail keeps Alpha in t2 and 0x1000 in a3 with ColorCenter in t0; ours Alpha in a3, 0x1000 in a2; second pC (m_CurrentVT) reload uses t1 in retail but v0 in ours. Tried ~39 variants (decl order/types/scope of p1,p2,fHalf, Position copy order, pV placement, pC store order, VC/VT block order, Alpha/ColorOut types): none reach MATCH; many made it worse.",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "EQUIVALENT",
+      "target_size": 400,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d8380",
+      "candidate_size": 188,
+      "first_difference": 48,
+      "implementation": "extern \"C\" void InterpolateMatrixAndStoreWithThreshold(float* pDest, float* pSrc, float* pDest2);\nint InterpolateMatrixAndTest(float* pDest, float* pSrc);\n\n/* The retail body is flagged as hand-written assembly (one debug line per\n * instruction and a hand-written \"add v0,zero,zero\" that MWCC would spell\n * \"move v0,zero\"), and the VU vector ops (vsub/vabs/vmax/vmulx .xyzw) have no\n * C form, so the VU sequence is written as inline asm blocks. */\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GliGlou\\Drivers\\PS2GL\\Src\\SDLs\\SDLInterpol.cpp lines 91\u2013156 */\n/* addr: 0x002d8440  size: 184 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 91\n *   +0x0014 -> line 94\n *   +0x0018 -> line 96\n *   +0x001c -> line 97\n *   +0x0020 -> line 98\n *   +0x0024 -> line 99\n *   +0x0028 -> line 101\n *   +0x002c -> line 102\n *   +0x0030 -> line 103\n *   +0x0034 -> line 104\n *   +0x0038 -> line 107\n *   +0x003c -> line 108\n *   +0x0040 -> line 109\n *   +0x0044 -> line 111\n *   +0x0048 -> line 112\n *   +0x004c -> line 113\n *   +0x0050 -> line 114\n *   +0x0054 -> line 115\n *   +0x0058 -> line 116\n *   +0x005c -> line 117\n *   +0x0060 -> line 119\n *   +0x0064 -> line 120\n *   +0x0068 -> line 122\n *   +0x006c -> line 124\n *   +0x0070 -> line 125\n *   +0x0074 -> line 126\n *   +0x0078 -> line 127\n *   +0x007c -> line 129\n *   +0x0080 -> line 134\n *   +0x0084 -> line 135\n *   +0x0088 -> line 136\n *   +0x008c -> line 137\n *   +0x0090 -> line 139\n *   +0x0094 -> line 140\n *   +0x0098 -> line 141\n *   +0x009c -> line 142\n *   +0x00a0 -> line 144\n *   +0x00a4 -> line 145\n *   +0x00a8 -> line 146\n *   +0x00ac -> line 147\n *   +0x00b0 -> line 156\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\nint InterpolateMatrixAndTest(float* pDest, float* pSrc)\n{\n    float fLimit = 0.3f;\n    float* pHalf = GLI_g_SDL_pHalfVect;\n    float fDist;\n    int Result;\n\n    asm {\n        lqc2 vf1, 0x0(pHalf)\n        lqc2 vf2, 0x0(pDest)\n        lqc2 vf3, 0x10(pDest)\n        lqc2 vf4, 0x20(pDest)\n        lqc2 vf5, 0x30(pDest)\n        lqc2 vf6, 0x0(pSrc)\n        lqc2 vf7, 0x10(pSrc)\n        lqc2 vf8, 0x20(pSrc)\n        lqc2 vf9, 0x30(pSrc)\n        vsub.xyzw vf10, vf6, vf2\n        vsub.xyzw vf11, vf7, vf3\n        vsub.xyzw vf12, vf8, vf4\n        vabs.xyzw vf10, vf10\n        vabs.xyzw vf11, vf11\n        vabs.xyzw vf12, vf12\n        vmax.xyzw vf10, vf10, vf11\n        vmax.xyzw vf10, vf10, vf12\n        vmaxz.x vf10, vf10, vf10z\n        vmaxy.x vf10, vf10, vf10y\n        qmfc2.ni v0, vf10\n        mtc1 v0, fDist\n    }\n    Result = 0;\n    if (fDist > fLimit)\n    {\n        Result = 1;\n    }\n    asm {\n        vadd.xyzw vf2, vf2, vf6\n        vadd.xyzw vf3, vf3, vf7\n        vadd.xyzw vf4, vf4, vf8\n        vadd.xyzw vf5, vf5, vf9\n        vmulx.xyzw vf2, vf2, vf1x\n        vmulx.xyzw vf3, vf3, vf1x\n        vmulx.xyzw vf4, vf4, vf1x\n        vmulx.xyzw vf5, vf5, vf1x\n        sqc2 vf2, 0x0(pDest)\n        sqc2 vf3, 0x10(pDest)\n        sqc2 vf4, 0x20(pDest)\n        sqc2 vf5, 0x30(pDest)\n    }\n    return Result;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-haiku",
+      "name": "InterpolateMatrixAndStoreWithThreshold",
+      "reason": "Unchanged source: FP hazard nops (mtc1/c.le.s, c.le.s/bc1t) from statement-level asm. A whole-function asm body removes them (scratch cand_best.cpp) but 'la' emits lui+addiu adjacent and MWCC asm rejects every %hi/%lo spelling, so retail's lui/mtc1/addiu split at +4..+0xc cannot be spelled (2 structural rows).",
+      "size": 188,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLInterpol.cpp",
+      "status": "MISMATCH",
+      "target_size": 188,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00314210",
+      "candidate_size": 384,
+      "first_difference": 101,
+      "implementation": "void Mmg_fn_vWhereIs(void* p_vPtr, unsigned short* p_uwModuleBlockId, void** pp_vBeginAdr);\nvoid fn_vGenFree(void* p_vMemBlock, unsigned char ucChannel);\nvoid fn_p_vGenAlloc(unsigned int ulSize, unsigned char ucChannel);\nvoid fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);\nvoid* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);\nunsigned long long* fn_p_vDynAlloc(unsigned int ulSize);\nvoid Mmg_fn_vDeleteBlock(unsigned char ucBlockId, unsigned char ucMode, tdstBlockInfoPriv_* p_stMyBlocksInfo);\n/* Retail callers pass seven arguments (a0..a3, t0..t2) and the callee reads a2 as\n   the module's block table, t1 as the alignment and t2 as the mode; the five-parameter\n   debug declaration drops the module id and the malloc-count limit (unused here). */\nvoid Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode);\n\nvoid fn_vStaFree(void* p_vMemBlock, unsigned char ucChannel);\nvoid PS2_fn_vEnterCriticalSection(_stCriticalSection* p_stCS);\nvoid PS2_fn_vLeaveCriticalSection(_stCriticalSection* p_stCS);\nvoid free(void* ptr);\n\nvoid* fn_p_vStaAlloc(unsigned int ulSize, unsigned char ucChannel);\nunsigned long long* fn_p_vDynAlloc(unsigned int ulSize);\n\n/* Reconstructed from the retail code.  The free list, the cell split and the\n * debug signature handling follow the target instruction for instruction;\n * what is still missing is the exact register allocation (the retail keeps\n * the size in $s0, the block info in $s1, the previous cell in $s2, the\n * \"found\" flag in $s3 and the current cell in $s4) and the line table. */\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\MMG\\cpammg.c lines 215\u2013441 */\n/* addr: 0x00314c10  size: 720 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 215\n *   +0x0004 -> line 220\n *   +0x0008 -> line 215\n *   +0x000c -> line 237\n *   +0x0010 -> line 215\n *   +0x0014 -> line 220\n *   +0x0018 -> line 215\n *   +0x001c -> line 237\n *   +0x0020 -> line 215\n *   +0x0044 -> line 237\n *   +0x0058 -> line 247\n *   +0x0068 -> line 249\n *   +0x0070 -> line 251\n *   +0x0074 -> line 253\n *   +0x008c -> line 254\n *   +0x0090 -> line 297\n *   +0x00b0 -> line 312\n *   +0x00c0 -> line 319\n *   +0x00c4 -> line 322\n *   +0x00d8 -> line 324\n *   +0x00e0 -> line 332\n *   +0x0104 -> line 338\n *   +0x010c -> line 343\n *   +0x0130 -> line 346\n *   +0x0138 -> line 351\n *   +0x013c -> line 354\n *   +0x0140 -> line 355\n *   +0x0148 -> line 363\n *   +0x014c -> line 356\n *   +0x0150 -> line 363\n *   +0x0154 -> line 357\n *   +0x0158 -> line 363\n *   +0x015c -> line 383\n *   +0x0160 -> line 363\n *   +0x0164 -> line 383\n *   +0x016c -> line 384\n *   +0x017c -> line 385\n *   +0x018c -> line 386\n *   +0x01a8 -> line 391\n *   +0x01b0 -> line 399\n *   +0x01b8 -> line 400\n *   +0x01bc -> line 401\n *   +0x01d0 -> line 402\n *   +0x01d4 -> line 412\n *   +0x01d8 -> line 405\n *   +0x01dc -> line 410\n *   +0x01e0 -> line 405\n *   +0x01e8 -> line 412\n *   +0x01f0 -> line 413\n *   +0x0200 -> line 414\n *   +0x0204 -> line 415\n *   +0x021c -> line 416\n *   +0x0220 -> line 419\n *   +0x0224 -> line 423\n *   +0x023c -> line 424\n *   +0x0240 -> line 426\n *   +0x0244 -> line 427\n *   +0x0248 -> line 430\n *   +0x0260 -> line 431\n *   +0x029c -> line 438\n *   +0x02a0 -> line 441\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid Mmg_fn_vInitSpecificBlock(unsigned char _ucBlockId, unsigned char _ucModuleId, tdstBlockInfoPriv_* _p_stMyBlocksInfo, unsigned int _ulSize, unsigned int _ulMaxNbOfMalloc, unsigned char _ucAlignment, unsigned char _ucMode)\n{\n    tdstInformationHeaderOfBolckWithoutFree_* param0;\n    unsigned int lTemporaryValue;\n    unsigned char ucAlignment;\n    tdstBlockInfoPriv_* p_stMyBlockInfo;\n    long double* p_uaPtr;\n    unsigned int ulI;\n    char* p_cBegin;\n\n    if (_ucAlignment > 16) {\n        _ucAlignment = 16;\n    }\n    p_stMyBlockInfo = &_p_stMyBlocksInfo[_ucBlockId];\n    if (_ucMode & 1) {\n        ucAlignment = _ucAlignment;\n        if (_ulSize & (ucAlignment - 1)) {\n            _ulSize = ucAlignment + (_ulSize & ~(ucAlignment - 1));\n        }\n        _ulSize += 3;\n    } else {\n        ucAlignment = 16;\n    }\n    if (_ulSize & (ucAlignment - 1)) {\n        _ulSize = ucAlignment + (_ulSize & ~(ucAlignment - 1));\n    }\n    p_cBegin = (char*)malloc(_ulSize);\n    lTemporaryValue = (unsigned int)p_cBegin;\n    if (lTemporaryValue & (ucAlignment - 1)) {\n        lTemporaryValue = ucAlignment + (lTemporaryValue & ~(ucAlignment - 1));\n    }\n    if ((unsigned int)p_cBegin != lTemporaryValue) {\n        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 2, -1, 0xFF, 0xFF, 0);\n    }\n    if (p_cBegin == NULL) {\n        Erm_fn_v_UpdateLastError(0x1D, g_ucMmgModuleId, 0, 0x1F, -1, 0xFF, 0xFF, 0);\n        return;\n    }\n    p_stMyBlockInfo->p_cBeginBlock = (int)p_cBegin;\n    p_stMyBlockInfo->p_cEndBlock = (int)p_cBegin + _ulSize - 1;\n    if (!(_ucMode & 1)) {\n        p_stMyBlockInfo->p_cFirstFree = (int)p_cBegin;\n        p_stMyBlockInfo->p_cMaxMem = (int)p_cBegin;\n        ((tdstFreeCell_*)p_cBegin)[0] = (unsigned int)(_ulSize >> 4);\n        ((tdstFreeCell_*)p_cBegin)[1] = 0;\n        if (_ucMode & 2) {\n            _ulSize -= ucAlignment * 2;\n            if (_ulSize) {\n                tdstFreeCell_* p_stCell = (tdstFreeCell_*)(p_cBegin + 0x20);\n                do {\n                    *p_stCell = 0xAAAAAAAA;\n                    _ulSize -= ucAlignment;\n                    p_stCell++;\n                } while (_ulSize);\n            }\n        }\n    } else {\n        p_stMyBlockInfo->p_cMaxMem = (int)p_cBegin + 3;\n        lTemporaryValue = p_stMyBlockInfo->p_cMaxMem;\n        if (lTemporaryValue & (ucAlignment - 1)) {\n            lTemporaryValue = ucAlignment + (lTemporaryValue & ~(ucAlignment - 1));\n        }\n        p_stMyBlockInfo->p_cMaxMem = lTemporaryValue;\n        p_stMyBlockInfo->p_cMaxMem = p_stMyBlockInfo->p_cMaxMem - 1;\n        p_stMyBlockInfo->p_cFirstFree = -1;\n        if (_ucMode & 2) {\n            char* p_cFill = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);\n            while (p_cFill <= (char*)p_stMyBlockInfo->p_cEndBlock) {\n                *p_cFill = (char)0xAA;\n                p_cFill++;\n            }\n        }\n        param0 = (tdstInformationHeaderOfBolckWithoutFree_*)p_stMyBlockInfo->p_cBeginBlock;\n        param0->ucBoundededHeaderSize = 3;\n        if ((ucAlignment - 1) & 3) {\n            param0->ucBoundededHeaderSize = ucAlignment + (~(ucAlignment - 1) & 3);\n        }\n        param0->ucAlignment = ucAlignment;\n        param0->ucMode = _ucMode;\n        if ((unsigned int)(p_stMyBlockInfo->p_cEndBlock - p_stMyBlockInfo->p_cMaxMem) >= 4) {\n            unsigned int ulPattern = 0xE123456E;\n            char* p_cPattern = (char*)&ulPattern;\n            char* p_cDst = (char*)(p_stMyBlockInfo->p_cMaxMem + 1);\n            char* p_cEnd = p_cDst + 4;\n            while (p_cDst < p_cEnd) {\n                *p_cDst = *p_cPattern;\n                p_cDst++;\n                p_cPattern++;\n            }\n        }\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-haiku",
+      "name": "Mmg_fn_vWhereIs",
+      "reason": "EQUIVALENT 384/384: both end-block range tests write sltu v1,v1,a0 where retail writes sltu at,v1,a0. ~35 more variants (operand casts, !(<=), swapped compares, found-first chains, unsigned locals) leave it unchanged; at-destination only reproduced for immediate compares.",
+      "size": 384,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MMG/cpammg.c",
+      "status": "EQUIVALENT",
+      "target_size": 384,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002d9d70",
+      "candidate_size": 136,
+      "first_difference": 34,
+      "implementation": "extern \"C\" void CHEAP_DisplayAllSDLs(int bTransparent);\nvoid CHEAP_SendModulesToViewportRT(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix);\nvoid CHEAP_SendModulesToViewport(HIE_tdstSuperObject_* _hSprObj, MTH4D_tdstMatrix_** ppCurrentMatrix, char* p_cActivity);\nvoid HIE_fn_vFastPS2ForcedRefreshHierarchy(HIE_tdstSuperObject_* _hSprObj);\n\n/* Not original source, needs cleaning up: the extractor spells this C++ function by its mangled name. */\nextern \"C\" void CHEAP_DrawAuras__FP17GLI_tdstMaterial_PA4_fUiPff(GLI_tdstMaterial_* pMat, float (*pParticleList)[4], unsigned int NbSprites, float* pSizes, float SizeRange);\nextern \"C\" void GLI_vInitGLProjectionMatrix(void);\nextern \"C\" void GLI_AddNormalInterpolation(void* pMatrix);\nextern \"C\" unsigned char GLI_DRV_IsMaterialTransparent(GLI_tdstMaterial_* pMat);\nextern \"C\" void GLI_vClearSendMatStates(void);\nextern \"C\" void GLI_DRV_SendMaterialToViewport(GLI_tdstMaterial_* pMat);\nextern \"C\" void PS2glInternalDrawSpriteArray(unsigned int NbSprites);\nextern \"C\" void PS2glMatrixMode(unsigned int mode);\nextern \"C\" void PS2glLoadMatrixf(const float* m);\nextern \"C\" void PS2glVertexPointer(int size, unsigned int type, int stride, void* pointer);\n\n/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);\n   the VU0 instructions have no C form (same helper as u_drawAGO2.c). */\ninline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])\n{\n    asm {\n        lqc2 vf5, 0x0(_vec)\n        lqc2 vf1, 0x0(_src)\n        lqc2 vf2, 0x10(_src)\n        lqc2 vf3, 0x20(_src)\n        lqc2 vf4, 0x30(_src)\n        vmul.xyzw vf1, vf1, vf5\n        vmul.xyzw vf2, vf2, vf5\n        vmul.xyzw vf3, vf3, vf5\n        vmul.xyzw vf4, vf4, vf5\n        sqc2 vf1, 0x0(_dst)\n        sqc2 vf2, 0x10(_dst)\n        sqc2 vf3, 0x20(_dst)\n        sqc2 vf4, 0x30(_dst)\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-haiku",
+      "name": "CHEAP_DisplayAllSDLs",
+      "reason": "136/136: only i/offset induction pair swapped (retail i=s1, offset=s0). ~60 variants (loop forms, counter types, extra locals, body spellings) unchanged; only a guarded do-while flips the pair but adds an entry test (144 bytes).",
+      "size": 136,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLCheap.cpp",
+      "status": "MISMATCH",
+      "target_size": 136,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00222350",
+      "candidate_size": 96,
+      "first_difference": 14,
+      "implementation": "tdstNodeInterpret_* fn_p_stElseKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stThenKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoVMTKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoGMTKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoGraphKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stCapsNullKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stEmptyTextKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNowhereKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNobodyKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoSoundEventKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoSOLinksWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoSuperObjectKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoInputKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stMainActorKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stMeKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stNoActionKeyWord(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\n\ntdstNodeInterpret_* fn_p_stSwapNextParameter(tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\n\ntdstNodeInterpret_* fn_p_stSkipWhile(tdstNodeInterpret_* p_stTreeInit);\n\ninline tdstNodeInterpret_* fn_p_stSkipNode(tdstNodeInterpret_* p_stNode, tdstNodeInterpret_* p_stStart)\n{\n    tdstNodeInterpret_* p_stNext;\n    if (p_stNode->uwNodeToSkip)\n        return p_stNode + p_stNode->uwNodeToSkip;\n    p_stNext = fn_p_stSwapNextParameter(p_stStart);\n    p_stNode->uwNodeToSkip = (unsigned short)(p_stNext - p_stNode);\n    return p_stNext;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-haiku",
+      "name": "fn_p_stElseKeyWord",
+      "reason": "~60 variants + 350 permuter iterations (floor 15). Best structural shape (scratch, not applied): ushort uwSkip local, return (char*)(p_stTree-1) + uwSkip*sizeof(tdstNodeInterpret_); only a consistent v0/v1 swap remains. Local-pointer forms compute the base eagerly (88/96); pointer-on-left forms fold the -8 into the end.",
+      "size": 96,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Keyword.c",
+      "status": "MISMATCH",
+      "target_size": 96,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031c080",
+      "candidate_size": 652,
+      "first_difference": 93,
+      "implementation": "void SCT_fn_vGetSymMatrixOfCameraInMirror(MAT_tdstTransformation_* hMatrixOfCamera, MAT_tdstTransformation_* hMatrixOfSymCamera, MTH3D_tdstVector_* pstGlobalPositionOfSymCamera, MTH3D_tdstVector_* pstGlobalNormalOfMirror, MTH3D_tdstVector_* pstGlobalPointOfMirror);\nMTH3D_tdstVector_* SECT_fn_p_stGetMaxPointInBorder(SECT_tdstSector_* _hSector);\nMTH3D_tdstVector_* SECT_fn_p_stGetMinPointInBorder(SECT_tdstSector_* _hSector);\nfloat fn_xGetSectorZFar(HIE_tdstSuperObject_* _hSprObjSector);\nvoid SECT_fn_vInitActivationSector(HIE_tdstSuperObject_* hSectorRoot);\nHIE_tdstSuperObject_* SECT_fn_hResolveSectorNextActivity(HIE_tdstSuperObject_* _hSectorObject);\nint SECT_fn_bIsSectorNewlyInactive(HIE_tdstSuperObject_* _hSectorObject);\nint SECT_fn_bIsSectorNewlyActive(HIE_tdstSuperObject_* _hSectorObject);\nint SECT_fn_cSetWantedActivity(HIE_tdstSuperObject_* _hSectorObject, char _cWantedActivity);\nchar fn_cGetSectorCameraType(HIE_tdstSuperObject_* _hSprObjSector);\nunsigned char SECT_fn_bIsThisSectorVirtual(HIE_tdstSuperObject_* _hSprObjSector);\nvoid SECT_fn_vAddTailDNMLightsListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfDNMLights_* hNode);\nvoid SECT_fn_vIsolateDNMLightsListNode(SECT_tdstListOfDNMLights_* hNode);\nvoid SECT_fn_vAddHeadCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode);\nvoid SECT_fn_vAddTailCharListNode(HIE_tdstSuperObject_* hSector, SECT_tdstListOfSOCharacters_* hNode);\nvoid SECT_fn_vIsolateCharListNode(SECT_tdstListOfSOCharacters_* hNode);\nvoid SCT_fn_vTestChangeSectorWithHistory(void* _pUnused, MTH3D_tdstVector_* _p_stAfterAbsolutePosition, HIE_tdstSuperObject_** _p_hSectorSOWhereIWas);\nHIE_tdstSuperObject_* SECT_fn_hResearchInWhatSectorIAm(HIE_tdstSuperObject_* SECT_hFatherSector, MTH3D_tdstVector_* p_stAbsolutePosition);\nint SECT_fn_bIsInBorderBox(MTH3D_tdstVector_* _p_stPosition, SECT_tdstSector_* _hSector);\nvoid SECT_fn_vSetHandleOfLightsInDNMLightsList(SECT_tdstListOfDNMLights_* hDNMLightsElement, GLI_tdstLight_* hDNMLights);\nSECT_tdstListOfDNMLights_* SECT_fn_hCreateElementLstDNMLights(void);\nvoid SECT_fn_vSetCharacterPointerInCharacterList(SECT_tdstListOfSOCharacters_* hCharacterElement, HIE_tdstSuperObject_* hSectorSuperObject);\nSECT_tdstListOfSOCharacters_* SECT_fn_hCreateElementLstCharacter(void);\nvoid SECT_fn_vGetMaxPointInBorder(SECT_tdstSector_* _hSector, MTH3D_tdstVector_* _p_stMaxPoint);\n\n#pragma auto_inline on\n\n#pragma auto_inline reset\n\n#define MTH3D_M_vMiddleVector(_d, _a, _b) { (_d)->xX = (_a)->xX + (_b)->xX; (_d)->xY = (_a)->xY + (_b)->xY; (_d)->xZ = (_a)->xZ + (_b)->xZ; (_d)->xX /= 2.0f; (_d)->xY /= 2.0f; (_d)->xZ /= 2.0f; }",
+      "line_offsets_equal": true,
+      "model": "claude-haiku",
+      "name": "SCT_fn_vGetSymMatrixOfCameraInMirror",
+      "reason": "EQUIVALENT 652/652: register renaming only (2.0/1.0/xX in f7/f8/f6 vs ours f6/f7/f8; &stTransVector.xY/xZ a3/v1 swapped). Reversed decls and normal-product reorders add structural rows; a22/a33 swap neutral; permuter ~735 iterations best 125, no zero.",
+      "size": 652,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sector.c",
+      "status": "EQUIVALENT",
+      "target_size": 652,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b53e0",
+      "candidate_size": 124,
+      "first_difference": 12,
+      "implementation": "void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport);\nvoid GLI_v_CalculateVectorsFor3DRainVU0(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);\nvoid GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy);\n\nextern void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* pViewport);\nextern void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);\n\nextern void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);\nextern void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites);\n\nint VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat);\n\n/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);\n   the VU0 instructions have no C form. */\ninline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])\n{\n    asm {\n        lqc2 vf5, 0x0(_vec)\n        lqc2 vf1, 0x0(_src)\n        lqc2 vf2, 0x10(_src)\n        lqc2 vf3, 0x20(_src)\n        lqc2 vf4, 0x30(_src)\n        vmul.xyzw vf1, vf1, vf5\n        vmul.xyzw vf2, vf2, vf5\n        vmul.xyzw vf3, vf3, vf5\n        vmul.xyzw vf4, vf4, vf5\n        sqc2 vf1, 0x0(_dst)\n        sqc2 vf2, 0x10(_dst)\n        sqc2 vf3, 0x20(_dst)\n        sqc2 vf4, 0x30(_dst)\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-haiku",
+      "name": "GLI_v_StartDrawingRain",
+      "reason": "~80 body variants, no change: prologue addiu a1,sp,0x10 / addiu %lo(GLI_g_NegVect) order swapped, and tail lw container/lui/sw/jal with move a2 in delay slot. Under 3.0.1 (diagnostic env override) the tail matches exactly; the prologue swap remains under both compilers.",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c",
+      "status": "MISMATCH",
+      "target_size": 124,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b5550",
+      "candidate_size": 568,
+      "first_difference": 294,
+      "implementation": "void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy);\n\nextern void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* pViewport);\nextern void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);\n\nextern void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);\nextern void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites);\n\nint VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat);\n\n/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);\n   the VU0 instructions have no C form. */\ninline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])\n{\n    asm {\n        lqc2 vf5, 0x0(_vec)\n        lqc2 vf1, 0x0(_src)\n        lqc2 vf2, 0x10(_src)\n        lqc2 vf3, 0x20(_src)\n        lqc2 vf4, 0x30(_src)\n        vmul.xyzw vf1, vf1, vf5\n        vmul.xyzw vf2, vf2, vf5\n        vmul.xyzw vf3, vf3, vf5\n        vmul.xyzw vf4, vf4, vf5\n        sqc2 vf1, 0x0(_dst)\n        sqc2 vf2, 0x10(_dst)\n        sqc2 vf3, 0x20(_dst)\n        sqc2 vf4, 0x30(_dst)\n    }\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "GLI_v_CalculateVectorsFor3DRain",
+      "reason": "568/568 relocs ok; only 2nd normalise (line 332) residual: V3.x loaded into f1 not f5, sqrt result f2 not f1, and mul.s for X.y scheduled before the X.x store. Block-local xInv fixed 5 rows; decl order/inline normalise helpers no help. Permuter candidate.",
+      "size": 568,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c",
+      "status": "MISMATCH",
+      "target_size": 568,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002b53e0",
+      "candidate_size": 124,
+      "first_difference": 12,
+      "implementation": "void GLI_v_StartDrawingRain(GLD_tdstViewportAttributes_* pViewport);\nvoid GLI_v_CalculateVectorsFor3DRainVU0(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);\nvoid GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* param0, float* pDirection, float sx, float sy);\n\nextern void GLI_v_CalculateInverseCamMat(MAT_tdstTransformation_* pInvertedCam, GLD_tdstViewportAttributes_* pViewport);\nextern void GLI_v_CalculateVectorsFor3DRain(MAT_tdstTransformation_* pInvertedCam, float* pDirection, float sx, float sy);\n\nextern void VAC_SetMaterial(void* hContainer, GLI_tdstMaterial_* pMat);\nextern void VAC_UnAcquireAndDraw(void* hContainer, unsigned int NbSprites);\n\nint VAC_Acquire(void* hContainer, float (*pMatrix)[4][4], GLI_tdstMaterial_* pMat);\n\n/* Multiplies each column of a 4x4 matrix by a vector on VU0 (macro mode);\n   the VU0 instructions have no C form. */\ninline void PS2_M_vMulMatrixColumnsByVector(float (*_src)[4], float* _vec, float (*_dst)[4])\n{\n    asm {\n        lqc2 vf5, 0x0(_vec)\n        lqc2 vf1, 0x0(_src)\n        lqc2 vf2, 0x10(_src)\n        lqc2 vf3, 0x20(_src)\n        lqc2 vf4, 0x30(_src)\n        vmul.xyzw vf1, vf1, vf5\n        vmul.xyzw vf2, vf2, vf5\n        vmul.xyzw vf3, vf3, vf5\n        vmul.xyzw vf4, vf4, vf5\n        sqc2 vf1, 0x0(_dst)\n        sqc2 vf2, 0x10(_dst)\n        sqc2 vf3, 0x20(_dst)\n        sqc2 vf4, 0x30(_dst)\n    }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_v_StartDrawingRain",
+      "reason": "124/124 relocs ok. Under the file's 3.0.3 the a2=0/1.0f store/hVAContainer load tail is scheduled differently (6 rows); under 3.0.1 and 3.0 only the order of 'addiu a1,sp,0x10' (ModelView) vs 'addiu v1,%lo(GLI_g_NegVect)' differs (2 rows). Invariant under inline param order, macro form, locals, flat array, NegVect extern/init/aligned, cam via local. Permuter running.",
+      "size": 124,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c",
+      "status": "MISMATCH",
+      "target_size": 124,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00253240",
+      "candidate_size": 428,
+      "first_difference": 34,
+      "implementation": "unsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);\nunsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);\nunsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);\nunsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace);\nunsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nint INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2);\nunsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\COL\\Inters.c lines 49\u201391 */\n/* addr: 0x00255160  size: 232 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 49\n *   +0x0018 -> line 51\n *   +0x0028 -> line 52\n *   +0x0038 -> line 54\n *   +0x003c -> line 56\n *   +0x0040 -> line 59\n *   +0x0044 -> line 56\n *   +0x004c -> line 55\n *   +0x0050 -> line 56\n *   +0x0054 -> line 57\n *   +0x0058 -> line 58\n *   +0x005c -> line 57\n *   +0x0060 -> line 58\n *   +0x0064 -> line 57\n *   +0x0068 -> line 59\n *   +0x0070 -> line 63\n *   +0x0080 -> line 65\n *   +0x0088 -> line 69\n *   +0x0098 -> line 71\n *   +0x009c -> line 72\n *   +0x00a0 -> line 71\n *   +0x00ac -> line 72\n *   +0x00b4 -> line 79\n *   +0x00c4 -> line 81\n *   +0x00d0 -> line 82\n *   +0x00d4 -> line 81\n *   +0x00d8 -> line 82\n *   +0x00e0 -> line 91\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2)\n{\n    float xDiv;\n    float xDelta;\n\n    if (xA != 0.0f) {\n        xDelta = xB * xB - 4.0f * (xA * xC);\n        if (xDelta > 0.0f) {\n            xDelta = MTH_xSqrt(xDelta);\n            xDiv = 1.0f / (xA + xA);\n            *p_xT1 = xDiv * (-xB + xDelta);\n            *p_xT2 = xDiv * (-xB - xDelta);\n            return 2;\n        }\n        if (xDelta < 0.0f)\n            return 0;\n        if (xDelta == 0.0f) {\n            *p_xT1 = -(xB / (xA + xA));\n            return 1;\n        }\n    } else if (xB != 0.0f) {\n        *p_xT1 = -(xC / xB);\n        return 1;\n    }\n    return 0;\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "INT_fn_bFastRejectIntersectSegmentWithSphere",
+      "reason": "EQUIVALENT: only f9/f10 swapped (p_stVect12->xZ vs the 0.0f constant of the first compare). Tried decl order, init vs assign, 0/0.0f/<= compare forms, component order, MTH vector macros with pointer temps, else-if/|| forms; permuter ~5600 iterations stuck at base score 25.",
+      "size": 428,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "EQUIVALENT",
+      "target_size": 428,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002143a0",
+      "candidate_size": 432,
+      "first_difference": 176,
+      "implementation": "tdstNodeInterpret_* fn_p_stRealFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stVectorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stGlobalToLocal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stDummyFunction(int lUnused, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* fn_p_stLocalToGlobal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stMathFunctionReal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stMathAbsoluteValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stMathFunctionInt(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stMathTernarReal(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stDistanceFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stGetWpAbsolutePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stInterpolationBt3WP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stBezierBt3WP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stGetRadiusWP(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stGetMyAbsolutePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stGetPersoAbsolutePosition(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stDistanceToPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stDistanceToPersoCenter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stR3GetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\n\nvoid GLI_vSinusEffetOn3DVertex(MTH3D_tdstVector_* p_stIn, MTH3D_tdstVector_* p_stOut);\n\ntdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);\nshort fn_wBbDeclareVariable2Monitor(void* p_pvVar, int lType, char* szName, int lFlag);\n\ninline int MTH_M_xRealToLong(float _xValue);\n\ntdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);\ntdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMCN);\nHIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);\n\nvoid fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, unsigned char ucFlags);\nHIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObj);\n\n#pragma auto_inline on\n\n#pragma auto_inline reset\n\n/* Engine float-to-int conversion: retail converts through $f30 at 164 sites\n * in 77 game functions (\"cvt.w.s $f30, x; mfc1 r, $f30\"), a register MWCC\n * never picks for its own conversions. */\n/* abs.s has no C form under MWCC; only that instruction is asm. */\ninline float MTH_xAbs(float xValue)\n{\n    float xResult;\n    asm { abs.s xResult, xValue }\n    return xResult;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stRealFunction",
+      "reason": "First diff +0xb0: retail is 24 bytes larger because it keeps dead copies of instructions it moved into branch delay slots (srl at +0xc4 in the uint->float conversion; mul.s at +0x15c/+0x168/+0x174/+0x184 in the switch) plus a nop at +0x13c. Every C shape tried drops them, and so does every compiler tried (3.0/3.0.1/3.0.3/pad7b/unfold). A non-empty default written first triggers the copies but puts the default right after the case tests.",
+      "size": 456,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MISMATCH",
+      "target_size": 456,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00216d40",
+      "candidate_size": 476,
+      "first_difference": 116,
+      "implementation": "tdstNodeInterpret_* fn_p_stDistanceToPersoCenter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* fn_p_stR3GetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\n\nvoid GLI_vSinusEffetOn3DVertex(MTH3D_tdstVector_* p_stIn, MTH3D_tdstVector_* p_stOut);\n\ntdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, HIE_tdstSuperObject_** hSuperObjPersoFound);\nshort fn_wBbDeclareVariable2Monitor(void* p_pvVar, int lType, char* szName, int lFlag);\n\ninline int MTH_M_xRealToLong(float _xValue);\n\ntdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);\ntdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMCN);\nHIE_tdstSuperObject_* MC_fn_hGetCharacterInMainCharacterNode(tdstNodeMainCharacter_* hMainCharNode);\n\nvoid fn_vReinitAIWithFlags(AI_tdstMind_* p_stMind, unsigned char ucFlags);\nHIE_tdstSuperObject_* HIE_fn_hForceGetSuperObjectNextBrother(HIE_tdstSuperObject_* hSuperObj);\n\n#pragma auto_inline on\n\n#pragma auto_inline reset\n\n/* Engine float-to-int conversion: retail converts through $f30 at 164 sites\n * in 77 game functions (\"cvt.w.s $f30, x; mfc1 r, $f30\"), a register MWCC\n * never picks for its own conversions. */\n/* abs.s has no C form under MWCC; only that instruction is asm. */\ninline float MTH_xAbs(float xValue)\n{\n    float xResult;\n    asm { abs.s xResult, xValue }\n    return xResult;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stDistanceToPersoCenter",
+      "reason": "+0x74/+0x78 and +0x104/+0x108: retail schedules p_stCenter1=&stCenter1 (addiu a2,sp,0x60) / param0=&stCenter2 (addiu a0,sp,0x70) before the inlined ApplyOnVertex Vtmp address (addiu a3,sp,0x40/0x50); ours swaps each pair. Scheduling only: 720 local declaration orders, inline/macro forms and direct &stCenter arguments left it unchanged. Permuter candidate.",
+      "size": 476,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MISMATCH",
+      "target_size": 476,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0021ae70",
+      "candidate_size": 516,
+      "first_difference": 376,
+      "implementation": "extern \"C\" tdstNodeInterpret_* fn_p_stCollideCommunicationFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetNormalCollideVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetDTFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4VitesseHorizontaleDuPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitPositionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4VecteurPointAxe(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitAxeZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitDimensionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitCentreZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4VitessePadAnalogique(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" void fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender, int lCollideType);\n\n/* The callback's unused a0 parameter is omitted by debug recovery; the target\n * preserves p_stTree from a1 across printf. */\n\n/* The target uses a1 for the tree and a2 for the result; a0 is unused. */\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\Functio1.cxx lines 124\u2013277 */\n/* addr: 0x002217c0  size: 952 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 124\n *   +0x0004 -> line 161\n *   +0x0008 -> line 124\n *   +0x000c -> line 138\n *   +0x0010 -> line 124\n *   +0x0014 -> line 161\n *   +0x0018 -> line 124\n *   +0x0028 -> line 138\n *   +0x0034 -> line 161\n *   +0x0038 -> line 138\n *   +0x0040 -> line 135\n *   +0x0044 -> line 138\n *   +0x0048 -> line 139\n *   +0x004c -> line 140\n *   +0x0050 -> line 139\n *   +0x0058 -> line 141\n *   +0x005c -> line 139\n *   +0x0064 -> line 143\n *   +0x0068 -> line 161\n *   +0x0070 -> line 166\n *   +0x0080 -> line 171\n *   +0x0084 -> line 172\n *   +0x008c -> line 175\n *   +0x00bc -> line 176\n *   +0x00c4 -> line 180\n *   +0x00f4 -> line 183\n *   +0x0104 -> line 186\n *   +0x0114 -> line 188\n *   +0x0118 -> line 190\n *   +0x0128 -> line 192\n *   +0x0154 -> line 193\n *   +0x0158 -> line 194\n *   +0x0164 -> line 195\n *   +0x0168 -> line 198\n *   +0x0174 -> line 200\n *   +0x0178 -> line 201\n *   +0x0180 -> line 206\n *   +0x0184 -> line 208\n *   +0x0194 -> line 210\n *   +0x0198 -> line 212\n *   +0x01a0 -> line 214\n *   +0x01d8 -> line 217\n *   +0x020c -> line 221\n *   +0x0218 -> line 224\n *   +0x0220 -> line 225\n *   +0x0238 -> line 227\n *   +0x0240 -> line 228\n *   +0x0244 -> line 231\n *   +0x0248 -> line 232\n *   +0x0258 -> line 236\n *   +0x0268 -> line 241\n *   +0x026c -> line 245\n *   +0x0270 -> line 242\n *   +0x0274 -> line 245\n *   +0x027c -> line 246\n *   +0x0288 -> line 247\n *   +0x02b0 -> line 250\n *   +0x02c0 -> line 252\n *   +0x02c4 -> line 253\n *   +0x02cc -> line 255\n *   +0x0304 -> line 258\n *   +0x0338 -> line 261\n *   +0x0340 -> line 264\n *   +0x0348 -> line 265\n *   +0x0360 -> line 267\n *   +0x0368 -> line 268\n *   +0x036c -> line 271\n *   +0x0370 -> line 272\n *   +0x037c -> line 273\n *   +0x0380 -> line 274\n *   +0x0390 -> line 276\n *   +0x0398 -> line 277\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender, int lCollideType)\n{\n    SECT_tdstSector_* hSectorObject;\n    SECT_tdstSector_* hSector1;\n    MTH3D_tdstVector_ stMax;\n    MTH3D_tdstVector_ stMin;\n    GMT_tdstCollideMaterial_* hColMatHit;\n    int i;\n    SECT_tdstCharList_* hInterList;\n    SECT_tdstCharList_* hList;\n    SECT_tdstCharElement_* hCharacterList;\n    HIE_tdstSuperObject_* hSuperObjectHit;\n    GMT_tdstCollideMaterial_* spColMatHit;\n    *(int*)&g_stCollideResultPoint.xX = 0;\n    *(int*)&g_stCollideResultPoint.xY = 0;\n    *(int*)&g_stCollideResultPoint.xZ = 0;\n    *(int*)&g_stCollideResultVector.xX = 0;\n    *(int*)&g_stCollideResultVector.xY = 0;\n    *(int*)&g_stCollideResultVector.xZ = 0;\n    g_hSuperObjectHit = NULL;\n    g_hColMatHit = NULL;\n    spColMatHit = NULL;\n    hColMatHit = NULL;\n    hSectorObject = SECT_fn_hResearchInWhatSectorIAm(SECT_hFatherSector, &g_stCollideParameterPoint);\n    if (g_ulMode != 1) {\n        g_ulSpoMask = g_ulOverRideRayTraceSpoMask;\n        if (hSectorObject == NULL) {\n            HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, SECT_hFatherSector, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit);\n        } else {\n            HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hSectorObject, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit);\n            for (i = hSectorObject->p_stSectorList->ulNbElement; i > 0; i--) {\n                if (hSectorObject->p_stSectorList->p_aElement[i].ucType == 2) { break; }\n                if (!SECT_fn_bIsThisSectorVirtual(hSectorObject->p_stSectorList->p_aElement[i].hSector)) {\n                    HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hSectorObject->p_stSectorList->p_aElement[i].hSector, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit);\n                }\n            }\n        }\n        if (g_ulMode == 0) {\n            g_hColMatHit = spColMatHit;\n        }\n    } else {\n        g_ulSpoMask = 0;\n        hList = hSectorObject->p_stSectorList->p_aCharacterList;\n        while (hList != NULL) {\n            hCharacterList = hList->p_stFirstElement;\n            if (hCharacterList->hSuperObject != hSender) {\n                if ((fn_ulStandardGameGetCustomBitsSO(hCharacterList->hSuperObject) & 0x10) != 0) {\n                    if ((hCharacterList->hSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) == 0) {\n                        if (HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hCharacterList->hSuperObject, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit) != 0) {\n                            hSuperObjectHit = hCharacterList->hSuperObject;\n                            while ((hSuperObjectHit != NULL) && (hSuperObjectHit->ulTypeOfLinkedObject != 2)) {\n                                hSuperObjectHit = hSuperObjectHit->hNextBrotherDyn;\n                            }\n                            if (hSuperObjectHit != NULL) {\n                                g_hSuperObjectHit = hSuperObjectHit;\n                            }\n                        }\n                    }\n                }\n            }\n            hList = hList->p_stNextElement;\n        }\n        for (i = hSectorObject->p_stSectorList->ulNbBorder; i > 0; i--) {\n            SECT_fn_vGetMinPointInBorder(hSectorObject->p_stSectorList->p_aBorder[i - 1].p_stBorder, &stMin);\n            SECT_fn_vGetMaxPointInBorder(hSectorObject->p_stSectorList->p_aBorder[i - 1].p_stBorder, &stMax);\n            if (INT_fn_bDetectIntersectSegmentWithBox(&g_stCollideParameterPoint, &g_stCollideParameterVector, &stMin, &stMax) != 0) {\n                hInterList = hSectorObject->p_stSectorList->p_aBorder[i - 1].p_stCharacterList;\n                while (hInterList != NULL) {\n                    hSuperObjectHit = hInterList->p_stFirstElement->hSuperObject;\n                    if (hSuperObjectHit != hSender) {\n                        if ((fn_ulStandardGameGetCustomBitsSO(hSuperObjectHit) & 0x10) != 0) {\n                            if ((hSuperObjectHit->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) == 0) {\n                                if (HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hSuperObjectHit, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit) != 0) {\n                                    while ((hSuperObjectHit != NULL) && (hSuperObjectHit->ulTypeOfLinkedObject != 2)) {\n                                        hSuperObjectHit = hSuperObjectHit->hNextBrotherDyn;\n                                    }\n                                    if (hSuperObjectHit != NULL) {\n                                        g_hSuperObjectHit = hSuperObjectHit;\n                                    }\n                                }\n                            }\n                        }\n                    }\n                    hInterList = hInterList->p_stNextElement;\n                }\n            }\n        }\n        g_hColMatHit = spColMatHit;\n    }\n    return;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_stCollideCommunicationFunc",
+      "reason": "+0x178: vector-case copy of fn_stCollSetGetColliderVector result into uParam.stVectorValue; retail loads x,y,z into f2,f1,f0 and stores x,y,z; every source order gets either load or store order wrong (2 rows); FPR scheduling, identical on 3.0/3.0.1/3.0.3/pad7b",
+      "size": 516,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MISMATCH",
+      "target_size": 516,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0018a6a0",
+      "candidate_size": 508,
+      "first_difference": 160,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "usnd_vTimerLoop__FPv",
+      "reason": "508/524: only the first inlined LeaveCritSect (+0xa0..+0xc4) differs; retail keeps &gs_uiCSCount[uiCS-1] unfolded (li -4; addu; addiu r,r,0; addu; 0(a1)) where ours folds to -4(v1). pad7b, 3.0.1 and pad7b-unfold all identical; int param on Enter moves the unfold to the other helper",
+      "size": 524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeethrd.cpp",
+      "status": "MISMATCH",
+      "target_size": 524,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00251aa0",
+      "candidate_size": 524,
+      "first_difference": 22,
+      "implementation": "unsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV);\nunsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV, short xIndex);\nvoid COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, MTH3D_tdstVector_* p_stNormal);\nvoid COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vComputeBoundingBoxOfSphere(MTH3D_tdstVector_* p_stMinBounding, MTH3D_tdstVector_* p_stMaxBounding, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nvoid COL_fn_vExploreOctreeWithBox(COL_tdstOctree_* p_stOctree, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, COL_tdstOctreeNode_** d_pstSelectedNode, short* p_xNumberOfSelectedNodes);\n\n/* The functions below are in their original source-line order (retail\n * emits them in reverse); these prototypes keep earlier calls valid. */\nvoid COL_fn_vCollideStaticSphereWithStaticAlignedBox(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes(COL_tdstGVForCollision_* p_stGV);\nunsigned char COL_fn_bCollideStaticElementSpheresWithStaticBoundingVolumes(COL_tdstGVForCollision_* p_stGV, int* _aDEF_lBitsFieldInCollision, unsigned char _bPartialResult);\nvoid COL_fn_vCollideStaticElementSpheresWithStaticElements(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticElementSpheresWithStaticOctree(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticElementSpheresWithStaticElementIndexedTriangles(COL_tdstGVForCollision_* p_stGV);\nunsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV, short xIndex);\nunsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, MTH3D_tdstVector_* p_stNormal);\nvoid COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV);\n\n/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops\n   have no C form under the baseline. */\n#define MTH_SQRT_TO(_result, _value) \\\n    asm { sqrt.s _result, _value }",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle",
+      "reason": "EQUIVALENT: register-only residual after volatile int[3] centre temp in COL_M_vUseEnlargeSphere + decl reorder; bUseEnlargeSphere flag in a3 (retail a2), vertex-address temps swap a2/a3/t0/t1; ~1500 decl orders floor at 29 reg rows; asm in body blocks permuter",
+      "size": 524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CsSphElt.c",
+      "status": "EQUIVALENT",
+      "target_size": 524,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00250600",
+      "candidate_size": 580,
+      "first_difference": 52,
+      "implementation": "void COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticSphereWithStaticSphere(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticElementSpheresWithStaticElementIndexedTriangles(COL_tdstGVForCollision_* p_stGV);\nunsigned char COL_fn_bCollideStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV, short xIndex);\nunsigned char COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle(COL_tdstGVForCollision_* p_stGV);\nvoid COL_fn_vCollideStaticSphereWithStaticEdge(COL_tdstGVForCollision_* p_stGV, MTH3D_tdstVector_* p_stNormal);\nvoid COL_fn_vEnlargeSphereIfNecessary(COL_tdstGVForCollision_* p_stGV);\n\n/* Recovered PS2 MTH scalar helpers: sqrt.s and the R5900 accumulator ops\n   have no C form under the baseline. */\n#define MTH_SQRT_TO(_result, _value) \\\n    asm { sqrt.s _result, _value }",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "COL_fn_vCollideStaticElementSpheresWithStaticElementSpheres",
+      "reason": "needs MWCC 3.0.3 for the sp-direct X copy in inlined MAT_fn_vApplyOnVertex (3.0.1 reuses &Vtmp reg); under 3.0.3-pad7b only 6 scheduling rows: retail lw a0,0x60(sp) before second transform's addiu setup (+0xd0..0xe0), move a0,s0 one slot off at +0x144",
+      "size": 580,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CsSphElt.c",
+      "status": "MISMATCH",
+      "target_size": 580,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ec740",
+      "candidate_size": 604,
+      "first_difference": 0,
+      "implementation": "",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "Process__8C_FireFxFv",
+      "reason": "604/616: VU0 asm and body correct; MWCC folds TimeDiff/fGravity/fSizeReductor float locals (retail keeps TimeDiff in f21, runtime mul.s); scoped opt_propagation+opt_common_subs off reaches 612/616 (not kept) leaving retail 'b test' loop entry (lqc2 in delay slot) and inlined InitOneParticle keeping &p->Vector[1] in s3; same on 3.0/3.0.1/3.0.3/b22/b38",
+      "size": 616,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/FireFx.cpp",
+      "status": "MISMATCH",
+      "target_size": 616,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0023d870",
+      "candidate_size": 624,
+      "first_difference": 277,
+      "implementation": "int fn_CrunchLink(LinkActorType_* p_link);\nunsigned char fn_Launch(LinkActorType_* p_link);\nint fn_DeleteLoops(LinkActorType_* p_link);\nIntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i);\nvoid fn_Mechanics(LinkActorType_* p_link);\nvoid fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);\nint fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k);\nvoid fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k);\nvoid fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd);\nvoid fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index);\nvoid fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode);\nvoid fn_StateConstructor(LinkActorType_* p_link);\ntdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\n\nvoid fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\LNK_Proc.c lines 127\u2013147 */\n/* addr: 0x00241990  size: 320 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 127\n *   +0x0004 -> line 128\n *   +0x0008 -> line 127\n *   +0x000c -> line 133\n *   +0x0010 -> line 127\n *   +0x001c -> line 128\n *   +0x0020 -> line 131\n *   +0x0024 -> line 128\n *   +0x002c -> line 131\n *   +0x0030 -> line 128\n *   +0x00d4 -> line 134\n *   +0x0118 -> line 139\n *   +0x011c -> line 136\n *   +0x0120 -> line 139\n *   +0x0124 -> line 145\n *   +0x0128 -> line 139\n *   +0x012c -> line 136\n *   +0x0130 -> line 139\n *   +0x0138 -> line 147\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    int k;\n\n    for (k = 0; k < 8; k++) {\n        linkStructure[k].p_GhostLinkSPO = 0;\n        linkStructure[k].p_LinkSPO = 0;\n        linkStructure[k].iLinkID = -1;\n    }\n    ui_BCPindexWrite = 0;\n    ui_BCPindexRead = 0;\n    for (k = 0; k < 1000; k++) {\n        a_NetBuffer[k].Time = 30000000;\n    }\n    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;\n    agoType = 21;\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_CrunchLink",
+      "reason": "624/624 register-only: loop2 (cp-search) counter in a3 instead of retail v0 (a2/a3/v0 rotated, 14 r-rows 0x114-0x190); control flow, delay slots, FP regs, tail match; decl order, while/for, k/cp swap, cond order and 9 min permuter (best 75) did not move it",
+      "size": 624,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 624,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002df820",
+      "candidate_size": 644,
+      "first_difference": 28,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter);\nvoid AE_SimpleBlurWINDOWEDNoOptPAL(int Counter);\nvoid AE_SimpleBlurWINDOWEDNoOpt(int Counter);\nvoid AE_SimpleBlurWINDOWED(int Counter);\nvoid GLIPS2_vProcessRedEnviromentEffect(void);\nvoid WAT_vTest(float (*pPos)[4]);\nvoid GLIPS2_vProcessWater2DEffectOLD(void);\nvoid GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2);\nvoid GLIPS2_vMakeWaterEffect();\nvoid GLIPS2_vWaterFXProcess(void);\nvoid GLIPS2_vProcessMatrixDeformations(void);\nvoid GLIPS2_vReinitMatrixDeformations(void);\nvoid GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE);\nvoid GLIPS2_vInitMatrixDeformation(void);\nvoid AE_EndMatrixEffect(void);\nvoid AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, float u1, float v1, float su, float sv, float AlphaCenter, float Angle);\nvoid AE_PrepareMatrixEffect(void);\nvoid GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity);\nvoid DoFullScreenWaterEffect(void);\nvoid DoFullScreenWaterEffectForMirror(void);\nvoid AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);\nvoid GLI_vSaveCurrentBackBuffer(void);\nvoid AE_PostProcessShadow(void);\nvoid GLI_vRestoreSavedFrameBuffer(void);\nvoid GLI_vSaveCurrentFrameBuffer(void);\nvoid GLI_vProcessFilters(void);\nvoid GLI_vProcessPSX_FX(void);\nvoid GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z);\nvoid GLIPS2_vSetWaterDeformation(int Val);\nvoid ActivateOldMovieEffect(void);\nvoid ReinitOldMovieEffect(void);\nvoid ProcessOldMovieEffect(void);\nvoid AE_BlackAndWhite(void);\nvoid GLI_vProcessMirrorAfterEffect(void);\nvoid GLIPS2_vSetMirrorBlur(void);\nvoid ProcessOldTV(void);\nvoid AE_Filter_BlurUsingDestAlpha2(void);\nvoid GLI_vReduceBackBufferTo256x256(void);\n\nvoid AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);\n\nvoid GLIPS2_vWaterFXProcess(void);\n\nfloat FRR(float param0, float param1);\nvoid GLI_vSetFIXFullScreenOrthoProjection(void);\nvoid PS2glSetGsRegister(int address, unsigned long value, unsigned long mask);\nvoid PS2glBegin(unsigned int mode);\nvoid PS2glEnd(void);\nvoid PS2glColor4f(float r, float g, float b, float a);\nvoid PS2glVertex2f(float x, float y);\nvoid PS2glTexCoord2f(float s, float t);\nvoid GLI_DRV_SendMaterialToViewport(void* pMat);\n\nvoid GsSendData(unsigned int reg, anon_1* pdata);\nvoid GsFlushBuffer(void);\n\nvoid GsUpdate(void);\nvoid GsSendData(unsigned int reg, anon_1* pdata);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\nvoid AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);\nfloat cosf(float x);\nfloat sinf(float x);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\n\nvoid AE_SetTextureNoBilinear(int BufferID);\n\nvoid AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);\n\nvoid AE_BlackAndWhite(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GliGlou\\Drivers\\PS2GL\\Src\\SFX\\u_effects.c lines 213\u2013228 */\n/* addr: 0x002e9660  size: 288 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 213\n *   +0x0004 -> line 214\n *   +0x0008 -> line 213\n *   +0x000c -> line 214\n *   +0x0058 -> line 215\n *   +0x0060 -> line 217\n *   +0x0074 -> line 218\n *   +0x007c -> line 219\n *   +0x0084 -> line 221\n *   +0x008c -> line 222\n *   +0x0094 -> line 223\n *   +0x00ac -> line 225\n *   +0x010c -> line 227\n *   +0x0114 -> line 228\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid GLI_vReduceBackBufferTo256x256(void)\n{\n    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;\n    AE_Begin();\n\n    PS2glColorMask(1, 1, 1, 0);\n    PS2glDepthMask(0);\n    PS2glDisable(0xB71);\n\n    AE_SetDrawTarget(4);\n    AE_SetTexture(1);\n    AE_SetGS(0, 2, 2, 2, 0x80);\n\n    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 25600.0f / XRESf, 25600.0f / YRESf, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);\n\n    AE_End();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOptWithDirection",
+      "reason": "644/644 relocs ok; scheduling around the 12-float AE_DrawWindowWithoutOptimization calls: retail stores stack UV args and loads f16 before f12-f15, ours interleaves. Same u_effects.c TU-state tie-break as AE_SimpleBlurWINDOWED; ~19 spellings give two schedules, neither retail; pad7b unchanged",
+      "size": 644,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 644,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002dfd40",
+      "candidate_size": 652,
+      "first_difference": 92,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOpt(int Counter);\nvoid AE_SimpleBlurWINDOWED(int Counter);\nvoid GLIPS2_vProcessRedEnviromentEffect(void);\nvoid WAT_vTest(float (*pPos)[4]);\nvoid GLIPS2_vProcessWater2DEffectOLD(void);\nvoid GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2);\nvoid GLIPS2_vMakeWaterEffect();\nvoid GLIPS2_vWaterFXProcess(void);\nvoid GLIPS2_vProcessMatrixDeformations(void);\nvoid GLIPS2_vReinitMatrixDeformations(void);\nvoid GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE);\nvoid GLIPS2_vInitMatrixDeformation(void);\nvoid AE_EndMatrixEffect(void);\nvoid AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, float u1, float v1, float su, float sv, float AlphaCenter, float Angle);\nvoid AE_PrepareMatrixEffect(void);\nvoid GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity);\nvoid DoFullScreenWaterEffect(void);\nvoid DoFullScreenWaterEffectForMirror(void);\nvoid AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);\nvoid GLI_vSaveCurrentBackBuffer(void);\nvoid AE_PostProcessShadow(void);\nvoid GLI_vRestoreSavedFrameBuffer(void);\nvoid GLI_vSaveCurrentFrameBuffer(void);\nvoid GLI_vProcessFilters(void);\nvoid GLI_vProcessPSX_FX(void);\nvoid GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z);\nvoid GLIPS2_vSetWaterDeformation(int Val);\nvoid ActivateOldMovieEffect(void);\nvoid ReinitOldMovieEffect(void);\nvoid ProcessOldMovieEffect(void);\nvoid AE_BlackAndWhite(void);\nvoid GLI_vProcessMirrorAfterEffect(void);\nvoid GLIPS2_vSetMirrorBlur(void);\nvoid ProcessOldTV(void);\nvoid AE_Filter_BlurUsingDestAlpha2(void);\nvoid GLI_vReduceBackBufferTo256x256(void);\n\nvoid AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);\n\nvoid GLIPS2_vWaterFXProcess(void);\n\nfloat FRR(float param0, float param1);\nvoid GLI_vSetFIXFullScreenOrthoProjection(void);\nvoid PS2glSetGsRegister(int address, unsigned long value, unsigned long mask);\nvoid PS2glBegin(unsigned int mode);\nvoid PS2glEnd(void);\nvoid PS2glColor4f(float r, float g, float b, float a);\nvoid PS2glVertex2f(float x, float y);\nvoid PS2glTexCoord2f(float s, float t);\nvoid GLI_DRV_SendMaterialToViewport(void* pMat);\n\nvoid GsSendData(unsigned int reg, anon_1* pdata);\nvoid GsFlushBuffer(void);\n\nvoid GsUpdate(void);\nvoid GsSendData(unsigned int reg, anon_1* pdata);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\nvoid AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);\nfloat cosf(float x);\nfloat sinf(float x);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\n\nvoid AE_SetTextureNoBilinear(int BufferID);\n\nvoid AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);\n\nvoid AE_BlackAndWhite(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GliGlou\\Drivers\\PS2GL\\Src\\SFX\\u_effects.c lines 213\u2013228 */\n/* addr: 0x002e9660  size: 288 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 213\n *   +0x0004 -> line 214\n *   +0x0008 -> line 213\n *   +0x000c -> line 214\n *   +0x0058 -> line 215\n *   +0x0060 -> line 217\n *   +0x0074 -> line 218\n *   +0x007c -> line 219\n *   +0x0084 -> line 221\n *   +0x008c -> line 222\n *   +0x0094 -> line 223\n *   +0x00ac -> line 225\n *   +0x010c -> line 227\n *   +0x0114 -> line 228\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid GLI_vReduceBackBufferTo256x256(void)\n{\n    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;\n    AE_Begin();\n\n    PS2glColorMask(1, 1, 1, 0);\n    PS2glDepthMask(0);\n    PS2glDisable(0xB71);\n\n    AE_SetDrawTarget(4);\n    AE_SetTexture(1);\n    AE_SetGS(0, 2, 2, 2, 0x80);\n\n    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 25600.0f / XRESf, 25600.0f / YRESf, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);\n\n    AE_End();\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOpt",
+      "reason": "652/644, constants and relocs right; 12-float AE_DrawWindowWithoutOptimization args interleave f12-f15 with f16/stack-arg stores where retail loads f16 and stores stack args first. Same u_effects.c TU-wide tie-break; literal 0.1f u1 gives 644/644 with ~20 shifting rows",
+      "size": 644,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 644,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ef0e0",
+      "candidate_size": 580,
+      "first_difference": 77,
+      "implementation": "short INOPS2_fn_wJoyCheckConnection(short _wJoystickNum);\nshort INOPS2_fn_wJoyGetJoystickCaps(int _unused, stJoystickCaps* _p_stJoyCaps);\nshort INOPS2_fn_wRegisterJoystick(short _wJoystickNum);\nshort INOPS2_fn_wInit(void);\nshort fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);\n\nvoid* memcpy(void* dst, const void* src, size_t n);\nshort fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\tempgrp\\ino\\ps2\\joyps2.c lines 325\u2013587 */\n/* addr: 0x002ef760  size: 2324 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 325\n *   +0x001c -> line 329\n *   +0x0050 -> line 331\n *   +0x005c -> line 356\n *   +0x00a4 -> line 358\n *   +0x00a8 -> line 359\n *   +0x00ac -> line 358\n *   +0x00b4 -> line 359\n *   +0x00bc -> line 421\n *   +0x00f0 -> line 423\n *   +0x0100 -> line 436\n *   +0x0108 -> line 437\n *   +0x0258 -> line 439\n *   +0x025c -> line 440\n *   +0x03b0 -> line 443\n *   +0x03b8 -> line 444\n *   +0x0508 -> line 446\n *   +0x050c -> line 447\n *   +0x0660 -> line 469\n *   +0x066c -> line 471\n *   +0x0670 -> line 472\n *   +0x0674 -> line 471\n *   +0x067c -> line 472\n *   +0x0684 -> line 477\n *   +0x0688 -> line 485\n *   +0x068c -> line 477\n *   +0x0694 -> line 485\n *   +0x06a8 -> line 489\n *   +0x06ac -> line 490\n *   +0x06b0 -> line 489\n *   +0x06bc -> line 492\n *   +0x06c8 -> line 494\n *   +0x06cc -> line 495\n *   +0x06d0 -> line 496\n *   +0x06d8 -> line 497\n *   +0x06e4 -> line 499\n *   +0x06e8 -> line 500\n *   +0x06ec -> line 501\n *   +0x06f4 -> line 504\n *   +0x0710 -> line 507\n *   +0x0714 -> line 508\n *   +0x0718 -> line 507\n *   +0x0724 -> line 510\n *   +0x0730 -> line 512\n *   +0x0734 -> line 513\n *   +0x0738 -> line 514\n *   +0x0740 -> line 515\n *   +0x074c -> line 517\n *   +0x0750 -> line 518\n *   +0x0754 -> line 519\n *   +0x075c -> line 522\n *   +0x0778 -> line 525\n *   +0x077c -> line 526\n *   +0x0780 -> line 525\n *   +0x078c -> line 528\n *   +0x0798 -> line 530\n *   +0x079c -> line 531\n *   +0x07a0 -> line 532\n *   +0x07a8 -> line 533\n *   +0x07b4 -> line 535\n *   +0x07b8 -> line 536\n *   +0x07bc -> line 537\n *   +0x07c4 -> line 540\n *   +0x07e0 -> line 543\n *   +0x07e4 -> line 544\n *   +0x07e8 -> line 543\n *   +0x07f4 -> line 546\n *   +0x0800 -> line 548\n *   +0x0804 -> line 549\n *   +0x0808 -> line 550\n *   +0x0810 -> line 551\n *   +0x081c -> line 553\n *   +0x0820 -> line 554\n *   +0x0824 -> line 555\n *   +0x082c -> line 558\n *   +0x0848 -> line 564\n *   +0x0858 -> line 568\n *   +0x085c -> line 566\n *   +0x0860 -> line 571\n *   +0x086c -> line 574\n *   +0x0880 -> line 576\n *   +0x0884 -> line 578\n *   +0x0890 -> line 581\n *   +0x08d0 -> line 583\n *   +0x08f8 -> line 586\n *   +0x08fc -> line 587\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nshort fn_wJoyGetJoystickState(short _wJoystickNum, stJoystickState* _p_stJoyState, stJoystickCaps* _p_stJoyCaps)\n{\n    short xButton;\n    float* p_fButtonValue;\n    stButtonCaps* p_stButtonCaps;\n    unsigned char* p_ucButtonValue;\n    int lAxisCaps;\n    signed char cAxisValue;\n    int v2;\n    int v1;\n    PS2_tdstControllerData_ stContData;\n    /* TODO: decompile from asm/... */\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "INOPS2_fn_wJoyCheckConnection",
+      "reason": "3.0.1 580/656 (calls fptoui; retail inlines float->uint), 3.0.3-pad7b 636/656: MWCC reuses entry &g_axPadMapping[n].iPort/.iSlot (s3/s4) in case body where retail recomputes into s6/s7, shifting regs plus a loop-align nop; index/pointer/inline-param/volatile-field variants no change",
+      "size": 656,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/joyps2.c",
+      "status": "MISMATCH",
+      "target_size": 656,
+      "unresolved_relocations": [
+        {
+          "offset": 364,
+          "symbol": "fptoui",
+          "type": 4
+        }
+      ]
+    },
+    {
+      "address": "0x00164d90",
+      "candidate_size": 692,
+      "first_difference": 192,
+      "implementation": "void impPS2glRasterPos4fv(float* v1);\nvoid PS2glFreeTexBlockSafe(int iBlock, int iSize);\nunsigned char PS2glIsEnabled(unsigned int cap);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\nvoid GsSendData(unsigned int reg, anon_3* data);\n\n/* libgraph.h register packer (sceGsTex0). */\n#define SCE_GS_SET_TEX0(tbp, tbw, psm, tw, th, tcc, tfx, cbp, cpsm, csm, csa, cld) \\\n    ((unsigned long)(tbp) | ((unsigned long)(tbw) << 14) | ((unsigned long)(psm) << 20) | \\\n     ((unsigned long)(tw) << 26) | ((unsigned long)(th) << 30) | ((unsigned long)(tcc) << 34) | \\\n     ((unsigned long)(tfx) << 35) | ((unsigned long)(cbp) << 37) | ((unsigned long)(cpsm) << 51) | \\\n     ((unsigned long)(csm) << 55) | ((unsigned long)(csa) << 56) | ((unsigned long)(cld) << 61))\n\nvoid GsUpdate(void);\nvoid impPS2glClearColor(float red, float green, float blue, float alpha);\nvoid impPS2glClear(unsigned int mask);\nvoid internalFullScreenQuadJeffWithoutOptimization(unsigned int mask, float x1, float y1, float x2, float y2, float R, float G, float B, float A, float u1, float v1, float u2, float v2);\nvoid internalFullScreenQuadJeff(unsigned int mask, float x1, float y1, float x2, float y2, float R, float G, float B, float A, float u1, float v1, float u2, float v2);\nvoid AE_InternalGetBPandPSMFromID(int BufferID, unsigned long* pDestBP, unsigned long* pDestPSM);\n\n/* One blurred full-screen strip: the quad covers the whole framebuffer and\n * the colour is the neutral 0.5 grey. */\n#define AE_BLUR_QUAD(x1, y1, x2, y2, r, g, b, a) \\\n    { \\\n        float fOne = 1.0f; \\\n        float fWidth = (float)(g_stBufferInfo.iScreenWidth * 16); \\\n        float fZero = 0.0f; \\\n        float fU1 = fZero * fWidth; \\\n        float fU2 = fOne * fWidth; \\\n        float fHeight; \\\n        float fV1; \\\n        float fV2; \\\n        if (g_stBufferInfo.bPlainBufferMode) \\\n        { \\\n            fHeight = (float)(g_stBufferInfo.iScreenHeight * 16); \\\n            fV1 = fZero * fHeight; \\\n            fV2 = fOne * fHeight; \\\n        } \\\n        else \\\n        { \\\n            fHeight = (float)(g_stBufferInfo.iScreenHeight * 8); \\\n            fV1 = fZero * fHeight; \\\n            fV2 = fOne * fHeight; \\\n        } \\\n        internalFullScreenQuadJeffWithoutOptimization(0x4000, (x1), (y1), (x2), (y2), (r), (g), (b), (a), fU1, fV1, fU2, fV2); \\\n    }",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "impPS2glRasterPos4fv",
+      "reason": "692/688 under 3.0: retail hoists the fRasterDistance store's lui at above madd.s, no nop after sqrt.s; MWCC 3.0 emits nop + lui at after the asm sqrt.s. 3.0.1 gives 688/688 but moves the store before ApplyMatrix arg setup. All else matches; ~17 sqrt asm spellings tried",
+      "size": 688,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_PixelOperation.c",
+      "status": "MISMATCH",
+      "target_size": 688,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0031a3e0",
+      "candidate_size": 716,
+      "first_difference": 92,
+      "implementation": "int SCT_fn_lSendSectorToViewportStatic(MTH3D_tdstVector_* _p_stAbsolutePositionOfCamera, GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector, int _lDrawMask);\nvoid SECT_fn_vSendFogToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);\nvoid SECT_fn_vSendDynamicLightsFromWhereIAmToViewport(GLD_tdstViewportAttributes_* _p_stVpt, HIE_tdstSuperObject_* _hSprObjSector);\n\n/* Target writes COP0 register 24 (mtc0 zero, $24) several times; C cannot\n * express it. Spelled with the R5900 alias mtbpc, MWCC schedules it like an\n * ordinary instruction (delay slots, hazard nop) as retail did. */\ninline void SCT_vClearCop0Register24Sched(void)\n{\n    asm { mtbpc zero }\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "SCT_fn_lSendSectorToViewportStatic",
+      "reason": "3.0.1 716/712 scheduling only: retail hoists the 0.01f lui/ori and leaves min.z sub until after abs(x)+abs(y), filling the bc1f delay slot; byte MATCH under 3.0.3-020716 and pad7b. Whole-file move hurts SCT_fn_vSendSectorWhereIAmToViewport (1160->1144), so needs a per-function override",
+      "size": 712,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectdraw.c",
+      "status": "MISMATCH",
+      "target_size": 712,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00252c90",
+      "candidate_size": 712,
+      "first_difference": 0,
+      "implementation": "unsigned char INT_fn_bDetectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);\nunsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);\nunsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);\nunsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace);\nunsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nint INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2);\nunsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\COL\\Inters.c lines 49\u201391 */\n/* addr: 0x00255160  size: 232 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 49\n *   +0x0018 -> line 51\n *   +0x0028 -> line 52\n *   +0x0038 -> line 54\n *   +0x003c -> line 56\n *   +0x0040 -> line 59\n *   +0x0044 -> line 56\n *   +0x004c -> line 55\n *   +0x0050 -> line 56\n *   +0x0054 -> line 57\n *   +0x0058 -> line 58\n *   +0x005c -> line 57\n *   +0x0060 -> line 58\n *   +0x0064 -> line 57\n *   +0x0068 -> line 59\n *   +0x0070 -> line 63\n *   +0x0080 -> line 65\n *   +0x0088 -> line 69\n *   +0x0098 -> line 71\n *   +0x009c -> line 72\n *   +0x00a0 -> line 71\n *   +0x00ac -> line 72\n *   +0x00b4 -> line 79\n *   +0x00c4 -> line 81\n *   +0x00d0 -> line 82\n *   +0x00d4 -> line 81\n *   +0x00d8 -> line 82\n *   +0x00e0 -> line 91\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2)\n{\n    float xDiv;\n    float xDelta;\n\n    if (xA != 0.0f) {\n        xDelta = xB * xB - 4.0f * (xA * xC);\n        if (xDelta > 0.0f) {\n            xDelta = MTH_xSqrt(xDelta);\n            xDiv = 1.0f / (xA + xA);\n            *p_xT1 = xDiv * (-xB + xDelta);\n            *p_xT2 = xDiv * (-xB - xDelta);\n            return 2;\n        }\n        if (xDelta < 0.0f)\n            return 0;\n        if (xDelta == 0.0f) {\n            *p_xT1 = -(xB / (xA + xA));\n            return 1;\n        }\n    } else if (xB != 0.0f) {\n        *p_xT1 = -(xC / xB);\n        return 1;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "INT_fn_bDetectIntersectSegmentWithSphere",
+      "reason": "712/712, control flow/memory/FP ops match; scheduling+FPR left: retail loads/subtracts CA in y,x,z order with CA.y=f2/CB.y=f5; 36 sub/add orders still swap CA.y/CB.y; xdist(AB.AB) gets f2 not f0 so neg.s xTemp misplaced. Same colouring issue as FastReject; 600s permuter no match",
+      "size": 712,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 712,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00252f60",
+      "candidate_size": 724,
+      "first_difference": 168,
+      "implementation": "unsigned char INT_fn_bIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithSphere(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bGetInclusionPointInSphere(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stSphereCenter, float xSphereRadius);\nunsigned char INT_fn_bDetectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan);\nunsigned char INT_fn_bIntersectSegmentWithTriangle2(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float xDotProduct, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3, MTH3D_tdstVector_* p_stNormal, float xDPlan, float* p_xT, MTH3D_tdstVector_* p_stHit);\nunsigned char INT_fn_bFastRejectIntersectSegmentWithTriangle(MTH3D_tdstVector_* p_stVertexA, MTH3D_tdstVector_* p_stVectAB, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVertex3);\nunsigned char INT_fn_bGetPointInTriangle(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stVertex0, MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stNormal);\nunsigned char INT_fn_bDetectIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* _p_xT);\nunsigned char ucPlaneCrossingdetect(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float xT, char cFace);\nunsigned char INT_fn_bIntersectSegmentWithBox(MTH3D_tdstVector_* p_stVertex1, MTH3D_tdstVector_* p_stVertex2, MTH3D_tdstVector_* p_stVect12, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint, float* p_xT, MTH3D_tdstVector_* p_stHit, MTH3D_tdstVector_* p_stNormal);\nint INT_fn_bGetInclusionPointInBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned int INT_fn_ulGetPositionPointWithBox(MTH3D_tdstVector_* p_stPoint, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectSphereWithSphere(MTH3D_tdstVector_* p_stCenter1, float xRadius1, MTH3D_tdstVector_* p_stCenter2, float xRadius2);\nunsigned char INT_fn_bIntersectSphereWithBox(MTH3D_tdstVector_* p_stCenter, float xRadius, MTH3D_tdstVector_* p_stMinPoint, MTH3D_tdstVector_* p_stMaxPoint);\nunsigned char INT_fn_bIntersectBoxWithBox(MTH3D_tdstVector_* p_stMinPoint1, MTH3D_tdstVector_* p_stMaxPoint1, MTH3D_tdstVector_* p_stMinPoint2, MTH3D_tdstVector_* p_stMaxPoint2);\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\COL\\Inters.c lines 49\u201391 */\n/* addr: 0x00255160  size: 232 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 49\n *   +0x0018 -> line 51\n *   +0x0028 -> line 52\n *   +0x0038 -> line 54\n *   +0x003c -> line 56\n *   +0x0040 -> line 59\n *   +0x0044 -> line 56\n *   +0x004c -> line 55\n *   +0x0050 -> line 56\n *   +0x0054 -> line 57\n *   +0x0058 -> line 58\n *   +0x005c -> line 57\n *   +0x0060 -> line 58\n *   +0x0064 -> line 57\n *   +0x0068 -> line 59\n *   +0x0070 -> line 63\n *   +0x0080 -> line 65\n *   +0x0088 -> line 69\n *   +0x0098 -> line 71\n *   +0x009c -> line 72\n *   +0x00a0 -> line 71\n *   +0x00ac -> line 72\n *   +0x00b4 -> line 79\n *   +0x00c4 -> line 81\n *   +0x00d0 -> line 82\n *   +0x00d4 -> line 81\n *   +0x00d8 -> line 82\n *   +0x00e0 -> line 91\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nshort INT_fn_xTrinomeResolution(float xA, float xB, float xC, float* p_xT1, float* p_xT2)\n{\n    float xDiv;\n    float xDelta;\n\n    if (xA != 0.0f) {\n        xDelta = xB * xB - 4.0f * (xA * xC);\n        if (xDelta > 0.0f) {\n            xDelta = MTH_xSqrt(xDelta);\n            xDiv = 1.0f / (xA + xA);\n            *p_xT1 = xDiv * (-xB + xDelta);\n            *p_xT2 = xDiv * (-xB - xDelta);\n            return 2;\n        }\n        if (xDelta < 0.0f)\n            return 0;\n        if (xDelta == 0.0f) {\n            *p_xT1 = -(xB / (xA + xA));\n            return 1;\n        }\n    } else if (xB != 0.0f) {\n        *p_xT1 = -(xC / xB);\n        return 1;\n    }\n    return 0;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "INT_fn_bIntersectSegmentWithSphere",
+      "reason": "724/724, 4 rows at +0xa8..+0xb8: retail interleaves addiu a0/a1 between the madda.s ops and puts msub.s in the jal delay slot; MWCC keeps the accumulator asm sequence contiguous (insights 1767/1777, same as INT_fn_bIntersectSemiAxeWithSphere)",
+      "size": 724,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MISMATCH",
+      "target_size": 724,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0028d4f0",
+      "candidate_size": 728,
+      "first_difference": 518,
+      "implementation": "void fn_vInitTransitionHierarchy(void);\nvoid fn_vPlugMicroOnSO(HIE_tdstSuperObject_* hSO);\nunsigned char fn_bScriptTransitionDeallocationCondition(void);\nunsigned char fn_bLevelHadTransitionMemory(void);\nvoid fn_vSetLevelHasTransitionMemory(unsigned char bValue);\nunsigned char fn_bLevelHasTransitionMemory(void);\nunsigned char fn_bIsTransitionInProgress(void);\nunsigned char fn_bIsLoadInProgress(void);\nvoid fn_vStopTransition(void);\nvoid fn_vSetDoTransition(unsigned char bValue);\n\nextern unsigned short GAM_fn_uwGetEngineLoading(void);\nextern void GAM_fn_vPushAllocMode(GAM_eLoadingMode);\nextern int fn_bIsInFix(tdstEngineObject_*);\n\ntypedef enum tdeObjectTreeInit_ {\n    OTI_WhenGameStart = 0,\n    OTI_MapLoaded = 1,\n    OTI_ReinitTheMap = 2,\n    OTI_LoadSavedGame = 3,\n    OTI_PlayerDead = 4,\n    OTI_WhenGoOutOfZone = 4,\n    OTI_Always = 4,\n    OTI_AlwaysCreated = 5\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "fn_vInitTransitionHierarchy",
+      "reason": "EQUIVALENT register-only: 3rd ChangeFather block (hTransitionSectorSO, +0x204) swaps father/temp a0<->a1; hTmp temp in inline TRA_vChangeFather fixes blocks 1-2 but not 3, no-temp form fixes 3 but not 1-2; ~25 variants + 600s permuter",
+      "size": 728,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/transition.c",
+      "status": "EQUIVALENT",
+      "target_size": 728,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002ae8d0",
+      "candidate_size": 8,
+      "first_difference": 0,
+      "implementation": "void GLI_vInitGLProjectionMatrix(void);\nvoid TakeCareOfCinemascopePS2(void);\nvoid sceVu0ApplyMatrix(float* v0, float m[4][4], float* v1);\nvoid PS2glGetFloatv(unsigned int pname, float* params);\nvoid GLI_vReinitViewport(void);\nvoid glFrustumf(float left, float right, float bottom, float top, float zNear, float zFar);\nGLI_tdstTexture_* GLI_xRefreshAnimatedTextureIfNeeded(GLI_tdstMaterial_* hVisualMaterial);\nvoid GLI_DRV_vSetCommonGLRenderStates(void);\nvoid GLI_vResetTempList(void);\nvoid GLI_vAllocateTempLists(void);\nvoid GLI_vReinitFrame(unsigned int SwapBuffers);\nvoid DisplayShadowVolumes(void);\nvoid DrawTriangles(void);\nvoid GLI_vAddShadowVolumeDisplayList(void);\nvoid GLI_vRemoveScissors(void);\nvoid GLI_vSetScissors(GLD_tdstViewportAttributes_* _p_stFixViewportAttr);\nGLI_SpecificPS2GL_Structure_* GLI_pstGetSpecificStructureFromEIT(GEO_tdstElementIndexedTriangles_* p_stEIT);\nGLI_SpecificPS2GL_Structure_* GLI_vAllocateSpecificStructure(unsigned int NbMultiTextureMaterials, GEO_tdstElementIndexedTriangles_* p_stEIT);\n\nextern void SDL_UpdateFogs(unsigned int hSDL);\nextern void SDL_Draw(unsigned int hSDL);\n\nextern void PS2glMatrixMode(unsigned int mode);\nextern void PS2glLoadIdentity(void);\nextern void PS2glOrtho(float left, float right, float bottom, float top, float zNear, float zFar);\nextern void PS2glScissor(int x, int y, int width, int height);\nextern void impPS2glScissor(int x, int y, int width, int height);\n\nvoid GLI_DRV_vSetCommonGLRenderStates(void);\nextern void GLI_vClearSendMatStates(void);\n\nextern void sceVu0MulMatrix(float dest[4][4], float left[4][4], float right[4][4]);\n\nextern void GLI_xRefreshAnimatedTexture(GLI_tdstMaterial_* hMaterial);\n\nextern void PS2glTexParameteri(unsigned int target, unsigned int pname, int param);\nextern void PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nextern void PS2glDepthFunc(unsigned int func);\nextern void PS2glCullFace(unsigned int mode);\nextern void PS2glBlendFunc(unsigned int sfactor, unsigned int dfactor);\nextern void PS2glDepthMask(unsigned char flag);\nextern void PS2glTexEnvf(unsigned int target, unsigned int pname, float param);\nextern void PS2glLightModelfv(unsigned int pname, float* params);\nextern void PS2glLightModeli(unsigned int pname, int param);\nextern void PS2glMateriali(unsigned int face, unsigned int pname, int param);\nextern void PS2glLoadMatrixf(const float* m);\nextern void PS2glBegin(unsigned int mode);\nextern void PS2glEnd(void);\nextern void PS2glColor4fv(const float* v);\nextern void PS2glVertex4f(float x, float y, float z, float w);\nextern void GLI_vInitGLProjectionMatrix(void);\n\nextern void GLI_vReinitTempVertexArrays(void);\nextern void GLI_vReinitSprites(void);\nextern void GLIPS2_vReinitMatrixDeformations(void);\nextern void VAC_ReinitForNewFrame(int hContainer);\nextern void GLI_vRemovePointLightsAfterProcessing(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GliGlou\\Drivers\\PS2GL\\Src\\u_draw.c lines 157\u2013220 */\n/* addr: 0x002b04d0  size: 368 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 157\n *   +0x001c -> line 165\n *   +0x0028 -> line 170\n *   +0x002c -> line 165\n *   +0x0030 -> line 171\n *   +0x0034 -> line 172\n *   +0x0038 -> line 173\n *   +0x003c -> line 174\n *   +0x0040 -> line 176\n *   +0x004c -> line 178\n *   +0x0058 -> line 179\n *   +0x005c -> line 180\n *   +0x0064 -> line 183\n *   +0x0068 -> line 188\n *   +0x0070 -> line 190\n *   +0x0074 -> line 195\n *   +0x0084 -> line 202\n *   +0x0088 -> line 195\n *   +0x008c -> line 202\n *   +0x00a8 -> line 206\n *   +0x012c -> line 213\n *   +0x0134 -> line 206\n *   +0x0140 -> line 213\n *   +0x0148 -> line 214\n *   +0x0150 -> line 216\n *   +0x0154 -> line 218\n *   +0x0158 -> line 220\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nGLI_SpecificPS2GL_Structure_* GLI_vAllocateSpecificStructure(unsigned int NbMultiTextureMaterials, GEO_tdstElementIndexedTriangles_* p_stEIT)\n{\n    unsigned int i;\n    GLI_SpecificPS2GL_Structure_* pTemp;\n    pTemp = (GLI_SpecificPS2GL_Structure_*)PS2glAllocator64(0x60);\n    pTemp->glDisplayLists = 0;\n    pTemp->SpriteGenArray = 0;\n    pTemp->pVertexArrayHandles = 0;\n    pTemp->LastFrame = 0;\n    pTemp->WasOutlinedOrDynamicallyLit = 0;\n    if (GLI_BIG_GLOBALS_p_stObj) {\n        GLI_CalculateBoundingBoxForElement(p_stEIT, &pTemp->stMin, &pTemp->stMax);\n        pTemp->BoundingBoxValid = 1;\n    }\n    else {\n        pTemp->BoundingBoxValid = 0;\n    }\n    pTemp->NbStages = NbMultiTextureMaterials;\n    if (!NbMultiTextureMaterials) {\n        NbMultiTextureMaterials++;\n    }\n    pTemp->glDisplayLists = (int)PS2glAllocator64((NbMultiTextureMaterials + 1) * sizeof(int));\n    for (i = 0; i < NbMultiTextureMaterials + 1; i++) {\n        ((int*)pTemp->glDisplayLists)[i] = 0;\n    }\n    pTemp->Flags = 15;\n    p_stEIT->glDisplayList = (unsigned int)pTemp;\n    return pTemp;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "GLI_vInitGLProjectionMatrix",
+      "reason": "candidate MATCHES 768/768 via inline helper GLI_vSetPerspective (build/large-match/GLI_vInitGLProjectionMatrix/u_draw_match_candidate.c), but any inline definition in u_draw.c swaps the -1.0f/1.0f constant order in recorded GLI_vSetFIXFullScreenOrthoProjection (insight 2031 TU-state effect); canonical left as stub",
+      "size": 768,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
+      "status": "MISMATCH",
+      "target_size": 768,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x002df590",
+      "candidate_size": 656,
+      "first_difference": 128,
+      "implementation": "void AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL(int Counter);\nvoid AE_SimpleBlurWINDOWEDNoOptWithDirection(int Counter);\nvoid AE_SimpleBlurWINDOWEDNoOptPAL(int Counter);\nvoid AE_SimpleBlurWINDOWEDNoOpt(int Counter);\nvoid AE_SimpleBlurWINDOWED(int Counter);\nvoid GLIPS2_vProcessRedEnviromentEffect(void);\nvoid WAT_vTest(float (*pPos)[4]);\nvoid GLIPS2_vProcessWater2DEffectOLD(void);\nvoid GLIPS2_Water2D_DisplayTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid GLIPS2_Water2D_DisplayNearClippedTriangle(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverXLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverXHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverYLow(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid ClipTriangleOverYHigh(float* Pos0, float* Pos1, float* Pos2, float* U0, float* U1, float* U2, float* C0, float* C1, float* C2);\nvoid GLIPS2_Water2D_DisplayClippedTriangle(float* Pos2D0, float* Pos2D1, float* Pos2D2, float* Pos2D0u, float* Pos2D1u, float* Pos2D2u, float* C0, float* C1, float* C2);\nvoid GLIPS2_vMakeWaterEffect();\nvoid GLIPS2_vWaterFXProcess(void);\nvoid GLIPS2_vProcessMatrixDeformations(void);\nvoid GLIPS2_vReinitMatrixDeformations(void);\nvoid GLIPS2_vAddMatrixDeformationEffect(const MTH3D_tdstVector_* pPosition, float fSize, unsigned int TYPE);\nvoid GLIPS2_vInitMatrixDeformation(void);\nvoid AE_EndMatrixEffect(void);\nvoid AE_DrawMatrixDeformation(float Z, float x1, float y1f, float sx, float sy, float u1, float v1, float su, float sv, float AlphaCenter, float Angle);\nvoid AE_PrepareMatrixEffect(void);\nvoid GLIPS2_vSetDepthBlurMode(float Near, float Far, float Intensity);\nvoid DoFullScreenWaterEffect(void);\nvoid DoFullScreenWaterEffectForMirror(void);\nvoid AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);\nvoid GLI_vSaveCurrentBackBuffer(void);\nvoid AE_PostProcessShadow(void);\nvoid GLI_vRestoreSavedFrameBuffer(void);\nvoid GLI_vSaveCurrentFrameBuffer(void);\nvoid GLI_vProcessFilters(void);\nvoid GLI_vProcessPSX_FX(void);\nvoid GLIPS2_vCreateWaterEffect(unsigned int Type, float X1, float Y1, float X2, float Y2, float Z);\nvoid GLIPS2_vSetWaterDeformation(int Val);\nvoid ActivateOldMovieEffect(void);\nvoid ReinitOldMovieEffect(void);\nvoid ProcessOldMovieEffect(void);\nvoid AE_BlackAndWhite(void);\nvoid GLI_vProcessMirrorAfterEffect(void);\nvoid GLIPS2_vSetMirrorBlur(void);\nvoid ProcessOldTV(void);\nvoid AE_Filter_BlurUsingDestAlpha2(void);\nvoid GLI_vReduceBackBufferTo256x256(void);\n\nvoid AE_DrawWindow(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);\n\nvoid GLIPS2_vWaterFXProcess(void);\n\nfloat FRR(float param0, float param1);\nvoid GLI_vSetFIXFullScreenOrthoProjection(void);\nvoid PS2glSetGsRegister(int address, unsigned long value, unsigned long mask);\nvoid PS2glBegin(unsigned int mode);\nvoid PS2glEnd(void);\nvoid PS2glColor4f(float r, float g, float b, float a);\nvoid PS2glVertex2f(float x, float y);\nvoid PS2glTexCoord2f(float s, float t);\nvoid GLI_DRV_SendMaterialToViewport(void* pMat);\n\nvoid GsSendData(unsigned int reg, anon_1* pdata);\nvoid GsFlushBuffer(void);\n\nvoid GsUpdate(void);\nvoid GsSendData(unsigned int reg, anon_1* pdata);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\nvoid AE_DrawDeformedScreen(float (*Points)[2], float (*UVs)[2]);\nfloat cosf(float x);\nfloat sinf(float x);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\nvoid PS2glEnable(unsigned int cap);\n\nvoid AE_Begin(void);\nvoid AE_End(void);\nvoid AE_SetGS(int vA, int vB, int vC, int vD, unsigned int vFIX);\nvoid AE_CopyScreen(void);\nvoid AE_SetTexture(int BufferID);\nvoid AE_SetDrawTarget(int BufferID);\nvoid PS2glColorMask(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);\nvoid PS2glDepthMask(unsigned char flag);\nvoid PS2glDisable(unsigned int cap);\n\nvoid AE_SetTextureNoBilinear(int BufferID);\n\nvoid AE_DrawWindowWithoutOptimization(float x1, float y1, float x2, float y2, float r, float g, float b, float a, float u1, float v1, float u2, float v2);\n\nvoid AE_BlackAndWhite(void);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\GliGlou\\Drivers\\PS2GL\\Src\\SFX\\u_effects.c lines 213\u2013228 */\n/* addr: 0x002e9660  size: 288 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 213\n *   +0x0004 -> line 214\n *   +0x0008 -> line 213\n *   +0x000c -> line 214\n *   +0x0058 -> line 215\n *   +0x0060 -> line 217\n *   +0x0074 -> line 218\n *   +0x007c -> line 219\n *   +0x0084 -> line 221\n *   +0x008c -> line 222\n *   +0x0094 -> line 223\n *   +0x00ac -> line 225\n *   +0x010c -> line 227\n *   +0x0114 -> line 228\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid GLI_vReduceBackBufferTo256x256(void)\n{\n    g_PS2glContext.nEnableBits |= 0x100; g_gsContext.PRMODE.ABE = 1; g_gsContext.ModFlgs.PRMODE_Modified = 1;\n    AE_Begin();\n\n    PS2glColorMask(1, 1, 1, 0);\n    PS2glDepthMask(0);\n    PS2glDisable(0xB71);\n\n    AE_SetDrawTarget(4);\n    AE_SetTexture(1);\n    AE_SetGS(0, 2, 2, 2, 0x80);\n\n    AE_DrawWindowWithoutOptimization(0.0f, 0.0f, 25600.0f / XRESf, 25600.0f / YRESf, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f);\n\n    AE_End();\n}",
+      "line_offsets_equal": true,
+      "model": "claude-opus-5-5",
+      "name": "AE_SimpleBlurWINDOWEDNoOptWithDirectionPAL",
+      "reason": "Size/relocs match; first diff +0x80: arg setup order for 2nd AE_DrawWindowWithoutOptimization call (stack args before coord constants in retail). TU-level scheduling per insights 2031/2239/2267; 8 variants no gain.",
+      "size": 656,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SFX/u_effects.c",
+      "status": "MISMATCH",
+      "target_size": 656,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0023dae0",
+      "candidate_size": 824,
+      "first_difference": 742,
+      "implementation": "unsigned char fn_Launch(LinkActorType_* p_link);\nint fn_DeleteLoops(LinkActorType_* p_link);\nIntersectionPoint_* fn_stSegmentDistance(LinkActorType_* p_link, unsigned short k, unsigned short i);\nvoid fn_Mechanics(LinkActorType_* p_link);\nvoid fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);\nint fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k);\nvoid fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k);\nvoid fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd);\nvoid fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index);\nvoid fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode);\nvoid fn_StateConstructor(LinkActorType_* p_link);\ntdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\n\nvoid fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\LNK_Proc.c lines 127\u2013147 */\n/* addr: 0x00241990  size: 320 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 127\n *   +0x0004 -> line 128\n *   +0x0008 -> line 127\n *   +0x000c -> line 133\n *   +0x0010 -> line 127\n *   +0x001c -> line 128\n *   +0x0020 -> line 131\n *   +0x0024 -> line 128\n *   +0x002c -> line 131\n *   +0x0030 -> line 128\n *   +0x00d4 -> line 134\n *   +0x0118 -> line 139\n *   +0x011c -> line 136\n *   +0x0120 -> line 139\n *   +0x0124 -> line 145\n *   +0x0128 -> line 139\n *   +0x012c -> line 136\n *   +0x0130 -> line 139\n *   +0x0138 -> line 147\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    int k;\n\n    for (k = 0; k < 8; k++) {\n        linkStructure[k].p_GhostLinkSPO = 0;\n        linkStructure[k].p_LinkSPO = 0;\n        linkStructure[k].iLinkID = -1;\n    }\n    ui_BCPindexWrite = 0;\n    ui_BCPindexRead = 0;\n    for (k = 0; k < 1000; k++) {\n        a_NetBuffer[k].Time = 30000000;\n    }\n    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;\n    agoType = 21;\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_Launch",
+      "reason": "824/824, relocs 29/29; first diff +0x2e4: arg setup order of AGO_vAddParticle(45,..,hVisualMaterial[ui_Material],8.0f) (retail loads index, a1/a0, then hVisualMaterial base; ours loads base early). Same residual as fn_StateConstructor; ~35 variants + 15min permuter no change; likely TU-wide scheduling (insight 2031).",
+      "size": 824,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 824,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0023fc60",
+      "candidate_size": 836,
+      "first_difference": 236,
+      "implementation": "void fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index);\nvoid fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode);\nvoid fn_StateConstructor(LinkActorType_* p_link);\ntdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\n\nvoid fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\LNK_Proc.c lines 127\u2013147 */\n/* addr: 0x00241990  size: 320 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 127\n *   +0x0004 -> line 128\n *   +0x0008 -> line 127\n *   +0x000c -> line 133\n *   +0x0010 -> line 127\n *   +0x001c -> line 128\n *   +0x0020 -> line 131\n *   +0x0024 -> line 128\n *   +0x002c -> line 131\n *   +0x0030 -> line 128\n *   +0x00d4 -> line 134\n *   +0x0118 -> line 139\n *   +0x011c -> line 136\n *   +0x0120 -> line 139\n *   +0x0124 -> line 145\n *   +0x0128 -> line 139\n *   +0x012c -> line 136\n *   +0x0130 -> line 139\n *   +0x0138 -> line 147\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    int k;\n\n    for (k = 0; k < 8; k++) {\n        linkStructure[k].p_GhostLinkSPO = 0;\n        linkStructure[k].p_LinkSPO = 0;\n        linkStructure[k].iLinkID = -1;\n    }\n    ui_BCPindexWrite = 0;\n    ui_BCPindexRead = 0;\n    for (k = 0; k < 1000; k++) {\n        a_NetBuffer[k].Time = 30000000;\n    }\n    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;\n    agoType = 21;\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_InsertCutPoint",
+      "reason": "836/836, relocs 4/4; first diff +0xe8: first distance test (a_Cutpoint[uc_index-1]) schedules y addu/lwc1 early so x/y FPRs swap (f3 vs f4); folded x offset 0 case. 20+ variants and 15min permuter no gain; scheduling under 3.0.3-pad7b-unfold.",
+      "size": 836,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
+      "status": "MISMATCH",
+      "target_size": 836,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x0023ec90",
+      "candidate_size": 856,
+      "first_difference": 166,
+      "implementation": "int fn_CheckDeletedCutPoint(LinkActorType_* p_link, int k);\nvoid fn_CheckNewCutPoint(LinkActorType_* p_link, unsigned short k);\nvoid fn_DeleteCutPoint(LinkActorType_* p_link, unsigned char uiStart, unsigned char uiEnd);\nvoid fn_InsertCutPoint(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPosition, MTH3D_tdstVector_* p_vNormal, MTH3D_tdstVector_* p_vSpeed, int uc_index);\nvoid fn_CollisionRayCastLnKProc(LinkActorType_* p_link, MTH3D_tdstVector_* p_vPoint, MTH3D_tdstVector_* p_vDirection, unsigned long ulMode);\nvoid fn_StateConstructor(LinkActorType_* p_link);\ntdstNodeInterpret_* LNK_fn_p_FollowLinkDirection(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_SetUnlaunch(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetFlagStraight(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_SetLaunchSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_SetGaugeSpeed(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_GetCutPoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_GetNoCutPoints(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_Kill(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_DoBehaviour(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_SetAgo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\ntdstNodeInterpret_* LNK_fn_p_Init(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree);\n\nvoid fn_MoveCutPoint(LinkActorType_* p_link, unsigned short k);\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\LNK_Proc.c lines 127\u2013147 */\n/* addr: 0x00241990  size: 320 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 127\n *   +0x0004 -> line 128\n *   +0x0008 -> line 127\n *   +0x000c -> line 133\n *   +0x0010 -> line 127\n *   +0x001c -> line 128\n *   +0x0020 -> line 131\n *   +0x0024 -> line 128\n *   +0x002c -> line 131\n *   +0x0030 -> line 128\n *   +0x00d4 -> line 134\n *   +0x0118 -> line 139\n *   +0x011c -> line 136\n *   +0x0120 -> line 139\n *   +0x0124 -> line 145\n *   +0x0128 -> line 139\n *   +0x012c -> line 136\n *   +0x0130 -> line 139\n *   +0x0138 -> line 147\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\ntdstNodeInterpret_* LNK_fn_p_InitAll(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree)\n{\n    int k;\n\n    for (k = 0; k < 8; k++) {\n        linkStructure[k].p_GhostLinkSPO = 0;\n        linkStructure[k].p_LinkSPO = 0;\n        linkStructure[k].iLinkID = -1;\n    }\n    ui_BCPindexWrite = 0;\n    ui_BCPindexRead = 0;\n    for (k = 0; k < 1000; k++) {\n        a_NetBuffer[k].Time = 30000000;\n    }\n    vNullVector.xX = 0; vNullVector.xY = 0; vNullVector.xZ = 0;\n    agoType = 21;\n    return p_stTree;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_CheckDeletedCutPoint",
+      "reason": "856/856 EQUIVALENT; 14 rows register-only: x/y temp-vector components in swapped FPRs in both norms (f5/f3, f10/f9). Many norm/normalize helper shapes, all decl perms, 5min permuter no gain.",
+      "size": 856,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
+      "status": "EQUIVALENT",
+      "target_size": 856,
+      "unresolved_relocations": []
+    },
+    {
+      "address": "0x00218160",
+      "candidate_size": 928,
+      "first_difference": 88,
+      "implementation": "extern \"C\" tdstNodeInterpret_* fn_p_ComputeJumpImpulsion(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_GetCustomValuesFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_GetComputationFrequency(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_GetPriviligedActivationZdx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_GetHierarchyLink(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_GetCollidedSPO(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_GetMechanicParameter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stVectorAndAngle(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stComputeRebondVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetFirstCollisionInfo(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetCollisionWithCollideMaterial(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetCollision(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetLastCollisionActor(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetCollidePoint(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stNamesFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_st3DFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetPersoSighting(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCollideCommunicationFunc(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetNormalCollideVector(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stGetDTFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4VitesseHorizontaleDuPerso(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitPositionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4VecteurPointAxe(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitAxeZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitDimensionZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4LitCentreZDx(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" tdstNodeInterpret_* fn_p_stCode4VitessePadAnalogique(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);\nextern \"C\" void fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender, int lCollideType);\n\n/* The callback's unused a0 parameter is omitted by debug recovery; the target\n * preserves p_stTree from a1 across printf. */\n\n/* The target uses a1 for the tree and a2 for the result; a0 is unused. */\n\n/* E:\\Rayman3\\Disk_01\\R3PS2_SCEA_engine_sources\\sourcesV39\\ps2\\TEMPGRP\\AI\\AIGame\\Functio1.cxx lines 124\u2013277 */\n/* addr: 0x002217c0  size: 952 bytes */\n/* Target MWCC statement boundaries (code offset -> source line):\n *   +0x0000 -> line 124\n *   +0x0004 -> line 161\n *   +0x0008 -> line 124\n *   +0x000c -> line 138\n *   +0x0010 -> line 124\n *   +0x0014 -> line 161\n *   +0x0018 -> line 124\n *   +0x0028 -> line 138\n *   +0x0034 -> line 161\n *   +0x0038 -> line 138\n *   +0x0040 -> line 135\n *   +0x0044 -> line 138\n *   +0x0048 -> line 139\n *   +0x004c -> line 140\n *   +0x0050 -> line 139\n *   +0x0058 -> line 141\n *   +0x005c -> line 139\n *   +0x0064 -> line 143\n *   +0x0068 -> line 161\n *   +0x0070 -> line 166\n *   +0x0080 -> line 171\n *   +0x0084 -> line 172\n *   +0x008c -> line 175\n *   +0x00bc -> line 176\n *   +0x00c4 -> line 180\n *   +0x00f4 -> line 183\n *   +0x0104 -> line 186\n *   +0x0114 -> line 188\n *   +0x0118 -> line 190\n *   +0x0128 -> line 192\n *   +0x0154 -> line 193\n *   +0x0158 -> line 194\n *   +0x0164 -> line 195\n *   +0x0168 -> line 198\n *   +0x0174 -> line 200\n *   +0x0178 -> line 201\n *   +0x0180 -> line 206\n *   +0x0184 -> line 208\n *   +0x0194 -> line 210\n *   +0x0198 -> line 212\n *   +0x01a0 -> line 214\n *   +0x01d8 -> line 217\n *   +0x020c -> line 221\n *   +0x0218 -> line 224\n *   +0x0220 -> line 225\n *   +0x0238 -> line 227\n *   +0x0240 -> line 228\n *   +0x0244 -> line 231\n *   +0x0248 -> line 232\n *   +0x0258 -> line 236\n *   +0x0268 -> line 241\n *   +0x026c -> line 245\n *   +0x0270 -> line 242\n *   +0x0274 -> line 245\n *   +0x027c -> line 246\n *   +0x0288 -> line 247\n *   +0x02b0 -> line 250\n *   +0x02c0 -> line 252\n *   +0x02c4 -> line 253\n *   +0x02cc -> line 255\n *   +0x0304 -> line 258\n *   +0x0338 -> line 261\n *   +0x0340 -> line 264\n *   +0x0348 -> line 265\n *   +0x0360 -> line 267\n *   +0x0368 -> line 268\n *   +0x036c -> line 271\n *   +0x0370 -> line 272\n *   +0x037c -> line 273\n *   +0x0380 -> line 274\n *   +0x0390 -> line 276\n *   +0x0398 -> line 277\n * Place reconstructed statements at these boundaries;\n * compare a candidate object's line table as an extra checkpoint.\n */\n\nvoid fn_vComputeCollideResult(HIE_tdstSuperObject_* hSender, int lCollideType)\n{\n    SECT_tdstSector_* hSectorObject;\n    SECT_tdstSector_* hSector1;\n    MTH3D_tdstVector_ stMax;\n    MTH3D_tdstVector_ stMin;\n    GMT_tdstCollideMaterial_* hColMatHit;\n    int i;\n    SECT_tdstCharList_* hInterList;\n    SECT_tdstCharList_* hList;\n    SECT_tdstCharElement_* hCharacterList;\n    HIE_tdstSuperObject_* hSuperObjectHit;\n    GMT_tdstCollideMaterial_* spColMatHit;\n    *(int*)&g_stCollideResultPoint.xX = 0;\n    *(int*)&g_stCollideResultPoint.xY = 0;\n    *(int*)&g_stCollideResultPoint.xZ = 0;\n    *(int*)&g_stCollideResultVector.xX = 0;\n    *(int*)&g_stCollideResultVector.xY = 0;\n    *(int*)&g_stCollideResultVector.xZ = 0;\n    g_hSuperObjectHit = NULL;\n    g_hColMatHit = NULL;\n    spColMatHit = NULL;\n    hColMatHit = NULL;\n    hSectorObject = SECT_fn_hResearchInWhatSectorIAm(SECT_hFatherSector, &g_stCollideParameterPoint);\n    if (g_ulMode != 1) {\n        g_ulSpoMask = g_ulOverRideRayTraceSpoMask;\n        if (hSectorObject == NULL) {\n            HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, SECT_hFatherSector, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit);\n        } else {\n            HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hSectorObject, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit);\n            for (i = hSectorObject->p_stSectorList->ulNbElement; i > 0; i--) {\n                if (hSectorObject->p_stSectorList->p_aElement[i].ucType == 2) { break; }\n                if (!SECT_fn_bIsThisSectorVirtual(hSectorObject->p_stSectorList->p_aElement[i].hSector)) {\n                    HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hSectorObject->p_stSectorList->p_aElement[i].hSector, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit);\n                }\n            }\n        }\n        if (g_ulMode == 0) {\n            g_hColMatHit = spColMatHit;\n        }\n    } else {\n        g_ulSpoMask = 0;\n        hList = hSectorObject->p_stSectorList->p_aCharacterList;\n        while (hList != NULL) {\n            hCharacterList = hList->p_stFirstElement;\n            if (hCharacterList->hSuperObject != hSender) {\n                if ((fn_ulStandardGameGetCustomBitsSO(hCharacterList->hSuperObject) & 0x10) != 0) {\n                    if ((hCharacterList->hSuperObject->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) == 0) {\n                        if (HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hCharacterList->hSuperObject, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit) != 0) {\n                            hSuperObjectHit = hCharacterList->hSuperObject;\n                            while ((hSuperObjectHit != NULL) && (hSuperObjectHit->ulTypeOfLinkedObject != 2)) {\n                                hSuperObjectHit = hSuperObjectHit->hNextBrotherDyn;\n                            }\n                            if (hSuperObjectHit != NULL) {\n                                g_hSuperObjectHit = hSuperObjectHit;\n                            }\n                        }\n                    }\n                }\n            }\n            hList = hList->p_stNextElement;\n        }\n        for (i = hSectorObject->p_stSectorList->ulNbBorder; i > 0; i--) {\n            SECT_fn_vGetMinPointInBorder(hSectorObject->p_stSectorList->p_aBorder[i - 1].p_stBorder, &stMin);\n            SECT_fn_vGetMaxPointInBorder(hSectorObject->p_stSectorList->p_aBorder[i - 1].p_stBorder, &stMax);\n            if (INT_fn_bDetectIntersectSegmentWithBox(&g_stCollideParameterPoint, &g_stCollideParameterVector, &stMin, &stMax) != 0) {\n                hInterList = hSectorObject->p_stSectorList->p_aBorder[i - 1].p_stCharacterList;\n                while (hInterList != NULL) {\n                    hSuperObjectHit = hInterList->p_stFirstElement->hSuperObject;\n                    if (hSuperObjectHit != hSender) {\n                        if ((fn_ulStandardGameGetCustomBitsSO(hSuperObjectHit) & 0x10) != 0) {\n                            if ((hSuperObjectHit->hLinkedObject.p_stCharacter->h_StandardGame->ucMiscFlags & 4) == 0) {\n                                if (HIE_bIntersectSegmentWithFirstSuperObject(&g_stCollideParameterPoint, &g_stCollideParameterVector, hSuperObjectHit, &g_stCollideResultPoint, &g_stCollideResultVector, &g_hSuperObjectHit, &spColMatHit) != 0) {\n                                    while ((hSuperObjectHit != NULL) && (hSuperObjectHit->ulTypeOfLinkedObject != 2)) {\n                                        hSuperObjectHit = hSuperObjectHit->hNextBrotherDyn;\n                                    }\n                                    if (hSuperObjectHit != NULL) {\n                                        g_hSuperObjectHit = hSuperObjectHit;\n                                    }\n                                }\n                            }\n                        }\n                    }\n                    hInterList = hInterList->p_stNextElement;\n                }\n            }\n        }\n        g_hColMatHit = spColMatHit;\n    }\n    return;\n}",
+      "line_offsets_equal": false,
+      "model": "claude-opus-5-5",
+      "name": "fn_p_ComputeJumpImpulsion",
+      "reason": "928/920, relocs 7/7; first diff +0x58: stack slot order of 12-byte vector locals (retail stParam a0,stStart b0,stEnd c0,stImpulsion d0,stNull e0; ours point-of-use order differs; insight 1065 conflict) plus +0x2c4 asm sqrt.s hazard nops/neg.s scheduling. Tried many copy forms, 200 float decl perms.",
+      "size": 920,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MISMATCH",
+      "target_size": 920,
+      "unresolved_relocations": []
     }
   ],
   "data": {
@@ -55358,6 +55889,14 @@
       "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c",
       "status": "MATCH"
     },
+    "0x00143620": {
+      "address": "0x00143620",
+      "compiler_profile": "mwccps2-3.0.1-020123-lib",
+      "name": "PS2glClearBuffers",
+      "size": 908,
+      "source": "src/Rayman3/dev/R3/Version13/ps2/PS2GL20/Src/PS2GL/PS2GL_BufferControl.c",
+      "status": "MATCH"
+    },
     "0x001439b0": {
       "address": "0x001439b0",
       "compiler_profile": "mwccps2-3.0.1-020123-lib",
@@ -63662,6 +64201,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeini.cpp",
       "status": "MATCH"
     },
+    "0x00189f00": {
+      "address": "0x00189f00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SND_fn_iInitSound",
+      "size": 428,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeeini.cpp",
+      "status": "MATCH"
+    },
     "0x0018a0b0": {
       "address": "0x0018a0b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -63878,6 +64425,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeecbankdesc.cpp",
       "status": "MATCH"
     },
+    "0x0018b760": {
+      "address": "0x0018b760",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_poAddCResData__9CBankDescFRCQ24usnd5CUUID",
+      "size": 424,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeectextfilesrc.cpp",
+      "status": "MATCH"
+    },
+    "0x0018b910": {
+      "address": "0x0018b910",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "mfn_bRead__12CTextFileSrcFRQ24usnd7sstring",
+      "size": 752,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeectextfilesrc.cpp",
+      "status": "MATCH"
+    },
     "0x0018bcd0": {
       "address": "0x0018bcd0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -63892,6 +64455,14 @@
       "name": "mfn_bOpen__12CTextFileSrcFPCc",
       "size": 296,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeectextfilesrc.cpp",
+      "status": "MATCH"
+    },
+    "0x0018d120": {
+      "address": "0x0018d120",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__dt__13CBankDescContFv",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/psx2/ee/sndeecbankdesccont.cpp",
       "status": "MATCH"
     },
     "0x001c9930": {
@@ -64155,6 +64726,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "mfn_poGetActorFromIdInTypeActorInstance__14CLinkTypeActorFi",
       "size": 60,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
+      "status": "MATCH"
+    },
+    "0x001ccd30": {
+      "address": "0x001ccd30",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "__ct__14CLinkTypeActorFRQ24usnd12TTypedVar<f>iiPC22_tdstAllRetObjectSound",
+      "size": 404,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/SND_R3/src/sndclinktypeactor.cpp",
       "status": "MATCH"
     },
@@ -66366,6 +66945,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
       "status": "MATCH"
     },
+    "0x001fb590": {
+      "address": "0x001fb590",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vReinitDesignerVariablesWithFlags",
+      "size": 396,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIBase/AI_Proto.c",
+      "status": "MATCH"
+    },
     "0x001fb720": {
       "address": "0x001fb720",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -68446,6 +69033,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
       "status": "MATCH"
     },
+    "0x00209aa0": {
+      "address": "0x00209aa0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fn_vSendParametersToParsing",
+      "size": 812,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
+      "status": "MATCH"
+    },
     "0x0020a620": {
       "address": "0x0020a620",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -68470,11 +69065,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
       "status": "MATCH"
     },
+    "0x0020a7e0": {
+      "address": "0x0020a7e0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fn_vComputeAnglesBetweenTwoVectors",
+      "size": 400,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
+      "status": "MATCH"
+    },
     "0x0020a970": {
       "address": "0x0020a970",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_bEqualVectorWithEpsilon",
       "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
+      "status": "MATCH"
+    },
+    "0x0020a9c0": {
+      "address": "0x0020a9c0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fn_xComputeRotation",
+      "size": 668,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Tool.c",
       "status": "MATCH"
     },
@@ -68619,6 +69230,22 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "CAM_fni_ComparePositions",
       "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Vis.c",
+      "status": "MATCH"
+    },
+    "0x0020cc00": {
+      "address": "0x0020cc00",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fnc_IsDirectionCorrect",
+      "size": 380,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Vis.c",
+      "status": "MATCH"
+    },
+    "0x0020cd80": {
+      "address": "0x0020cd80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_fnx_ComputePosPound",
+      "size": 760,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/CAM_Vis.c",
       "status": "MATCH"
     },
@@ -68934,6 +69561,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Cond.c",
       "status": "MATCH"
     },
+    "0x0020fba0": {
+      "address": "0x0020fba0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stMiscCondition",
+      "size": 760,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Cond.c",
+      "status": "MATCH"
+    },
     "0x0020fea0": {
       "address": "0x0020fea0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -69003,6 +69638,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_stBooleanCondition",
       "size": 392,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Cond.c",
+      "status": "MATCH"
+    },
+    "0x002111b0": {
+      "address": "0x002111b0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_p_stComparisonCondition",
+      "size": 888,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Cond.c",
       "status": "MATCH"
     },
@@ -69518,6 +70161,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00212430": {
+      "address": "0x00212430",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stFFBFunctions",
+      "size": 604,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x00212690": {
       "address": "0x00212690",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -69598,6 +70249,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00213100": {
+      "address": "0x00213100",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stColorFunction",
+      "size": 936,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x002134b0": {
       "address": "0x002134b0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -69614,11 +70273,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
+    "0x00213610": {
+      "address": "0x00213610",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stVisualMaterialFunction",
+      "size": 420,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
     "0x002137c0": {
       "address": "0x002137c0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stGameMaterialFunction",
       "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00213900": {
+      "address": "0x00213900",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stMiscFunction",
+      "size": 488,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -69635,6 +70310,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stTimeFunction",
       "size": 140,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00214190": {
+      "address": "0x00214190",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stHitPointsAndHitPointsMaxFunction",
+      "size": 528,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -69675,6 +70358,22 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stMathFunctionInt",
       "size": 276,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00215300": {
+      "address": "0x00215300",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stMathTernarReal",
+      "size": 504,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
+      "status": "MATCH"
+    },
+    "0x00215500": {
+      "address": "0x00215500",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stDistanceFunction",
+      "size": 776,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Function.c",
       "status": "MATCH"
     },
@@ -69878,6 +70577,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
       "status": "MATCH"
     },
+    "0x00217f40": {
+      "address": "0x00217f40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_GetBooleanInArray",
+      "size": 544,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
     "0x00218500": {
       "address": "0x00218500",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -69918,6 +70625,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
       "status": "MATCH"
     },
+    "0x00218b10": {
+      "address": "0x00218b10",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_GetMechanicParameter",
+      "size": 780,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x002198b0": {
+      "address": "0x002198b0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stGetCollisionWithCollideMaterial",
+      "size": 632,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x00219b30": {
+      "address": "0x00219b30",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stGetCollision",
+      "size": 744,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
     "0x00219e20": {
       "address": "0x00219e20",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -69926,11 +70657,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
       "status": "MATCH"
     },
+    "0x0021a6a0": {
+      "address": "0x0021a6a0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stNamesFunc",
+      "size": 924,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x0021aa40": {
+      "address": "0x0021aa40",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_st3DFunc",
+      "size": 916,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
     "0x0021ade0": {
       "address": "0x0021ade0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "fn_p_stGetPersoSighting",
       "size": 144,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
+      "status": "MATCH"
+    },
+    "0x0021ae70": {
+      "address": "0x0021ae70",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_p_stCollideCommunicationFunc",
+      "size": 516,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/Functio1.cxx",
       "status": "MATCH"
     },
@@ -72358,6 +73113,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
       "status": "MATCH"
     },
+    "0x0023ec90": {
+      "address": "0x0023ec90",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_CheckDeletedCutPoint",
+      "size": 856,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/AI/AIGame/LNK_Proc.c",
+      "status": "EQUIVALENT"
+    },
     "0x0023fae0": {
       "address": "0x0023fae0",
       "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
@@ -72958,6 +73721,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollElts.c",
       "status": "MATCH"
     },
+    "0x0024ccb0": {
+      "address": "0x0024ccb0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "COL_fn_vCollideStaticGeomObj1WithStaticGeomObj2",
+      "size": 432,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CollGO.c",
+      "status": "MATCH"
+    },
     "0x0024d180": {
       "address": "0x0024d180",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -73174,11 +73945,67 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Box.c",
       "status": "MATCH"
     },
+    "0x0024f740": {
+      "address": "0x0024f740",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_vCollideStaticElementSpheresWithStaticElementAlignedBoxes",
+      "size": 588,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CsSphElt.c",
+      "status": "MATCH"
+    },
+    "0x0024fda0": {
+      "address": "0x0024fda0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_vCollideStaticElementSpheresWithStaticElements",
+      "size": 500,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CsSphElt.c",
+      "status": "MATCH"
+    },
+    "0x00251aa0": {
+      "address": "0x00251aa0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_bIsCollisionPossibleStaticSphereWithStaticIndexedTriangle",
+      "size": 524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/CsSphElt.c",
+      "status": "EQUIVALENT"
+    },
+    "0x00253240": {
+      "address": "0x00253240",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "INT_fn_bFastRejectIntersectSegmentWithSphere",
+      "size": 428,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "EQUIVALENT"
+    },
     "0x002533f0": {
       "address": "0x002533f0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "INT_fn_bGetInclusionPointInSphere",
       "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MATCH"
+    },
+    "0x00253440": {
+      "address": "0x00253440",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "INT_fn_bDetectIntersectSegmentWithTriangle",
+      "size": 352,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MATCH"
+    },
+    "0x00253d00": {
+      "address": "0x00253d00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "INT_fn_bGetPointInTriangle",
+      "size": 884,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MATCH"
+    },
+    "0x00254500": {
+      "address": "0x00254500",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "ucPlaneCrossingdetect",
+      "size": 536,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
       "status": "MATCH"
     },
@@ -73211,6 +74038,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "INT_fn_bIntersectSphereWithBox",
       "size": 256,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
+      "status": "MATCH"
+    },
+    "0x002550b0": {
+      "address": "0x002550b0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "INT_fn_bIntersectBoxWithBox",
+      "size": 172,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/COL/Inters.c",
       "status": "MATCH"
     },
@@ -73723,6 +74558,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vClearUnusedAlwaysInDemoMode",
       "size": 88,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
+      "status": "MATCH"
+    },
+    "0x0025b1c0": {
+      "address": "0x0025b1c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucIsAlwaysGeneratedByMe",
+      "size": 112,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Always.c",
       "status": "MATCH"
     },
@@ -74243,6 +75086,30 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vFirstInitEngineClock",
       "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Collisio.c",
+      "status": "MATCH"
+    },
+    "0x0025e6f0": {
+      "address": "0x0025e6f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_vStaticCollisionWithPartOfTreeForSector",
+      "size": 424,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Collisio.c",
+      "status": "MATCH"
+    },
+    "0x0025e8a0": {
+      "address": "0x0025e8a0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "COL_fn_vNewStaticCollisionForCharacter",
+      "size": 860,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Collisio.c",
+      "status": "MATCH"
+    },
+    "0x0025ec00": {
+      "address": "0x0025ec00",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vNewTestStaticCollideFor2Characters",
+      "size": 828,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Collisio.c",
       "status": "MATCH"
     },
@@ -75638,6 +76505,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
       "status": "MATCH"
     },
+    "0x0026b510": {
+      "address": "0x0026b510",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_bIsCharacterTWODetectedByCharacterOne",
+      "size": 740,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
+      "status": "MATCH"
+    },
+    "0x0026b800": {
+      "address": "0x0026b800",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "fn_bIsCharacterTWODetectedByThisZddOfCharacterOne",
+      "size": 172,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/ZdxStuff.c",
+      "status": "MATCH"
+    },
     "0x0026b8b0": {
       "address": "0x0026b8b0",
       "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
@@ -75923,6 +76806,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "CAM_fn_vRemindSpeed",
       "size": 84,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
+      "status": "MATCH"
+    },
+    "0x0026da10": {
+      "address": "0x0026da10",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vInitAveragePositionDatasIfNecessary",
+      "size": 180,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/cineinfo.c",
       "status": "MATCH"
     },
@@ -76510,11 +77401,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },
+    "0x0026fdf0": {
+      "address": "0x0026fdf0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "HIE_fn_hGetSuperObjectLight",
+      "size": 104,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
     "0x0026fe60": {
       "address": "0x0026fe60",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_vMSLightSetRLIParameter",
       "size": 80,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
+      "status": "MATCH"
+    },
+    "0x0026feb0": {
+      "address": "0x0026feb0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_ucGetNumberOfRLIFromCharacter",
+      "size": 92,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/Actions/MSlight.c",
       "status": "MATCH"
     },
@@ -77582,6 +78489,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
+    "0x00275720": {
+      "address": "0x00275720",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "PLA_fn_stGetAngularSpeedMatrix",
+      "size": 688,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
     "0x00275f80": {
       "address": "0x00275f80",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -77627,6 +78542,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PLA_fn_bSetNewStateWithRandom",
       "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
+    "0x00276c90": {
+      "address": "0x00276c90",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "PLA_fn_vRefreshGlobalMatrixUnderCharacter",
+      "size": 156,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
@@ -77683,6 +78606,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PLA_fn_vInitHeaps",
       "size": 156,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
+      "status": "MATCH"
+    },
+    "0x00277f70": {
+      "address": "0x00277f70",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "PLA_fn_vComputeNextFrame",
+      "size": 824,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/PlayAnim.c",
       "status": "MATCH"
     },
@@ -77766,6 +78697,30 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
       "status": "MATCH"
     },
+    "0x0027b360": {
+      "address": "0x0027b360",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vPlayEvent",
+      "size": 560,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
+      "status": "MATCH"
+    },
+    "0x0027b590": {
+      "address": "0x0027b590",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vPlayLastEventsBeforeRestart",
+      "size": 508,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
+      "status": "MATCH"
+    },
+    "0x0027b790": {
+      "address": "0x0027b790",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vPlayEventsSinceLastOneNoLoop",
+      "size": 556,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/playevts.c",
+      "status": "MATCH"
+    },
     "0x0027bc70": {
       "address": "0x0027bc70",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -77779,6 +78734,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_p_GetA3dGENERAL",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_int.c",
+      "status": "MATCH"
+    },
+    "0x0027bea0": {
+      "address": "0x0027bea0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_v_QuatSlerp",
+      "size": 476,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/PlayAnim/Interpol/a3x_int.c",
       "status": "MATCH"
     },
@@ -78380,6 +79343,14 @@
       "name": "fn_vAskToDisplayVignette",
       "size": 12,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/PC/DspFix.c",
+      "status": "MATCH"
+    },
+    "0x00282bb0": {
+      "address": "0x00282bb0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "fn_vDisplayFix",
+      "size": 492,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/specif/ps2/LoadLvl.c",
       "status": "MATCH"
     },
     "0x00282da0": {
@@ -79125,6 +80096,14 @@
       "size": 80,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/transition.c",
       "status": "MATCH"
+    },
+    "0x0028d4f0": {
+      "address": "0x0028d4f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "fn_vInitTransitionHierarchy",
+      "size": 728,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GAM/transition.c",
+      "status": "EQUIVALENT"
     },
     "0x0028d7d0": {
       "address": "0x0028d7d0",
@@ -81302,6 +82281,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
       "status": "MATCH"
     },
+    "0x002aa2c0": {
+      "address": "0x002aa2c0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLIPS2_vSendCharacterVisualSetToViewport",
+      "size": 900,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
     "0x002aa650": {
       "address": "0x002aa650",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -81318,11 +82305,35 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
       "status": "MATCH"
     },
+    "0x002aa690": {
+      "address": "0x002aa690",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xSendObjectToViewportWithLightsFlag",
+      "size": 440,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
+    "0x002aa850": {
+      "address": "0x002aa850",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xSendObjectToViewportWithLights",
+      "size": 576,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
     "0x002aaa90": {
       "address": "0x002aaa90",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vSetViewportVars",
       "size": 44,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
+      "status": "MATCH"
+    },
+    "0x002aaac0": {
+      "address": "0x002aaac0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_xSendObjectElement",
+      "size": 408,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/MultiDRV/Src/Object.c",
       "status": "MATCH"
     },
@@ -81734,6 +82745,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/gld/DevVpt.c",
       "status": "MATCH"
     },
+    "0x002ac0e0": {
+      "address": "0x002ac0e0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLD_bDeleteDevice",
+      "size": 228,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/gld/DevVpt.c",
+      "status": "MATCH"
+    },
     "0x002ac1d0": {
       "address": "0x002ac1d0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -81822,6 +82841,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
       "status": "MATCH"
     },
+    "0x002adb10": {
+      "address": "0x002adb10",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vDisplayAllShadows",
+      "size": 856,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
+      "status": "MATCH"
+    },
     "0x002ade70": {
       "address": "0x002ade70",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -81883,6 +82910,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vSetFIXFullScreenOrthoProjection",
       "size": 396,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
+      "status": "MATCH"
+    },
+    "0x002ae8d0": {
+      "address": "0x002ae8d0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vInitGLProjectionMatrix",
+      "size": 768,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
       "status": "MATCH"
     },
@@ -81955,6 +82990,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vRemoveScissors",
       "size": 588,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
+      "status": "MATCH"
+    },
+    "0x002b0310": {
+      "address": "0x002b0310",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vSetScissors",
+      "size": 428,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_draw.c",
       "status": "MATCH"
     },
@@ -82278,6 +83321,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c",
       "status": "MATCH"
     },
+    "0x002b5130": {
+      "address": "0x002b5130",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "GLI_vDisplaySerialParticleRain",
+      "size": 604,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawAGO2.c",
+      "status": "MATCH"
+    },
     "0x002b5390": {
       "address": "0x002b5390",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -82363,6 +83414,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vDMAObjectIsCompliant",
       "size": 204,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
+      "status": "MATCH"
+    },
+    "0x002b8080": {
+      "address": "0x002b8080",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_g_CheckForFire",
+      "size": 628,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/u_drawHier.c",
       "status": "MATCH"
     },
@@ -82734,6 +83793,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
       "status": "MATCH"
     },
+    "0x002be950": {
+      "address": "0x002be950",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "GLI_vSendStaticMaterialToViewport",
+      "size": 3292,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
     "0x002bf630": {
       "address": "0x002bf630",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -82747,6 +83814,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SetStaticFog",
       "size": 224,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002bf800": {
+      "address": "0x002bf800",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vAssignOptimizedFunctionToMaterial",
+      "size": 456,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
       "status": "MATCH"
     },
@@ -82822,11 +83897,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
       "status": "MATCH"
     },
+    "0x002c18a0": {
+      "address": "0x002c18a0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "GLI_DRV_SendMaterialToViewport",
+      "size": 11336,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
     "0x002c44f0": {
       "address": "0x002c44f0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SetFogc",
       "size": 328,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
+      "status": "MATCH"
+    },
+    "0x002c4640": {
+      "address": "0x002c4640",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vSetFogParameters",
+      "size": 448,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SendMat.c",
       "status": "MATCH"
     },
@@ -83774,6 +84865,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
+    "0x002d1580": {
+      "address": "0x002d1580",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "Icon2D_Percent__17CSpriteControllerFP27GLD_tdstViewportAttributes_ffffP17GLI_tdstMaterial_",
+      "size": 592,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
     "0x002d1bf0": {
       "address": "0x002d1bf0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -83790,6 +84889,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
+    "0x002d21d0": {
+      "address": "0x002d21d0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "WorldQuadWithUVAndFade__17CSpriteControllerFP27GLD_tdstViewportAttributes_PfPfPfPfffffP17GLI_tdstMaterial_ff",
+      "size": 704,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
     "0x002d2490": {
       "address": "0x002d2490",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -83803,6 +84910,46 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "WorldQuad__17CSpriteControllerFP27GLD_tdstViewportAttributes_PfPfPfPfP17GLI_tdstMaterial_",
       "size": 384,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d2810": {
+      "address": "0x002d2810",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "WorldPlanarSprite__17CSpriteControllerFP17MTH3D_tdstVector_P17GLI_tdstMaterial_ffP27GLD_tdstViewportAttributes_Ui",
+      "size": 404,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d29b0": {
+      "address": "0x002d29b0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "WorldOrthoPlanarOriented__17CSpriteControllerFP17MTH3D_tdstVector_P17GLI_tdstMaterial_ffP27GLD_tdstViewportAttributes_P17MTH3D_tdstVector_P17MTH3D_tdstVector_f",
+      "size": 556,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d2be0": {
+      "address": "0x002d2be0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "WorldOrthoPlanarSpriteColor__17CSpriteControllerFP17MTH3D_tdstVector_P17GLI_tdstMaterial_ffP27GLD_tdstViewportAttributes_UiP17MTH3D_tdstVector_P17MTH3D_tdstVector_Ui",
+      "size": 524,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d2df0": {
+      "address": "0x002d2df0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "WorldOrthoPlanarSprite__17CSpriteControllerFP17MTH3D_tdstVector_P17GLI_tdstMaterial_ffP27GLD_tdstViewportAttributes_UiP17MTH3D_tdstVector_P17MTH3D_tdstVector_",
+      "size": 476,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
+      "status": "MATCH"
+    },
+    "0x002d3160": {
+      "address": "0x002d3160",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "SimpleSpriteOriented_WithUVs__17CSpriteControllerFP17MTH3D_tdstVector_P17GLI_tdstMaterial_ffffffP27GLD_tdstViewportAttributes_Uif",
+      "size": 444,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/VUSprites.cpp",
       "status": "MATCH"
     },
@@ -83931,6 +85078,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "GLI_vPrintSDLStatsBefore",
       "size": 20,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
+      "status": "MATCH"
+    },
+    "0x002d5690": {
+      "address": "0x002d5690",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "GLIPS2_vSetNoInterpolationForSPO",
+      "size": 216,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLMain.cpp",
       "status": "MATCH"
     },
@@ -84622,6 +85777,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLUtils.cpp",
       "status": "MATCH"
     },
+    "0x002db230": {
+      "address": "0x002db230",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "GLI_vGetVertexPointersFromSDCStructureForSinus",
+      "size": 356,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/SDLs/SDLUtils.cpp",
+      "status": "MATCH"
+    },
     "0x002db3a0": {
       "address": "0x002db3a0",
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
@@ -85302,6 +86465,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp",
       "status": "MATCH"
     },
+    "0x002ecf60": {
+      "address": "0x002ecf60",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "GLI_vUncompress_256x256_Screenshot",
+      "size": 580,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/GliGlou/Drivers/PS2GL/Src/Picture.cpp",
+      "status": "MATCH"
+    },
     "0x002ed730": {
       "address": "0x002ed730",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -85699,6 +86870,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "INOPS2_fn_wJoyGetJoystickCaps",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/joyps2.c",
+      "status": "MATCH"
+    },
+    "0x002ef390": {
+      "address": "0x002ef390",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "INOPS2_fn_wRegisterJoystick",
+      "size": 876,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/ino/ps2/joyps2.c",
       "status": "MATCH"
     },
@@ -86118,6 +87297,14 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_kwan.c",
       "status": "MATCH"
     },
+    "0x002f5910": {
+      "address": "0x002f5910",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "IPT_fn_bIsEntryActionValid",
+      "size": 152,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_anal.c",
+      "status": "MATCH"
+    },
     "0x002f59b0": {
       "address": "0x002f59b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -86307,6 +87494,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "IPT_fn_ulGetUniqueValueForHandle",
       "size": 208,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
+      "status": "MATCH"
+    },
+    "0x002f6b60": {
+      "address": "0x002f6b60",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "IPT_fn_szGetStringOf",
+      "size": 164,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/Ipt/ipt_main.c",
       "status": "MATCH"
     },
@@ -87022,6 +88217,22 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame.c",
       "status": "MATCH"
     },
+    "0x002feb80": {
+      "address": "0x002feb80",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "DNM_p_stDynamicsCameraMechanics",
+      "size": 520,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame.c",
+      "status": "MATCH"
+    },
+    "0x00300820": {
+      "address": "0x00300820",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "CAM_lHaveITakeSThgIntoTheMug",
+      "size": 568,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMCame.c",
+      "status": "MATCH"
+    },
     "0x003011c0": {
       "address": "0x003011c0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
@@ -87075,6 +88286,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "DNM_fn_vDynamicsInitDefault",
       "size": 340,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMMTH.c",
+      "status": "MATCH"
+    },
+    "0x00302680": {
+      "address": "0x00302680",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MTH_p_stRotationMulVector",
+      "size": 636,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/DNMMTH.c",
       "status": "MATCH"
     },
@@ -87187,6 +88406,14 @@
       "compiler_profile": "mwccps2-3.0.3-020716-o3",
       "name": "MEC_fn_lComputeCall",
       "size": 312,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBhv.c",
+      "status": "MATCH"
+    },
+    "0x0030b150": {
+      "address": "0x0030b150",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "MEC_fn_vOrient",
+      "size": 496,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/MEC/MECBhv.c",
       "status": "MATCH"
     },
@@ -88254,11 +89481,27 @@
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectdraw.c",
       "status": "MATCH"
     },
+    "0x0031a3e0": {
+      "address": "0x0031a3e0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-o3",
+      "name": "SCT_fn_lSendSectorToViewportStatic",
+      "size": 712,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectdraw.c",
+      "status": "MATCH"
+    },
     "0x0031a6b0": {
       "address": "0x0031a6b0",
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "SECT_fn_vSendFogToViewport",
       "size": 316,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectdraw.c",
+      "status": "MATCH"
+    },
+    "0x0031a7f0": {
+      "address": "0x0031a7f0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SECT_fn_vSendDynamicLightsFromWhereIAmToViewport",
+      "size": 248,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectdraw.c",
       "status": "MATCH"
     },
@@ -88299,6 +89542,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "fn_iZCompare",
       "size": 28,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
+      "status": "MATCH"
+    },
+    "0x0031bef0": {
+      "address": "0x0031bef0",
+      "compiler_profile": "mwccps2-3.0.1-020123-o3",
+      "name": "SCT_fn_vFindAllMirrorsInVisibleSector",
+      "size": 396,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SCT/Sectmir.c",
       "status": "MATCH"
     },
@@ -88659,6 +89910,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "HIE_bDetectIntersectSegmentWithSuperObject",
       "size": 64,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HiePick.c",
+      "status": "MATCH"
+    },
+    "0x00320b50": {
+      "address": "0x00320b50",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "HIE_bIntersectSegmentWithFirstSuperObject",
+      "size": 832,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/TEMPGRP/SPO/HiePick.c",
       "status": "MATCH"
     },
@@ -89587,6 +90846,14 @@
       "compiler_profile": "mwccps2-3.0.1-020123-o3",
       "name": "PS2MC_DisplayCurrentMessage",
       "size": 12,
+      "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MC_Messages.cpp",
+      "status": "MATCH"
+    },
+    "0x00331ea0": {
+      "address": "0x00331ea0",
+      "compiler_profile": "mwccps2-3.0.3-pad7b-unfold-o3",
+      "name": "PS2MC_SetDisplayMessage",
+      "size": 120,
       "source": "src/Rayman3/Disk_01/R3PS2_SCEA_engine_sources/sourcesV39/ps2/tempgrp/PS2MC/PS2MC_Messages.cpp",
       "status": "MATCH"
     },

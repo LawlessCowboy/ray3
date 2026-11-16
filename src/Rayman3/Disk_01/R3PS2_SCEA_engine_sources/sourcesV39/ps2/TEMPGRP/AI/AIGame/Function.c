@@ -188,6 +188,7 @@ typedef struct anon_7 anon_7;
 typedef union RGBAStruct_ RGBAStruct_;
 
 tdstNodeInterpret_* fn_p_stEvalTree(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
+tdstNodeInterpret_* fn_p_stSkipThisArgument(tdstNodeInterpret_* p_stTree);
 HIE_tdstSuperObject_* GAM_fn_hGetCurrentSector(HIE_tdstSuperObject_* _hCharacter);
 
 typedef enum tdeFieldId_ {
@@ -3563,6 +3564,9 @@ float IPT_fn_xGetAnalogForceForPadNumber(unsigned char ucPadNumber);
 float IPT_fn_xGetTrueAnalogForceForPadNumber(unsigned char ucPadNumber);
 float IPT_fn_xGetRotationAngleForPadNumber(unsigned char ucPadNumber);
 int IPT_fn_xGetSectorForPadNumber(unsigned char ucPadNumber);
+signed char IPT_fn_cPreCreateConstantFFBEffect(unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);
+signed char IPT_fn_cCreateAndLaunchConstantFFBEffect(unsigned int ulCurrentTime, unsigned char ucPadNumber, float xFadeInStartValue, float xFadeInTime, float xConstantValue, float xConstantTime, float xFadeOutStopValue, float xFadeOutTime);
+signed char IPT_fn_cStopFFBEffectWithFade(unsigned int ulCurrentTime, unsigned char ucPadNumber, signed char cEffectNumber, float xFadeOutStopValue, float xFadeOutTime);
 unsigned char SAV2_fn_ucGetNumberOfExistingSave(void);
 void SAV2_fn_xGetAValueAtIndex(char* p_szElementName, unsigned int ulElementNumber, void* p_stParam);
 void SAV2_fn_xGetASingleValue(char* p_szElementName, void* p_stParam);
@@ -3574,6 +3578,11 @@ HIE_tdstSuperObject_* fn_h_StandardGameGetSuperObject(tdstStandardGame_* h_StdGa
 void WP_fnv_WayPoint_ComputeLocation(WP_tdstWayPoint_* _hWayPoint, MTH3D_tdstVector_* _p_stVertex);
 unsigned int fn_ulR3GetEnvScoreWithRevisit(unsigned int ulIndE);
 unsigned int fn_ulR3GetEnvNbCage(unsigned int ulIndE);
+int fn_lGetSubMapNumber(void);
+unsigned int fn_ulGetNumberOfAlwaysBelongingToMe(HIE_tdstSuperObject_* _hGenerator);
+HIE_tdstSuperObject_* fn_p_stAllocateAlways(int otObjectModelType, HIE_tdstSuperObject_* p_stFatherSuperObject, HIE_tdstSuperObject_* _hGenerator, unsigned short uwAction, MAT_tdstTransformation_* p_stMatrix);
+unsigned char fn_ucIsAnAlwaysModel(tdstEngineObject_* p_stEngineObject);
+void MAT_fn_vSetIdentity(MAT_tdstTransformation_* _hMatrix);
 
 char* strstr(const char* _pszString, const char* _pszSubString);
 unsigned int strlen(const char* _pszString);
@@ -3650,6 +3659,14 @@ tdstNodeInterpret_* fn_p_st_SPO_GetDrawFlag(HIE_tdstSuperObject_* p_SuperObjPers
 tdstNodeInterpret_* fn_p_stColorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 int fn_lAddColor(int color1, int color2);
 tdstNodeInterpret_* fn_p_stEvalRedOrGreenOrBlueOrAlpha(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, int* lValue);
+void GLI_xGetMaterialColor(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialSpecularCoef(GLI_tdstMaterial_* hMaterial, int* p_lSpecularExponent, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialDiffuseCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialAmbientCoef(GLI_tdstMaterial_* hMaterial, GEO_tdstColor_* p_stColor);
+void GLI_xGetMaterialTextureScrollingCoef(GLI_tdstMaterial_* hMaterial, int lUnused, int* p_bSwitch, float* p_fUSpeed, float* p_fVSpeed);
+int GLI_lGetCurrentAnimatedTextureNumber(GLI_tdstMaterial_* hMaterial);
+int GLI_lGetMaterialNumberOfAnimatedTexture(GLI_tdstMaterial_* hMaterial);
+void fn_vConvertColorToParam(GEO_tdstColor_* p_stColor, tdstGetSetParam_* p_stParam);
 tdstNodeInterpret_* fn_p_stVisualMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_stGameMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
 tdstNodeInterpret_* fn_p_stMiscFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue);
@@ -3683,6 +3700,31 @@ tdstNodeInterpret_* fn_p_stOperatorGetPerso(HIE_tdstSuperObject_* p_SuperObjPers
 short fn_wBbDeclareVariable2Monitor(void* p_pvVar, int lType, char* szName, int lFlag);
 
 inline int MTH_M_xRealToLong(float _xValue);
+float fn_xRealModuloAround(float xFrom, float xModulus, float xValue);
+float fn_xComputeBestEcartDirectionAngle(float xAngleFollowed, float xAngleToFollow);
+float fn_xComputeDirectionAngle(MTH3D_tdstVector_* p_stVector);
+float fn_xExtendedDistanceBetweenPerso(HIE_tdstSuperObject_* param0, HIE_tdstSuperObject_* p_SuperObjPerso2, unsigned char ucFlags);
+float fn_xDistanceBetweenPersoAndWP(HIE_tdstSuperObject_* p_SuperObjPerso, WP_tdstWayPoint_* hWP);
+
+inline void MAT_M_vGetTranslation(MAT_tdstTransformation_* _hMatrix, MTH3D_tdstVector_* _p_stTrans)
+{
+    ((int*)_p_stTrans)[0] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xX; ((int*)_p_stTrans)[1] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xY; ((int*)_p_stTrans)[2] = *(int*)&((MTH3D_tdstVector_*)&_hMatrix->stTransformMatrix.stCol_3)->xZ;
+}
+
+inline void MTH3D_M_vCopyVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA)
+{
+    ((int*)VectDest)[0] = ((int*)VectA)[0]; ((int*)VectDest)[1] = ((int*)VectA)[1]; ((int*)VectDest)[2] = ((int*)VectA)[2];
+}
+
+inline void MTH3D_M_vSubVector(MTH3D_tdstVector_* VectDest, MTH3D_tdstVector_* VectA, MTH3D_tdstVector_* VectB)
+{
+    VectDest->xX = VectA->xX - VectB->xX; VectDest->xY = VectA->xY - VectB->xY; VectDest->xZ = VectA->xZ - VectB->xZ;
+}
+
+inline void MTH3D_M_vSetVectorElements(MTH3D_tdstVector_* VectDest, float x, float y, float z)
+{
+    VectDest->xX = x; VectDest->xY = y; VectDest->xZ = z;
+}
 
 tdstNodeMainCharacter_* MC_fn_hGetFirstMainCharNode(void);
 tdstNodeMainCharacter_* MC_fn_hGetNextMainCharNode(tdstNodeMainCharacter_* hMCN);
@@ -3723,6 +3765,13 @@ unsigned short GMT_fn_hGetCollideMaterialIdentifier(GMT_tdstCollideMaterial_* hC
 DNM_stReport* fn_pstGetDNMReport(HIE_tdstSuperObject_* p_SuperObjPerso);
 
 HIE_tdstSuperObject_* fn_p_stGetPersoInList(tdstList_* p_List, unsigned char ucPosition);
+
+unsigned char fn_ucGetHitPoints(tdstEngineObject_* _p_stObject);
+void fn_vAddHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+unsigned char fn_ucSubHitPoints(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+unsigned char fn_ucGetHitPointsMax(tdstEngineObject_* _p_stObject);
+void fn_vAddHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
+unsigned char fn_ucSubHitPointsMax(tdstEngineObject_* _p_stObject, unsigned char _ucValue);
 
 float WP_fnx_WayPoint_GetRadius(WP_tdstWayPoint_* hWayPoint);
 
@@ -3780,6 +3829,33 @@ tdstNodeInterpret_* fn_p_stR3GetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tds
     return p_stTree;
 }
 
+/* MatSp.h inline MAT_fn_vApplyOnVertex: the VU0 macro-mode instructions
+ * have no C form. */
+static inline void MAT_fn_vApplyOnVertexInlined(MTH3D_tdstVector_* VectDest, MAT_tdstTransformation_* _hTransform, MTH3D_tdstVector_* VectA)
+{
+    MTH4D_tdstVector_ Vtmp;
+    MTH4D_tdstMatrix_* p_stMatrix;
+    MTH4D_tdstVector_* p_stVtmp;
+
+    p_stMatrix = &_hTransform->stTransformMatrix; p_stVtmp = &Vtmp;
+    *(unsigned int*)&Vtmp.xX = ((unsigned int*)VectA)[0]; *(unsigned int*)&Vtmp.xY = ((unsigned int*)VectA)[1]; *(unsigned int*)&Vtmp.xZ = ((unsigned int*)VectA)[2];
+    asm {
+        lqc2 vf1, 0x0(p_stVtmp)
+        lqc2 vf2, 0x0(p_stMatrix)
+        lqc2 vf3, 0x10(p_stMatrix)
+        lqc2 vf4, 0x20(p_stMatrix)
+        lqc2 vf5, 0x30(p_stMatrix)
+        vmulax.xyzw ACC, vf2, vf1x
+        vmadday.xyzw ACC, vf3, vf1y
+        vmaddaz.xyzw ACC, vf4, vf1z
+        vmaddw.xyzw vf6, vf5, vf0w
+        nop
+        nop
+        sqc2 vf6, 0x0(p_stVtmp)
+    }
+    *(unsigned int*)&VectDest->xX = *(unsigned int*)&Vtmp.xX; *(unsigned int*)&VectDest->xY = *(unsigned int*)&Vtmp.xY; *(unsigned int*)&VectDest->xZ = *(unsigned int*)&Vtmp.xZ;
+}
+
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 134–182 */
 /* addr: 0x00216d40  size: 476 bytes */
 /* Target MWCC statement boundaries (code offset -> source line):
@@ -3811,14 +3887,45 @@ tdstNodeInterpret_* fn_p_stR3GetValue(HIE_tdstSuperObject_* p_SuperObjPerso, tds
  */
 tdstNodeInterpret_* fn_p_stDistanceToPersoCenter(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    /*type_0x83*/ int hNewSuperObjPerso;
-    HIE_tdstSuperObject_* p_SuperObjTarget;
-    MTH3D_tdstVector_* param0;
-    MTH3D_tdstVector_ stCenter2;
-    MTH3D_tdstVector_* p_stCenter1;
-    MTH3D_tdstVector_ stCenter1;
+    COL_tdstBoundingSphere_* hBoundingSphere1;
     COL_tdstBoundingSphere_* hBoundingSphere2;
-    /* TODO: decompile from asm/... */
+    MTH3D_tdstVector_ stCenter1;
+    MTH3D_tdstVector_* p_stCenter1;
+    MTH3D_tdstVector_ stCenter2;
+    MTH3D_tdstVector_* param0;
+    HIE_tdstSuperObject_* p_SuperObjTarget;
+    /*type_0x83*/ int hNewSuperObjPerso;
+    float xX, xY, xZ;
+
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator((p_stTree - 1)->uDummy.uId.eFuncId), p_SuperObjPerso, (HIE_tdstSuperObject_**)&hNewSuperObjPerso);
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_SuperObjTarget = fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame);
+    {
+        hBoundingSphere1 = (COL_tdstBoundingSphere_*)p_SuperObjTarget->hCollideBoundingVolume;
+        hBoundingSphere2 = (COL_tdstBoundingSphere_*)((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hCollideBoundingVolume;
+        if (hBoundingSphere1)
+        {
+            p_stCenter1 = &stCenter1;
+            MAT_fn_vApplyOnVertexInlined(p_stCenter1, p_SuperObjTarget->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere1->stCenterPoint);
+        }
+        else
+        {
+            p_stCenter1 = (MTH3D_tdstVector_*)&p_SuperObjTarget->hGlobalMatrix->stTransformMatrix.stCol_3;
+        }
+        if (hBoundingSphere2)
+        {
+            param0 = &stCenter2;
+            MAT_fn_vApplyOnVertexInlined(param0, ((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, (MTH3D_tdstVector_*)&hBoundingSphere2->stCenterPoint);
+        }
+        else
+        {
+            param0 = (MTH3D_tdstVector_*)&((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix->stTransformMatrix.stCol_3;
+        }
+        xX = p_stCenter1->xX - param0->xX; xY = p_stCenter1->xY - param0->xY; xZ = p_stCenter1->xZ - param0->xZ;
+        asm { mula.s xX, xX } asm { madda.s xY, xY } asm { madd.s xZ, xZ, xZ } p_stValue->uDummy.uParam.xValue = MTH_xSqrt(xZ);
+        p_stValue->eType = E_vt_Float;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 191–226 */
@@ -4454,11 +4561,78 @@ tdstNodeInterpret_* fn_p_stDistanceFunction(HIE_tdstSuperObject_* p_SuperObjPers
     MTH3D_tdstVector_ stVector2;
     MTH3D_tdstVector_ stVector1;
     MTH3D_tdstVector_ stVector;
+    MTH3D_tdstVector_* p_stVector;
     /*type_0x83*/ int hNewSuperObjPerso;
     float xReal;
     unsigned char ucFlags;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    /* Permuter-found (verified MATCH): the p_stVector alias and this unused
+     * local together make MWCC set up the fn_xRealModuloAround float
+     * arguments f13-before-f12 as retail does. */
+    int lUnused;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    fn_vGetUltraOperatorPerso(fn_ucGetFunctionUltraOperator(eFuncId), p_SuperObjPerso, (HIE_tdstSuperObject_**)&hNewSuperObjPerso);
+
+    switch (eFuncId)
+    {
+    case eFunc_GetPersoAbsolutePosition:
+        MAT_M_vGetTranslation(((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, &stVector2);
+        MTH3D_M_vCopyVector(&p_stValue->uDummy.uParam.stVectorValue, &stVector2);
+        p_stValue->eType = E_vt_Vector;
+        return p_stTree;
+
+    case eFunc_GetAngleAroundZToPerso:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_SuperObjTarget = fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame);
+
+        MTH3D_M_vSetVectorElements(&stVector1, 0.0f, -1.0f, 0.0f);
+        MAT_fn_vApplyOnVector(&stVector1, ((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, &stVector1);
+        p_stVector = &stVector1;
+        xAngleStart = fn_xComputeDirectionAngle(&stVector1);
+        xAngleStart = fn_xRealModuloAround(0, 6.2831855f, xAngleStart);
+
+        MAT_M_vGetTranslation(((HIE_tdstSuperObject_*)hNewSuperObjPerso)->hGlobalMatrix, p_stVector);
+        MAT_M_vGetTranslation(p_SuperObjTarget->hGlobalMatrix, &stVector);
+        MTH3D_M_vSubVector(&stVector, &stVector, p_stVector);
+        xAngleEnd = fn_xComputeDirectionAngle(&stVector);
+        xAngleEnd = fn_xRealModuloAround(0, 6.2831855f, xAngleEnd);
+        xDeltaAngle = fn_xComputeBestEcartDirectionAngle(xAngleStart, xAngleEnd);
+
+        p_stValue->uDummy.uParam.xValue = xDeltaAngle * 57.29578f;
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+
+    case eFunc_DistanceToWP:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stValue->uDummy.uParam.xValue = fn_xDistanceBetweenPersoAndWP((HIE_tdstSuperObject_*)hNewSuperObjPerso, p_stValue->uDummy.uParam.m_hWayPoint);
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+
+    default:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_SuperObjTarget = fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame);
+        ucFlags = 0;
+        switch (eFuncId)
+        {
+        case eFunc_DistanceXToPerso: ucFlags = 1; break;
+        case eFunc_DistanceYToPerso: ucFlags = 2; break;
+        case eFunc_DistanceZToPerso: ucFlags = 4; break;
+        case eFunc_DistanceXYToPerso: ucFlags = 3; break;
+        case eFunc_DistanceXZToPerso: ucFlags = 5; break;
+        case eFunc_DistanceYZToPerso: ucFlags = 6; break;
+        case eFunc_DistanceXToPersoCenter: ucFlags = 0x81; break;
+        case eFunc_DistanceYToPersoCenter: ucFlags = 0x82; break;
+        case eFunc_DistanceZToPersoCenter: ucFlags = 0x84; break;
+        case eFunc_DistanceXYToPersoCenter: ucFlags = 0x83; break;
+        case eFunc_DistanceXZToPersoCenter: ucFlags = 0x85; break;
+        case eFunc_DistanceYZToPersoCenter: ucFlags = 0x86; break;
+        }
+        xReal = fn_xExtendedDistanceBetweenPerso((HIE_tdstSuperObject_*)hNewSuperObjPerso, p_SuperObjTarget, ucFlags);
+        p_stValue->uDummy.uParam.xValue = xReal;
+        p_stValue->eType = E_vt_Float;
+        return p_stTree;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 878–949 */
@@ -4502,7 +4676,57 @@ tdstNodeInterpret_* fn_p_stMathTernarReal(HIE_tdstSuperObject_* p_SuperObjPerso,
     unsigned char bTestResult;
     float xRet;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    if (eFuncId == eFunc_TernOp)
+    {
+        bTestResult = p_stValue->uDummy.uParam.ucValue;
+    }
+    else
+    {
+        xRet = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        {
+            float xValue = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+            switch (eFuncId)
+            {
+            case eFunc_TernInf:
+                bTestResult = (xRet < xValue);
+                break;
+            case eFunc_TernSup:
+                bTestResult = (xRet > xValue);
+                break;
+            case eFunc_TernInfEq:
+                bTestResult = (xRet <= xValue);
+                break;
+            case eFunc_TernSupEq:
+                bTestResult = (xRet >= xValue);
+                break;
+            case eFunc_TernEq:
+                bTestResult = (xRet == xValue);
+                break;
+            default:
+                bTestResult = 0;
+                break;
+            }
+        }
+    }
+    if (bTestResult)
+    {
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        xRet = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+        p_stTree = fn_p_stSkipThisArgument(p_stTree);
+    }
+    else
+    {
+        p_stTree = fn_p_stSkipThisArgument(p_stTree);
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        xRet = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+    }
+    p_stValue->uDummy.uParam.xValue = xRet;
+    p_stValue->eType = E_vt_Float;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 956–984 */
@@ -4868,7 +5092,49 @@ tdstNodeInterpret_* fn_p_stRealFunction(HIE_tdstSuperObject_* p_SuperObjPerso, t
     float xTmp;
     float xResult;
     float xValue1;
-    /* TODO: decompile from asm/... */
+    float xValue2;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    xResult = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    xValue1 = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    xValue2 = (p_stValue->eType == E_vt_Float) ? p_stValue->uDummy.uParam.xValue : (float)p_stValue->uDummy.uParam.lValue;
+
+    switch (MTH_M_xRealToLong(0.5f + (float)g_stEngineStructure.stEngineTimer.ulUsefulDeltaTime / (1000.0f * g_stEngineStructure.stEngineTimer.xFrameLength)))
+    {
+    case 1:
+        break;
+    case 2:
+        xValue1 = xValue1 * xValue1;
+        break;
+    case 3:
+        xTmp = xValue1 * xValue1;
+        xValue1 = xValue1 * xTmp;
+        break;
+    case 4:
+        xTmp = xValue1 * xValue1;
+        xValue1 = xTmp * xTmp;
+        break;
+    case 5:
+        xTmp = xValue1 * xValue1;
+        xTmp = xTmp * xTmp;
+        xValue1 = xValue1 * xTmp;
+        break;
+    default:
+        xTmp = xValue1 * xValue1 * xValue1;
+        xValue1 = xTmp * xTmp;
+        break;
+    }
+
+    xResult = xResult - xValue2;
+    xResult = xResult * xValue1;
+    xResult = xResult + xValue2;
+    p_stValue->uDummy.uParam.xValue = xResult;
+    p_stValue->eType = E_vt_Float;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1460–1514 */
@@ -4916,7 +5182,51 @@ tdstNodeInterpret_* fn_p_stHitPointsAndHitPointsMaxFunction(HIE_tdstSuperObject_
     int lValue;
     tdstEngineObject_* p_stObject;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stObject = p_stValue->uDummy.uParam.p_stEngObjValue;
+
+    switch (eFuncId)
+    {
+    case eFunc_GetHitPoints:
+        lValue = fn_ucGetHitPoints(p_stObject);
+        break;
+
+    case eFunc_AddAndGetHitPoints:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        fn_vAddHitPoints(p_stObject, (unsigned char)((p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue));
+        lValue = fn_ucGetHitPoints(p_stObject);
+        break;
+
+    case eFunc_SubAndGetHitPoints:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = fn_ucSubHitPoints(p_stObject, (unsigned char)((p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue));
+        break;
+
+    case eFunc_GetHitPointsMax:
+        lValue = fn_ucGetHitPointsMax(p_stObject);
+        break;
+
+    case eFunc_AddAndGetHitPointsMax:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        fn_vAddHitPointsMax(p_stObject, (unsigned char)((p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue));
+        lValue = fn_ucGetHitPointsMax(p_stObject);
+        break;
+
+    case eFunc_SubAndGetHitPointsMax:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = fn_ucSubHitPointsMax(p_stObject, (unsigned char)((p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue));
+        break;
+
+    default:
+        lValue = 0;
+        break;
+    }
+
+    p_stValue->uDummy.uParam.lValue = lValue;
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1521–1551 */
@@ -5128,6 +5438,11 @@ tdstNodeInterpret_* fn_p_stInputFunction(HIE_tdstSuperObject_* p_SuperObjPerso, 
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline void MAT_M_vSetTranslation(MTH4D_tdstVector_* p_stDest, MTH3D_tdstVector_* p_stSrc)
+{
+    *(int*)&p_stDest->xX = *(int*)&p_stSrc->xX; *(int*)&p_stDest->xY = *(int*)&p_stSrc->xY; *(int*)&p_stDest->xZ = *(int*)&p_stSrc->xZ;
+}
+
 tdstNodeInterpret_* fn_p_stMiscFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     MAT_tdstTransformation_ stMatrix;
@@ -5135,7 +5450,48 @@ tdstNodeInterpret_* fn_p_stMiscFunction(HIE_tdstSuperObject_* p_SuperObjPerso, t
     tdstEngineObject_* p_stEngineObject;
     int lNbAlways;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    switch (eFuncId)
+    {
+    case eFunc_GetSubMapId:
+        p_stValue->uDummy.uParam.lValue = (fn_lGetSubMapNumber() & 0xFFFF0000) >> 16; p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    case eFunc_GetGlobalCounter:
+        p_stValue->uDummy.uParam.lValue = g_stEngineStructure.ucLevelGlobalCounter;
+        p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    case eFunc_CountGeneratedObjects:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lNbAlways = fn_ulGetNumberOfAlwaysBelongingToMe(fn_h_StandardGameGetSuperObject(p_stValue->uDummy.uParam.p_stEngObjValue->h_StandardGame));
+        p_stValue->uDummy.uParam.lValue = lNbAlways; p_stValue->eType = E_vt_Integer;
+        return p_stTree;
+    case eFunc_CastIntegerToChannel:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stValue->eType = E_vt_Module;
+        return p_stTree;
+    case eFunc_GenerateObject:
+        p_SuperObjPersoGenerated = NULL;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stEngineObject = p_stValue->uDummy.uParam.p_stEngObjValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        if (p_stEngineObject)
+        {
+            if (fn_ucIsAnAlwaysModel(p_stEngineObject))
+            {
+                int otModel = p_stEngineObject->h_StandardGame->otObjectModelType;
+                MAT_fn_vSetIdentity(&stMatrix);
+                if (stMatrix.eType == MAT_eTransform_Identity) stMatrix.eType = MAT_eTransform_Translation; MAT_M_vSetTranslation(&stMatrix.stTransformMatrix.stCol_3, &p_stValue->uDummy.uParam.stVectorValue); stMatrix.stTransformMatrix.stCol_3.xW = 1.0f;
+                p_SuperObjPersoGenerated = fn_p_stAllocateAlways(otModel, gp_stDynamicWorld, p_SuperObjPerso, 0, &stMatrix);
+            }
+        }
+        p_stValue->uDummy.uParam.p_stEngObjValue = (p_SuperObjPersoGenerated == NULL) ? NULL : ((p_SuperObjPersoGenerated->ulTypeOfLinkedObject != 2) ? NULL : p_SuperObjPersoGenerated->hLinkedObject.p_stCharacter);
+        p_stValue->eType = E_vt_Perso;
+        return p_stTree;
+    default:
+        break;
+    }
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1808–1860 */
@@ -5267,13 +5623,62 @@ tdstNodeInterpret_* fn_p_stGameMaterialFunction(HIE_tdstSuperObject_* p_SuperObj
  */
 tdstNodeInterpret_* fn_p_stVisualMaterialFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    float fV;
-    float fU;
-    int lValue;
-    GEO_tdstColor_ stColor;
-    GLI_tdstMaterial_* hVisualMaterial;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    GLI_tdstMaterial_* hVisualMaterial;
+    GEO_tdstColor_ stColor;
+    int lValue;
+    float fU;
+    float fV;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+    hVisualMaterial = p_stValue->uDummy.uParam.hVisualMaterial;
+    if (hVisualMaterial)
+    {
+        switch (eFuncId)
+        {
+        case eFunc_GetVMTColor:
+            GLI_xGetMaterialColor(hVisualMaterial, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTSpecularCoef:
+            GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTSpecularExponent:
+            GLI_xGetMaterialSpecularCoef(hVisualMaterial, &lValue, &stColor);
+            p_stValue->uDummy.uParam.lValue = lValue; p_stValue->eType = E_vt_Integer;
+            return p_stTree;
+        case eFunc_GetVMTDiffuseCoef:
+            GLI_xGetMaterialDiffuseCoef(hVisualMaterial, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTAmbientCoef:
+            GLI_xGetMaterialAmbientCoef(hVisualMaterial, &stColor);
+            fn_vConvertColorToParam(&stColor, p_stValue);
+            return p_stTree;
+        case eFunc_GetVMTTextureScrollingCoefU:
+            GLI_xGetMaterialTextureScrollingCoef(hVisualMaterial, 0, &lValue, &fU, &fV);
+            p_stValue->uDummy.uParam.xValue = fU; p_stValue->eType = E_vt_Float;
+            return p_stTree;
+        case eFunc_GetVMTTextureScrollingCoefV:
+            GLI_xGetMaterialTextureScrollingCoef(hVisualMaterial, 0, &lValue, &fU, &fV);
+            p_stValue->uDummy.uParam.xValue = fV; p_stValue->eType = E_vt_Float;
+            return p_stTree;
+        case eFunc_GetVMTFrame:
+            p_stValue->uDummy.uParam.lValue = GLI_lGetCurrentAnimatedTextureNumber(hVisualMaterial);
+            p_stValue->eType = E_vt_Integer;
+            return p_stTree;
+        case eFunc_GetVMTNumberOfFrames:
+            p_stValue->uDummy.uParam.lValue = GLI_lGetMaterialNumberOfAnimatedTexture(hVisualMaterial);
+            p_stValue->eType = E_vt_Integer;
+            return p_stTree;
+        }
+    }
+
+    p_stValue->uDummy.uParam.lValue = 0; p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 1991–2005 */
@@ -5428,14 +5833,106 @@ int fn_lAddColor(int color1, int color2)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+inline tdstNodeInterpret_* fn_p_stEvalRGB(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    int lBlue;
+    int lGreen;
+    int lRed;
+
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Alpha = 0;
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lRed);
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Red = (char)lRed;
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lGreen);
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Green = (char)lGreen;
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lBlue);
+    ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Blue = (char)lBlue;
+    p_stValue->eType = E_vt_Color;
+    return p_stTree;
+}
+
+inline tdstNodeInterpret_* fn_p_stEvalRGBA(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
+{
+    int lAlpha;
+
+    p_stTree = fn_p_stEvalRGB(p_SuperObjPerso, p_stTree, p_stValue);
+    p_stTree = fn_p_stEvalRedOrGreenOrBlueOrAlpha(p_SuperObjPerso, p_stTree, &lAlpha);
+    *((char*)&p_stValue->uDummy.uParam.ColorValue + 3) = (char)lAlpha;
+    return p_stTree;
+}
+
 tdstNodeInterpret_* fn_p_stColorFunction(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
     RGBAStruct_ rgba;
     int color1;
     int lValue;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    lValue = 0;
+    rgba.Color = 0;
+
+    switch (eFuncId)
+    {
+    case eFunc_ColorRedGreenBlueAlpha:
+        p_stValue->uDummy.uParam.ColorValue = 0;
+        p_stTree = fn_p_stEvalRGBA(p_SuperObjPerso, p_stTree, p_stValue);
+        return p_stTree;
+    case eFunc_ColorRedGreenBlue:
+        p_stValue->uDummy.uParam.ColorValue = 0;
+        p_stTree = fn_p_stEvalRGB(p_SuperObjPerso, p_stTree, p_stValue);
+        return p_stTree;
+    case eFunc_AddColor:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, p_stValue->uDummy.uParam.ColorValue); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddRed:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Red = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddGreen:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Green = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddBlue:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Blue = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_AddAlpha:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue); color1 = p_stValue->uDummy.uParam.ColorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        rgba.Component.Alpha = (p_stValue->eType == E_vt_Float) ? MTH_M_xRealToLong(p_stValue->uDummy.uParam.xValue) : p_stValue->uDummy.uParam.lValue;
+        p_stValue->uDummy.uParam.ColorValue = fn_lAddColor(color1, rgba.Color); p_stValue->eType = E_vt_Color;
+        return p_stTree;
+    case eFunc_ColorRed:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Red;
+        break;
+    case eFunc_ColorGreen:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Green;
+        break;
+    case eFunc_ColorBlue:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Blue;
+        break;
+    case eFunc_ColorAlpha:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, p_stValue);
+        lValue = ((RGBAStruct_*)&p_stValue->uDummy.uParam.ColorValue)->Component.Alpha;
+        break;
+    }
+
+    if (lValue < 0) lValue = 0; else if (lValue > 100) lValue = 100;
+    p_stValue->uDummy.uParam.lValue = lValue; p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
+
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2225–2244 */
 /* addr: 0x00213070  size: 140 bytes */
@@ -6029,15 +6526,57 @@ tdstNodeInterpret_* fn_p_stGetTransitionSectorIDFunction(HIE_tdstSuperObject_* p
  */
 tdstNodeInterpret_* fn_p_stFFBFunctions(HIE_tdstSuperObject_* p_SuperObjPerso, tdstNodeInterpret_* p_stTree, tdstGetSetParam_* p_stValue)
 {
-    unsigned int ulCurrentTime;
-    MTH3D_tdstVector_ stFadeOut;
-    MTH3D_tdstVector_ stConstant;
-    MTH3D_tdstVector_ stFadeIn;
-    unsigned char ucPadNumber;
-    tdstGetSetParam_ stParam;
-    signed char cEffectNumber;
     tdeFuncId_ eFuncId;
-    /* TODO: decompile from asm/... */
+    signed char cEffectNumber;
+    tdstGetSetParam_ stParam;
+    unsigned char ucPadNumber;
+    MTH3D_tdstVector_ stFadeIn;
+    MTH3D_tdstVector_ stConstant;
+    MTH3D_tdstVector_ stFadeOut;
+    unsigned int ulCurrentTime;
+
+    eFuncId = (p_stTree - 1)->uDummy.uId.eFuncId;
+    ulCurrentTime = g_stEngineStructure.stEngineTimer.ulCurrentTimerCount;
+    cEffectNumber = -1;
+    p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+    ucPadNumber = stParam.uDummy.uParam.ucValue;
+    if (ucPadNumber > 15)
+        ucPadNumber = 0;
+
+    switch (eFuncId)
+    {
+    case eFunc_FFBPreCreateConstantEffect:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stFadeIn = stParam.uDummy.uParam.stVectorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stConstant = stParam.uDummy.uParam.stVectorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stFadeOut = stParam.uDummy.uParam.stVectorValue;
+        cEffectNumber = IPT_fn_cPreCreateConstantFFBEffect(ucPadNumber, stFadeIn.xX, stFadeIn.xY, stConstant.xX, stConstant.xY, stFadeOut.xX, stFadeOut.xY);
+        break;
+
+    case eFunc_FFBCreateAndLaunchConstantEffect:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stFadeIn = stParam.uDummy.uParam.stVectorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stConstant = stParam.uDummy.uParam.stVectorValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stFadeOut = stParam.uDummy.uParam.stVectorValue;
+        cEffectNumber = IPT_fn_cCreateAndLaunchConstantFFBEffect(ulCurrentTime, ucPadNumber, stFadeIn.xX, stFadeIn.xY, stConstant.xX, stConstant.xY, stFadeOut.xX, stFadeOut.xY);
+        break;
+
+    case eFunc_FFBStopEffectWithFade:
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        cEffectNumber = stParam.uDummy.uParam.cValue;
+        p_stTree = fn_p_stEvalTree(p_SuperObjPerso, p_stTree, &stParam);
+        stFadeOut = stParam.uDummy.uParam.stVectorValue;
+        cEffectNumber = IPT_fn_cStopFFBEffectWithFade(ulCurrentTime, ucPadNumber, cEffectNumber, stFadeOut.xX, stFadeOut.xY);
+        break;
+    }
+
+    p_stValue->uDummy.uParam.lValue = cEffectNumber;
+    p_stValue->eType = E_vt_Integer;
+    return p_stTree;
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\AI\AIGame\Function.c lines 2654–2675 */

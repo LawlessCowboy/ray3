@@ -1753,6 +1753,10 @@ void IPO_fn_vComputeRadiosity(IPO_tdstInstanciatedPhysicalObject_* _hIPO);
 ISI_tdstColor_* ISI_fn_dGetVertexRLILOD(void* _hISI, short _xNumISILOD);
 int ISI_fn_dGetVertexRLILODLightMapU(void* _hISI, short _xNumISILOD);
 void GLI_g_CheckForFire(GEO_tdstGeometricObject_* pObj);
+void FireFx_vAddObject(MTH3D_tdstVector_* pPosition, GLI_tdstMaterial_* hVisualMaterial, GEO_tdstGeometricObject_* pObj);
+char* strupr(char*);
+char* strstr(const char*, const char*);
+#define M_MIN(a, b) ((a) < (b) ? (a) : (b))
 void GLI_vDMABufferParseTreeForThisSector(HIE_tdstSuperObject_* pSO);
 void GLI_vDMABufferParseTree(HIE_tdstSuperObject_* pSO);
 void GLI_vUpdateFogFromSector(SECT_tdstSector_* hSectorObject);
@@ -2973,7 +2977,42 @@ void GLI_g_CheckForFire(GEO_tdstGeometricObject_* pObj)
     MTH3D_tdstVector_ Position;
     GLI_tdstTexture_* p_stTexture;
     GEO_tdstElementIndexedTriangles_* p_stEIT;
-    /* TODO: decompile from asm/... */
+
+    if (pObj->xNbElements != 1 || pObj->xNbPoints != 4)
+        return;
+
+    p_stEIT = *(GEO_tdstElementIndexedTriangles_**)pObj->d_stListOfElements;
+    if (p_stEIT == NULL)
+        return;
+    if (p_stEIT->hVisualMaterial == NULL)
+        return;
+
+    if (p_stEIT->hVisualMaterial->ulNbTextureStages == 1)
+        p_stTexture = p_stEIT->hVisualMaterial->a_stMultiMaterial[0].pst_Texture;
+    else
+        p_stTexture = p_stEIT->hVisualMaterial->p_stTexture;
+
+    if (p_stTexture == NULL)
+        return;
+
+    strupr(p_stTexture->a255_cFileName);
+    if (strstr(p_stTexture->a255_cFileName, "_FIREFX"))
+    {
+        Position.xX = (pObj->d_stListOfPoints[0].xX + pObj->d_stListOfPoints[1].xX + pObj->d_stListOfPoints[2].xX + pObj->d_stListOfPoints[3].xX) * 0.25f;
+
+        Position.xY = (pObj->d_stListOfPoints[0].xY + pObj->d_stListOfPoints[1].xY + pObj->d_stListOfPoints[2].xY + pObj->d_stListOfPoints[3].xY) * 0.25f;
+
+        Position.xZ = ((pObj->d_stListOfPoints[0].xZ + pObj->d_stListOfPoints[1].xZ + pObj->d_stListOfPoints[2].xZ + pObj->d_stListOfPoints[3].xZ) * 0.25f
+            + M_MIN(pObj->d_stListOfPoints[0].xZ, M_MIN(pObj->d_stListOfPoints[1].xZ, M_MIN(pObj->d_stListOfPoints[2].xZ, pObj->d_stListOfPoints[3].xX)))) * 0.5f;
+
+        Position.xX += ((HIE_tdstSuperObject_*)G_pSO)->hLocalMatrix->stTransformMatrix.stCol_3.xX;
+        Position.xY += ((HIE_tdstSuperObject_*)G_pSO)->hLocalMatrix->stTransformMatrix.stCol_3.xY;
+        Position.xZ += ((HIE_tdstSuperObject_*)G_pSO)->hLocalMatrix->stTransformMatrix.stCol_3.xZ;
+
+        FireFx_vAddObject(&Position, p_stEIT->hVisualMaterial, pObj);
+
+        pObj->bIsStatic = 2;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\u_drawHier.c lines 1373–1638 */

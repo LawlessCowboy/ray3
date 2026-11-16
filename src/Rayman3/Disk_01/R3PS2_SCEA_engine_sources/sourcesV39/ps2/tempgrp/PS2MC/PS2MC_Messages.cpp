@@ -1862,7 +1862,7 @@ void C_PS2MC_Message::CalculateMessagePosition(void)
  */
 void PS2MC_SetDisplayMessage(PS2MC_tdeMessageID _MessageID, unsigned int _RequiredDataSize)
 {
-    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage; PS2MC_g_MessageHandler.m_iCurrentMessage = (unsigned char)_MessageID; PS2MC_g_MessageHandler.m_pCurrentMessage = &PS2MC_g_MessageTable[g_CurrentLanguage][(unsigned char)_MessageID]; PS2MC_g_MessageHandler.m_iCurrentChoice = PS2MC_g_MessageHandler.m_pCurrentMessage->iDefaultChoice; PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _RequiredDataSize; PS2MC_g_MessageHandler.CalculateMessagePosition();
+    g_CurrentLanguage = g_stEngineStructure.ucCurrentLanguage; PS2MC_g_MessageHandler.m_pCurrentMessage = &PS2MC_g_MessageTable[g_CurrentLanguage][(unsigned char)_MessageID]; PS2MC_g_MessageHandler.m_iCurrentMessage = (unsigned char)_MessageID; PS2MC_g_MessageHandler.m_iCurrentChoice = PS2MC_g_MessageHandler.m_pCurrentMessage->iDefaultChoice; PS2MC_g_MessageHandler.m_uiSaveGameRequiredSize = _RequiredDataSize; PS2MC_g_MessageHandler.CalculateMessagePosition();
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\tempgrp\PS2MC\PS2MC_Messages.cpp lines 3731–3731 */

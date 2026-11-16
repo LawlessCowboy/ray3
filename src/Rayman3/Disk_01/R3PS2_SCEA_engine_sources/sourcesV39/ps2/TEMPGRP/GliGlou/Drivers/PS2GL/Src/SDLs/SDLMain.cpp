@@ -3993,12 +3993,11 @@ void GLIPS2_vSetNoInterpolationForSPO(HIE_tdstSuperObject_* _hLinkedSpo)
     while (hFatherSpo && hFatherSpo->ulTypeOfLinkedObject != 4)
         hFatherSpo = hFatherSpo->hFatherDyn;
 
-    if (hFatherSpo && hFatherSpo->ulTypeOfLinkedObject == 4)
-    {
-        hSectorObject = hFatherSpo->hLinkedObject.p_stSector;
-        pOpaqueSDL = (C_Sdl*)hSectorObject->glOpaqueDisplayList; pTranspSDL = (C_Sdl*)hSectorObject->glTransparentDisplayList;
-        if (_hLinkedSpo) { if (pTranspSDL) pTranspSDL->RemoveSPOInterpol(_hLinkedSpo); if (pOpaqueSDL) pOpaqueSDL->RemoveSPOInterpol(_hLinkedSpo); for (hChild = _hLinkedSpo->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) GLIPS2_vRecurseRemoveInterpolationForSPOs(hChild, pOpaqueSDL, pTranspSDL); }
-    }
+    if (!hFatherSpo) return;
+    if (hFatherSpo->ulTypeOfLinkedObject != 4) return;
+    hSectorObject = hFatherSpo->hLinkedObject.p_stSector;
+    pOpaqueSDL = (C_Sdl*)hSectorObject->glOpaqueDisplayList; pTranspSDL = (C_Sdl*)hSectorObject->glTransparentDisplayList;
+    if (_hLinkedSpo) { if (pTranspSDL) pTranspSDL->RemoveSPOInterpol(_hLinkedSpo); if (pOpaqueSDL) pOpaqueSDL->RemoveSPOInterpol(_hLinkedSpo); for (hChild = _hLinkedSpo->hFirstElementDyn; hChild; hChild = hChild->hNextBrotherDyn) GLIPS2_vRecurseRemoveInterpolationForSPOs(hChild, pOpaqueSDL, pTranspSDL); }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GliGlou\Drivers\PS2GL\Src\SDLs\SDLMain.cpp lines 1315–1315 */

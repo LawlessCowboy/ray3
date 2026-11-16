@@ -1363,7 +1363,7 @@ void fn_vDesInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* hNe
         goto PlayCurrentEvents2;
     p_stNextEvent2 = p_stNextEvent;
     p_stEvent = fn_p_GetEventsAddress(p_stAnim, uwFrameNumber, h_3dData->h_CurrentObjectsTable);
-    for (i = 0; i < p_stAnim->ucNumberOfEvents; i++, p_stEvent++)
+    for (i = 0; (short)i < p_stAnim->ucNumberOfEvents; i++, p_stEvent++)
     {
         if (p_stEvent->p_stfEventInTBL->ucFirstCall != 0xFF)
             break;
@@ -1384,7 +1384,7 @@ void fn_vDesInitAllEvents(HIE_tdstSuperObject_* p_stSuperObject, tdstState_* hNe
     goto Cleanup;
 PlayCurrentEvents2:
     p_stEvent = fn_p_GetEventsAddress(p_stAnim, 0, h_3dData->h_CurrentObjectsTable);
-    for (i = 0; i < p_stAnim->ucNumberOfEvents; i++, p_stEvent++)
+    for (i = 0; (short)i < p_stAnim->ucNumberOfEvents; i++, p_stEvent++)
     {
         if (p_stEvent->p_stfEventInTBL->ucFirstCall != 0xFF)
             fn_vPlayEvent(p_stEvent, 2, p_stSuperObject);
@@ -1392,7 +1392,7 @@ PlayCurrentEvents2:
     goto Cleanup;
 PlayCurrentEvents:
     p_stEvent = fn_p_GetEventsAddress(p_stAnim, 0, h_3dData->h_CurrentObjectsTable);
-    for (i = 0; i < p_stAnim->ucNumberOfEvents; i++, p_stEvent++)
+    for (i = 0; (short)i < p_stAnim->ucNumberOfEvents; i++, p_stEvent++)
     {
         if (p_stEvent->p_stfEventInTBL->ucFirstCall != 0xFF)
             fn_vPlayEvent(p_stEvent, 2, p_stSuperObject);
@@ -1440,12 +1440,55 @@ Cleanup:
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+signed char fn_scGetSpeedInState(tdstState_* p_stState);
 void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    tdstEvent_* p_stEvent;
-    tdstAnim3d_* p_stAnim;
+    tdstState_* h_State;
     tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
+    tdstAnim3d_* p_stAnim;
+    tdstEvent_* p_stEvent;
+
+    h_3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    h_State = h_3dData->h_CurrentState;
+    if (h_State == NULL)
+        return;
+    p_stAnim = fn_p_stGetAnimInState(h_State);
+    p_stEvent = fn_p_GetEventsAddress(p_stAnim, (unsigned short)MTH_M_xRealToLong(h_3dData->xCurrentFrame), h_3dData->h_CurrentObjectsTable);
+    if (p_stEvent != NULL)
+    {
+        if (fn_scGetSpeedInState(h_State) > 0)
+        {
+            while (p_stAnim->ucNumberOfEvents != h_3dData->ucNextEvent && p_stEvent[h_3dData->ucNextEvent].uwFrameNumber <= (unsigned short)MTH_M_xRealToLong(h_3dData->xCurrentFrame))
+            {
+                if (((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] == 0)
+                {
+                    fn_vPlayEvent(&p_stEvent[h_3dData->ucNextEvent], 0, p_stSuperObject);
+                    ((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] = p_stEvent[h_3dData->ucNextEvent].p_stfEventInTBL->ucPeriod;
+                }
+                else if (((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] != 0xFF)
+                {
+                    ((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] = (char)((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] - 1;
+                }
+                h_3dData->ucNextEvent = (char)h_3dData->ucNextEvent + 1;
+            }
+        }
+        else
+        {
+            while (h_3dData->ucNextEvent != 0xFF && p_stEvent[h_3dData->ucNextEvent].uwFrameNumber >= (unsigned short)MTH_M_xRealToLong(h_3dData->xCurrentFrame))
+            {
+                if (((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] == 0)
+                {
+                    fn_vPlayEvent(&p_stEvent[h_3dData->ucNextEvent], 1, p_stSuperObject);
+                    ((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] = p_stEvent[h_3dData->ucNextEvent].p_stfEventInTBL->ucPeriod;
+                }
+                else if (((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] != 0xFF)
+                {
+                    ((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] = (char)((unsigned char*)h_3dData->d_ucEventActivation)[h_3dData->ucNextEvent] - 1;
+                }
+                h_3dData->ucNextEvent = (char)h_3dData->ucNextEvent - 1;
+            }
+        }
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 389–453 */
@@ -1490,11 +1533,55 @@ void fn_vPlayEventsSinceLastOneNoLoop(HIE_tdstSuperObject_* p_stSuperObject)
  */
 void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
 {
-    char i;
-    tdstEvent_* p_stEvent;
-    tdstAnim3d_* p_stAnim;
+    tdstState_* h_State;
     tdst3dData_* h_3dData;
-    /* TODO: decompile from asm/... */
+    tdstAnim3d_* p_stAnim;
+    tdstEvent_* p_stEvent;
+    char i;
+
+    h_3dData = p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData;
+    h_State = h_3dData->h_CurrentState;
+    if (h_State == NULL)
+        return;
+    p_stAnim = fn_p_stGetAnimInState(h_State);
+    p_stEvent = fn_p_GetEventsAddress(p_stAnim, (unsigned short)MTH_M_xRealToLong(h_3dData->xCurrentFrame) - 1, h_3dData->h_CurrentObjectsTable);
+    if (p_stEvent == NULL)
+        return;
+    if (fn_scGetSpeedInState(h_State) > 0)
+    {
+        for (i = h_3dData->ucNextEvent; (short)i < p_stAnim->ucNumberOfEvents; i++)
+        {
+            if (((unsigned char*)h_3dData->d_ucEventActivation)[i] == 0)
+            {
+                fn_vPlayEvent(&p_stEvent[i], 0, p_stSuperObject);
+                ((unsigned char*)h_3dData->d_ucEventActivation)[i] = p_stEvent[i].p_stfEventInTBL->ucPeriod;
+            }
+            else if (((unsigned char*)h_3dData->d_ucEventActivation)[i] != 0xFF)
+            {
+                ((unsigned char*)h_3dData->d_ucEventActivation)[i]--;
+            }
+        }
+        h_3dData->ucNextEvent = 0;
+    }
+    else
+    {
+        if (h_3dData->ucNextEvent != 0xFF)
+        {
+            for (i = h_3dData->ucNextEvent; (short)i >= 0; i--)
+            {
+                if (((unsigned char*)h_3dData->d_ucEventActivation)[i] == 0)
+                {
+                    fn_vPlayEvent(&p_stEvent[i], 1, p_stSuperObject);
+                    ((unsigned char*)h_3dData->d_ucEventActivation)[i] = p_stEvent[i].p_stfEventInTBL->ucPeriod;
+                }
+                else if (((unsigned char*)h_3dData->d_ucEventActivation)[i] != 0xFF)
+                {
+                    ((unsigned char*)h_3dData->d_ucEventActivation)[i]--;
+                }
+            }
+        }
+        h_3dData->ucNextEvent = p_stAnim->ucNumberOfEvents - 1;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 468–634 */
@@ -1539,6 +1626,18 @@ void fn_vPlayLastEventsBeforeRestart(HIE_tdstSuperObject_* p_stSuperObject)
  * Place reconstructed statements at these boundaries;
  * compare a candidate object's line table as an extra checkpoint.
  */
+int SND_fn_s32SendRequestSemaphoreSound(int s32_SemaphoreId, int s32_ObjectId, int s32_ChannelId, int s32_TypeId, _SND_tduRefEvt u_RefEvt, int s32_Prio, void (*pfn_Proc)(int));
+unsigned int fn_ulStandardGameGetCustomBitsSO(HIE_tdstSuperObject_* hSupObj);
+void fn_vStandardGameSetCustomBitsSO(HIE_tdstSuperObject_* hSupObj, unsigned int ulCustomBits);
+void PLA_fn_vRefreshGlobalMatrixUnderCharacter(HIE_tdstSuperObject_* _hSprObj);
+void fn_v3dDataSetUserEventFlag(tdst3dData_* h_3dData, unsigned char _ucFlagIndex, int _bSet, MAT_tdstTransformation_* _p_stPosition);
+
+inline HIE_tdstSuperObject_* fn_hGetChannelSuperObject(tdst3dData_* h_3dData, unsigned short uwChannel)
+{
+    tdstAChannel_* a_hArrayOfChannels = h_3dData->hArrayOfChannels;
+    return a_hArrayOfChannels ? a_hArrayOfChannels[uwChannel].hSupObject : NULL;
+}
+
 void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stSuperObject)
 {
     unsigned int ulCustomBits;
@@ -1547,7 +1646,80 @@ void fn_vPlayEvent(tdstEvent_* p_stEvent, int iMode, HIE_tdstSuperObject_* p_stS
     int s32_TypeId;
     int s32_ChannelId;
     int s32_ObjectId;
-    /* TODO: decompile from asm/... */
+
+    switch (p_stEvent->p_stfEventInTBL->ucTypeOfEvent)
+    {
+    case 0:
+        if (p_stEvent->uwIsLocalized)
+        {
+            s32_ChannelId = (int)fn_hGetChannelSuperObject(p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData, p_stEvent->uwChannelNumber);
+            if (s32_ChannelId == 0)
+                s32_ChannelId = -1;
+        }
+        else
+            s32_ChannelId = -1;
+
+        u_RefEvt.Id = p_stEvent->p_stfEventInTBL->p_xEvent;
+
+        switch (p_stEvent->p_stfEventInTBL->ucPriority)
+        {
+        case 1:
+            s32_TypeId = g_lSoundObjectTypeAmbiance;
+            break;
+        case 2:
+            s32_TypeId = g_lSoundObjectTypeVoice;
+            break;
+        case 3:
+            s32_TypeId = g_lSoundObjectTypeMusic;
+            break;
+        case 4:
+            s32_TypeId = g_lSoundObjectTypeMenu;
+            break;
+        default:
+            s32_TypeId = g_lSoundObjectTypeAnim;
+            break;
+        }
+
+        s32_SemaphoreId = p_stEvent->p_stfEventInTBL->u32SemaphoreId;
+        if (s32_SemaphoreId != -3)
+            s32_TypeId = g_lSoundObjectTypeVoice;
+
+        if (!g_DEMO_AutoPlay)
+        {
+            s32_ObjectId = (int)p_stSuperObject;
+            SND_fn_s32SendRequestSemaphoreSound(s32_SemaphoreId, s32_ObjectId, s32_ChannelId, s32_TypeId, u_RefEvt, 0, NULL);
+        }
+        break;
+
+    case 2:
+        if (p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentCineActor != NULL)
+        {
+            if (p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentCineActor->pCine != NULL)
+                p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData->h_CurrentCineActor->pCine->lGenerateEvent = p_stEvent->p_stfEventInTBL->p_xEvent;
+        }
+        break;
+
+    case 3:
+    {
+        int lEvent = (unsigned char)p_stEvent->p_stfEventInTBL->p_xEvent;
+        if (lEvent >= 6 && lEvent < 14)
+        {
+            HIE_tdstSuperObject_* hChannelSO = fn_hGetChannelSuperObject(p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData, p_stEvent->uwChannelNumber);
+            if (hChannelSO != NULL)
+            {
+                ulCustomBits = fn_ulStandardGameGetCustomBitsSO(p_stSuperObject);
+                if (!(ulCustomBits & 2))
+                {
+                    fn_vStandardGameSetCustomBitsSO(p_stSuperObject, ulCustomBits | 2);
+                    PLA_fn_vRefreshGlobalMatrixUnderCharacter(p_stSuperObject);
+                    fn_vStandardGameSetCustomBitsSO(p_stSuperObject, ulCustomBits);
+                }
+                fn_v3dDataSetUserEventFlag(p_stSuperObject->hLinkedObject.p_stCharacter->h_3dData, (unsigned char)(lEvent - 6), 1, hChannelSO->hGlobalMatrix);
+            }
+        }
+    }
+        break;
+    }
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\playevts.c lines 638–639 */

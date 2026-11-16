@@ -4,6 +4,8 @@
 
 #include <stddef.h>
 
+float sinf(float);
+
 /* Recovered aggregate layouts from MWCC debug type records. */
 typedef struct tdstA3dGENERAL_ tdstA3dGENERAL_;
 
@@ -179,13 +181,53 @@ float fn_xRModulus(float xValue, float xModulus)
  */
 void fn_v_QuatSlerp(float* _a4_xQuatD, float* _a4_xQuatS1, float* _a4_xQuatS2, float _xT)
 {
-    float xCoef3;
-    float xCoef2;
-    float xCoef1;
-    float xTbyOmega;
-    float xSinOmega;
     float xCosOmega;
-    /* TODO: decompile from asm/... */
+    float xSinOmega;
+    float xTbyOmega;
+    float xCoef1;
+    float xCoef2;
+    float xCoef3;
+
+    xCosOmega = _a4_xQuatS1[0] * _a4_xQuatS2[0] + _a4_xQuatS1[1] * _a4_xQuatS2[1] + _a4_xQuatS1[2] * _a4_xQuatS2[2] + _a4_xQuatS1[3] * _a4_xQuatS2[3];
+
+    if (xCosOmega < 0.0f)
+    {
+        xCoef3 = -1.0f;
+        xCosOmega = -xCosOmega;
+    }
+    else
+    {
+        xCoef3 = 1.0f;
+    }
+
+    if (xCosOmega < 0.999f)
+    {
+        xCosOmega = ax_AcosTab[(int)(4095.5f * (1.0f + xCosOmega))];
+        xSinOmega = sinf(xCosOmega);
+        if (xSinOmega != 0.0f)
+        {
+            xSinOmega = 1.0f / xSinOmega;
+            xTbyOmega = _xT * xCosOmega;
+            xCoef1 = sinf(xCosOmega - xTbyOmega) * xSinOmega;
+            xCoef2 = sinf(xTbyOmega) * xSinOmega;
+        }
+        else
+        {
+            xCoef1 = 1.0f - _xT;
+            xCoef2 = _xT;
+        }
+    }
+    else
+    {
+        xCoef1 = 1.0f - _xT;
+        xCoef2 = _xT;
+    }
+
+    xCoef2 *= xCoef3;
+    _a4_xQuatD[0] = xCoef1 * _a4_xQuatS1[0] + xCoef2 * _a4_xQuatS2[0];
+    _a4_xQuatD[1] = xCoef1 * _a4_xQuatS1[1] + xCoef2 * _a4_xQuatS2[1];
+    _a4_xQuatD[2] = xCoef1 * _a4_xQuatS1[2] + xCoef2 * _a4_xQuatS2[2];
+    _a4_xQuatD[3] = xCoef1 * _a4_xQuatS1[3] + xCoef2 * _a4_xQuatS2[3];
 }
 
 /* E:\Rayman3\Disk_01\R3PS2_SCEA_engine_sources\sourcesV39\ps2\TEMPGRP\GAM\PlayAnim\Interpol\a3x_int.c lines 39–40 */
